@@ -6,8 +6,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.post('/login', (req, res) => {
+  const body = req.body;
+
+  res.status(200).json();
+
+  res.end();
 });
 
 app.listen(process.env.PORT, () => {
