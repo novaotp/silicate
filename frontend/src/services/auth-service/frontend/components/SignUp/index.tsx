@@ -3,6 +3,8 @@
 import { useRef, FormEvent } from 'react'
 
 import InputField from "../shared/InputField";
+import { SignUpProps } from '@shared/interfaces';
+import { signUpController } from '../../../backend/controllers';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -12,11 +14,13 @@ export default function SignUpComponent() {
 
     const formData = new FormData(formRef.current!);
 
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const data: SignUpProps = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string
+    }
 
-    console.log(name, email, password);
+    await signUpController(data)
   }
 
   return (
