@@ -1,4 +1,4 @@
-DROP SCHEMA IF EXISTS public;
+DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
 
 CREATE TABLE public.accounts (
@@ -8,5 +8,5 @@ CREATE TABLE public.accounts (
   password VARCHAR(24) NOT NULL,
   CONSTRAINT pk_id PRIMARY KEY (id),
   CONSTRAINT u_email UNIQUE (email),
-  CONSTRAINT c_email CHECK (email LIKE '*@*.*')
+  CONSTRAINT c_email CHECK (email LIKE '%@%.%')
 );

@@ -3,6 +3,7 @@
 
 import express from 'express';
 import 'dotenv/config';
+import client from './databases/postgres/index.js';
 
 const app = express();
 
@@ -17,13 +18,31 @@ app.post('/login', (req, res) => {
   res.end();
 });
 
-app.post('/signup', (req, res) => {
-  /** @type SignUpProps */
-  const body = req.body;
+app.post('/signup', async (req, res) => {
+  try {
+    /** @type SignUpProps */
+    const body = req.body;
 
-  res.status(200).json();
+    const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.accounts WHERE email = $1)';
+    const userExistsValues = [body.email]
+    const { rows } = await client.query(userExistsQuery, userExistsValues);
+    const userExists = rows[0].exists;
+    
+    if (userExists) {
+      res.status(400).json({ success: false, message: 'User already exists' });
+    }
 
-  res.end();
+    const newAccountQuery = 'INSERT INTO public.accounts (name, email, password) VALUES ($1, $2, $3)';
+    const newAccountValues = [body.name, body.email, body.password];
+    await client.query(newAccountQuery, newAccountValues);
+
+    res.status(200).json({ success: true, message: 'Account created successfully' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Internal Server Error' })
+
+  }
 });
 
 app.listen(process.env.PORT, () => {
