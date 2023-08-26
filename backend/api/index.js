@@ -1,6 +1,8 @@
 
+/** @typedef { import('../../shared/interfaces').SignUpProps } SignUpProps */
+
 import express from 'express';
-import 'dotenv/config'
+import 'dotenv/config';
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
+  /** @type SignUpProps */
   const body = req.body;
 
   res.status(200).json();
