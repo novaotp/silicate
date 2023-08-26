@@ -1,17 +1,20 @@
+import { poppins } from '@/core/fonts';
 import styles from './index.module.css';
 
 interface InputFieldProps {
   type: "text" | "email" | "password";
+  label: string;
   placeholder: string;
   name: string;
 }
 
-export default function InputField({ type, placeholder, name }: InputFieldProps) {
+export default function InputField({ type, label, placeholder, name }: InputFieldProps) {
   return (
-    <div>
+    <div className={styles.field}>
+      <label htmlFor={name}>{label}</label>
       <input
         type={type}
-        className={styles.input}
+        className={`${styles.input} ${poppins.className}`}
         placeholder={placeholder}
         name={name}
         autoComplete="off"
