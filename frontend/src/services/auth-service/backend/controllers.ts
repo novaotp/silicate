@@ -1,8 +1,8 @@
 'use server'
 
-import { LoginProps, SignUpProps } from "@shared/interfaces";
+import { AuthResponseProps, LoginProps, SignUpProps } from "@shared/interfaces";
 
-export async function signUpController(data: SignUpProps) {
+export async function signUpController(data: SignUpProps): Promise<AuthResponseProps> {
   const url = process.env.API_SERVER_URL + '/signup';
   const init: RequestInit = {
     method: 'POST',
@@ -10,12 +10,15 @@ export async function signUpController(data: SignUpProps) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    cache: "no-store"
   }
   const response = await fetch(url, init);
-  const result = await response.json();
+  const result: AuthResponseProps = await response.json();
+
+  return result;
 }
 
-export async function loginController(data: LoginProps) {
+export async function loginController(data: LoginProps): Promise<AuthResponseProps> {
   const url = process.env.API_SERVER_URL + '/login';
   const init: RequestInit = {
     method: 'POST',
@@ -23,7 +26,10 @@ export async function loginController(data: LoginProps) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    cache: "no-store"
   }
   const response = await fetch(url, init);
-  const result = await response.json();
+  const result: AuthResponseProps = await response.json();
+
+  return result;
 }

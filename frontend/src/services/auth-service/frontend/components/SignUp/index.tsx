@@ -2,6 +2,7 @@
 
 import { useRef, FormEvent } from 'react'
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { SignUpProps } from '@shared/interfaces';
 import { signUpController } from '../../../backend/controllers';
@@ -12,6 +13,7 @@ import { InputField, SubmitButton, AlternativeLink } from '../shared';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -24,7 +26,13 @@ export default function SignUpComponent() {
       password: formData.get('password') as string
     }
 
-    await signUpController(data)
+    const response = await signUpController(data);
+
+    if (!response.success) {
+      alert(response.message);
+    } else {
+      router.push('/auth/login')
+    }
   }
 
   return (
