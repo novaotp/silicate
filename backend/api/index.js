@@ -29,18 +29,18 @@ app.post('/signup', async (req, res) => {
     const userExists = rows[0].exists;
     
     if (userExists) {
-      res.status(400).json({ success: false, message: 'User already exists' });
+      return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
     const newAccountQuery = 'INSERT INTO public.accounts (name, email, password) VALUES ($1, $2, $3)';
     const newAccountValues = [body.name, body.email, body.password];
     await client.query(newAccountQuery, newAccountValues);
 
-    res.status(200).json({ success: true, message: 'Account created successfully' });
+    return res.status(200).json({ success: true, message: 'Account created successfully' });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Internal Server Error' })
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
 
   }
 });
