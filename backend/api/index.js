@@ -15,7 +15,7 @@ app.post('/login', async (req, res) => {
     /** @type { import('../../shared/interfaces').LoginProps } */
     const body = req.body;
 
-    const userQuery = 'SELECT * FROM public.accounts WHERE email = $1 LIMIT 1';
+    const userQuery = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
     const userValues = [body.email];
 
     const { rows } = await client.query(userQuery, userValues);
@@ -44,7 +44,7 @@ app.post('/signup', async (req, res) => {
     /** @type { import('../../shared/interfaces').SignUpProps } */
     const body = req.body;
 
-    const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.accounts WHERE email = $1)';
+    const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
     const userExistsValues = [body.email]
 
     const { rows } = await client.query(userExistsQuery, userExistsValues);
@@ -55,7 +55,7 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
-    const newAccountQuery = 'INSERT INTO public.accounts (name, email, password) VALUES ($1, $2, $3)';
+    const newAccountQuery = 'INSERT INTO public.user (name, email, password) VALUES ($1, $2, $3)';
     const newAccountValues = [body.name, body.email, body.password];
 
     await client.query(newAccountQuery, newAccountValues);
