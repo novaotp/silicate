@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS public.friendship (
   id SERIAL PRIMARY KEY,
   first_user_id INT NOT NULL,
   second_user_id INT NOT NULL,
-  FOREIGN KEY (first_user_id) REFERENCES user(id),
-  FOREIGN KEY (second_user_id) REFERENCES user(id),
+  FOREIGN KEY (first_user_id) REFERENCES public.user(id),
+  FOREIGN KEY (second_user_id) REFERENCES public.user(id),
   UNIQUE (first_user_id, second_user_id),
   CHECK (first_user_id < second_user_id) -- this makes impossible to create duplicated friendship even with inverted columns
 );
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
   id SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
   user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (user_id) REFERENCES public.user(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.subject (
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS public.grade (
   score DECIMAL NOT NULL,
   subject_id INT NOT NULL,
   gradebook_id INT NOT NULL,
-  FOREIGN KEY (subject_id) REFERENCES subject(id),
-  FOREIGN KEY (gradebook_id) REFERENCES gradebook(id)
+  FOREIGN KEY (subject_id) REFERENCES public.subject(id),
+  FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.note (
@@ -44,5 +44,5 @@ CREATE TABLE IF NOT EXISTS public.note (
   title VARCHAR(50) NOT NULL,
   content TEXT NOT NULL,
   user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (user_id) REFERENCES public.user(id)
 );

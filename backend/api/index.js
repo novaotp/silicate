@@ -41,6 +41,8 @@ app.post('/login', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
   try {
+    await client.connect();
+  
     /** @type { import('../../shared/interfaces').SignUpProps } */
     const body = req.body;
 
@@ -59,6 +61,8 @@ app.post('/signup', async (req, res) => {
     const newAccountValues = [body.name, body.email, body.password];
 
     await client.query(newAccountQuery, newAccountValues);
+    
+    await client.disconnect();
 
     return res.status(200).json({ success: true, message: 'Account created successfully' });
 

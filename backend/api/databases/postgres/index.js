@@ -15,7 +15,12 @@ export default class DBClient {
         await this.client.end();
     }
 
-    async query(query, parameters=[], callback=()=>{}) {
-        return await this.client.query(query, parameters, callback);
+    async query(query, parameters=[], callback=null) {
+    	if (callback === null) {
+    	  return await this.client.query(query, parameters);
+    	  
+    	} else {
+          return await this.client.query(query, parameters, callback);
+        }
     }
 }
