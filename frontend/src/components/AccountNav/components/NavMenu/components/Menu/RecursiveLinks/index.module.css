@@ -1,0 +1,76 @@
+.li {
+  position: relative;
+  width: 100%;
+  height: auto;
+  border-bottom: solid 1px rgb(211, 110, 110);
+}
+
+.li:first-child {
+  border-top: solid 1px rgb(211, 110, 110);
+}
+
+.linkWrapper {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+.link {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: rgb(29, 29, 29);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nestedUl {
+  height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.toggleBtn {
+  background: none;
+  border: solid 1px black;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toggleBtn svg {
+  animation: openUl 200ms ease-in-out forwards;
+}
+
+.toggleBtn.openButton svg {
+  animation: closeUl 200ms ease-in-out forwards;
+}
+
+@keyframes closeUl {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes openUl {
+  0% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.openNestedUl {
+  height: auto;
+}

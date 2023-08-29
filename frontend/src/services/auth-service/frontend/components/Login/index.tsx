@@ -4,14 +4,16 @@ import { useRef, FormEvent } from 'react'
 import Image from 'next/image';
 
 import SilicateLogo from '@public/silicate_logo.svg';
-import { LoginProps } from '@shared/interfaces';
+import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
 
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.css';
+import { useRouter } from 'next/navigation';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -23,7 +25,13 @@ export default function LoginComponent() {
       password: formData.get('password') as string
     }
 
-    await loginController(data)
+    const result: AuthResponseProps = await loginController(data);
+
+    if (!result.success) {
+      alert(result.message)
+    } else {
+      router.push('/account/dashboard')
+    }
   }
 
   return (
