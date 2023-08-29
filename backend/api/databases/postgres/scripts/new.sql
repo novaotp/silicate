@@ -1,37 +1,48 @@
-DROP SCHEMA IF EXISTS public CASCADE;
-CREATE SCHEMA public;
+-- PostgreSQL database creation script
 
-CREATE TABLE public.accounts (
-  id SERIAL PRIMARY KEY NOT NULL,
-  name VARCHAR(80) NOT NULL,
-  email VARCHAR(80) NOT NULL,
-  password VARCHAR(24) NOT NULL,
-  CONSTRAINT u_email UNIQUE (email),
-  CONSTRAINT c_email CHECK (email LIKE '%@%.%')
+CREATE TABLE IF NOT EXISTS public.user (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE gradebooks (
-  id SERIAL NOT NULL,
-  account_id INT,
-  name TEXT,
-  CONSTRAINT pk_grade_books_id PRIMARY KEY (id),
-  CONSTRAINT fk_grade_books_accounts FOREIGN KEY (account_id) REFERENCES public.accounts (id),
-  CONSTRAINT u_grade_book UNIQUE (account_id, name)
+CREATE TABLE IF NOT EXISTS public.friendship (
+  id SERIAL PRIMARY KEY,
+  first_user_id INT NOT NULL,
+  second_user_id INT NOT NULL,
+  FOREIGN KEY (first_user_id) REFERENCES user(id),
+  FOREIGN KEY (second_user_id) REFERENCES user(id),
+  UNIQUE (first_user_id, second_user_id),
+  CHECK (first_user_id < second_user_id) -- this makes impossible to create duplicated friendship even with inverted columns
 );
 
-CREATE TABLE subjects (
-  id SERIAL PRIMARY KEY NOT NULL,
-  name TEXT,
-  CONSTRAINT u_subject UNIQUE (name)
+CREATE TABLE IF NOT EXISTS public.gradebook (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE grades (
-  id SERIAL PRIMARY KEY NOT NULL,
-  gradebook_id INT NOT NULL,
+CREATE TABLE IF NOT EXISTS public.subject (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  abbreviation VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.grade (
+  id SERIAL PRIMARY KEY,
+  score DECIMAL NOT NULL,
   subject_id INT NOT NULL,
-  title TEXT,
-  value TEXT,
-  CONSTRAINT fk_grades_gradebooks FOREIGN KEY (gradebook_id) REFERENCES public.gradebooks (id),
-  CONSTRAINT fk_grades_subjects FOREIGN KEY (subject_id) REFERENCES public.subjects (id),
-  CONSTRAINT u_grade UNIQUE (gradebook_id, subject_id, title, value)
+  gradebook_id INT NOT NULL,
+  FOREIGN KEY (subject_id) REFERENCES subject(id),
+  FOREIGN KEY (gradebook_id) REFERENCES gradebook(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.note (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(50) NOT NULL,
+  content TEXT NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
