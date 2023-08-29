@@ -69,6 +69,18 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+app.post('/logout', async (req, res) => {
+  // TODO : finish that
+});
+
+app.post('/friends/add', async (req, res) => {
+  /** @type { import('../../shared/interfaces').FriendsProps } */
+  const body = req.body;
+
+  
+
+});
+
 app.listen(process.env.PORT, () => {
   console.log('API Listening on port ' + process.env.PORT);
 });
