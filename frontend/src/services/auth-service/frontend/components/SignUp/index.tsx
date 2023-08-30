@@ -39,7 +39,7 @@ export default function SignUpComponent() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.welcomeWrapper}>
-        <h1>Welcome to</h1>
+        <h1>Bienvenue sur</h1>
         <Image
           src={SilicateLogo}
           alt="Silicate Logo"

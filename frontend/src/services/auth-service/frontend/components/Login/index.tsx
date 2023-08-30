@@ -37,7 +37,7 @@ export default function LoginComponent() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.welcomeWrapper}>
-        <h1>Welcome back to</h1>
+        <h1>Re-bienvenue sur</h1>
         <Image
           src={SilicateLogo}
           alt="Silicate Logo"
