@@ -12,6 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/login', async (req, res) => {
   try {
+    await client.connect();
+
     /** @type { import('../../shared/interfaces').LoginProps } */
     const body = req.body;
 
@@ -29,6 +31,8 @@ app.post('/login', async (req, res) => {
     if (user.password !== body.password) {
       return res.status(400).json({ success: false, message: 'The passwords do not match' });
     }
+
+    await client.disconnect();
 
     return res.status(200).json({ success: true, message: 'Connected successfully' });
 
@@ -57,8 +61,8 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
-    const newAccountQuery = 'INSERT INTO public.user (name, email, password) VALUES ($1, $2, $3)';
-    const newAccountValues = [body.name, body.email, body.password];
+    const newAccountQuery = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)';
+    const newAccountValues = [body.firstName, body.lastName, body.email, body.password];
 
     await client.query(newAccountQuery, newAccountValues);
     

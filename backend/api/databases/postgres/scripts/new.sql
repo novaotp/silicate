@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS public.user (
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   password VARCHAR(50) NOT NULL,
-  email VARCHAR(50) NOT NULL
+  email VARCHAR(75) UNIQUE NOT NULL,
+  CHECK(email LIKE '%@%.%')
 );
 
 CREATE TABLE IF NOT EXISTS public.friendship (
@@ -22,22 +23,25 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
   id SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
   user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES public.user(id)
+  FOREIGN KEY (user_id) REFERENCES public.user(id),
+  UNIQUE(name, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.subject (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(50) NOT NULL,
-  abbreviation VARCHAR(10) NOT NULL
+  name VARCHAR(50) UNIQUE NOT NULL,
+  abbreviation VARCHAR(10) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.grade (
   id SERIAL PRIMARY KEY,
   score DECIMAL NOT NULL,
+  name VARCHAR(50) NOT NULL,
   subject_id INT NOT NULL,
   gradebook_id INT NOT NULL,
   FOREIGN KEY (subject_id) REFERENCES public.subject(id),
-  FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id)
+  FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id),
+  UNIQUE(name, subject_id, gradebook_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.note (
