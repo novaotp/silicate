@@ -1,8 +1,26 @@
+
 import pg from 'pg';
 import 'dotenv/config'
 
-const client = new pg.Client(process.env.PG_DB_URI);
+export default class DBClient {
+    constructor() {
+        this.client = new pg.Client(process.env.PG_DB_URI);
+    }
 
-await client.connect();
+    async connect() {
+        await this.client.connect();
+    }
 
-export default client;
+    async disconnect() {
+        await this.client.end();
+    }
+
+    async query(query, parameters=[], callback=null) {
+    	if (callback === null) {
+    	  return await this.client.query(query, parameters);
+    	  
+    	} else {
+          return await this.client.query(query, parameters, callback);
+        }
+    }
+}

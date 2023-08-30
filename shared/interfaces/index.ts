@@ -28,3 +28,7 @@ export interface GradeProps {
   title: string;
   value: string;
 }
+
+export interface PayloadProps {
+  id: string;
+}
