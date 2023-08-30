@@ -2,26 +2,27 @@
 
 // Next
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 // Internal
 import { SubjectProps } from "@shared/interfaces";
 import styles from './index.module.css';
+import route from "@utils/route";
 
 interface RenderSubjectsProps {
   subjects: SubjectProps[];
 }
 
 export default function RenderSubjects({ subjects }: RenderSubjectsProps) {
-  const pathname = usePathname();
-
   return (
     <div>
       {
         subjects.map(subject => {
+          const { name } = subject;
+          const href = route.app.gradebooks.book(name).use();
+
           return (
-            <li key={subject.name}>
-              <Link href={`${pathname}/${subject.name}`}>{subject.name}</Link>
+            <li key={name}>
+              <Link href={href}>{name}</Link>
             </li>
           )
         })

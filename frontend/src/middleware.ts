@@ -1,25 +1,26 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import JWT from "@shared/classes/JWT";
+import route from "@utils/route";
 
 
 export default async function Middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/auth")) {
-    if (pathname === '/auth') {
-      return NextResponse.redirect(process.env.FRONTEND_URL + '/auth/login')
+    if (pathname === route.auth.use()) {
+      return NextResponse.redirect(process.env.FRONTEND_URL + route.auth.login.use())
     }
 
-    if (pathname === '/auth/logout') {
-      const res = NextResponse.redirect(process.env.FRONTEND_URL + '/');
+    if (pathname === route.auth.logout.use()) {
+      const res = NextResponse.redirect(process.env.FRONTEND_URL + route.use());
 
       res.cookies.delete('token');
 
       return res;
     }
 
-    if (pathname === '/auth/login') {
+    if (pathname === route.auth.login.use()) {
 
       await fetch(`${process.env.API_SERVER_URL}`, {
         method: 'POST',

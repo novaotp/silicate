@@ -10,6 +10,7 @@ import SilicateLogo from '@public/silicate_logo.svg'
 
 import styles from './index.module.css';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
+import route from '@utils/route';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -32,7 +33,7 @@ export default function SignUpComponent() {
     if (!response.success) {
       alert(response.message);
     } else {
-      router.push('/auth/login')
+      router.push(route.auth.login.use())
     }
   }
 
