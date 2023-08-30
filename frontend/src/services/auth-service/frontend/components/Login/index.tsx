@@ -1,15 +1,15 @@
 'use client'
 
+// React / Next
 import { useRef, FormEvent } from 'react'
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import SilicateLogo from '@public/silicate_logo.svg';
 import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
-
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.css';
-import { useRouter } from 'next/navigation';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -55,7 +55,7 @@ export default function LoginComponent() {
           />
           <InputField
             type="password"
-            label="Password"
+            label="Mot de passe"
             placeholder="Entre ton mot de passe ici..."
             name="password"
           />
