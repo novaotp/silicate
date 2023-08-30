@@ -8,7 +8,7 @@ interface GradebookComponentProps {
 
 export default function GradebooksComponent({ gradebooks }: GradebookComponentProps) {
   return (
-    <div>
+    <div className={styles.wrapper}>
       {gradebooks.length > 0 && <RenderGradebooks gradebooks={gradebooks} />}
       {gradebooks.length === 0 && <NoGradebooksFound />}
     </div>
