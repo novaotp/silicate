@@ -3,7 +3,7 @@
 import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from "@shared/interfaces";
 
 export async function signUpController(data: SignUpProps): Promise<AuthResponseProps> {
-  const url = process.env.API_SERVER_URL + '/signup';
+  const url = process.env.API_SERVER_URL + '/auth/signup';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -19,7 +19,7 @@ export async function signUpController(data: SignUpProps): Promise<AuthResponseP
 }
 
 export async function loginController(data: LoginProps): Promise<AuthResponseProps> {
-  const url = process.env.API_SERVER_URL + '/login';
+  const url = process.env.API_SERVER_URL + '/auth/login';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -35,7 +35,7 @@ export async function loginController(data: LoginProps): Promise<AuthResponsePro
 }
 
 export async function verifyTokenController(data: VerifyTokenProps): Promise<TokenResponseProps> {
-  const url = process.env.API_SERVER_URL + '/verifytoken';
+  const url = process.env.API_SERVER_URL + '/auth/verifytoken';
   const init: RequestInit = {
     method: 'POST',
     headers: {

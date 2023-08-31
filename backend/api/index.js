@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/login', async (req, res) => {
+app.post('/auth/login', async (req, res) => {
   try {
     const client = await pool.connect();
 
@@ -44,7 +44,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/signup', async (req, res) => {
+app.post('/auth/signup', async (req, res) => {
   try {
     const client = await pool.connect();
   
@@ -86,7 +86,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-app.post('/verifytoken', async (req, res) => {
+app.post('/auth/verifytoken', async (req, res) => {
   const body = req.body;
 
   console.log(body.jwt);

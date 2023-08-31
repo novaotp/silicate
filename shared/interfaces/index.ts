@@ -1,3 +1,9 @@
+
+interface ResponseProps {
+  success: boolean;
+  message: string;
+}
+
 export interface SignUpProps {
   firstName: string;
   lastName: string;
@@ -14,15 +20,11 @@ export interface VerifyTokenProps {
   jwt: string | undefined;
 }
 
-export interface AuthResponseProps {
-  success: boolean;
-  message: string;
+export interface AuthResponseProps extends ResponseProps {
   jwt?: string;
 }
 
-export interface TokenResponseProps {
-  success: boolean;
-  message: string;
+export interface TokenResponseProps extends ResponseProps {
   payload: any;
 }
 
