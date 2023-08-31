@@ -6,7 +6,7 @@ import Link from "next/link";
 // Internal
 import { SubjectProps } from "@shared/interfaces";
 import styles from './index.module.css';
-import route from "@utils/route";
+import route from "@/core/utils/route";
 import { usePathname } from "next/navigation";
 
 interface RenderSubjectsProps {

@@ -1,9 +1,10 @@
 
 import express from 'express';
 import 'dotenv/config';
-import Client from './databases/postgres/index.js';
+import { DBPool } from './databases/postgres/index.js';
+import JWT from '../../shared/classes/JWT.js';
 
-const client = new Client();
+const pool = new DBPool();
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/login', async (req, res) => {
   try {
-    await client.connect();
+    const client = await pool.connect();
 
     /** @type { import('../../shared/interfaces').LoginProps } */
     const body = req.body;
@@ -31,11 +32,8 @@ app.post('/login', async (req, res) => {
     if (user.password !== body.password) {
       return res.status(400).json({ success: false, message: 'The passwords do not match' });
     }
-<<<<<<< HEAD
-=======
 
-    await client.disconnect();
->>>>>>> d1f5d52d2ebb99cc5d474f8d6bc4c1d82a41ec1e
+    await client.release(true);
 
     return res.status(200).json({ success: true, message: 'Connected successfully' });
 
@@ -48,37 +46,38 @@ app.post('/login', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
   try {
-    await client.connect();
+    const client = await pool.connect();
   
     /** @type { import('../../shared/interfaces').SignUpProps } */
     const body = req.body;
 
     const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
-    const userExistsValues = [body.email]
+    const email = [body.email];
 
-    const { rows } = await client.query(userExistsQuery, userExistsValues);
+    let queryResponse = await client.query(userExistsQuery, email);
 
-    const userExists = rows[0].exists;
+    const userExists = queryResponse.rows[0].exists;
     
     if (userExists) {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
-<<<<<<< HEAD
-
-    const newAccountQuery = 'INSERT INTO public.accounts (name, email, password) VALUES ($1, $2, $3)';
-    const newAccountValues = [body.name, body.email, body.password];
-
-=======
 
     const newAccountQuery = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)';
     const newAccountValues = [body.firstName, body.lastName, body.email, body.password];
 
->>>>>>> d1f5d52d2ebb99cc5d474f8d6bc4c1d82a41ec1e
     await client.query(newAccountQuery, newAccountValues);
-    
-    await client.disconnect();
 
-    return res.status(200).json({ success: true, message: 'Account created successfully' });
+    const getTokenQuery = 'SELECT id from public.user WHERE email = $1 LIMIT 1';
+
+    queryResponse = await client.query(getTokenQuery, email);
+
+    const userID = queryResponse.rows[0].id;
+    
+    await client.release(true);
+
+    const jwt = await JWT.sign({ userID: userID });
+
+    return res.status(200).json({ success: true, message: 'Account created successfully', jwt: jwt });
 
   } catch (err) {
     console.error(err);
@@ -87,16 +86,19 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-app.post('/logout', async (req, res) => {
-  // TODO : finish that
-});
+app.post('/verifytoken', async (req, res) => {
+  const body = req.body;
+
+  console.log(body.jwt);
+
+  const payload = await JWT.verify(body.jwt);
+
+  return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
+})
 
 app.post('/friends/add', async (req, res) => {
   /** @type { import('../../shared/interfaces').FriendsProps } */
   const body = req.body;
-
-  
-
 });
 
 app.listen(process.env.PORT, () => {

@@ -6,7 +6,7 @@ import Link from 'next/link';
 // Internal
 import { GradebookProps } from '@shared/interfaces';
 import styles from './index.module.css';
-import route from '@utils/route';
+import route from '@/core/utils/route';
 
 interface GradebookCardProps {
   gradebook: GradebookProps;

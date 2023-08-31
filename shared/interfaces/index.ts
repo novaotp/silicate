@@ -10,10 +10,20 @@ export interface LoginProps {
   password: string;
 }
 
+export interface VerifyTokenProps {
+  jwt: string | undefined;
+}
+
 export interface AuthResponseProps {
   success: boolean;
   message: string;
-  data?: any;
+  jwt?: string;
+}
+
+export interface TokenResponseProps {
+  success: boolean;
+  message: string;
+  payload: any;
 }
 
 export interface GradebookProps {

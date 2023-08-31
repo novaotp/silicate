@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from '../../frontend/node_modules/jose';
+import { SignJWT, jwtVerify } from 'jose';
 import { TextEncoder } from 'util';
 
 /**

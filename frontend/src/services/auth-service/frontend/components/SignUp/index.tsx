@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { SignUpProps } from '@shared/interfaces';
-import { signUpController } from '../../../backend/controllers';
+import { signUpController, verifyTokenController } from '../../../backend/controllers';
 import SilicateLogo from '@public/silicate_logo.svg'
 
 import styles from './index.module.css';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
-import route from '@utils/route';
+import route from '@/core/utils/route';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -32,8 +32,11 @@ export default function SignUpComponent() {
 
     if (!response.success) {
       alert(response.message);
+
     } else {
-      router.push(route.auth.login.use())
+      const logResponse = await verifyTokenController({ jwt: response.jwt });
+
+      console.log(logResponse.payload.payload.userID);
     }
   }
 

@@ -4,7 +4,7 @@ import { GradeProps } from "@shared/interfaces"
 import { NoGradesFound, RenderGrades } from "./components";
 import BackLink from "../shared/BackLink";
 import styles from './index.module.css';
-import route from "@utils/route";
+import route from "@/core/utils/route";
 import { usePathname } from "next/navigation";
 
 interface GradesComponentProps {

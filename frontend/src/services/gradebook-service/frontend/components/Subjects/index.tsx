@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import route from "@utils/route";
+import route from "@/core/utils/route";
 import { SubjectProps } from "@shared/interfaces"
 import { NoSubjectsFound, RenderSubjects } from "./components";
 import BackLink from "../shared/BackLink";

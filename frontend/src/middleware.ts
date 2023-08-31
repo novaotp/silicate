@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import JWT from "@shared/classes/JWT";
-import route from "@utils/route";
+import route from "@/core/utils/route";
 
 
 export default async function Middleware(request: NextRequest) {

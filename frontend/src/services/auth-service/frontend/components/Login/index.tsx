@@ -10,7 +10,7 @@ import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.css';
-import route from '@utils/route';
+import route from '@/core/utils/route';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
