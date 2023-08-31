@@ -1,0 +1,16 @@
+.nav {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-lavender);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: 250ms ease-out;
+}
+
+.open {
+  left: 0%;
+}

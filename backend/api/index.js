@@ -12,10 +12,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/login', async (req, res) => {
   try {
+    await client.connect();
+
     /** @type { import('../../shared/interfaces').LoginProps } */
     const body = req.body;
 
-    const userQuery = 'SELECT * FROM public.accounts WHERE email = $1 LIMIT 1';
+    const userQuery = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
     const userValues = [body.email];
 
     const { rows } = await client.query(userQuery, userValues);
@@ -29,6 +31,11 @@ app.post('/login', async (req, res) => {
     if (user.password !== body.password) {
       return res.status(400).json({ success: false, message: 'The passwords do not match' });
     }
+<<<<<<< HEAD
+=======
+
+    await client.disconnect();
+>>>>>>> d1f5d52d2ebb99cc5d474f8d6bc4c1d82a41ec1e
 
     return res.status(200).json({ success: true, message: 'Connected successfully' });
 
@@ -41,10 +48,12 @@ app.post('/login', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
   try {
+    await client.connect();
+  
     /** @type { import('../../shared/interfaces').SignUpProps } */
     const body = req.body;
 
-    const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.accounts WHERE email = $1)';
+    const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
     const userExistsValues = [body.email]
 
     const { rows } = await client.query(userExistsQuery, userExistsValues);
@@ -54,11 +63,20 @@ app.post('/signup', async (req, res) => {
     if (userExists) {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
+<<<<<<< HEAD
 
     const newAccountQuery = 'INSERT INTO public.accounts (name, email, password) VALUES ($1, $2, $3)';
     const newAccountValues = [body.name, body.email, body.password];
 
+=======
+
+    const newAccountQuery = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)';
+    const newAccountValues = [body.firstName, body.lastName, body.email, body.password];
+
+>>>>>>> d1f5d52d2ebb99cc5d474f8d6bc4c1d82a41ec1e
     await client.query(newAccountQuery, newAccountValues);
+    
+    await client.disconnect();
 
     return res.status(200).json({ success: true, message: 'Account created successfully' });
 

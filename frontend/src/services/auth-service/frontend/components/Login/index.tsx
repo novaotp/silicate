@@ -1,17 +1,20 @@
 'use client'
 
+// React / Next
 import { useRef, FormEvent } from 'react'
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import SilicateLogo from '@public/silicate_logo.svg';
-import { LoginProps } from '@shared/interfaces';
+import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
-
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.css';
+import route from '@utils/route';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -23,13 +26,19 @@ export default function LoginComponent() {
       password: formData.get('password') as string
     }
 
-    await loginController(data)
+    const result: AuthResponseProps = await loginController(data);
+
+    if (!result.success) {
+      alert(result.message)
+    } else {
+      router.push(route.app.use());
+    }
   }
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.welcomeWrapper}>
-        <h1>Welcome back to</h1>
+        <h1>Re-bienvenue sur</h1>
         <Image
           src={SilicateLogo}
           alt="Silicate Logo"
@@ -47,7 +56,7 @@ export default function LoginComponent() {
           />
           <InputField
             type="password"
-            label="Password"
+            label="Mot de passe"
             placeholder="Entre ton mot de passe ici..."
             name="password"
           />

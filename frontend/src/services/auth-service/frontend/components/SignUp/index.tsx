@@ -10,6 +10,7 @@ import SilicateLogo from '@public/silicate_logo.svg'
 
 import styles from './index.module.css';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
+import route from '@utils/route';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -21,7 +22,8 @@ export default function SignUpComponent() {
     const formData = new FormData(formRef.current!);
 
     const data: SignUpProps = {
-      name: formData.get('name') as string,
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
       email: formData.get('email') as string,
       password: formData.get('password') as string
     }
@@ -31,14 +33,14 @@ export default function SignUpComponent() {
     if (!response.success) {
       alert(response.message);
     } else {
-      router.push('/auth/login')
+      router.push(route.auth.login.use())
     }
   }
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.welcomeWrapper}>
-        <h1>Welcome to</h1>
+        <h1>Bienvenue sur</h1>
         <Image
           src={SilicateLogo}
           alt="Silicate Logo"
@@ -50,9 +52,15 @@ export default function SignUpComponent() {
         <form className={styles.form} ref={formRef} onSubmit={handleFormSubmit}>
           <InputField
             type="text"
-            label="Name"
-            placeholder="Entre ton nom complet ici..."
-            name="name"
+            label="Prénom"
+            placeholder="Entre ton prénom ici..."
+            name="firstName"
+          />
+          <InputField
+            type="text"
+            label="Nom de famille"
+            placeholder="Entre ton nom de famille ici..."
+            name="lastName"
           />
           <InputField
             type="email"
@@ -62,7 +70,7 @@ export default function SignUpComponent() {
           />
           <InputField
             type="password"
-            label="Password"
+            label="Mot de passe"
             placeholder="Entre ton mot de passe ici..."
             name="password"
           />
