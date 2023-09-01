@@ -1,9 +1,10 @@
 'use server'
 
 import { AuthResponseProps, LoginProps, SignUpProps } from "@shared/interfaces";
+import { serverRoute } from "@shared/utils/route";
 
 export async function signUpController(data: SignUpProps): Promise<AuthResponseProps> {
-  const url = process.env.API_SERVER_URL + '/signup';
+  const url = process.env.API_SERVER_URL + serverRoute.auth.signup.use();
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -19,7 +20,7 @@ export async function signUpController(data: SignUpProps): Promise<AuthResponseP
 }
 
 export async function loginController(data: LoginProps): Promise<AuthResponseProps> {
-  const url = process.env.API_SERVER_URL + '/login';
+  const url = process.env.API_SERVER_URL + serverRoute.auth.login.use();
   const init: RequestInit = {
     method: 'POST',
     headers: {

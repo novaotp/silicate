@@ -10,7 +10,7 @@ import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.css';
-import route from '@utils/route';
+import { clientRoute } from '@shared/utils/route';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -31,7 +31,7 @@ export default function LoginComponent() {
     if (!result.success) {
       alert(result.message)
     } else {
-      router.push(route.app.use());
+      router.push(clientRoute.app.use());
     }
   }
 
