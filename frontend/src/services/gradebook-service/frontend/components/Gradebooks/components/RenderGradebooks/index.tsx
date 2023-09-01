@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { GradebookProps } from "@shared/interfaces";
 import GradebookCard from "./GradebookCard";
 

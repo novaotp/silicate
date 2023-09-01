@@ -9,8 +9,8 @@
   flex-direction: column;
   z-index: 100;
   transition: 250ms ease-out;
-}
 
-.open {
-  left: 0%;
+  &.open {
+    left: 0%;
+  }  
 }

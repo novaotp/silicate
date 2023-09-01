@@ -7,7 +7,7 @@ import WestIcon from '@mui/icons-material/West';
 import Link from "next/link";
 
 // Internal
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import SuperClientRoute from '@core/utils/route';
 
 interface BackLinkProps {

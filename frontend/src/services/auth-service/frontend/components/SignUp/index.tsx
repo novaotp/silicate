@@ -8,7 +8,7 @@ import { SignUpProps } from '@shared/interfaces';
 import { signUpController, verifyTokenController } from '../../../backend/controllers';
 import SilicateLogo from '@public/silicate_logo.svg'
 
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import { clientRoute } from '@shared/utils/route';
 

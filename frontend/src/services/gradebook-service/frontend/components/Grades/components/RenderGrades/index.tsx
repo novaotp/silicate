@@ -1,5 +1,5 @@
 import { GradeProps } from "@shared/interfaces";
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface RenderGradesProps {
   grades: GradeProps[];

@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import React, { SetStateAction } from 'react';
 
 // Internal
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface SearchFieldProps {
   filter: string;
