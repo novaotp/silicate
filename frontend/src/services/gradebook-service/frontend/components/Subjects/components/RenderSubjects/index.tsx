@@ -6,8 +6,7 @@ import Link from "next/link";
 // Internal
 import { SubjectProps } from "@shared/interfaces";
 import styles from './index.module.css';
-import route from "@/core/utils/route";
-import { usePathname } from "next/navigation";
+import SuperClientRoute from "@/core/utils/route";
 
 interface RenderSubjectsProps {
   filter: string;
@@ -15,8 +14,6 @@ interface RenderSubjectsProps {
 }
 
 export default function RenderSubjects({ filter, subjects }: RenderSubjectsProps) {
-  const bookName: string = usePathname().split("/").at(-1)!;
-
   return (
     <div>
       {
@@ -24,7 +21,7 @@ export default function RenderSubjects({ filter, subjects }: RenderSubjectsProps
           const { name } = subject;
 
           if (name.toLowerCase().includes(filter)) {
-            const href = route.app.gradebooks.book(bookName).subject(name).use();
+            const href = SuperClientRoute.addToPath(name);
 
             return (
               <li key={name}>

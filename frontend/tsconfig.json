@@ -24,7 +24,7 @@
       "@shared/*": ["../shared/*"],
       "@public/*": ["public/*"],
       "@core/*": ["src/core/*"],
-      "@utils/*": ["src/core/utils/*"],
+      "@utils/*": ["../shared/utils/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../shared/**/*.ts"],

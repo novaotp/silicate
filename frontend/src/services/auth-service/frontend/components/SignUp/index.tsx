@@ -10,7 +10,7 @@ import SilicateLogo from '@public/silicate_logo.svg'
 
 import styles from './index.module.css';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
-import route from '@/core/utils/route';
+import { clientRoute } from '@shared/utils/route';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);

@@ -6,7 +6,7 @@ import Link from 'next/link';
 // Internal
 import { GradebookProps } from '@shared/interfaces';
 import styles from './index.module.css';
-import route from '@/core/utils/route';
+import SuperClientRoute from '@/core/utils/route';
 
 interface GradebookCardProps {
   gradebook: GradebookProps;
@@ -14,10 +14,10 @@ interface GradebookCardProps {
 
 export default function GradebookCard({ gradebook }: GradebookCardProps) {
   const { name } = gradebook;
-  const href = route.app.gradebooks.book(name).use();
+  const href = SuperClientRoute.addToPath(name);
 
   return (
-    <li className={styles.li} key={gradebook.name}>
+    <li className={styles.li} key={name}>
       <Link className={styles.link} href={href}>{name}</Link>
     </li>
   )

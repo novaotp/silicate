@@ -1,38 +1,19 @@
-const route = {
-  use: () => '/',
-  auth: {
-    use: () => '/auth',
-    login: {
-      use: () => '/auth/log-in',
-    }, 
-    signup: {
-      use: () => '/auth/sign-up',
-    },
-    logout: {
-      use: () => '/auth/log-out',
-    }
-  },
-  app: {
-    use: () => '/app',
-    dashboard: {
-      use: () => '/app/dashboard',
-    },
-    gradebooks: {
-      use: () => '/app/gradebooks',
-      book: (id: string) => ({
-        use: () => `/app/gradebooks/${id}`,
-        subject: (subject: string) => ({
-          use: () => `/app/gradebooks/${id}/${subject}`
-        })
-      }),
-    },
-    notes: {
-      use: () => '/app/notes',
-      note: (id: string) => ({
-        use: () => `/app/notes/${id}`
-      })
-    }
-  }
-};
+import ClientRoute from "@shared/utils/route/client.route";
+import { usePathname } from "next/navigation";
 
-export default route;
+/**
+ * This object is only usable in client components.
+ * 
+ * See {@link ClientRoute} to access it in server components.
+ */
+export default class SuperClientRoute extends ClientRoute {
+  /** Returns the parent link */
+  public static override parent(): string {
+    return usePathname().split("/").slice(0, -1).join("/");
+  }
+
+  /** Add a new string to the current path */
+  public static addToPath(id: string): string {
+    return `${usePathname()}/${id}`;
+  }
+}
