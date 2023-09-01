@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface AlternativeLinkProps {
   text: string;

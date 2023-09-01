@@ -1,6 +1,6 @@
 import NavMenuLinkProps from '@/components/AccountNav/interfaces';
 import RecursiveLink from './RecursiveLinks';
-import styles from './index.module.css'
+import styles from './index.module.scss'
 
 interface MenuProps {
   closeNav: () => void;

@@ -1,5 +1,5 @@
 import { poppins } from '@/core/fonts';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface SubmitButtonProps {
   label: string;

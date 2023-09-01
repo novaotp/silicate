@@ -5,7 +5,7 @@ import Link from "next/link";
 
 // Internal
 import { SubjectProps } from "@shared/interfaces";
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import SuperClientRoute from "@/core/utils/route";
 
 interface RenderSubjectsProps {

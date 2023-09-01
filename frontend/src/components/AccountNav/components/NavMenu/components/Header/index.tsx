@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import SilicateLogo from '@public/silicate_logo.svg';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface HeaderProps {
   closeNav: () => void;

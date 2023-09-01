@@ -9,7 +9,7 @@ import SilicateLogo from '@public/silicate_logo.svg';
 import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import { loginController } from '../../../backend/controllers';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { clientRoute } from '@shared/utils/route';
 
 export default function LoginComponent() {
