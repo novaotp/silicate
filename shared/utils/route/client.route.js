@@ -39,7 +39,7 @@ export default class ClientRoute {
     };
   }
 
-  static parent();
+  static parent() {};
   /**
    * Returns the parent link
    * @param {string} href 
