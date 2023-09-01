@@ -1,5 +1,5 @@
 import AccountNavigation from '@/components/AccountNav'
-import styles from './layout.module.css'
+import styles from './layout.module.scss'
 
 export default function Layout({
   children,
