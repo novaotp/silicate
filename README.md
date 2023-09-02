@@ -37,7 +37,7 @@ And on the second type
 - `/auth/login` gives you a JWT if the user exists in the DB
 - `/auth/signup` create a new user in the DB and gives you a JWT
 - `/auth/verifytoken` verify the JWT and gives you the payload
-- `/auth/friends` don't act like you have any, ***but you can still call someone like your teacher :skull:***
+- `/friends` don't act like you have any, ***but you can still call someone like your teacher :skull:***
 
 ## Autors
 

@@ -44,3 +44,8 @@ export interface GradeProps {
 export interface PayloadProps {
   id: string;
 }
+
+export interface FriendRequestProps {
+  firstUserID: number;
+  secondUserID: number;
+}

@@ -97,8 +97,53 @@ app.post('/auth/verifytoken', async (req, res) => {
 })
 
 app.post('/friends/add', async (req, res) => {
-  /** @type { import('../../shared/interfaces').FriendsProps } */
+  /** @type { import('../../shared/interfaces').FriendRequestProps } */
   const body = req.body;
+
+  try {
+    const client = await pool.connect();
+
+    const addFriendQuery = 'INSERT INTO public.friendship (first_user_id, second_user_id) VALUES ($1, $2)';
+
+    const firstUserID = Math.min(body.firstUserID, body.secondUserID);
+    const secondUserID = Math.max(body.firstUserID, body.secondUserID);
+
+    await client.query(addFriendQuery, [firstUserID, secondUserID]);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Friend added successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+app.post('/friends/remove', async (req, res) => {
+  /** @type { import('../../shared/interfaces').FriendRequestProps } */
+  const body = req.body;
+
+  try {
+    const client = await pool.connect();
+
+    const removeFriendQuery = 'DELETE FROM public.friendship WHERE first_user_id = $1 AND second_user_id = $2';
+
+    const firstUserID = Math.min(body.firstUserID, body.secondUserID);
+    const secondUserID = Math.max(body.firstUserID, body.secondUserID);
+
+    await client.query(removeFriendQuery, [firstUserID, secondUserID]);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Friend removed successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
 });
 
 app.listen(process.env.PORT, () => {
