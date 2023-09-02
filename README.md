@@ -18,15 +18,17 @@ A simple solution for school life management
 
 ## Getting Started
 
+Run the configure.ps1 or configure.sh script to configure the dependencies
+
 Open two terminals simultaneously  
 
-On the first type  
+On the first type :  
 `cd frontend && npm run dev`  
 
-And on the second type  
+And on the second type :  
 `cd backend/api && npm start`  
 
-> Note : you can also run the .ps1 files within your two terminals
+> Note : you can also run the run files (.ps1 or .sh) within your two terminals
 
 ## API Calls
 
@@ -34,10 +36,16 @@ And on the second type
 
 ### Routes
 
+#### `/auth` (don't need a token)
+ 
 - `/auth/login` gives you a JWT if the user exists in the DB
 - `/auth/signup` create a new user in the DB and gives you a JWT
 - `/auth/verifytoken` verify the JWT and gives you the payload
-- `/friends` don't act like you have any, ***but you can still call someone like your teacher :skull:***
+
+#### `/friends` (need a token)
+
+- `/friends/add` create a new friendship between two users
+- `/friends/remove` remove a friendship between two users
 
 ## Autors
 
