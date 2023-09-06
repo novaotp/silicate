@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 // Internal
 import { GradebookProps } from "@shared/interfaces";
 import { NoGradebooksFound, RenderGradebooks } from "./components";
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { useEffect, useRef } from 'react';
 import InputField from '../shared/InputField';
 

@@ -1,7 +1,8 @@
-'use server'
+'use server';
 
 import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from "@shared/interfaces";
-import { serverRoute } from "@shared/utils/route";
+import { serverRoute } from "@shared/classes/route";
+import { cookies } from "next/headers";
 
 export async function signUpController(data: SignUpProps): Promise<AuthResponseProps> {
   const url = process.env.API_SERVER_URL + serverRoute.auth.signup.use();
@@ -36,7 +37,7 @@ export async function loginController(data: LoginProps): Promise<AuthResponsePro
 }
 
 export async function verifyTokenController(data: VerifyTokenProps): Promise<TokenResponseProps> {
-  const url = process.env.API_SERVER_URL + '/auth/verifytoken';
+  const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -49,4 +50,10 @@ export async function verifyTokenController(data: VerifyTokenProps): Promise<Tok
   const result: TokenResponseProps = await response.json();
 
   return result;
+}
+
+export async function newCookie(key: string, value: string, expires: number) {
+  'use server';
+
+  cookies().set(key, value, { expires: expires });
 }

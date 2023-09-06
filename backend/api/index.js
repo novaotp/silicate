@@ -3,6 +3,7 @@ import express from 'express';
 import 'dotenv/config';
 import { DBPool } from './databases/postgres/index.js';
 import JWT from '../../shared/classes/JWT.js';
+import { serverRoute } from '../../shared/classes/route/index.js';
 
 const pool = new DBPool();
 
@@ -11,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/auth/login', async (req, res) => {
+app.post(serverRoute.auth.login.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 
@@ -35,7 +36,9 @@ app.post('/auth/login', async (req, res) => {
 
     await client.release(true);
 
-    return res.status(200).json({ success: true, message: 'Connected successfully' });
+    const jwt = await JWT.sign({ userID: user.id });
+
+    return res.status(200).json({ success: true, message: 'Connected successfully', jwt: jwt });
 
   } catch (err) {
     console.error(err);
@@ -44,7 +47,7 @@ app.post('/auth/login', async (req, res) => {
   }
 });
 
-app.post('/auth/signup', async (req, res) => {
+app.post(serverRoute.auth.signup.use(), async (req, res) => {
   try {
     const client = await pool.connect();
   
@@ -86,7 +89,7 @@ app.post('/auth/signup', async (req, res) => {
   }
 });
 
-app.post('/auth/verifytoken', async (req, res) => {
+app.post(serverRoute.auth.verifyToken.use(), async (req, res) => {
   const body = req.body;
 
   const payload = await JWT.verify(body.jwt);
@@ -96,7 +99,7 @@ app.post('/auth/verifytoken', async (req, res) => {
   return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 })
 
-app.post('/friends/add', async (req, res) => {
+app.post(serverRoute.friends.add.use(), async (req, res) => {
   /** @type { import('../../shared/interfaces').FriendRequestProps } */
   const body = req.body;
 
@@ -121,7 +124,7 @@ app.post('/friends/add', async (req, res) => {
   }
 });
 
-app.post('/friends/remove', async (req, res) => {
+app.post(serverRoute.friends.remove.use(), async (req, res) => {
   /** @type { import('../../shared/interfaces').FriendRequestProps } */
   const body = req.body;
 

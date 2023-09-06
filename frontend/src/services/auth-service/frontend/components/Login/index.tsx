@@ -6,19 +6,17 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import SilicateLogo from '@public/silicate_logo.svg';
-import { AuthResponseProps, LoginProps } from '@shared/interfaces';
-import { loginController } from '../../../backend/controllers';
+import { AuthResponseProps, LoginProps, TokenResponseProps } from '@shared/interfaces';
+import { loginController, newCookie, verifyTokenController } from '../../../backend/controllers';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
 import styles from './index.module.scss';
-import { clientRoute } from '@shared/utils/route';
+import { clientRoute } from '@shared/classes/route';
 
 export default function LoginComponent() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  const handleFormSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-
+  const handleLogin = async (): Promise<AuthResponseProps> => {
     const formData = new FormData(formRef.current!);
 
     const data: LoginProps = {
@@ -26,13 +24,29 @@ export default function LoginComponent() {
       password: formData.get('password') as string
     }
 
-    const result: AuthResponseProps = await loginController(data);
+    const response: AuthResponseProps = await loginController(data);
 
-    if (!result.success) {
-      alert(result.message)
-    } else {
-      router.push(clientRoute.app.use());
+    return response;
+  }
+
+  const handleFormSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const authResponse: AuthResponseProps = await handleLogin();
+
+    if (!authResponse.success) {
+      return alert(authResponse.message);
     }
+
+    const tokenResponse: TokenResponseProps = await verifyTokenController({ jwt: authResponse.jwt });
+
+    if (!tokenResponse.payload) {
+      router.push(clientRoute.auth.login.use())
+    }
+
+    await newCookie("id", authResponse.jwt!, tokenResponse.payload.exp! * 1000);
+
+    router.push(clientRoute.app.use());
   }
 
   return (
@@ -63,7 +77,7 @@ export default function LoginComponent() {
           <SubmitButton label="Connexion" />
         </form>
         <AlternativeLink text="Mot de passe oublié ?" href='/auth/reset-password' linkLabel='Change-le' />
-        <AlternativeLink text="Pas encore de compte ?" href='/auth/sign-up' linkLabel='Crées-en un' />
+        <AlternativeLink text="Pas encore de compte ?" href={clientRoute.auth.signup.use()} linkLabel='Crées-en un' />
       </div>
     </div>
   )

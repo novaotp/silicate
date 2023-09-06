@@ -1,4 +1,6 @@
 
+import { type JWTPayload } from '../../frontend/node_modules/jose';
+
 interface ResponseProps {
   success: boolean;
   message: string;
@@ -25,7 +27,11 @@ export interface AuthResponseProps extends ResponseProps {
 }
 
 export interface TokenResponseProps extends ResponseProps {
-  payload: any;
+  payload: JWTPayload & {
+    payload: {
+      userID: number
+    }
+  };
 }
 
 export interface GradebookProps {

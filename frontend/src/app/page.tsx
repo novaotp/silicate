@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import LandingComponent from './page.components'
 
 export const metadata: Metadata = {
   title: 'Silicate'
@@ -6,6 +7,6 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <p>Hello</p>
+    <LandingComponent />
   )
 }

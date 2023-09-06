@@ -6,9 +6,10 @@ interface InputFieldProps {
   label: string;
   placeholder: string;
   name: string;
+  pattern?: string;
 }
 
-export default function InputField({ type, label, placeholder, name }: InputFieldProps) {
+export default function InputField({ type, label, placeholder, name, pattern }: InputFieldProps) {
   return (
     <div className={styles.field}>
       <label htmlFor={name}>{label}</label>
@@ -19,6 +20,7 @@ export default function InputField({ type, label, placeholder, name }: InputFiel
         name={name}
         autoComplete="off"
         required={true}
+        pattern={pattern}
       />
     </div>
   )

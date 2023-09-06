@@ -1,5 +1,5 @@
-import ClientRoute from "./client.route";
-import ServerRoute from "./server.route";
+import ClientRoute from "./client.route.js";
+import ServerRoute from "./server.route.js";
 
 /** Shorthand for {@link ClientRoute.object()} */
 export const clientRoute = ClientRoute.object();
