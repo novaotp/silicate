@@ -89,9 +89,9 @@ app.post('/auth/signup', async (req, res) => {
 app.post('/auth/verifytoken', async (req, res) => {
   const body = req.body;
 
-  console.log(body.jwt);
-
   const payload = await JWT.verify(body.jwt);
+
+  console.log(payload);
 
   return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 })

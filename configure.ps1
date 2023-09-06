@@ -5,4 +5,7 @@ npm i
 Set-Location ../../frontend
 npm i
 
+Set-Location ../shared
+npm i
+
 Set-Location ..
