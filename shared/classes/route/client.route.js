@@ -3,6 +3,9 @@ export default class ClientRoute {
   static object() {
     return {
       use: () => '/',
+      features: {
+        use: () => '/features'
+      },
       auth: {
         use: () => '/auth',
         login: {

@@ -1,12 +1,13 @@
 
 import { NextRequest, NextResponse } from "next/server"
-import { clientRoute } from "@shared/utils/route";
+import { clientRoute, serverRoute } from "@shared/classes/route";
+import { TokenResponseProps, VerifyTokenProps } from "@shared/interfaces";
 
 
 export default async function Middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith(clientRoute.auth.use())) {
     if (pathname === clientRoute.auth.use()) {
       return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
     }
@@ -20,19 +21,41 @@ export default async function Middleware(request: NextRequest) {
     }
 
     if (pathname === clientRoute.auth.login.use()) {
+      const jwt = request.cookies.get('id')?.value;
+      const tokenResponse = await verifyTokenController({ jwt: jwt })
 
-      await fetch(`${process.env.API_SERVER_URL}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          // TODO: make body
-        })
-      })
+      if (tokenResponse.success) {
+        return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.use());
+      }
+    }
+  }
 
+  if (pathname.startsWith(clientRoute.app.use())) {
+    const jwt = request.cookies.get('id')?.value;
+    const tokenResponse = await verifyTokenController({ jwt: jwt })
+
+    if (!tokenResponse.success) {
+      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
     }
 
+    if (pathname === clientRoute.app.use()) {
+      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.dashboard.use())
+    }
   }
-  
+}
+
+export async function verifyTokenController(data: VerifyTokenProps): Promise<TokenResponseProps> {
+  const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    cache: "no-store"
+  }
+  const response = await fetch(url, init);
+  const result: TokenResponseProps = await response.json();
+
+  return result;
 }

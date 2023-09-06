@@ -1,24 +1,23 @@
 'use client'
 
+// React / Next
 import { useRef, FormEvent } from 'react'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import { SignUpProps } from '@shared/interfaces';
-import { signUpController, verifyTokenController } from '../../../backend/controllers';
+// Internal
 import SilicateLogo from '@public/silicate_logo.svg'
-
+import { AuthResponseProps, SignUpProps, TokenResponseProps } from '@shared/interfaces';
+import { clientRoute } from '@shared/classes/route';
+import { newCookie, signUpController, verifyTokenController } from '../../../backend/controllers';
 import styles from './index.module.scss';
 import { InputField, SubmitButton, AlternativeLink } from '../shared';
-import { clientRoute } from '@shared/utils/route';
 
 export default function SignUpComponent() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  const handleFormSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-
+  const handleSignUp = async (): Promise<AuthResponseProps> => {
     const formData = new FormData(formRef.current!);
 
     const data: SignUpProps = {
@@ -28,16 +27,29 @@ export default function SignUpComponent() {
       password: formData.get('password') as string
     }
 
-    const response = await signUpController(data);
+    const response: AuthResponseProps = await signUpController(data);
 
-    if (!response.success) {
-      alert(response.message);
+    return response;
+  }
 
-    } else {
-      const logResponse = await verifyTokenController({ jwt: response.jwt });
+  const handleFormSubmit = async (event: FormEvent) => {
+    event.preventDefault();
 
-      console.log(logResponse.payload.payload.userID);
+    const authResponse: AuthResponseProps = await handleSignUp();
+
+    if (!authResponse.success) {
+      return alert(authResponse.message);
     }
+
+    const tokenResponse: TokenResponseProps = await verifyTokenController({ jwt: authResponse.jwt });
+
+    if (!tokenResponse.payload) {
+      router.push(clientRoute.auth.login.use());
+    }
+
+    await newCookie("id", authResponse.jwt!, tokenResponse.payload.exp! * 1000);
+
+    router.push(clientRoute.app.use());
   }
 
   return (
@@ -70,6 +82,7 @@ export default function SignUpComponent() {
             label="Email"
             placeholder="Entre ton email ici..."
             name="email"
+            pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/"
           />
           <InputField
             type="password"
@@ -79,7 +92,7 @@ export default function SignUpComponent() {
           />
           <SubmitButton label="Créer mon compte" />
         </form>
-        <AlternativeLink text="T'as déjà un compte ?" href='/auth/login' linkLabel='Connecte-toi' />
+        <AlternativeLink text="T'as déjà un compte ?" href={clientRoute.auth.login.use()} linkLabel='Connecte-toi' />
       </div>
     </div>
   )

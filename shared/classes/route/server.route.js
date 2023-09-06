@@ -12,7 +12,10 @@ export default class ServerRoute {
           use: () => '/auth/signup'
         },
         logout: {
-          use: () => 'auth/logout'
+          use: () => '/auth/logout'
+        },
+        verifyToken: {
+          use: () => '/auth/verifytoken'
         }
       },
       friends: {

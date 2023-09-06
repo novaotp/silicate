@@ -2,11 +2,11 @@
 
 // Next
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Internal
 import { SubjectProps } from "@shared/interfaces";
 import styles from './index.module.scss';
-import SuperClientRoute from "@/core/utils/route";
 
 interface RenderSubjectsProps {
   filter: string;
@@ -21,7 +21,7 @@ export default function RenderSubjects({ filter, subjects }: RenderSubjectsProps
           const { name } = subject;
 
           if (name.toLowerCase().includes(filter)) {
-            const href = SuperClientRoute.addToPath(name);
+            const href = `${usePathname()}/${name}`;
 
             return (
               <li key={name}>
