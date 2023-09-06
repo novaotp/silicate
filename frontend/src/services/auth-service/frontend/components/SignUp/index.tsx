@@ -82,7 +82,6 @@ export default function SignUpComponent() {
             label="Email"
             placeholder="Entre ton email ici..."
             name="email"
-            pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/"
           />
           <InputField
             type="password"
