@@ -90,13 +90,23 @@ app.post(serverRoute.auth.signup.use(), async (req, res) => {
 });
 
 app.post(serverRoute.auth.verifyToken.use(), async (req, res) => {
+  /** @type { import('../../shared/interfaces').VerifyTokenProps } */
   const body = req.body;
 
-  const payload = await JWT.verify(body.jwt);
+  try {
+    const payload = await JWT.verify(body.jwt);
 
-  console.log(payload);
+    console.log(payload);
 
-  return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
+    return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
+
+  } catch (err) {
+    if (err.code === 'ERR_JWS_INVALID') {
+      return res.status(401).json({ success: false, message: 'Invalid Token' })
+    }
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
 })
 
 app.post(serverRoute.friends.add.use(), async (req, res) => {
