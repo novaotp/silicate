@@ -21,8 +21,13 @@ export default async function Middleware(request: NextRequest) {
     }
 
     if (pathname === clientRoute.auth.login.use()) {
-      const jwt = request.cookies.get('id')?.value;
-      const tokenResponse = await verifyTokenController({ jwt: jwt })
+      const userID = request.cookies.get('id');
+
+      if (!userID) {
+        return NextResponse.next();
+      }
+
+      const tokenResponse = await verifyTokenController({ jwt: userID.value })
 
       if (tokenResponse.success) {
         return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.use());
@@ -31,8 +36,13 @@ export default async function Middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith(clientRoute.app.use())) {
-    const jwt = request.cookies.get('id')?.value;
-    const tokenResponse = await verifyTokenController({ jwt: jwt })
+    const userID = request.cookies.get('id');
+
+    if (!userID) {
+      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
+    }
+
+    const tokenResponse = await verifyTokenController({ jwt: userID.value })
 
     if (!tokenResponse.success) {
       return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
