@@ -54,6 +54,6 @@ CREATE TABLE IF NOT EXISTS public.note (
 	id				SERIAL			PRIMARY KEY NOT NULL,
 	user_id			INT				NOT NULL,
 	title			VARCHAR(50)		NOT NULL,
-	content			VARCHAR(50)		NOT NULL,
+	content			TEXT			NOT NULL,
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id)
 );

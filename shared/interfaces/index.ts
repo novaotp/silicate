@@ -27,7 +27,7 @@ export interface AuthResponseProps extends ResponseProps {
 }
 
 export interface TokenResponseProps extends ResponseProps {
-  payload: JWTPayload & {
+  payload?: JWTPayload & {
     payload: {
       userID: number
     }
