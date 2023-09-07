@@ -21,9 +21,21 @@ async function verifyController(data: { jwt: string }) {
 }
 
 export async function addNoteController(data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps> {
+  const cookie = cookies().get('id');
+
+  if (!cookie) {
+    return { success: false, message: "No cookie <id> found" }
+  }
+
+  const tokenResponse = await verifyController({ jwt: cookie.value });
+
+  if (!tokenResponse.success) {
+    return { success: tokenResponse.success, message: tokenResponse.message }
+  }
+
   const userData: AddNoteProps = {
     ...data,
-    userID: (await verifyController({ jwt: cookies().get('id')!.value })).payload.payload.userID
+    userID: tokenResponse.payload!.payload.userID
   }
 
   const url = process.env.API_SERVER_URL + serverRoute.notes.add.use();
