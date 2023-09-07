@@ -34,6 +34,9 @@ export default class ClientRoute {
         },
         notes: {
           use: () => '/app/notes',
+          add: {
+            use: () => '/app/notes/add'
+          },
           note: (id) => ({
             use: () => `/app/notes/${id}`
           })
@@ -42,7 +45,6 @@ export default class ClientRoute {
     };
   }
 
-  static parent() {};
   /**
    * Returns the parent link
    * @param {string} href 

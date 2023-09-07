@@ -1,7 +1,7 @@
 
 import { type JWTPayload } from '../../frontend/node_modules/jose';
 
-interface ResponseProps {
+export interface ResponseProps {
   success: boolean;
   message: string;
 }
@@ -45,6 +45,22 @@ export interface SubjectProps {
 export interface GradeProps {
   title: string;
   value: string;
+}
+
+export interface NoteProps {
+  title: string;
+  content: string;
+}
+
+export interface AddNoteProps {
+  userID: number;
+  title: string;
+  content: string;
+}
+
+export interface RemoveNoteProps {
+  id: number;
+  userID: number;
 }
 
 export interface PayloadProps {

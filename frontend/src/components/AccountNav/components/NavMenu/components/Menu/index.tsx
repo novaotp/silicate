@@ -43,8 +43,8 @@ function getNavMenuLinks(): NavMenuLinkProps[] {
       ]
     },
     {
-      href: '/account/dashboard',
-      label: 'Dashboard',
+      href: '/app/notes',
+      label: 'Notes',
     },
   ]
 

@@ -1,6 +1,9 @@
 'use client'
 
+// React
 import { useState } from "react";
+
+// Internal
 import styles from './index.module.scss';
 import TopNavBar from "./components/TopNavBar";
 import NavMenu from "./components/NavMenu";

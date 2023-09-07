@@ -26,6 +26,19 @@ export default class ServerRoute {
         remove: {
           use: () => '/friends/remove'
         }
+      },
+      notes: {
+        use: () => '/notes',
+        add: {
+          use: () => '/notes/add'
+        },
+        remove: {
+          use: () => '/notes/remove'
+        },
+        /** @param {number} id */
+        edit: (id) => ({
+          use: () => `/notes/edit/:${id}`
+        })
       }
     };
   }

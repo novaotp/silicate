@@ -147,6 +147,52 @@ app.post(serverRoute.friends.remove.use(), async (req, res) => {
   }
 });
 
+app.post(serverRoute.notes.add.use(), async (req, res) => {
+  try {
+    const client = await pool.connect();
+
+    /** @type { import('../../shared/interfaces').AddNoteProps } */
+    const body = req.body;
+
+    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content) VALUES ($1, $2, $3)';
+    const newNoteValues = [body.userID, body.title, body.content];
+
+    await client.query(newNoteQuery, newNoteValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Added note successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
+app.post(serverRoute.notes.remove.use(), async (req, res) => {
+  try {
+    const client = await pool.connect();
+
+    /** @type { import('../../shared/interfaces').RemoveNoteProps } */
+    const body = req.body;
+
+    const deleteNoteQuery = 'DELETE FROM public.note WHERE id = %1 AND user_id = %2';
+    const deleteNoteValues = [body.id, body.userID];
+
+    await client.query(deleteNoteQuery, deleteNoteValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Removed note successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
 app.listen(process.env.PORT, () => {
   console.log('API Listening on port ' + process.env.PORT);
 });
