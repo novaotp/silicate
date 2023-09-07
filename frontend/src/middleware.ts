@@ -1,9 +1,15 @@
-
+/* 
 import { NextRequest, NextResponse } from "next/server"
 import { clientRoute, serverRoute } from "@shared/classes/route";
-import { TokenResponseProps, VerifyTokenProps } from "@shared/interfaces";
+import { TokenResponseProps, VerifyTokenProps } from "@shared/interfaces"; */
 
+import { NextRequest } from "next/server";
 
+export default async function middleware(request: NextRequest) {
+
+}
+
+/*
 export default async function Middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -68,4 +74,4 @@ export async function verifyTokenController(data: VerifyTokenProps): Promise<Tok
   const result: TokenResponseProps = await response.json();
 
   return result;
-}
+} */
