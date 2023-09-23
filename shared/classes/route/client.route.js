@@ -34,12 +34,12 @@ export default class ClientRoute {
         },
         notes: {
           use: () => '/app/notes',
-          add: {
-            use: () => '/app/notes/add'
+          note: {
+            use: () => '/app/note',
+            edit: (title) => ({
+              use: () => `/app/note/${title}`
+            })
           },
-          note: (id) => ({
-            use: () => `/app/notes/${id}`
-          })
         }
       }
     };
@@ -47,7 +47,7 @@ export default class ClientRoute {
 
   /**
    * Returns the parent link
-   * @param {string} href 
+   * @param {string} href
    * @returns {string} The parent link
    */
   static parent(href) {

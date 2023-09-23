@@ -47,9 +47,14 @@ export interface GradeProps {
   value: string;
 }
 
-export interface NoteProps {
+interface Note {
   title: string;
   content: string;
+}
+
+export interface NoteProps extends Note {
+  /** The note's id in the database */
+  id: number;
 }
 
 export interface AddNoteProps {
@@ -58,9 +63,26 @@ export interface AddNoteProps {
   content: string;
 }
 
+export interface EditNoteProps extends NoteProps {
+  userID: number;
+}
+export interface ReadNoteProps {
+  id: number;
+  userID: number;
+}
+
+export interface ReadNoteResponseProps extends ResponseProps {
+  note:
+}
+
 export interface RemoveNoteProps {
   id: number;
   userID: number;
+}
+
+export interface NotesResponseProps extends ResponseProps {
+  /** This is a stringified array, must use {@link JSON.parse} to use. */
+  notes: string;
 }
 
 export interface PayloadProps {

@@ -35,10 +35,12 @@ export default class ServerRoute {
         remove: {
           use: () => '/notes/remove'
         },
-        /** @param {number} id */
-        edit: (id) => ({
-          use: () => `/notes/edit/:${id}`
-        })
+        edit: {
+          use: () => `/notes/edit`
+        },
+        read: {
+          use: () => `/notes/read`
+        }
       }
     };
   }
