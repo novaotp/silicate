@@ -1,7 +1,27 @@
+$button-width: 40px;
+$navbar-height: 60px;
+
 .navBar {
   position: relative;
   top: 0;
   left: 0;
-  height: 60px;
-  background-color: blue;
+  height: $navbar-height;
+  display: flex;
+  align-items: center;
+  border-bottom: solid 1px black;
+}
+
+.button {
+  position: relative;
+  width: $button-width;
+  aspect-ratio: 1;
+  left: calc( ( $navbar-height - $button-width ) / 2 );
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.button svg {
+  position: relative;
+  font-size: 28px;
 }

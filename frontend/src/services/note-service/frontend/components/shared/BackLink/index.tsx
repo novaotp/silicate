@@ -1,3 +1,4 @@
+
 'use client';
 
 // MUI Icons
@@ -11,16 +12,28 @@ import { usePathname } from 'next/navigation';
 import styles from './index.module.scss';
 import ClientRoute from '@shared/classes/route/client.route';
 
+/** The {@link BackLink}'s props. */
 interface BackLinkProps {
+  /** The text of the back link */
   title: string;
+  /** An optional hyperlink target. Redirects to parent if not provided. */
+  href?: string;
 }
 
-export default function BackLink({ title }: BackLinkProps) {
-  const href = ClientRoute.parent(usePathname());
+/** Returns a custom element for returning to parent or to another target. */
+const BackLink = ({ title, href }: BackLinkProps): JSX.Element => {
+  const hyperLink = href !== undefined ? href : ClientRoute.parent(usePathname());
 
   return (
     <div className={styles.wrapper}>
-      <Link className={styles.link} href={href}><WestIcon />&nbsp;&nbsp;&nbsp;{title}</Link>
+      <Link
+        className={styles.link}
+        href={hyperLink}
+      >
+        <WestIcon />&nbsp;&nbsp;&nbsp;{title}
+      </Link>
     </div>
   )
 }
+
+export default BackLink;

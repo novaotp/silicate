@@ -1,22 +1,33 @@
-'use client'
 
+'use client';
+
+// Next
 import Link from "next/link";
+
+// Internal
 import styles from './index.module.scss';
 
+/** The {@link AlternativeLink}'s props. */
 interface AlternativeLinkProps {
+  /** The displayed text. */
   text: string;
+  /** The href of the hyperlink. */
   href: string;
-  linkLabel: string;
+  /** The text of the hyperlink. */
+  label: string;
 }
 
-export default function AlternativeLink({ text, href, linkLabel }: AlternativeLinkProps) {
+/** Returns a text with a redirecting hyperlink. */
+const AlternativeLink = ({ text, href, label }: AlternativeLinkProps): JSX.Element => {
   return (
     <p className={styles.text}>
       {text}
       &nbsp;
       <Link className={styles.link} href={href}>
-        {linkLabel}
+        {label}
       </Link>
     </p>
   )
 }
+
+export default AlternativeLink;

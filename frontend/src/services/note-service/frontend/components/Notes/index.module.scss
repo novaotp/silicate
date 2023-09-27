@@ -11,20 +11,4 @@ $add-button-height: 50px;
     width: 100%;
     height: calc( 100% - $add-button-height );
   }
-
-  .add {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: $add-button-height;
-    background-color: blue;
-    border: none;
-    outline: transparent;
-    text-decoration: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 8px;
-  }
 }

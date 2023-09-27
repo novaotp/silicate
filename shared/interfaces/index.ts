@@ -1,73 +1,27 @@
 
-import { type JWTPayload } from '../../frontend/node_modules/jose';
+import { ResponseProps } from './common';
+import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from './auth';
+import { FriendRequestProps } from './friend';
+import { GradeProps, GradebookProps, SubjectProps } from './gradebook';
+import { AddNoteProps, EditNoteProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
 
-export interface ResponseProps {
-  success: boolean;
-  message: string;
+export {
+  AuthResponseProps,
+  LoginProps,
+  SignUpProps,
+  TokenResponseProps,
+  VerifyTokenProps,
+  FriendRequestProps,
+  GradeProps,
+  GradebookProps,
+  SubjectProps,
+  AddNoteProps,
+  EditNoteProps,
+  NoteProps,
+  NoteResponseProps,
+  NotesResponseProps,
+  ReadNoteProps,
+  ReadNoteResponseProps,
+  RemoveNoteProps
 }
-
-export interface SignUpProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginProps {
-  email: string;
-  password: string;
-}
-
-export interface VerifyTokenProps {
-  jwt: string | undefined;
-}
-
-export interface AuthResponseProps extends ResponseProps {
-  jwt?: string;
-}
-
-export interface TokenResponseProps extends ResponseProps {
-  payload?: JWTPayload & {
-    payload: {
-      userID: number
-    }
-  };
-}
-
-export interface GradebookProps {
-  name: string;
-}
-
-export interface SubjectProps {
-  name: string;
-}
-
-export interface GradeProps {
-  title: string;
-  value: string;
-}
-
-export interface NoteProps {
-  title: string;
-  content: string;
-}
-
-export interface AddNoteProps {
-  userID: number;
-  title: string;
-  content: string;
-}
-
-export interface RemoveNoteProps {
-  id: number;
-  userID: number;
-}
-
-export interface PayloadProps {
-  id: string;
-}
-
-export interface FriendRequestProps {
-  firstUserID: number;
-  secondUserID: number;
-}
+export default ResponseProps;

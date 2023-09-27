@@ -1,6 +1,12 @@
 
+// Cors + Express
+import cors from 'cors';
 import express from 'express';
+
+// .env
 import 'dotenv/config';
+
+// Internal
 import { DBPool } from './databases/postgres/index.js';
 import JWT from '../../shared/classes/JWT.js';
 import { serverRoute } from '../../shared/classes/route/index.js';
@@ -9,6 +15,9 @@ const pool = new DBPool();
 
 const app = express();
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,7 +32,7 @@ app.post(serverRoute.auth.login.use(), async (req, res) => {
     const userValues = [body.email];
 
     const { rows } = await client.query(userQuery, userValues);
-    
+
     if (rows.length === 0) {
       return res.status(400).json({ success: false, message: `User with email "${body.email}" does not exist` });
     }
@@ -50,7 +59,7 @@ app.post(serverRoute.auth.login.use(), async (req, res) => {
 app.post(serverRoute.auth.signup.use(), async (req, res) => {
   try {
     const client = await pool.connect();
-  
+
     /** @type { import('../../shared/interfaces').SignUpProps } */
     const body = req.body;
 
@@ -60,7 +69,7 @@ app.post(serverRoute.auth.signup.use(), async (req, res) => {
     let queryResponse = await client.query(userExistsQuery, email);
 
     const userExists = queryResponse.rows[0].exists;
-    
+
     if (userExists) {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
@@ -75,7 +84,7 @@ app.post(serverRoute.auth.signup.use(), async (req, res) => {
     queryResponse = await client.query(getTokenQuery, email);
 
     const userID = queryResponse.rows[0].id;
-    
+
     await client.release(true);
 
     const jwt = await JWT.sign({ userID: userID });
@@ -95,8 +104,6 @@ app.post(serverRoute.auth.verifyToken.use(), async (req, res) => {
 
   try {
     const payload = await JWT.verify(body.jwt);
-
-    console.log(payload);
 
     return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 
@@ -159,21 +166,21 @@ app.post(serverRoute.friends.remove.use(), async (req, res) => {
   }
 });
 
-app.post(serverRoute.notes.add.use(), async (req, res) => {
+app.post(serverRoute.notes.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 
-    /** @type { import('../../shared/interfaces').AddNoteProps } */
+    /** @type {{ userID: number }} */
     const body = req.body;
 
-    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content) VALUES ($1, $2, $3)';
-    const newNoteValues = [body.userID, body.title, body.content];
+    const fetchNotesQuery = 'SELECT * FROM public.note WHERE user_id = $1;';
+    const fetchNotesValues = [body.userID];
 
-    await client.query(newNoteQuery, newNoteValues);
+    const { rows } = await client.query(fetchNotesQuery, fetchNotesValues);
 
     await client.release(true);
 
-    return res.status(200).json({ success: true, message: 'Added note successfully' });
+    return res.status(200).json({ success: true, message: 'Fetched notes successfully', notes: JSON.stringify(rows) });
 
   } catch (err) {
     console.error(err);
@@ -182,7 +189,81 @@ app.post(serverRoute.notes.add.use(), async (req, res) => {
   }
 });
 
-app.post(serverRoute.notes.remove.use(), async (req, res) => {
+app.post(serverRoute.notes.read.use(), async (req, res) => {
+  try {
+    const client = await pool.connect();
+
+    /** @type {import('../../shared/interfaces').ReadNoteProps} */
+    const body = req.body;
+
+    const fetchNoteQuery = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
+    const fetchNoteValues = [body.id, body.userID];
+
+    const { rows } = await client.query(fetchNoteQuery, fetchNoteValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Fetched note successfully', note: JSON.stringify(rows[0]) });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
+app.post(serverRoute.notes.update.use(), async (req, res) => {
+  try {
+    const client = await pool.connect();
+
+    /** @type {import('../../shared/interfaces').EditNoteProps} */
+    const body = req.body;
+
+    const now = Date.now();
+    const updateNoteQuery = 'UPDATE public.note SET title = $1, content = $2, updated_at = $3 WHERE id = $4;';
+    const updateNoteValues = [body.title, body.content, now, body.id];
+
+    await client.query(updateNoteQuery, updateNoteValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Updated note successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
+app.post(serverRoute.notes.add.use(), async (req, res) => {
+  try {
+    console.log("ENDPOINT");
+    const client = await pool.connect();
+
+    /** @type { import('../../shared/interfaces').AddNoteProps } */
+    const body = req.body;
+
+    console.log(body)
+
+    const now = Date.now();
+    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+    const newNoteValues = [body.userID, body.title, body.content, now, now];
+
+    const { rows } = await client.query(newNoteQuery, newNoteValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Added note successfully', noteId: rows[0].id });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
+app.post(serverRoute.notes.delete.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 

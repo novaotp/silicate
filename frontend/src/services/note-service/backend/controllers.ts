@@ -1,54 +1,45 @@
+
 'use server';
 
 import { serverRoute } from "@shared/classes/route";
-import { AddNoteProps, AuthResponseProps, ResponseProps, TokenResponseProps } from "@shared/interfaces";
-import { cookies } from "next/headers";
+import { AddNoteProps, EditNoteProps, NoteProps, ResponseProps } from "@shared/interfaces";
+import useVerifyToken, { type UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
+import Requests from "@core/requests";
 
-async function verifyController(data: { jwt: string }) {
-  const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
-  const init: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-    cache: "no-store"
-  }
-  const response = await fetch(url, init);
-  const result: TokenResponseProps = await response.json();
+const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps & { noteId?: number }> => {
+  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
 
-  return result;
-}
-
-export async function addNoteController(data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps> {
-  const cookie = cookies().get('id');
-
-  if (!cookie) {
-    return { success: false, message: "No cookie <id> found" }
-  }
-
-  const tokenResponse = await verifyController({ jwt: cookie.value });
-
-  if (!tokenResponse.success) {
-    return { success: tokenResponse.success, message: tokenResponse.message }
+  if (!success) {
+    return result as ResponseProps;
   }
 
   const userData: AddNoteProps = {
     ...data,
-    userID: tokenResponse.payload!.payload.userID
+    userID: result.payload!.payload.userID
   }
 
   const url = process.env.API_SERVER_URL + serverRoute.notes.add.use();
-  const init: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-    cache: "no-store"
-  }
-  const response = await fetch(url, init);
-  const result: ResponseProps = await response.json();
-
-  return result;
+  
+  const response = await Requests.noStorePost(url, userData);
+  return await response.json();
 }
+
+const updateNoteController = async (data: Pick<EditNoteProps, 'id' | "title" | "content">): Promise<ResponseProps> => {
+  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
+
+  if (!success) {
+    return result as ResponseProps;
+  }
+
+  const userData: Omit<EditNoteProps, "created_at" | "updated_at"> = {
+    ...data,
+    userID: result.payload!.payload.userID
+  }
+
+  const url = process.env.API_SERVER_URL + serverRoute.notes.update.use();
+
+  const response = await Requests.noStorePost(url, userData);
+  return await response.json();
+}
+
+export { addNoteController, updateNoteController };
