@@ -1,19 +1,21 @@
-import verifyTokenController from "@core/controllers/verifyToken";
+
+// Next
+import { Metadata } from "next";
+
+// Internal
+import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
 import { NoteComponent } from "@/services/note-service";
 import { serverRoute } from "@shared/classes/route";
-import { NoteProps, NotesResponseProps, TokenResponseProps } from "@shared/interfaces";
-import { Metadata } from "next";
-import { cookies } from "next/headers";
-import VerifyToken from "@core/controllers/verifyToken";
+import { NoteProps, NotesResponseProps } from "@shared/interfaces";
 
 export const metadata: Metadata = {
   title: "My Notes - Silicate"
 }
 
 const fetchNotes = async (): Promise<NoteProps[]> => {
-  const tokenResponse: TokenResponseProps = await VerifyToken.api({ jwt: cookies().get('id')?.value });
+  const { success, result: tokenResponse }: UseVerifyTokenReturnProps = await useVerifyToken();
 
-  if (!tokenResponse.success) {
+  if (!success) {
     return [];
   }
 

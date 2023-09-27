@@ -1,13 +1,13 @@
+
 // Next
-import {Metadata} from "next";
-import {cookies, headers} from "next/headers";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 // Internal
-import VerifyToken from "@core/controllers/verifyToken";
-import {clientRoute, serverRoute} from "@shared/classes/route";
-import {NoteProps, NotesResponseProps, TokenResponseProps} from "@shared/interfaces";
+import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
+import { clientRoute } from "@shared/classes/route";
 import EditComponent from "@/services/note-service/frontend/components/Edit";
-import {redirect} from "next/navigation";
 
 function getId(): string {
   const headersList = headers();
@@ -19,44 +19,16 @@ export const metadata: Metadata = {
   title: `Editing note - Silicate`
 }
 
-const fetchNote = async (): Promise<NoteProps | undefined> => {
-  const tokenResponse: TokenResponseProps = await VerifyToken.api({ jwt: cookies().get('id')?.value });
-
-  if (!tokenResponse.success) {
-    return undefined;
-  }
-
-  const id = getId();
-  const url = process.env.API_SERVER_URL + serverRoute.notes.read.use();
-  const init: RequestInit = {
-    method: "POST",
-    body: JSON.stringify({ id: id, userID: tokenResponse.payload!.payload.userID }),
-    headers: {
-      'content-type': 'application/json'
-    }
-  }
-
-  const response = await fetch(url, init);
-  const result: NotesResponseProps = await response.json();
-  const note: { user_id: number } & NoteProps = JSON.parse(result.notes);
-
-  const processedNote: NoteProps = {
-    id: note.id,
-    title: note.title,
-    content: note.content
-  };
-
-  return processedNote;
-}
-
 export default async function Page() {
-  const note: NoteProps | undefined = await fetchNote();
+  const { success, result: tokenResponse }: UseVerifyTokenReturnProps = await useVerifyToken();
 
-  if (!note) {
+  if (!success) {
     redirect(clientRoute.app.notes.use());
   }
 
+  const userID = tokenResponse.payload!.payload.userID;
+
   return (
-    <EditComponent note={note} />
+    <EditComponent noteId={getId()} userID={userID} />
   )
 }

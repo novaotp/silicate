@@ -1,30 +1,39 @@
-'use client'
 
-import { clientRoute } from "@shared/classes/route";
-import { NoteProps } from "@shared/interfaces";
+'use client';
+
+// Next
 import Link from "next/link";
 
+// Internal
+import styles from './index.module.scss';
+import { clientRoute } from "@shared/classes/route";
+import { NoteProps } from "@shared/interfaces";
+
+/** The {@link RenderNotes}'s props. */
 interface RenderNotesProps {
-  notes: NoteProps[]
+  /** An array of the user's notes. */
+  notes: NoteProps[];
 }
 
-export default function RenderNotes({ notes }: RenderNotesProps) {
+/** Returns an unordered list of the notes. */
+const RenderNotes = ({ notes }: RenderNotesProps): JSX.Element => {
   return (
-    <div>
+    <ul className={styles.wrapper}>
       {
         notes.map(note => {
           const href = clientRoute.app.notes.note.edit(note.id).use();
 
           return (
-            <Link
-              key={note.id}
-              href={href}
-            >
-              {note.id} | {note.title}
-            </Link>
+            <li key={note.id} className={styles.note}>
+              <Link className={styles.link} href={href}>
+                {note.title}
+              </Link>
+            </li>
           )
         })
       }
-    </div>
+    </ul>
   )
 }
+
+export default RenderNotes;

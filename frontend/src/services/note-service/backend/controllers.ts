@@ -1,67 +1,45 @@
+
 'use server';
 
-import {serverRoute} from "@shared/classes/route";
-import {AddNoteProps, EditNoteProps, NoteProps, ResponseProps, TokenResponseProps} from "@shared/interfaces";
-import VerifyToken from "@core/controllers/verifyToken";
+import { serverRoute } from "@shared/classes/route";
+import { AddNoteProps, EditNoteProps, NoteProps, ResponseProps } from "@shared/interfaces";
+import useVerifyToken, { type UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
+import Requests from "@core/requests";
 
-async function newNote(userData: AddNoteProps): Promise<ResponseProps & { noteId?: number }> {
-  const url = process.env.API_SERVER_URL + serverRoute.notes.add.use();
-  const init: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-    cache: "no-store"
-  }
-  const response = await fetch(url, init);
-  return await response.json();
-}
+const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps & { noteId?: number }> => {
+  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
 
-export async function addNoteController(
-  data: Pick<AddNoteProps, 'title' | 'content'>
-): Promise<ResponseProps & {
-  noteId?: number
-}> {
-  const validation: TokenResponseProps = await VerifyToken.validation();
-
-  if (!validation.success) {
-    return validation;
+  if (!success) {
+    return result as ResponseProps;
   }
 
   const userData: AddNoteProps = {
     ...data,
-    userID: validation.payload!.payload.userID
+    userID: result.payload!.payload.userID
   }
 
-  return await newNote(userData);
-}
-
-async function updateNote(userData: EditNoteProps): Promise<ResponseProps> {
-  const url = process.env.API_SERVER_URL + serverRoute.notes.edit.use();
-  const init: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-    cache: "no-store"
-  }
-  const response = await fetch(url, init);
+  const url = process.env.API_SERVER_URL + serverRoute.notes.add.use();
+  
+  const response = await Requests.noStorePost(url, userData);
   return await response.json();
 }
 
-export async function updateNoteController(data: NoteProps): Promise<ResponseProps> {
-  const validation: TokenResponseProps = await VerifyToken.validation();
+const updateNoteController = async (data: Pick<EditNoteProps, 'id' | "title" | "content">): Promise<ResponseProps> => {
+  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
 
-  if (!validation.success) {
-    return validation;
+  if (!success) {
+    return result as ResponseProps;
   }
 
-  const userData: EditNoteProps = {
+  const userData: Omit<EditNoteProps, "created_at" | "updated_at"> = {
     ...data,
-    userID: validation.payload!.payload.userID
+    userID: result.payload!.payload.userID
   }
 
-  return await updateNote(userData);
+  const url = process.env.API_SERVER_URL + serverRoute.notes.update.use();
+
+  const response = await Requests.noStorePost(url, userData);
+  return await response.json();
 }
+
+export { addNoteController, updateNoteController };

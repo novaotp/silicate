@@ -1,13 +1,17 @@
+
+// Internal
 import { NoteProps } from "@shared/interfaces"
 import styles from './index.module.scss';
-import NewNote from "./components/NewNote";
-import RenderNotes from "@/services/note-service/frontend/components/Notes/components/RenderNotes";
+import { NewNote, RenderNotes } from "./components";
 
+/** The {@link NoteComponent}'s props. */
 interface NoteComponentProps {
+  /** An array of the user's notes. */
   notes: NoteProps[];
 }
 
-export default function NoteComponent({ notes }: NoteComponentProps) {
+/** Returns the main component of the notes page. */
+const NoteComponent = ({ notes }: NoteComponentProps): JSX.Element => {
   return (
     <div className={styles.window}>
       <div className={styles.view}>
@@ -18,3 +22,5 @@ export default function NoteComponent({ notes }: NoteComponentProps) {
     </div>
   )
 }
+
+export default NoteComponent;

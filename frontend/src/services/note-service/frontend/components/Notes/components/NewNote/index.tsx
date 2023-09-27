@@ -1,12 +1,20 @@
+
 'use client';
 
-import styles from "./index.module.scss";
-import {poppins} from "@core/fonts";
-import {addNoteController} from "@/services/note-service/backend/controllers";
-import {useRouter} from "next/navigation";
-import {clientRoute} from "@shared/classes/route";
+// Next
+import { useRouter } from "next/navigation";
 
-export default function NewNote() {
+// Internal
+import styles from "./index.module.scss";
+import { poppins } from "@core/fonts";
+import { addNoteController } from "@/services/note-service/backend/controllers";
+import { clientRoute } from "@shared/classes/route";
+
+/**
+ * Returns a custom button for adding a new note
+ * and redirecting to the editing page of said-note.
+ */
+const NewNote = () => {
   const router = useRouter();
 
   const handleOnClick = async () => {
@@ -26,3 +34,5 @@ export default function NewNote() {
     </button>
   )
 }
+
+export default NewNote;

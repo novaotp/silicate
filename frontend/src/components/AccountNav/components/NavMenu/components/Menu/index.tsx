@@ -1,6 +1,11 @@
+
+"use client";
+
 import NavMenuLinkProps from '@/components/AccountNav/interfaces';
 import RecursiveLink from './RecursiveLinks';
 import styles from './index.module.scss'
+import Disconnect from '../Disconnect';
+import { clientRoute } from '@shared/classes/route';
 
 interface MenuProps {
   closeNav: () => void;
@@ -9,41 +14,15 @@ interface MenuProps {
 function getNavMenuLinks(): NavMenuLinkProps[] {
   const links: NavMenuLinkProps[] = [
     {
-      href: '/account/dashboard',
+      href: clientRoute.app.dashboard.use(),
       label: 'Dashboard',
     },
     {
-      href: '/account/gradebooks',
+      href: clientRoute.app.gradebooks.use(),
       label: 'Gradebooks',
-      subLinks: [
-        {
-          href: '/account/dashboard',
-          label: 'Dashboard',
-        },
-        {
-          href: '/account/gradebooks',
-          label: 'Gradebooks',
-          subLinks: [
-            {
-              href: '/account/gradebooks',
-              label: 'Gradebooks',
-              subLinks: [
-                {
-                  href: '/account/dashboard',
-                  label: 'Dashboard',
-                },
-                {
-                  href: '/account/gradebooks',
-                  label: 'Gradebooks'
-                }
-              ]
-            },
-          ]
-        }
-      ]
     },
     {
-      href: '/app/notes',
+      href: clientRoute.app.notes.use(),
       label: 'Notes',
     },
   ]
@@ -51,7 +30,8 @@ function getNavMenuLinks(): NavMenuLinkProps[] {
   return links;
 }
 
-export default function Menu({ closeNav }: MenuProps) {
+/** Returns a custom menu for the account's navigation. */
+const Menu = ({ closeNav }: MenuProps) => {
   const links = getNavMenuLinks();
 
   return (
@@ -61,6 +41,9 @@ export default function Menu({ closeNav }: MenuProps) {
           links.map((link: NavMenuLinkProps) => <RecursiveLink key={link.href} link={link} closeNav={closeNav} />)
         }
       </ul>
+      <Disconnect />
     </menu>
   )
 }
+
+export default Menu;

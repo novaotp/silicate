@@ -8,7 +8,7 @@
   flex-direction: column;
   background-color: rgb(255, 213, 220);
 
-  .welcomeWrapper {
+  .welcome {
     position: relative;
     width: 100%;
     height: 30%;
@@ -18,7 +18,7 @@
     flex-direction: column;
   }
   
-  .formWrapper {
+  .form {
     position: relative;
     width: 100%;
     height: 70%;
@@ -28,23 +28,5 @@
     flex-direction: column;
     background-color: white;
     box-shadow: 0 0 4px rgb(117, 117, 117);
-    
-    .form {
-      position: relative;
-      width: 80%;
-      height: auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-  
-      div:first-of-type {
-        margin-top: 0;
-      }
-      
-      div:last-of-type {
-        margin-bottom: 0;
-      }
-    }
   }
 }

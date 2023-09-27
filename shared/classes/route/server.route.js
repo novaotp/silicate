@@ -28,16 +28,21 @@ export default class ServerRoute {
         }
       },
       notes: {
+        /** Read all notes */
         use: () => '/notes',
+        /** Add a note and returns the id */
         add: {
           use: () => '/notes/add'
         },
-        remove: {
-          use: () => '/notes/remove'
+        /** Delete a note */
+        delete: {
+          use: () => '/notes/delete'
         },
-        edit: {
-          use: () => `/notes/edit`
+        /** Update a note */
+        update: {
+          use: () => `/notes/update`
         },
+        /** Returns a specific note's data */
         read: {
           use: () => `/notes/read`
         }

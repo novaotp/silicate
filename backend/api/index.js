@@ -1,6 +1,12 @@
 
+// Cors + Express
+import cors from 'cors';
 import express from 'express';
+
+// .env
 import 'dotenv/config';
+
+// Internal
 import { DBPool } from './databases/postgres/index.js';
 import JWT from '../../shared/classes/JWT.js';
 import { serverRoute } from '../../shared/classes/route/index.js';
@@ -9,6 +15,9 @@ const pool = new DBPool();
 
 const app = express();
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -180,7 +189,7 @@ app.post(serverRoute.notes.use(), async (req, res) => {
   }
 });
 
-app.post(`${serverRoute.notes.use()}/read`, async (req, res) => {
+app.post(serverRoute.notes.read.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 
@@ -203,15 +212,16 @@ app.post(`${serverRoute.notes.use()}/read`, async (req, res) => {
   }
 });
 
-app.post(serverRoute.notes.edit.use(), async (req, res) => {
+app.post(serverRoute.notes.update.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 
     /** @type {import('../../shared/interfaces').EditNoteProps} */
     const body = req.body;
 
-    const updateNoteQuery = 'UPDATE public.note SET title = $1, content = $2 WHERE id = $3;';
-    const updateNoteValues = [body.title, body.content, body.id];
+    const now = Date.now();
+    const updateNoteQuery = 'UPDATE public.note SET title = $1, content = $2, updated_at = $3 WHERE id = $4;';
+    const updateNoteValues = [body.title, body.content, now, body.id];
 
     await client.query(updateNoteQuery, updateNoteValues);
 
@@ -236,8 +246,9 @@ app.post(serverRoute.notes.add.use(), async (req, res) => {
 
     console.log(body)
 
-    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content) VALUES ($1, $2, $3) RETURNING id';
-    const newNoteValues = [body.userID, body.title, body.content];
+    const now = Date.now();
+    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+    const newNoteValues = [body.userID, body.title, body.content, now, now];
 
     const { rows } = await client.query(newNoteQuery, newNoteValues);
 
@@ -252,7 +263,7 @@ app.post(serverRoute.notes.add.use(), async (req, res) => {
   }
 });
 
-app.post(serverRoute.notes.remove.use(), async (req, res) => {
+app.post(serverRoute.notes.delete.use(), async (req, res) => {
   try {
     const client = await pool.connect();
 

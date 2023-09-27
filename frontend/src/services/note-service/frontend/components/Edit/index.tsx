@@ -1,50 +1,73 @@
+
 'use client';
 
-// React
-import {type FormEvent, useState} from 'react';
-
 // Internal
-import BackLink from "../shared/BackLink";
+
+/// Styles and fonts
 import styles from './index.module.scss';
-import {AddNoteProps, EditNoteProps, NoteProps, ResponseProps} from '@shared/interfaces';
-import {addNoteController, updateNoteController} from '@/services/note-service/backend/controllers';
+import { poppins } from '@/core/fonts';
 
-interface EditComponentProps {
-  note: NoteProps;
-}
+/// Components
+import BackLink from "../shared/BackLink";
 
-export default function EditComponent({ note: { id, title: fetchedTitle, content: fetchedContent } }: EditComponentProps) {
-  const [title, setTitle] = useState<string>(fetchedTitle);
-  const [content, setContent] = useState<string>(fetchedContent);
+/// Functions and objects
+import useNote from './hooks/useNote';
+import { clientRoute } from '@shared/classes/route';
 
-  const updateNote = async (): Promise<ResponseProps> => {
-    const data: Omit<EditNoteProps, 'userID'> = {
-      id: id,
-      title: title,
-      content: content
-    }
+/// Interfaces
+import { EditComponentProps } from './interfaces';
+import Actions from './classes/actions';
 
-    return await updateNoteController(data);
-  }
+/** Returns the main component of the editing note page. */
+const EditComponent = ({ noteId, userID }: EditComponentProps): JSX.Element => {
+  const { note: noteData, updateNoteField, isError, isLoading } = useNote(noteId, userID);
 
-  const handleFormSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  if (isError) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
 
-    const response: ResponseProps = await updateNote();
-
-    if (response.success) {
-      alert("Updated successfully")
-    }
-  }
+  /** The defined note. */
+  const note = noteData!;
+  const actions = new Actions(note, updateNoteField);
 
   return (
     <div className={styles.window}>
-      <BackLink title="Mes Notes" />
-      <form method="POST" onSubmit={handleFormSubmit}>
-        <input type="text" name="title" value={title} onChange={e => setTitle(e.currentTarget.value)} placeholder="My Note's title..." />
-        <textarea name="content" value={content} onChange={e => setContent(e.currentTarget.value)} placeholder="My Note's content..." />
-        <button type="submit">Save</button>
+      <BackLink title="Mes Notes" href={clientRoute.app.notes.use()} />
+      <form className={styles.form} method="POST" onSubmit={actions.update}>
+        <input
+          className={`${styles.title} ${poppins.className}`}
+          type="text"
+          name="title"
+          value={note.title}
+          onChange={e => updateNoteField('title', e.currentTarget.value)}
+          placeholder="My Note's title..."
+        />
+        <textarea
+          className={`${styles.content} ${poppins.className}`}
+          name="content"
+          value={note.content}
+          onChange={e => updateNoteField('content', e.currentTarget.value)}
+          placeholder="My Note's content..."
+        />
+        <div className={styles.actions}>
+          <button
+            className={`${styles.button} ${styles.cancel} ${poppins.className}`}
+            type="button"
+            onClick={actions.cancel}
+            disabled={note.title === note.initialTitle && note.content === note.initialContent}
+          >
+            Cancel
+          </button>
+          <button
+            className={`${styles.button} ${styles.save} ${poppins.className}`}
+            type="submit"
+            disabled={note.title === note.initialTitle && note.content === note.initialContent}
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   )
 }
+
+export default EditComponent;
