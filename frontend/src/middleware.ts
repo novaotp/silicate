@@ -1,15 +1,11 @@
-/* 
+
+// Next
 import { NextRequest, NextResponse } from "next/server"
-import { clientRoute, serverRoute } from "@shared/classes/route";
-import { TokenResponseProps, VerifyTokenProps } from "@shared/interfaces"; */
 
-import { NextRequest } from "next/server";
+// Internal
+import { clientRoute } from "@shared/classes/route";
+import { UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "./core/controllers/verifyToken";
 
-export default async function middleware(request: NextRequest) {
-
-}
-
-/*
 export default async function Middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -33,9 +29,9 @@ export default async function Middleware(request: NextRequest) {
         return NextResponse.next();
       }
 
-      const tokenResponse = await verifyTokenController({ jwt: userID.value })
+      const { success }: UseVerifyTokenReturnProps = await useVerifyTokenWithJWT(userID.value);
 
-      if (tokenResponse.success) {
+      if (success) {
         return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.use());
       }
     }
@@ -48,9 +44,9 @@ export default async function Middleware(request: NextRequest) {
       return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
     }
 
-    const tokenResponse = await verifyTokenController({ jwt: userID.value })
+    const { success }: UseVerifyTokenReturnProps = await useVerifyTokenWithJWT(userID.value);
 
-    if (!tokenResponse.success) {
+    if (!success) {
       return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
     }
 
@@ -59,19 +55,3 @@ export default async function Middleware(request: NextRequest) {
     }
   }
 }
-
-export async function verifyTokenController(data: VerifyTokenProps): Promise<TokenResponseProps> {
-  const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
-  const init: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-    cache: "no-store"
-  }
-  const response = await fetch(url, init);
-  const result: TokenResponseProps = await response.json();
-
-  return result;
-} */
