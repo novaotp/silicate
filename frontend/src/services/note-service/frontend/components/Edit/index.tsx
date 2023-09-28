@@ -12,27 +12,31 @@ import BackLink from "../shared/BackLink";
 
 /// Functions and objects
 import useNote from './hooks/useNote';
+import useActions from './hooks/useActions';
 import { clientRoute } from '@shared/classes/route';
 
-/// Interfaces
-import { EditComponentProps } from './interfaces';
-import Actions from './classes/actions';
+interface EditComponentProps {
+  /** The note's id. */
+  noteId: string;
+  /** The user's id. */
+  userID: number;
+}
 
 /** Returns the main component of the editing note page. */
 const EditComponent = ({ noteId, userID }: EditComponentProps): JSX.Element => {
-  const { note: noteData, updateNoteField, isError, isLoading } = useNote(noteId, userID);
+  const { note: noteData, updateNoteField, isError, isLoading } = useNote({ noteId, userID });
 
   if (isError) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;
 
   /** The defined note. */
   const note = noteData!;
-  const actions = new Actions(note, updateNoteField);
+  const { update, discard } = useActions({ note, updateNoteField });
 
   return (
     <div className={styles.window}>
       <BackLink title="Mes Notes" href={clientRoute.app.notes.use()} />
-      <form className={styles.form} method="POST" onSubmit={actions.update}>
+      <form className={styles.form} method="POST" onSubmit={update}>
         <input
           className={`${styles.title} ${poppins.className}`}
           type="text"
@@ -52,7 +56,7 @@ const EditComponent = ({ noteId, userID }: EditComponentProps): JSX.Element => {
           <button
             className={`${styles.button} ${styles.cancel} ${poppins.className}`}
             type="button"
-            onClick={actions.cancel}
+            onClick={discard}
             disabled={note.title === note.initialTitle && note.content === note.initialContent}
           >
             Cancel

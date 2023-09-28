@@ -5,7 +5,7 @@ import { FriendRequestProps } from './friend';
 import { GradeProps, GradebookProps, SubjectProps } from './gradebook';
 import { AddNoteProps, EditNoteProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
 
-export {
+export type {
   AuthResponseProps,
   LoginProps,
   SignUpProps,

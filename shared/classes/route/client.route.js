@@ -1,4 +1,5 @@
-export default class ClientRoute {
+
+class ClientRoute {
   /** Returns a client route object */
   static object() {
     return {
@@ -17,6 +18,9 @@ export default class ClientRoute {
         logout: {
           use: () => '/auth/log-out',
         }
+      },
+      account: {
+        use: () => '/account'
       },
       app: {
         use: () => '/app',
@@ -54,3 +58,5 @@ export default class ClientRoute {
     return href.split("/").slice(0, -1).join("/");
   }
 }
+
+export default ClientRoute;

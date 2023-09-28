@@ -1,4 +1,4 @@
-import AccountNavigation from '@/components/AccountNav'
+import Navigation from '@/components/Navigation';
 import styles from './layout.module.scss'
 
 export default function Layout({
@@ -8,7 +8,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <AccountNavigation />
+      <Navigation />
     
       <div className={styles.window}>
         {children}

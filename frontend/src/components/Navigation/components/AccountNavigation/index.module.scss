@@ -1,0 +1,20 @@
+.nav {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  background-color: rgb(231, 231, 231);
+  z-index: 9;
+  transition: 200ms ease-in-out;
+
+  &.open {
+    top: 60px;
+  }
+
+  .menu {
+    position: relative;
+    list-style: none;
+    background-color: rgb(233, 233, 233);
+    padding: 10px;
+  }
+}

@@ -37,6 +37,6 @@ export default async function Page() {
   const notes: NoteProps[] = await fetchNotes();
 
   return (
-      <NoteComponent notes={notes} />
+    <NoteComponent notes={notes} />
   )
 }

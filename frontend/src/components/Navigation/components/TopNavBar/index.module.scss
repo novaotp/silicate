@@ -1,0 +1,31 @@
+$button-width: 40px;
+$navbar-height: 60px;
+
+.navBar {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  height: $navbar-height;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px black;
+  z-index: 10;
+  background-color: white;
+
+  .button {
+    position: relative;
+    width: $button-width;
+    aspect-ratio: 1;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    .button svg {
+      position: relative;
+      font-size: 28px;
+    }
+  }
+}

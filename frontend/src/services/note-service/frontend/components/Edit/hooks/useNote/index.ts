@@ -10,10 +10,8 @@ import useSWR from "swr";
 // Internal
 import { serverRoute } from "@shared/classes/route";
 import { NoteProps, NoteResponseProps, ReadNoteResponseProps } from "@shared/interfaces";
-import { Note, UseNoteProps } from "../interfaces";
 import Requests from "@/core/requests";
-
-type CustomFetcherProps = [string, string, number];
+import Note, { CustomFetcherProps, UseNoteProps, UseNoteReturnProps } from "./interfaces";
 
 /** A custom fetcher for the {@link useNote} hook. */
 const customFetcher = async (props: CustomFetcherProps) => {
@@ -37,13 +35,8 @@ const customFetcher = async (props: CustomFetcherProps) => {
   return processedNote;
 };
 
-/**
- * Fetches a specific note's data, comes with error and loading handling.
- * @param noteId The note's id.
- * @param userID The user's id.
- * @returns A {@link UseNoteProps} object.
- */
-const useNote = (noteId: string, userID: number): UseNoteProps => {
+/** Fetches a specific note's data, comes with error and loading handling. */
+const useNote = ({ noteId, userID }: UseNoteProps): UseNoteReturnProps => {
   const [note, setNote] = useState<Note>({
     id: Number(noteId),
     title: "",

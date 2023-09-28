@@ -1,10 +1,9 @@
 
 "use client";
 
-import NavMenuLinkProps from '@/components/AccountNav/interfaces';
+import NavMenuLinkProps from '../../interfaces';
 import RecursiveLink from './RecursiveLinks';
 import styles from './index.module.scss'
-import Disconnect from '../Disconnect';
 import { clientRoute } from '@shared/classes/route';
 
 interface MenuProps {
@@ -30,7 +29,7 @@ function getNavMenuLinks(): NavMenuLinkProps[] {
   return links;
 }
 
-/** Returns a custom menu for the account's navigation. */
+/** Returns a custom menu for the app's navigation. */
 const Menu = ({ closeNav }: MenuProps) => {
   const links = getNavMenuLinks();
 
@@ -41,7 +40,6 @@ const Menu = ({ closeNav }: MenuProps) => {
           links.map((link: NavMenuLinkProps) => <RecursiveLink key={link.href} link={link} closeNav={closeNav} />)
         }
       </ul>
-      <Disconnect />
     </menu>
   )
 }

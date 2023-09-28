@@ -1,4 +1,8 @@
+
+// Next
 import Image from 'next/image';
+
+// Internal
 import SilicateLogo from '@public/silicate_logo.svg';
 import styles from './index.module.scss';
 
@@ -6,7 +10,7 @@ interface HeaderProps {
   closeNav: () => void;
 }
 
-export default function Header({ closeNav }: HeaderProps) {
+const Header = ({ closeNav }: HeaderProps) => {
   return (
     <div>
       <button className={styles.button} onClick={closeNav}>
@@ -21,3 +25,5 @@ export default function Header({ closeNav }: HeaderProps) {
     </div>
   )
 }
+
+export default Header;

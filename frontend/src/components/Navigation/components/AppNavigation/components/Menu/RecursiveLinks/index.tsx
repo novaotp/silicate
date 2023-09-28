@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 // Internal
-import NavMenuLinkProps from "@/components/AccountNav/interfaces";
+import NavMenuLinkProps from "@/components/AppNav/interfaces";
 import styles from './index.module.scss';
 
 interface RecursiveLinkProps {
