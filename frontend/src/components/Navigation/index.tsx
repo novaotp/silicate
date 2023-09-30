@@ -24,6 +24,7 @@ const Navigation = () => {
       />
       <AccountNavigation
         isAccountNavOpen={isAccountNavOpen}
+        closeNav={() => setIsAccountNavOpen(false)}
       />
     </>
   )

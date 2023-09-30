@@ -1,3 +1,4 @@
+
 'use client';
 
 // Next
@@ -21,7 +22,8 @@ function FeatureCard({ title, text }: FeatureCardProps) {
   )
 }
 
-export default function LandingComponent() {
+/** The component on the landing page. */
+const LandingComponent = (): JSX.Element => {
   return (
     <div className={styles.window}>
       <div className={styles.section1}>
@@ -62,3 +64,5 @@ export default function LandingComponent() {
     </div>
   )
 }
+
+export default LandingComponent;

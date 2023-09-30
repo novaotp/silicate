@@ -7,7 +7,7 @@ import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/ver
 import { NoteComponent } from "@/services/note-service";
 import { serverRoute } from "@shared/classes/route";
 import { NoteProps, NotesResponseProps } from "@shared/interfaces";
-import Requests from "@/core/requests";
+import Requests from "@/core/classes/requests";
 
 export const dynamic = 'force-dynamic';
 

@@ -10,7 +10,7 @@ import useSWR from "swr";
 // Internal
 import { serverRoute } from "@shared/classes/route";
 import { NoteProps, NoteResponseProps, ReadNoteResponseProps } from "@shared/interfaces";
-import Requests from "@/core/requests";
+import Requests from "@/core/classes/requests";
 import Note, { CustomFetcherProps, UseNoteProps, UseNoteReturnProps } from "./interfaces";
 
 /** A custom fetcher for the {@link useNote} hook. */

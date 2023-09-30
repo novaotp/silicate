@@ -1,9 +1,9 @@
 
 import Navigation from '@/components/Navigation';
-import styles from './layout.module.scss'
-import LayoutProps from '@/app/interfaces';
+import styles from './layout.module.scss';
+import LayoutProps from '../interfaces';
 
-/** The app's layout. */
+/** The account related pages layout. */
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>

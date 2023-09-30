@@ -20,7 +20,10 @@ class ClientRoute {
         }
       },
       account: {
-        use: () => '/account'
+        use: () => '/account',
+        profile: {
+          use: () => '/account/profile',
+        }
       },
       app: {
         use: () => '/app',

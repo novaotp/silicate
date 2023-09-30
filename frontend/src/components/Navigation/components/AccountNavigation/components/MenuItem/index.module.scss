@@ -19,6 +19,17 @@
     &.button {
       border: none;
       background-color: transparent;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        display: flex;
+        align-items: center
+      }
+    }
+
+    svg {
+      margin-right: 10px;
     }
   }
 

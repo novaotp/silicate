@@ -5,8 +5,11 @@ import { NextRequest, NextResponse } from "next/server"
 // Internal
 import { clientRoute } from "@shared/classes/route";
 import { UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "./core/controllers/verifyToken";
+import { key, value, maxAge } from "@hooks/useTheme/config";
 
-export default async function Middleware(request: NextRequest) {
+/** Returns a custom middleware for the app. */
+const middleware = async (request: NextRequest) => {
+  const { isAuthenticated } = useAuth(request);
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith(clientRoute.auth.use())) {
@@ -23,35 +26,63 @@ export default async function Middleware(request: NextRequest) {
     }
 
     if (pathname === clientRoute.auth.login.use()) {
-      const userID = request.cookies.get('id');
-
-      if (!userID) {
-        return NextResponse.next();
-      }
-
-      const { success }: UseVerifyTokenReturnProps = await useVerifyTokenWithJWT(userID.value);
-
-      if (success) {
+      if (await isAuthenticated()) {
         return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.use());
       }
     }
   }
 
-  if (pathname.startsWith(clientRoute.app.use())) {
+  if (pathname.startsWith(clientRoute.app.use()) || pathname.startsWith(clientRoute.account.use())) {
+    if (!await isAuthenticated()) {
+      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
+    }
+
+    let res: NextResponse<unknown>;
+    switch (pathname) {
+      case clientRoute.app.use():
+        res = NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.dashboard.use());
+        break;
+
+      case clientRoute.account.use():
+        res = NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.account.profile.use());
+        break;
+    
+      default:
+        res = NextResponse.next();
+        break;
+    }      
+
+    if (!request.cookies.has('theme')) {
+      res.cookies.set(key, value, { maxAge: maxAge });
+    }
+
+    return res;
+  }
+}
+
+interface UseAuthReturnProps {
+  /** Checks if the user is authenticated. Returns true or false appropriately. */
+  isAuthenticated(): Promise<boolean>;
+}
+
+/** A hook that returns a function that checks the state of authentication of the user. */
+const useAuth = (request: NextRequest): UseAuthReturnProps => {
+  /** Checks if the user is authenticated. Returns true or false appropriately. */
+  const isAuthenticated = async (): Promise<boolean> => {
     const userID = request.cookies.get('id');
 
     if (!userID) {
-      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
+      return false;
     }
 
     const { success }: UseVerifyTokenReturnProps = await useVerifyTokenWithJWT(userID.value);
 
-    if (!success) {
-      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
-    }
+    return success;
+  }
 
-    if (pathname === clientRoute.app.use()) {
-      return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.dashboard.use())
-    }
+  return {
+    isAuthenticated
   }
 }
+
+export default middleware;

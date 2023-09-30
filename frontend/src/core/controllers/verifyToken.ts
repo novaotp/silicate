@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 // Internal
 import { serverRoute } from "@shared/classes/route";
 import { TokenResponseProps } from "@shared/interfaces";
-import Requests from "../requests";
+import Requests from "../classes/requests";
 
 /** The return props of {@link useVerifyToken} and {@link useVerifyTokenWithJWT}. */
 interface UseVerifyTokenReturnProps {

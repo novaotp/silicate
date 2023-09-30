@@ -4,7 +4,7 @@
 import { serverRoute } from "@shared/classes/route";
 import { AddNoteProps, EditNoteProps, NoteProps, ResponseProps } from "@shared/interfaces";
 import useVerifyToken, { type UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
-import Requests from "@core/requests";
+import Requests from "@/core/classes/requests";
 
 const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps & { noteId?: number }> => {
   const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
