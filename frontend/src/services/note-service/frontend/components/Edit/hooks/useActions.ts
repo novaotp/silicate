@@ -32,10 +32,6 @@ interface UseActionsReturnProps {
 
 /** A hook to handle the different actions in the edit component. */
 const useActions = ({ note, updateNoteField }: UseActionsProps): UseActionsReturnProps => {
-  /**
-   * Handles the update of the note on the form's submit.
-   * @param event The form's event.
-   */
   const update = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
@@ -53,7 +49,6 @@ const useActions = ({ note, updateNoteField }: UseActionsProps): UseActionsRetur
     }
   }
 
-  /** Discards the changes and sets the value to the initial values. */
   const discard = (): void => {
     updateNoteField('title', note.initialTitle);
     updateNoteField('content', note.initialContent);
