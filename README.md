@@ -37,7 +37,7 @@ And on the second type :
 ### Routes
 
 #### `/auth` (don't need a token)
- 
+
 - `/auth/login` gives you a JWT if the user exists in the DB
 - `/auth/signup` create a new user in the DB and gives you a JWT
 - `/auth/verifytoken` verify the JWT and gives you the payload
