@@ -14,6 +14,7 @@ import BackLink from "../shared/BackLink";
 import useNote from './hooks/useNote';
 import useActions from './hooks/useActions';
 import { clientRoute } from '@shared/classes/route';
+import Editor from './components/Editor';
 
 interface EditComponentProps {
   /** The note's id. */
@@ -45,13 +46,9 @@ const EditComponent = ({ noteId, userID }: EditComponentProps): JSX.Element => {
           onChange={e => updateNoteField('title', e.currentTarget.value)}
           placeholder="My Note's title..."
         />
-        <textarea
-          className={`${styles.content} ${poppins.className}`}
-          name="content"
-          value={note.content}
-          onChange={e => updateNoteField('content', e.currentTarget.value)}
-          placeholder="My Note's content..."
-        />
+        <div className={styles.content}>
+          <Editor note={note} updateNoteField={updateNoteField} />
+        </div>
         <div className={styles.actions}>
           <button
             className={`${styles.button} ${styles.cancel} ${poppins.className}`}
