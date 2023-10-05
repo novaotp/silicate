@@ -6,12 +6,10 @@ import { Suspense } from 'react';
 import { poppins } from '@/core/fonts';
 import './globals.scss';
 import Loading from './loading';
+import LayoutProps from './interfaces';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+/** The main layout of the app. */
+const RootLayout = ({ children }: LayoutProps): JSX.Element => {
   return (
     <html lang="en">
       <body className={poppins.className}>
@@ -22,3 +20,5 @@ export default function RootLayout({
     </html>
   )
 }
+
+export default RootLayout;

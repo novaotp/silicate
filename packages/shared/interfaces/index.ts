@@ -1,11 +1,13 @@
 
 import { ResponseProps } from './common';
+import { AccountReturnProps } from './account';
 import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from './auth';
 import { FriendRequestProps } from './friend';
 import { GradeProps, GradebookProps, SubjectProps } from './gradebook';
 import { AddNoteProps, EditNoteProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
 
 export type {
+  AccountReturnProps,
   AuthResponseProps,
   LoginProps,
   SignUpProps,

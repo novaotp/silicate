@@ -9,8 +9,11 @@ export const metadata: Metadata = {
   title: 'Sign up - Silicate'
 }
 
-export default function Page() {
+/** The sign-up page. */
+const Page = (): JSX.Element => {
   return (
     <SignUpComponent />
   )
 }
+
+export default Page;

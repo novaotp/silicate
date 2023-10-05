@@ -286,6 +286,43 @@ app.post(serverRoute.notes.delete.use(), async (req, res) => {
   }
 });
 
+app.post(serverRoute.account.use(), async (req, res) => {
+  try {
+    const client = await pool.connect();
+
+    /** @type {{ jwt: string }} */
+    const body = req.body;
+
+    const response = await fetch(process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use(), { 
+      method: 'POST',
+      body: JSON.stringify({ jwt : body.jwt }),
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    /** @type {import('../../shared/interfaces').TokenResponseProps} */
+    const result = await response.json();
+
+    if (!result.success) {
+      return res.status(200).json({ success: false, message: 'Not authenticated' })
+    }
+
+    const fetchAccountQuery = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
+    const fetchAccountValues = [result.payload.payload.userID];
+
+    const { rows } = await client.query(fetchAccountQuery, fetchAccountValues);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Fetched account data successfully', data: JSON.stringify(rows[0]) });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  }
+});
+
 app.listen(process.env.PORT, () => {
   console.log('API Listening on port ' + process.env.PORT);
 });

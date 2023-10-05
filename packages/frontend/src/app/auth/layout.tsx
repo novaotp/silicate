@@ -1,14 +1,14 @@
 
+import LayoutProps from '@app/interfaces';
 import styles from './layout.module.scss';
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+/** The layout of the `/auth` route. */
+const Layout = ({ children }: LayoutProps): JSX.Element => {
   return (
     <div className={styles.window}>
       {children}
     </div>
   )
 }
+
+export default Layout;

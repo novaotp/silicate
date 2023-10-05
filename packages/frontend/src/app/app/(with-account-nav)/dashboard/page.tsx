@@ -1,13 +1,19 @@
 
 // Next
-import { Metadata } from "next"
+import { Metadata } from "next";
+
+// Internal
+import { Dashboard } from "@/services/dashboard-service";
 
 export const metadata: Metadata = {
   title: "Dashboard - Silicate"
 }
 
-export default function Page() {
+/** The dashboard page. */
+const Page = (): JSX.Element => {
   return (
-    <p>potato dashboard</p>
+    <Dashboard />
   )
 }
+
+export default Page;

@@ -29,6 +29,8 @@ interface UseVerifyTokenReturnProps {
  * Verifies the auth state of the user and returns true or false appropriately.
  * 
  * Doesn't take a jwt string. See {@link useVerifyTokenWithJWT} for jwt as a parameter.
+ * 
+ * This is a SERVER-SIDE function.
  */
 const useVerifyToken = async (): Promise<UseVerifyTokenReturnProps> => {
   const cookie = cookies().get('id');
@@ -58,7 +60,9 @@ const useVerifyToken = async (): Promise<UseVerifyTokenReturnProps> => {
  * Verifies the auth state of the user and returns true or false appropriately.
  * 
  * Needs a jwt string. See {@link useVerifyToken} for jwt retrieval from cookie.
- * @param jwt The jwt.
+ * 
+ * This is a SERVER-SIDE function.
+ * @param jwt The jwt payload to check.
  */
 const useVerifyTokenWithJWT = async (jwt: string): Promise<UseVerifyTokenReturnProps> => {
   const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();

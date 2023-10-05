@@ -8,21 +8,7 @@ import Link from 'next/link';
 import styles from './page.module.scss';
 import { clientRoute } from '@shared/classes/route';
 
-interface FeatureCardProps {
-  title: string,
-  text: string,
-}
-
-function FeatureCard({ title, text }: FeatureCardProps) {
-  return (
-    <div className={styles.card}>
-      <h3 className={styles.title}>{title}</h3>
-      <p className={styles.text}>{text}</p>
-    </div>
-  )
-}
-
-/** The component on the landing page. */
+/** The main component of the landing page. */
 const LandingComponent = (): JSX.Element => {
   return (
     <div className={styles.window}>
@@ -39,28 +25,6 @@ const LandingComponent = (): JSX.Element => {
         <p className={styles.linksDelimitor}>ou</p>
         <Link className={`${styles.links} ${styles.login}`} href={clientRoute.auth.login.use()}>Se connecter</Link>
       </div>
-      {/* <div className={styles.section2}>
-        <h2 className={styles.subTitle}>Fonctionnalités</h2>
-        <Link className={styles.details} href={clientRoute.features.use()}>La liste complète ici</Link>
-        <FeatureCard
-          title="Maîtrisez Vos Notes"
-          text="Gérez vos notes efficacement : ajoutez
-                des pondérations, calculez votre moyenne
-                et numérisez vos examens !"
-        />
-        <FeatureCard
-          title="Jamais Oublié, Toujours Notifié"
-          text="Garde une longueur d'avance sur tes
-                tâches avec nos rappels et note facilement
-                toutes tes échéances !"
-        />
-        <FeatureCard
-          title="Connecte et Collabore"
-          text="Crée ou rejoins des groupes, partage des
-                fichiers et collabore sur des devoirs,
-                tout ça en un seul endroit !"
-        />
-      </div> */}
     </div>
   )
 }

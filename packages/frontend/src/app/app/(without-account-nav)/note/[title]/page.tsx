@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 // Internal
 import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
 import { clientRoute } from "@shared/classes/route";
-import EditComponent from "@/services/note-service/frontend/components/Edit";
+import { EditComponent } from "@/services/note-service";
 
 function getId(): string {
   const headersList = headers();

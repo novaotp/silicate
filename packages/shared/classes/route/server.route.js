@@ -46,6 +46,10 @@ export default class ServerRoute {
         read: {
           use: () => `/notes/read`
         }
+      },
+      account: {
+        /** Returns the user's data. */
+        use: () => '/account/data'
       }
     };
   }

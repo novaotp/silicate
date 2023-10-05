@@ -43,7 +43,7 @@ const AccountNavigation = ({ isAccountNavOpen, closeNav }: AccountNavigationProp
     <div ref={menuRef} className={`${styles.nav} ${isAccountNavOpen ? styles.open : ""}`}>
       <ul className={styles.menu}>
         <MenuItem icon={<PersonIcon />} text='My profile' href={clientRoute.account.profile.use()} onClick={closeNav} />
-        <MenuItem icon={<ColorLensIcon />} text='Appearance' backgroundColor={theme === 'light' ? 'white' : 'green'} onClick={switchTheme} />
+        <MenuItem icon={<ColorLensIcon />} text='Appearance' backgroundColor={theme === 'light' ? 'white' : 'blue'} onClick={switchTheme} />
         <MenuItem icon={<AlternateEmailRoundedIcon />} text='Contact / Support' href={clientRoute.account.use()} onClick={closeNav} />
         <MenuItem icon={<QuizIcon />} text='FAQ' href={clientRoute.account.use()} onClick={closeNav} />
         <MenuItem icon={<LogoutRoundedIcon />} text='Disconnect' onClick={() => handleDisconnection()} color='white' backgroundColor='red' />

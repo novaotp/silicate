@@ -1,16 +1,19 @@
 
 // Next
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 // Internal
-import { LoginComponent } from '@/services/auth-service'
+import { LoginComponent } from '@/services/auth-service';
 
 export const metadata: Metadata = {
   title: 'Login - Silicate'
 }
 
-export default function Page() {
+/** The log-in page. */
+const Page = (): JSX.Element => {
   return (
     <LoginComponent />
   )
 }
+
+export default Page;
