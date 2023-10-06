@@ -3,11 +3,11 @@
 import { Metadata } from "next";
 
 // Internal
-import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
+import useVerifyToken, { UseVerifyTokenReturnProps } from "@controllers/verifyToken";
 import { NoteComponent } from "@/services/note-service";
+import Requests from "@classes/requests";
 import { serverRoute } from "@shared/classes/route";
 import { NoteProps, NotesResponseProps } from "@shared/interfaces";
-import Requests from "@/core/classes/requests";
 
 export const dynamic = 'force-dynamic';
 
