@@ -55,6 +55,6 @@ Write-Host "Starting powershell script..."
 Clear-Host
 Write-Host "Starting powershell script..."
 
-Install-NpmModules -route "backend/api" -override $override
-Install-NpmModules -route "frontend" -override $override
-Install-NpmModules -route "shared" -override $override
+Install-NpmModules -route "packages/backend" -override $override
+Install-NpmModules -route "packages/frontend" -override $override
+Install-NpmModules -route "packages/shared" -override $override
