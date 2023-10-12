@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import ClientRoute from '@shared/classes/route/client.route';
+import ClientRoute from '@shared/classes/routes/client.route';
 
 /** The {@link BackLink}'s props. */
 interface BackLinkProps {

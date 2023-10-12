@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 // Internal
-import useVerifyToken, { UseVerifyTokenReturnProps } from "@core/controllers/verifyToken";
-import { clientRoute } from "@shared/classes/route";
+import useVerifyToken, { UseVerifyTokenReturnProps } from "@/core/hooks/useVerifyToken";
+import { clientRoute } from "@shared/classes/routes";
 import { EditComponent } from "@/services/note-service";
 
 function getId(): string {

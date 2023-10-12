@@ -3,7 +3,6 @@
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import { Server as IOServer } from 'socket.io';
 
 // .env
 import 'dotenv/config';
@@ -11,18 +10,15 @@ import 'dotenv/config';
 // Internal
 import { DBPool } from './databases/postgres/index.js';
 import JWT from '../shared/classes/JWT.js';
-import { serverRoute } from '../shared/classes/route/index.js';
+import { serverRoute } from '../shared/classes/routes/index.js';
+import setupWebSocket from './webSocket/index.js';
 
 const pool = new DBPool();
 
 const app = express();
 const server = http.createServer(app);
-const io = new IOServer(server, {
-  serveClient: false,
-  cors: {
-    origin: process.env.FRONTEND_URL,
-  }
-});
+
+setupWebSocket();
 
 app.use(cors({
   origin: process.env.FRONTEND_URL,
@@ -124,6 +120,31 @@ app.post(serverRoute.auth.verifyToken.use(), async (req, res) => {
     return res.status(500).json({ success: false, message: 'Internal Server Error' })
   }
 })
+
+app.post(serverRoute.friends.use(), async (req, res) => {
+  /** @type { import('../shared/interfaces/index.js').AllFriendsRequestProps } */
+  const body = req.body;
+
+  try {
+    const client = await pool.connect();
+
+    const addFriendQuery = 'SELECT * FROM public.friendship WHERE first_user_id = $1 OR second_user_id = $1;';
+
+    const firstUserID = Math.min(body.firstUserID, body.secondUserID);
+    const secondUserID = Math.max(body.firstUserID, body.secondUserID);
+
+    await client.query(addFriendQuery, [firstUserID, secondUserID]);
+
+    await client.release(true);
+
+    return res.status(200).json({ success: true, message: 'Friend added successfully' });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
 
 app.post(serverRoute.friends.add.use(), async (req, res) => {
   /** @type { import('../shared/interfaces/index.js').FriendRequestProps } */
@@ -335,7 +356,3 @@ app.post(serverRoute.account.use(), async (req, res) => {
 server.listen(process.env.PORT, () => {
   console.log('API Listening on port ' + process.env.PORT);
 });
-
-io.on('connection', (socket) => {
-  console.log(`User connected : ${socket.id}`);
-})

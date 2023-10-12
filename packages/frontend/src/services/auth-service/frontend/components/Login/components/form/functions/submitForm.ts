@@ -5,9 +5,9 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 // Internal
 import { newCookie } from "@/services/auth-service/backend/controllers";
-import { clientRoute } from "@shared/classes/route";
+import { clientRoute } from "@shared/classes/routes";
 import { AuthResponseProps } from "@shared/interfaces";
-import { type UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "@/core/controllers/verifyToken";
+import { type UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "@/core/hooks/useVerifyToken";
 import logIn from "./logIn";
 
 /**

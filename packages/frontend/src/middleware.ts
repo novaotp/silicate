@@ -3,8 +3,8 @@
 import { NextRequest, NextResponse } from "next/server"
 
 // Internal
-import { clientRoute } from "@shared/classes/route";
-import { UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "./core/controllers/verifyToken";
+import { clientRoute } from "@shared/classes/routes";
+import { UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "./core/hooks/useVerifyToken";
 import { key, value, maxAge } from "@hooks/useTheme/config";
 
 /** Returns a custom middleware for the app. */

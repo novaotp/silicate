@@ -4,7 +4,7 @@
 import NavMenuLinkProps from '../../interfaces';
 import RecursiveLink from './RecursiveLinks';
 import styles from './index.module.scss'
-import { clientRoute } from '@shared/classes/route';
+import { clientRoute } from '@shared/classes/routes';
 
 interface MenuProps {
   closeNav: () => void;
@@ -23,6 +23,10 @@ function getNavMenuLinks(): NavMenuLinkProps[] {
     {
       href: clientRoute.app.notes.use(),
       label: 'Notes',
+    },
+    {
+      href: clientRoute.app.chat.use(),
+      label: 'Chat',
     },
   ]
 

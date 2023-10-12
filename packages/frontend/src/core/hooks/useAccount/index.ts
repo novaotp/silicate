@@ -12,7 +12,7 @@ import { redirect, useRouter } from "next/navigation";
 import Cookies from "@classes/cookies";
 import Requests from "@classes/requests";
 import Account, { UseAccountReturnProps, CustomFetcherProps } from "./interfaces";
-import { serverRoute } from "@shared/classes/route";
+import { serverRoute } from "@shared/classes/routes";
 import { AccountReturnProps } from "@shared/interfaces";
 
 /** A custom fetcher for the {@link useAccount} hook. */

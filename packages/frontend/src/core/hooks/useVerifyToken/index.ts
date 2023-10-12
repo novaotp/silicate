@@ -5,25 +5,10 @@
 import { cookies } from "next/headers";
 
 // Internal
-import { serverRoute } from "@shared/classes/route";
+import Requests from "@classes/requests";
+import UseVerifyTokenReturnProps from "./interfaces";
+import { serverRoute } from "@shared/classes/routes";
 import { TokenResponseProps } from "@shared/interfaces";
-import Requests from "../classes/requests";
-
-/** The return props of {@link useVerifyToken} and {@link useVerifyTokenWithJWT}. */
-interface UseVerifyTokenReturnProps {
-  /**
-   * The state of the auth, true if it succeeded, false otherwise.
-   * 
-   * Shorthand for result.success - see {@link result}.
-   */
-  success: boolean;
-  /**
-   * The {@link TokenResponseProps | response object} itself.
-   * 
-   * If succeeded, contains a payload.
-   */
-  result: TokenResponseProps
-}
 
 /**
  * Verifies the auth state of the user and returns true or false appropriately.

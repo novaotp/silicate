@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import styles from "./index.module.scss";
 import { poppins } from "@core/fonts";
 import { addNoteController } from "@/services/note-service/backend/controllers";
-import { clientRoute } from "@shared/classes/route";
+import { clientRoute } from "@shared/classes/routes";
 
 /**
  * Returns a custom button for adding a new note

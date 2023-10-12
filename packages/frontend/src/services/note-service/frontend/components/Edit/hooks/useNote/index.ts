@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 // Internal
-import { serverRoute } from "@shared/classes/route";
+import { serverRoute } from "@shared/classes/routes";
 import { NoteProps, NoteResponseProps, ReadNoteResponseProps } from "@shared/interfaces";
 import Requests from "@classes/requests";
 import Note, { CustomFetcherProps, UseNoteProps, UseNoteReturnProps } from "./interfaces";

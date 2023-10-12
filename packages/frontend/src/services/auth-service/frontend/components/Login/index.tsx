@@ -2,7 +2,7 @@
 // Internal
 import { AlternativeLink } from '../shared';
 import styles from './index.module.scss';
-import { clientRoute } from '@shared/classes/route';
+import { clientRoute } from '@shared/classes/routes';
 import { LoginForm, WelcomeHeader } from './components';
 
 /** Returns the main component for the log-in page. */

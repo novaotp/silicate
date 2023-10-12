@@ -1,10 +1,7 @@
 
 "use client";
 
-// React
-import { useEffect } from 'react';
-
-// SocketIO
+// Socket IO
 import { io } from 'socket.io-client';
 
 // Internal
@@ -21,19 +18,6 @@ const useWebSocket = (): UseWebSocketReturnProps => {
       socket.connect();
     }
   }
-
-  useEffect(() => {
-    ensureSocketConnected()
-
-    socket.on('connect', (): void => {
-      console.log(socket.id);
-    });
-  
-    // Cleanup
-    return () => {
-      socket.disconnect();
-    }
-  }, []);
 
   return {
     socket,

@@ -13,7 +13,7 @@ import BackLink from "../shared/BackLink";
 /// Functions and objects
 import useNote from './hooks/useNote';
 import useActions from './hooks/useActions';
-import { clientRoute } from '@shared/classes/route';
+import { clientRoute } from '@shared/classes/routes';
 import Editor from './components/Editor';
 
 interface EditComponentProps {

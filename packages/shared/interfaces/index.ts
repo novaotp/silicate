@@ -2,7 +2,7 @@
 import { ResponseProps } from './common';
 import { AccountReturnProps } from './account';
 import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from './auth';
-import { FriendRequestProps } from './friend';
+import { AllFriendsRequestProps, FriendRequestProps } from './friend';
 import { GradeProps, GradebookProps, SubjectProps } from './gradebook';
 import { AddNoteProps, EditNoteProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
 
@@ -14,6 +14,7 @@ export type {
   TokenResponseProps,
   VerifyTokenProps,
   FriendRequestProps,
+  AllFriendsRequestProps,
   GradeProps,
   GradebookProps,
   SubjectProps,
@@ -24,6 +25,6 @@ export type {
   NotesResponseProps,
   ReadNoteProps,
   ReadNoteResponseProps,
-  RemoveNoteProps
+  RemoveNoteProps,
 }
 export default ResponseProps;

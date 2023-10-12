@@ -47,7 +47,13 @@ class ClientRoute {
               use: () => `/app/note/${title}`
             })
           },
-        }
+        },
+        friends: {
+          use: () => '/app/friends',
+        },
+        chat: {
+          use: () => '/app/chat',
+        },
       }
     };
   }

@@ -1,6 +1,6 @@
 
 // Internal
-import { clientRoute } from '@shared/classes/route';
+import { clientRoute } from '@shared/classes/routes';
 import styles from './index.module.scss';
 import { SignUpForm, WelcomeHeader } from './components';
 import { AlternativeLink } from '../shared';

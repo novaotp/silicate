@@ -1,0 +1,46 @@
+// Votre SCSS
+.friendContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+  
+    input {
+      margin-bottom: 1em;
+      padding: 0.5em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 0.25em;
+    }
+  
+    .suggestions {
+      width: 100%;
+      margin-top: 1em;
+  
+      .suggestionItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5em;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #f0f0f0;
+        }
+  
+        button {
+          padding: 0.2em 0.5em;
+          font-size: 0.9em;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 0.25em;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: #0056b3;
+          }
+        }
+      }
+    }
+  }
+  

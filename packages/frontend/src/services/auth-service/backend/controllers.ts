@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 // Internal
 import { AuthResponseProps, LoginProps, SignUpProps, } from "@shared/interfaces";
-import { serverRoute } from "@shared/classes/route";
+import { serverRoute } from "@shared/classes/routes";
 import Requests from "@/core/classes/requests";
 
 /**
