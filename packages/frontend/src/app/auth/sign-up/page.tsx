@@ -3,7 +3,7 @@
 import type { Metadata } from 'next';
 
 // Internal
-import { SignUpComponent } from '@/services/auth-service';
+import { SignUp } from '@components/auth';
 
 export const metadata: Metadata = {
   title: 'Sign up - Silicate'
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 /** The sign-up page. */
 const Page = (): JSX.Element => {
   return (
-    <SignUpComponent />
+    <SignUp />
   )
 }
 

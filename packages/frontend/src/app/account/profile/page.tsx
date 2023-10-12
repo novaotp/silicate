@@ -1,14 +1,18 @@
-import { ProfileComponent } from "@/services/account-service";
+
+// Next
 import { Metadata } from "next";
+
+// Internal
+import { Profile } from "@components/account";
 
 export const metadata: Metadata = {
   title: "My Profile - Silicate"
 }
 
-/** Returns the profile page. */
+/** The profile page. */
 const Page = (): JSX.Element => {
   return (
-    <ProfileComponent />
+    <Profile />
   )
 }
 

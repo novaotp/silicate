@@ -5,9 +5,9 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 // Internal
-import useVerifyToken, { UseVerifyTokenReturnProps } from "@/core/hooks/useVerifyToken";
+import useVerifyToken from "@hooks/useVerifyToken";
 import { clientRoute } from "@shared/classes/routes";
-import { EditComponent } from "@/services/note-service";
+import { Edit } from "@components/note";
 
 function getId(): string {
   const headersList = headers();
@@ -19,8 +19,9 @@ export const metadata: Metadata = {
   title: `Editing note - Silicate`
 }
 
-export default async function Page() {
-  const { success, result: tokenResponse }: UseVerifyTokenReturnProps = await useVerifyToken();
+/** The editing note page. */
+const Page = async (): Promise<JSX.Element> => {
+  const { success, result: tokenResponse } = await useVerifyToken();
 
   if (!success) {
     redirect(clientRoute.app.notes.use());
@@ -29,6 +30,8 @@ export default async function Page() {
   const userID = tokenResponse.payload!.payload.userID;
 
   return (
-    <EditComponent noteId={getId()} userID={userID} />
+    <Edit noteId={getId()} userID={userID} />
   )
 }
+
+export default Page;

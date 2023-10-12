@@ -1,18 +1,25 @@
-import GradebookComponent from "@/services/gradebook-service/frontend/components/Gradebooks"
-import { GradebookProps } from "@shared/interfaces";
+
+// Next
 import { Metadata } from "next"
+
+// Internal
+import { Gradebooks } from "@components/gradebook";
+import { GradebookProps } from "@shared/interfaces";
 
 export const metadata: Metadata = {
   title: "Gradebooks - Silicate"
 }
 
-export default async function Page() {
+/** The gradebooks page. */
+const Page = () => {
   const gradebooks: GradebookProps[] = [
     { name: "EPTM 2023-2024" },
     { name: "MATU 2023-2024" }
   ]; // TODO: await getGradebooks()
 
   return (
-    <GradebookComponent gradebooks={gradebooks} />
+    <Gradebooks gradebooks={gradebooks} />
   )
 }
+
+export default Page;

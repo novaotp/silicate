@@ -1,7 +1,10 @@
+
+// Next
 import { Metadata } from 'next';
 import { headers } from "next/headers";
 
-import SubjectComponents from '@/services/gradebook-service/frontend/components/Subjects';
+// Internal
+import { Subjects } from '@components/gradebook';
 import { SubjectProps } from '@shared/interfaces';
 
 function getTitle(): string {
@@ -20,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function Page() {
-  const bookTitle = getTitle();
+/** The subjects page. */
+const Page = (): JSX.Element => {
   const subjects: SubjectProps[] = [
       { name: "Maths" },
       { name: "Allemand" },
@@ -31,6 +34,8 @@ export default async function Page() {
   ]; // TODO: await getSubjects(bookTitle);
 
   return (
-    <SubjectComponents subjects={subjects} />
+    <Subjects subjects={subjects} />
   )
 }
+
+export default Page;

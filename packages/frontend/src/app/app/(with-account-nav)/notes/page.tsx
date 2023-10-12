@@ -3,8 +3,8 @@
 import { Metadata } from "next";
 
 // Internal
-import useVerifyToken, { UseVerifyTokenReturnProps } from "@/core/hooks/useVerifyToken";
-import { NoteComponent } from "@/services/note-service";
+import useVerifyToken from "@hooks/useVerifyToken";
+import { Notes } from "@components/note";
 import Requests from "@classes/requests";
 import { serverRoute } from "@shared/classes/routes";
 import { NoteProps, NotesResponseProps } from "@shared/interfaces";
@@ -15,8 +15,9 @@ export const metadata: Metadata = {
   title: "My Notes - Silicate"
 }
 
+/** Fetches the notes. */
 const fetchNotes = async (): Promise<NoteProps[]> => {
-  const { success, result: tokenResponse }: UseVerifyTokenReturnProps = await useVerifyToken();
+  const { success, result: tokenResponse } = await useVerifyToken();
 
   if (!success) {
     return [];
@@ -33,10 +34,13 @@ const fetchNotes = async (): Promise<NoteProps[]> => {
   return processedNotes;
 }
 
-export default async function Page() {
+/** The notes page. */
+const Page = async (): Promise<JSX.Element> => {
   const notes: NoteProps[] = await fetchNotes();
 
   return (
-    <NoteComponent notes={notes} />
+    <Notes notes={notes} />
   )
 }
+
+export default Page;

@@ -3,7 +3,7 @@
 import type { Metadata } from 'next';
 
 // Internal
-import { LoginComponent } from '@/services/auth-service';
+import { Login } from '@components/auth';
 
 export const metadata: Metadata = {
   title: 'Login - Silicate'
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 /** The log-in page. */
 const Page = (): JSX.Element => {
   return (
-    <LoginComponent />
+    <Login />
   )
 }
 

@@ -22,13 +22,12 @@
     "paths": {
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
-      "@shared/*": ["../shared/*"],
       "@public/*": ["public/*"],
       "@core/*": ["src/core/*"],
-      "@utils/*": ["../shared/utils/*"],
       "@hooks/*": ["src/core/hooks/*"],
       "@classes/*": ["src/core/classes/*"],
-      "@controllers/*": ["src/core/controllers/*"]
+      "@components/*": ["src/components/*"],
+      "@shared/*": ["../shared/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../shared/**/*.ts"],

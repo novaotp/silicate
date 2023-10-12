@@ -3,7 +3,7 @@
 import { Metadata } from "next";
 
 // Internal
-import { Dashboard } from "@/services/dashboard-service";
+import { Dashboard } from "@components/dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard - Silicate"

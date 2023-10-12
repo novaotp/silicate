@@ -1,13 +1,13 @@
 
-import Navigation from '@/components/Navigation';
+import { InsiderNav } from '@components/navigation';
 import styles from './layout.module.scss'
-import LayoutProps from '@/app/interfaces';
+import LayoutProps from '@app/interfaces';
 
 /** The app's layout. */
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Navigation />
+      <InsiderNav />
     
       <div className={styles.window}>
         {children}

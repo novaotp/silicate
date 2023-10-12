@@ -1,7 +1,10 @@
+
+// Internal
 import { Metadata } from 'next';
 import { headers } from "next/headers";
 
-import { GradesComponent } from '@/services/gradebook-service';
+// Internal
+import { Grades } from '@components/gradebook';
 import { GradeProps } from '@shared/interfaces';
 
 function getTitles() {
@@ -25,8 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function Page() {
-  const { subjectTitle } = getTitles();
+/** The grades page. */
+const Page = (): JSX.Element => {
   const grades: GradeProps[] = [
     {
       title: "Examen 1",
@@ -39,6 +42,8 @@ export default async function Page() {
   ]; // TODO: await getGrades(subjectTitle);
 
   return (
-    <GradesComponent grades={grades} />
+    <Grades grades={grades} />
   )
 }
+
+export default Page;
