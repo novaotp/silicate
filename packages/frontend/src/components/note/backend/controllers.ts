@@ -2,7 +2,7 @@
 'use server';
 
 import { serverRoute } from "@shared/classes/routes";
-import { AddNoteProps, EditNoteProps, NoteProps, ResponseProps } from "@shared/interfaces";
+import ResponseProps, { AddNoteProps, EditNoteProps } from "@shared/interfaces";
 import useVerifyToken, { type UseVerifyTokenReturnProps } from "@/core/hooks/useVerifyToken";
 import Requests from "@/core/classes/requests";
 

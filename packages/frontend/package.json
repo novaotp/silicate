@@ -13,12 +13,9 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.6",
     "@mui/material": "^5.14.6",
-    "@next/bundle-analyzer": "^13.5.4",
     "bufferutil": "^4.0.7",
-    "cookies-next": "^4.0.0",
     "jose": "^4.14.4",
     "next": "^13.5.4",
-    "phoenix": "^1.7.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^9.0.0",
@@ -35,7 +32,6 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "sass": "^1.66.1",
-    "typescript": "5.1.6",
-    "webpack-node-externals": "^3.0.0"
+    "typescript": "5.1.6"
   }
 }

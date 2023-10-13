@@ -8,7 +8,7 @@ import http from 'http';
 import 'dotenv/config';
 
 // Internal
-import { DBPool } from './databases/postgres/index.js';
+import DBPool from './databases/postgres/index.js';
 import JWT from '../shared/classes/JWT.js';
 import { serverRoute } from '../shared/classes/routes/index.js';
 import setupWebSocket from './webSocket/index.js';
@@ -277,7 +277,7 @@ app.post(serverRoute.notes.add.use(), async (req, res) => {
     console.log(body)
 
     const now = Date.now();
-    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+    const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id LIMIT 1;';
     const newNoteValues = [body.userID, body.title, body.content, now, now];
 
     const { rows } = await client.query(newNoteQuery, newNoteValues);
@@ -300,7 +300,7 @@ app.post(serverRoute.notes.delete.use(), async (req, res) => {
     /** @type { import('../shared/interfaces/index.js').RemoveNoteProps } */
     const body = req.body;
 
-    const deleteNoteQuery = 'DELETE FROM public.note WHERE id = %1 AND user_id = %2';
+    const deleteNoteQuery = 'DELETE FROM public.note WHERE id = $1 AND user_id = $2';
     const deleteNoteValues = [body.id, body.userID];
 
     await client.query(deleteNoteQuery, deleteNoteValues);
