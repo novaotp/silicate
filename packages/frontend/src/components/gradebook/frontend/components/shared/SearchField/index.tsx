@@ -1,3 +1,4 @@
+
 'use client';
 
 // MUI Icons
@@ -14,7 +15,8 @@ interface SearchFieldProps {
   setFilter: React.Dispatch<SetStateAction<string>>;
 }
 
-export default function SearchField({ filter, setFilter }: SearchFieldProps) {
+/** A search field for the gradebook pages. */
+const SearchField = ({ filter, setFilter }: SearchFieldProps) => {
   return (
     <div className={styles.field}>
       <input
@@ -30,3 +32,5 @@ export default function SearchField({ filter, setFilter }: SearchFieldProps) {
     </div>
   )
 };
+
+export default SearchField;

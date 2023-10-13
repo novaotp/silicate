@@ -1,3 +1,4 @@
+
 'use client';
 
 // MUI Icons
@@ -5,17 +6,15 @@ import WestIcon from '@mui/icons-material/West';
 
 // Next
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import SuperClientRoute from '@core/utils/route';
+import ClientRoute from '@shared/classes/routes/client.route';
 
-interface BackLinkProps {
-  href: string;
-}
-
-export default function BackLink() {
-  const href = SuperClientRoute.parent();
+/** A backlink for the gradebook pages. */
+const BackLink = () => {
+  const href = ClientRoute.parent(usePathname());
 
   return (
     <div className={styles.wrapper}>
@@ -23,3 +22,5 @@ export default function BackLink() {
     </div>
   )
 }
+
+export default BackLink;

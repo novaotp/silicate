@@ -5,13 +5,14 @@
 import AddIcon from '@mui/icons-material/Add';
 
 // React
-import { useEffect, useRef } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 
 // Internal
 import { GradebookProps } from "@shared/interfaces";
 import { NoGradebooksFound, RenderGradebooks } from "./components";
 import styles from './index.module.scss';
 import InputField from '../shared/InputField';
+import { poppins } from '@/core/fonts';
 
 interface GradebooksProps {
   gradebooks: GradebookProps[];
@@ -20,6 +21,7 @@ interface GradebooksProps {
 /** Returns the main component of the gradebooks page. */
 const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -34,6 +36,10 @@ const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
     }
   }, []);
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+  }
+
   const handleAddGradebook = () => {
     dialogRef.current!.showModal();
   }
@@ -45,15 +51,17 @@ const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
       <dialog className={styles.dialog} ref={dialogRef}>
-        <button onClick={closeModal}>Close</button>
-        <form action="">
+        <form ref={formRef} onSubmit={handleSubmit}>
           <InputField
             type='text'
             label='Nom du gradebook'
             name='name'
             placeholder='Entrez le nom du gradebook ici...'
           />
-          <button onClick={closeModal} type="submit">Ajouter</button>
+          <div className={styles.buttons}>
+            <button className={`${styles.add} ${styles.button} ${poppins.className}`} onClick={closeModal} type="submit">Ajouter</button>
+            <button className={`${styles.close} ${styles.button} ${poppins.className}`} onClick={closeModal}>Close</button>
+          </div>
         </form>
       </dialog>
       {gradebooks.length > 0 && <RenderGradebooks gradebooks={gradebooks} />}
