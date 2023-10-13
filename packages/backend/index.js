@@ -18,7 +18,7 @@ const pool = new DBPool();
 const app = express();
 const server = http.createServer(app);
 
-setupWebSocket();
+setupWebSocket(server);
 
 app.use(cors({
   origin: process.env.FRONTEND_URL,

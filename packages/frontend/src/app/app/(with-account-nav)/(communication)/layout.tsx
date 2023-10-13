@@ -1,7 +1,7 @@
 
 import styles from './layout.module.scss'
 import LayoutProps from '@/app/interfaces';
-import { CommunicationNavigation } from '@/services/communication-service';
+import { CommunicationNavigation } from '@components/communication';
 
 /** The app's layout. */
 const Layout = ({ children }: LayoutProps) => {

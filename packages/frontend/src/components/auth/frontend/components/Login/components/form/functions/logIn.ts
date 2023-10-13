@@ -3,7 +3,7 @@
 import { RefObject } from "react";
 
 // Internal
-import { loginController } from "@/services/auth-service/backend/controllers";
+import { loginController } from "@components/auth/backend/controllers";
 import { AuthResponseProps, LoginProps } from "@shared/interfaces";
 
 /**

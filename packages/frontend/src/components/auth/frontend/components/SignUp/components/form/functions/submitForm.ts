@@ -1,21 +1,21 @@
 
 // React + Next
 import { RefObject } from "react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 // Internal
-import { newCookie } from "@/services/auth-service/backend/controllers";
+import { newCookie } from "@components/auth/backend/controllers";
 import { clientRoute } from "@shared/classes/routes";
 import { AuthResponseProps } from "@shared/interfaces";
 import signUp from "./signUp";
 import { type UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "@/core/hooks/useVerifyToken";
+import { useRouter } from "next/navigation";
 
 /**
  * Handles the form submission, including the account creation, alerting on error and redirections.
  * @param ref The form's reference.
  * @param router A {@link AppRouterInstance | router instance} for redirection on user authentication error.
  */
-const submitForm = async (ref: RefObject<HTMLFormElement>, router: AppRouterInstance): Promise<void> => {
+const submitForm = async (ref: RefObject<HTMLFormElement>, router: ReturnType<typeof useRouter>): Promise<void> => {
   const authResponse: AuthResponseProps = await signUp(ref);
 
   if (!authResponse.success) {

@@ -1,6 +1,6 @@
 
 // Internal
-import CommunicationComponent from '@/services/communication-service';
+import CommunicationComponent from '@components/communication';
 
 const Page = (): JSX.Element => {
   return (
