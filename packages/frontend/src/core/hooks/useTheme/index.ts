@@ -3,7 +3,6 @@
 
 // React + Next
 import { useState } from 'react';
-import { getCookie, setCookie } from 'cookies-next';
 
 // Internal
 import { key, maxAge, value } from './config';
@@ -34,6 +33,7 @@ const useTheme = (): UseThemeReturnProps => {
     const cookie: string | undefined = Cookies.get(key);
 
     if (!cookie || (cookie !== 'light' && cookie !== 'dark')) {
+      Cookies.set({ key: key, data: value, maxAge: maxAge });
       return value;
     }
 
@@ -43,7 +43,7 @@ const useTheme = (): UseThemeReturnProps => {
   const switchTheme = (): void => {
     const newTheme: ThemeOption = theme === 'light' ? 'dark' : 'light';
 
-    setCookie(key, newTheme, { maxAge: maxAge }); // Set to 10 years
+    Cookies.set({ key: key, data: newTheme, maxAge: maxAge });
     setTheme(newTheme);
   }
 
