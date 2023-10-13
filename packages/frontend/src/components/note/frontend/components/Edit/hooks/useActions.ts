@@ -6,7 +6,7 @@ import { FormEvent } from "react";
 
 // Internal
 import type Note from "../interfaces";
-import { updateNoteController } from "@/services/note-service/backend/controllers";
+import { updateNoteController } from "@components/note/backend/controllers";
 import ResponseProps, { EditNoteProps } from "@shared/interfaces";
 
 interface UseActionsProps {

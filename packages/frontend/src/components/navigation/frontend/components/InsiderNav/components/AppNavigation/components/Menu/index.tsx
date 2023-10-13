@@ -1,9 +1,9 @@
 
 "use client";
 
-import NavMenuLinkProps from '../../interfaces';
+import styles from './index.module.scss';
+import NavMenuLinkProps from './interfaces';
 import RecursiveLink from './RecursiveLinks';
-import styles from './index.module.scss'
 import { clientRoute } from '@shared/classes/routes';
 
 interface MenuProps {
@@ -33,7 +33,7 @@ function getNavMenuLinks(): NavMenuLinkProps[] {
   return links;
 }
 
-/** Returns a custom menu for the app's navigation. */
+/** Custom menu for the app's navigation. */
 const Menu = ({ closeNav }: MenuProps) => {
   const links = getNavMenuLinks();
 

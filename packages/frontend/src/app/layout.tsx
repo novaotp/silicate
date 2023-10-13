@@ -11,7 +11,7 @@ import LayoutProps from './interfaces';
 /** The main layout of the app. */
 const RootLayout = ({ children }: LayoutProps): JSX.Element => {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className={poppins.className}>
         <Suspense fallback={<Loading />}>
           {children}

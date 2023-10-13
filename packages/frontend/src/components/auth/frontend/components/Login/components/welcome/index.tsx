@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 // Internal
-import SilicateLogo from '@public/silicate_logo.svg';
+import SilicateLogo from '@public/SilicateAppIconBlackHorizontal.png';
 
 /** Returns the header of the log-in page. */
 const LoginWelcomeHeader = (): JSX.Element => {

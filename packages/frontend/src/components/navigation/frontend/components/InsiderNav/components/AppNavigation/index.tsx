@@ -12,6 +12,7 @@ interface AppNavigationProps {
   closeNav: () => void;
 }
 
+/** The navigation related to the app. */
 const AppNavigation = ({ isAppNavOpen, closeNav }: AppNavigationProps) => {
   return (
     <div className={`${styles.nav} ${isAppNavOpen ? styles.open : ""}`}>

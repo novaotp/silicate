@@ -1,26 +1,31 @@
 
+"use client";
+
+// MUI Icons
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+
 // Next
 import Image from 'next/image';
 
 // Internal
-import SilicateLogo from '@public/silicate_logo.svg';
+import SilicateLogo from '@public/SilicateAppIconBlackHorizontal.png';
 import styles from './index.module.scss';
 
 interface HeaderProps {
   closeNav: () => void;
 }
 
+/** The app navigation's header. */
 const Header = ({ closeNav }: HeaderProps) => {
   return (
-    <div>
+    <div className={styles.header}>
       <button className={styles.button} onClick={closeNav}>
-        Close
+        <CloseRoundedIcon />
       </button>
       <Image
         src={SilicateLogo}
         alt="Silicate Logo"
-        width={150}
-        height={75}
+        height={60}
       />
     </div>
   )

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 // Internal
-import NavMenuLinkProps from "@/components/AppNav/interfaces";
+import NavMenuLinkProps from "../interfaces";
 import styles from './index.module.scss';
 
 interface RecursiveLinkProps {
@@ -27,7 +27,7 @@ export default function RecursiveLink({ link, closeNav, level = 1 }: RecursiveLi
   return (
     <li className={styles.li}>
       <span className={styles.linkWrapper}>
-        <Link onClick={closeNav} href={href}>{label}</Link>
+        <Link className={styles.link} onClick={closeNav} href={href}>{label}</Link>
         {subLinks && <button className={`${styles.toggleBtn} ${isOpen ? styles.openButton : ""}`} onClick={toggleOpen}><KeyboardArrowDownSharpIcon /></button>}
       </span>
       {

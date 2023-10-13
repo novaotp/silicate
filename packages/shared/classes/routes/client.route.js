@@ -14,9 +14,6 @@ class ClientRoute {
         },
         signup: {
           use: () => '/auth/sign-up',
-        },
-        logout: {
-          use: () => '/auth/log-out',
         }
       },
       account: {

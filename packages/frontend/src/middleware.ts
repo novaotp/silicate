@@ -17,14 +17,6 @@ const middleware = async (request: NextRequest) => {
       return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use())
     }
 
-    if (pathname === clientRoute.auth.logout.use()) {
-      const res = NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.auth.login.use());
-
-      res.cookies.delete('token');
-
-      return res;
-    }
-
     if (pathname === clientRoute.auth.login.use()) {
       if (await isAuthenticated()) {
         return NextResponse.redirect(process.env.FRONTEND_URL + clientRoute.app.use());
