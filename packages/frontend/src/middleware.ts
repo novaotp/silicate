@@ -1,11 +1,11 @@
 
 // Next
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 
 // Internal
 import { clientRoute } from "@shared/classes/routes";
-import { UseVerifyTokenReturnProps, useVerifyTokenWithJWT } from "./core/hooks/useVerifyToken";
 import { key, value, maxAge } from "@hooks/useTheme/config";
+import TokenVerifier, { VerifyReturnProps } from "@classes/tokenVerifier";
 
 /** Returns a custom middleware for the app. */
 const middleware = async (request: NextRequest) => {
@@ -61,13 +61,13 @@ interface UseAuthReturnProps {
 const useAuth = (request: NextRequest): UseAuthReturnProps => {
   /** Checks if the user is authenticated. Returns true or false appropriately. */
   const isAuthenticated = async (): Promise<boolean> => {
-    const userID = request.cookies.get('id');
+    const cookie = request.cookies.get('id');
 
-    if (!userID) {
+    if (!cookie) {
       return false;
     }
 
-    const { success }: UseVerifyTokenReturnProps = await useVerifyTokenWithJWT(userID.value);
+    const { success }: VerifyReturnProps = await TokenVerifier.verify(cookie.value);
 
     return success;
   }

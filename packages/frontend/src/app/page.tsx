@@ -1,5 +1,8 @@
 
+// Next
 import { type Metadata } from 'next';
+
+// Internal
 import LandingComponent from './page.components';
 
 export const metadata: Metadata = {

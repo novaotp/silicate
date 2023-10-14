@@ -2,7 +2,7 @@
 'use client';
 
 // React + Next
-import { useRef, FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 // Internal
@@ -12,22 +12,26 @@ import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import { clientRoute } from "@shared/classes/routes";
 import { AuthResponseProps, SignUpProps } from "@shared/interfaces";
 import Cookies from "@classes/cookies";
-import { signUpController } from "@components/auth/backend/controllers";
+import { signUpController } from "../../../../../backend/controllers";
+import Dates from "@classes/dates";
 
 /** Returns the form of the sign-up page. */
 const SignUpForm = (): JSX.Element => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isStepTwo, setIsStepTwo] = useState<boolean>(false);
   const router = useRouter();
 
   /** Handles the signup process. */
   const signUp = async () => {
-    const formData = new FormData(formRef.current!);
-
     const data: SignUpProps = {
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      password: formData.get('password') as string
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password
     }
 
     const response: AuthResponseProps = await signUpController(data);
@@ -39,9 +43,17 @@ const SignUpForm = (): JSX.Element => {
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
+    if (password !== confirmPassword) {
+      setPassword("");
+      setConfirmPassword("");
+      return alert("Passwords do not match");
+    }
+    
     const authResponse: AuthResponseProps = await signUp();
 
     if (!authResponse.success) {
+      setPassword("");
+      setConfirmPassword("");
       return alert(authResponse.message);
     }
 
@@ -51,38 +63,88 @@ const SignUpForm = (): JSX.Element => {
       router.push(clientRoute.auth.login.use());
     }
     
-    Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: tokenResponse.payload!.exp! * 1000 - Date.now() });
+    Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
 
     router.push(clientRoute.app.use());
   }
   
   return (
-    <form className={styles.form} ref={formRef} onSubmit={handleFormSubmit}>
-      <InputField
-        type="text"
-        label="Prénom"
-        placeholder="Entre ton prénom ici..."
-        name="firstName"
-      />
-      <InputField
-        type="text"
-        label="Nom de famille"
-        placeholder="Entre ton nom de famille ici..."
-        name="lastName"
-      />
-      <InputField
-        type="email"
-        label="Email"
-        placeholder="Entre ton email ici..."
-        name="email"
-      />
-      <InputField
-        type="password"
-        label="Mot de passe"
-        placeholder="Entre ton mot de passe ici..."
-        name="password"
-      />
-      <SubmitButton label="Créer mon compte" />
+    <form className={styles.form} onSubmit={handleFormSubmit}>
+      <div className={`${styles.fields} ${isStepTwo ? styles.active : ''}`}>
+        <div className={styles.innerFields}>
+          <InputField
+            type="text"
+            label="Prénom"
+            placeholder="Entre ton prénom ici..."
+            name="firstName"
+            value={firstName}
+            onChange={setFirstName}
+          />
+          <InputField
+            type="text"
+            label="Nom de famille"
+            placeholder="Entre ton nom de famille ici..."
+            name="lastName"
+            value={lastName}
+            onChange={setLastName}
+          />
+        </div>
+        <div className={styles.innerFields}>
+          <InputField
+            type="email"
+            label="Email"
+            placeholder="Entre ton email ici..."
+            name="email"
+            value={email}
+            onChange={setEmail}
+          />
+          <InputField
+            type="password"
+            label="Mot de passe"
+            placeholder="Entre ton mot de passe ici..."
+            name="password"
+            value={password}
+            onChange={setPassword}
+          />
+          <InputField
+            type="password"
+            label="Confirmer le mot de passe"
+            placeholder="Entre ton mot de passe ici..."
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+          />
+        </div>
+      </div>
+      <div className={styles.buttons}>
+      {!isStepTwo && (
+          <SubmitButton
+            label="Continuer"
+            type='button'
+            onClick={() => {
+              if (!isStepTwo) {
+                setIsStepTwo(true);
+              }
+            }}
+          />
+        )}
+        {isStepTwo && (
+          <SubmitButton
+            backgroundColor="grey"
+            label="Retour"
+            type="button"
+            onClick={() => {
+              setIsStepTwo(false);
+            }}
+          />
+        )}
+        {isStepTwo && (
+          <SubmitButton
+            label="Créer mon compte"
+            type='submit'
+          />
+        )}
+      </div>
     </form>
   )
 }

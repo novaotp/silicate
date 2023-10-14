@@ -2,7 +2,7 @@
 'use client';
 
 // React + Next
-import { useRef, FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Internal
@@ -12,19 +12,20 @@ import { loginController, newCookie } from '@components/auth/backend/controllers
 import { useVerifyTokenWithJWT } from '@hooks/useVerifyToken';
 import { clientRoute } from '@shared/classes/routes';
 import { AuthResponseProps, LoginProps } from '@shared/interfaces';
+import Cookies from '@classes/cookies';
+import Dates from '@classes/dates';
 
 /** Returns the form of the log-in page. */
 const LoginForm = (): JSX.Element => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   /** Handles the log-in process. */
   const logIn = async (): Promise<AuthResponseProps> => {
-    const formData = new FormData(formRef.current!);
-
     const data: LoginProps = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string
+      email: email,
+      password: password
     }
 
     const response: AuthResponseProps = await loginController(data);
@@ -49,24 +50,28 @@ const LoginForm = (): JSX.Element => {
       router.push(clientRoute.auth.login.use())
     }
 
-    await newCookie("id", authResponse.jwt!, tokenResponse.payload!.exp! * 1000);
+    Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
 
     router.push(clientRoute.app.use());
   }
 
   return (
-    <form className={styles.form} ref={formRef} onSubmit={handleFormSubmit}>
+    <form className={styles.form} onSubmit={handleFormSubmit}>
       <InputField
         type="email"
         label="Email"
         placeholder="Entre ton email ici..."
         name="email"
+        value={email}
+        onChange={setEmail}
       />
       <InputField
         type="password"
         label="Mot de passe"
         placeholder="Entre ton mot de passe ici..."
         name="password"
+        value={password}
+        onChange={setPassword}
       />
       <SubmitButton label="Connexion" />
     </form>

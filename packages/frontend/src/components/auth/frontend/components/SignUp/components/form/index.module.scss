@@ -3,15 +3,46 @@
   width: 80%;
   height: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  overflow-x: hidden;
 
-  div:first-of-type {
-    margin-top: 0;
+  .fields {
+    position: relative;
+    width: 250%;
+    height: 250px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 200ms ease-in-out;
+
+    &.active {
+      transform: translateX(-60%);
+    }
+
+    .innerFields {
+      position: relative;
+      width: 40%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 2px;
+    }
   }
-  
-  div:last-of-type {
-    margin-bottom: 0;
+
+  .buttons {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0;
+
+    button:first-of-type {
+      margin-top: 0;
+    }
+
+    button:last-of-type {
+      margin-bottom: 0;
+    }
   }
 }

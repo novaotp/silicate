@@ -1,6 +1,6 @@
 
 // Internal
-import { FriendsComponent } from '@/services/communication-service';
+import { FriendsComponent } from '@components/communication';
 
 const Page = (): JSX.Element => {
   return (
