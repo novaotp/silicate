@@ -15,17 +15,20 @@ import useNote from './hooks/useNote';
 import useActions from './hooks/useActions';
 import { clientRoute } from '@shared/classes/routes';
 import Editor from './components/Editor';
+import { usePathname } from 'next/navigation';
 
 interface EditProps {
-  /** The note's id. */
-  noteId: string;
   /** The user's id. */
   userID: number;
 }
 
+const getNoteId = (): string => {
+  return usePathname().split('/').pop()!;
+}
+
 /** Returns the main component of the editing note page. */
-const Edit = ({ noteId, userID }: EditProps): JSX.Element => {
-  const { note: noteData, updateNoteField, isError, isLoading } = useNote({ noteId, userID });
+const Edit = ({ userID }: EditProps): JSX.Element => {
+  const { note: noteData, updateNoteField, isError, isLoading } = useNote({ noteId: getNoteId(), userID });
 
   if (isError) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;

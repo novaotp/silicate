@@ -1,6 +1,8 @@
 # Configure the repo (install npm modules etc.)
 
-$root = Get-Location
+Import-Module .\scripts\utils.psm1
+
+$root = Get-RootPath
 function Install-NpmModules ([string] $route, [string] $override) {
   [string] $prefix = "$route : "
   [string] $removingMessage = "Removing npm_modules...                  "
@@ -53,7 +55,7 @@ Clear-Host
 Write-Host "Starting powershell script..."
 [string] $override = Read-Host "Remove and reinstall the node_modules folder if it already exists ? (y/n) "
 Clear-Host
-Write-Host "Starting powershell script..."
+Write-Host "Installing dependencies..."
 
 Install-NpmModules -route "packages/backend" -override $override
 Install-NpmModules -route "packages/frontend" -override $override

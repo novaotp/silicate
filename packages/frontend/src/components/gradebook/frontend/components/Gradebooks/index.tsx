@@ -58,6 +58,18 @@ const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
             name='name'
             placeholder='Entrez le nom du gradebook ici...'
           />
+          <InputField
+            type="date"
+            label="Début"
+            name="startDate"
+            placeholder="Entrez la date de début ici..."
+          />
+          <InputField
+            type="date"
+            label="Fin"
+            name="endDate"
+            placeholder="Entrez la date de fin ici..."
+          />
           <div className={styles.buttons}>
             <button className={`${styles.add} ${styles.button} ${poppins.className}`} onClick={closeModal} type="submit">Ajouter</button>
             <button className={`${styles.close} ${styles.button} ${poppins.className}`} onClick={closeModal}>Close</button>

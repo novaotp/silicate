@@ -4,7 +4,7 @@ import styles from './index.module.scss';
 
 interface InputFieldProps {
   /** The type of the input field. */
-  type: "text" | "email" | "password";
+  type: "text" | "email" | "password" | "date";
   /** The label for the input field. */
   label: string;
   /** The placeholder for the input field. */

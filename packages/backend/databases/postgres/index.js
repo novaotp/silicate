@@ -31,4 +31,14 @@ class DBPool {
   }
 }
 
-export default DBPool;
+/** A Postgres pool with database URIs. */
+const pool = new pg.Pool({
+  host: process.env.PG_DB_HOST,
+  user: process.env.PG_DB_USER,
+  password: process.env.PG_DB_PASSWORD,
+  database: process.env.PG_DB,
+  port: process.env.PG_DB_PORT,
+});
+
+export { DBPool };
+export default pool;

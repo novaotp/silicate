@@ -78,22 +78,22 @@ class ServerRoute {
            */
           client: (userId, friendId) => `/friend/${userId}/${friendId}`,
         },
-        /** Removes a friend from the user. */
-        remove: {
+        /** Deletes a friend from the user. */
+        delete: {
           /**
-           * The server-side route to remove a friend from a user with dynamic ids.
+           * The server-side route to delete a friend from a user with dynamic ids.
            * 
            * Method : `delete`
-           * @returns {'/friend/:userId/:friendId'} The server-side endpoint to remove the friend from the user.
+           * @returns {'/friend/:userId/:friendId'} The server-side endpoint to delete the friend from the user.
            */
           server: () => '/friend/:userId/:friendId',
           /**
-           * The client-side route to remove a friend with dynamic ids.
+           * The client-side route to delete a friend with dynamic ids.
            * 
            * Method : `delete`
-           * @param {string} userId The id of the user from whom the friend is being removed.
-           * @param {string} friendId The id of the friend to be removed.
-           * @returns {string} The client-side endpoint to remove the friend from the user.
+           * @param {string} userId The id of the user from whom the friend is being deleted.
+           * @param {string} friendId The id of the friend to be deleted.
+           * @returns {string} The client-side endpoint to delete the friend from the user.
            */
           client: (userId, friendId) => `/friend/${userId}/${friendId}`,
         }
