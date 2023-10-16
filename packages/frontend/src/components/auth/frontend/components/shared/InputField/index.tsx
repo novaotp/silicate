@@ -5,7 +5,7 @@
 import { type ChangeEvent, type SetStateAction } from 'react';
 
 // Internal
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 import styles from './index.module.scss';
 
 interface InputFieldProps {

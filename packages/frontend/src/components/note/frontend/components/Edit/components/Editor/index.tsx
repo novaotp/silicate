@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 // Internal
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 import Note from '../../interfaces';
 import styles from './index.module.scss';
 import { useRef } from 'react';

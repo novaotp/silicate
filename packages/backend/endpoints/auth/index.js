@@ -1,6 +1,6 @@
 
 import JWT from '../../../shared/classes/JWT.js';
-import { Pool } from 'pg';
+import pool from '../../databases/postgres/index.js';
 
 /**
  * Handles authentication endpoints.
@@ -8,24 +8,15 @@ import { Pool } from 'pg';
  */
 class AuthEndpoints {
 	/**
-   * Creates an instance of AuthEndpoints.
-   * @param {Pool} pool The database pool
-   */
-	constructor(pool) {
-		/** The database pool. */
-		this.pool = pool;
-	}
-
-	/**
 	 * Handles user login.
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-	async login(req, res) {
+	static async login(req, res) {
 		try {
-			const client = await this.pool.connect();
+			const client = await pool.connect();
 
-			/** @type { import('../shared/interfaces/index.js').LoginProps } */
+			/** @type { import('../../../shared/interfaces/index.js').LoginProps } */
 			const body = req.body;
 
 			const userQuery = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
@@ -61,9 +52,9 @@ class AuthEndpoints {
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-	async signup(req, res) {
+	static async signup(req, res) {
 		try {
-			const client = await this.pool.connect();
+			const client = await pool.connect();
 	
 			/** @type { import('../shared/interfaces/index.js').SignUpProps } */
 			const body = req.body;
@@ -108,7 +99,7 @@ class AuthEndpoints {
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-	async verifyToken(req, res) {
+	static async verifyToken(req, res) {
 		/** @type { import('../shared/interfaces/index.js').VerifyTokenProps } */
 		const body = req.body;
 	

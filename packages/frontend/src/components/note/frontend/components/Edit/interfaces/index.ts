@@ -1,3 +1,4 @@
+
 interface Note {
   /** The id in the database. */
   id: number,

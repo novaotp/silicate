@@ -1,5 +1,5 @@
 
-import { Pool } from 'pg';
+import pool from '../../databases/postgres/index.js';
 
 /**
  * Handles friends endpoints.
@@ -7,25 +7,16 @@ import { Pool } from 'pg';
  */
 class FriendsEndpoints {
   /**
-   * Creates an instance of FriendsEnpoints.
-   * @param {Pool} pool The database pool
-   */
-	constructor(pool) {
-		/** The database pool. */
-		this.pool = pool;
-	}
-
-  /**
 	 * Adds a new friend in the database.
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-  async create(req, res) {
+  static async create(req, res) {
     /** @type { import('../shared/interfaces/index.js').FriendRequestProps } */
     const body = req.body;
   
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
   
       const addFriendQuery = 'INSERT INTO public.friendship (first_user_id, second_user_id) VALUES ($1, $2)';
   
@@ -50,12 +41,12 @@ class FriendsEndpoints {
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-  async readAll(req, res) {
+  static async readAll(req, res) {
     /** @type { import('../shared/interfaces/index.js').AllFriendsRequestProps } */
     const body = req.body;
   
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
   
       const addFriendQuery = 'SELECT * FROM public.friendship WHERE first_user_id = $1 OR second_user_id = $1;';
   
@@ -80,12 +71,12 @@ class FriendsEndpoints {
 	 * @param {Express.Request} req The request object
 	 * @param {Express.Response} res The response object
 	 */
-  async delete(req, res) {
+  static async delete(req, res) {
     /** @type { import('../shared/interfaces/index.js').FriendRequestProps } */
     const body = req.body;
   
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
   
       const removeFriendQuery = 'DELETE FROM public.friendship WHERE first_user_id = $1 AND second_user_id = $2';
   

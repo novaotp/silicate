@@ -1,13 +1,27 @@
 
-/** A static class for generic request bodies. */
-class Requests {
+class NoStoreRequests {
+  /**
+   * Sends a GET request with no caching.
+   * @param url The url for the request.
+   * @param data The data for the request.
+   * @returns A promise of a {@link Response} object.
+   */
+  async get(url: string): Promise<Response> {
+    const init: RequestInit = {
+      method: 'GET',
+      cache: "no-store"
+    }
+    
+    return await fetch(url, init);
+  }
+
   /**
    * Sends a POST request with no caching.
    * @param url The url for the request.
    * @param data The data for the request.
    * @returns A promise of a {@link Response} object.
    */
-  static async noStorePost(url: string, data: any): Promise<Response> {
+  async post(url: string, data: any): Promise<Response> {
     const init: RequestInit = {
       method: 'POST',
       headers: {
@@ -19,24 +33,6 @@ class Requests {
     
     return await fetch(url, init);
   }
-
-  /**
-   * Sends a basic POST request.
-   * @param url The url for the request.
-   * @param data The data for the request.
-   * @returns A promise of a {@link Response} object.
-   */
-  static async post(url: string, data: any): Promise<Response> {
-    const init: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    }
-    
-    return await fetch(url, init);
-  }
 }
 
-export default Requests;
+export default NoStoreRequests;

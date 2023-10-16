@@ -9,9 +9,13 @@ import useAccount from "@hooks/useAccount";
 import SilicateLogo from "@public/SilicateAppIconBlackVertical.png";
 import styles from "./index.module.scss";
 
+interface DashboardProps {
+  userId: number;
+}
+
 /** The main component of the dashboard page. */
-const Dashboard = (): JSX.Element => {
-  const { account, isError, isLoading } = useAccount();
+const Dashboard = ({ userId }: DashboardProps): JSX.Element => {
+  const { account, isError, isLoading } = useAccount(userId);
 
   if (isError) return <p>An error occured while fetching the data...</p>
   if (isLoading) return <p>Fetching the data...</p>

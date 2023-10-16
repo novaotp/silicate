@@ -1,6 +1,6 @@
 
 /** A static class for server-side routes. */
-class ServerRoute {
+class NewServerRoute {
   /** Returns a server route object */
   static object() {
     return {
@@ -256,4 +256,4 @@ class ServerRoute {
   }
 }
 
-export default ServerRoute;
+export default NewServerRoute;

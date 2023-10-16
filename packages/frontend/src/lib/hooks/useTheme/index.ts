@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 // Internal
 import { key, maxAge, value } from './config';
-import Cookies from '@classes/cookies';
+import Cookies from '@utils/cookies';
 
 interface UseThemeReturnProps {
   /**

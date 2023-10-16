@@ -11,9 +11,9 @@ import { InputField, SubmitButton } from "../../../shared";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import { clientRoute } from "@shared/classes/routes";
 import { AuthResponseProps, SignUpProps } from "@shared/interfaces";
-import Cookies from "@classes/cookies";
+import Cookies from "@utils/cookies";
 import { signUpController } from "../../../../../backend/controllers";
-import Dates from "@classes/dates";
+import Dates from "@utils/dates";
 
 /** Returns the form of the sign-up page. */
 const SignUpForm = (): JSX.Element => {

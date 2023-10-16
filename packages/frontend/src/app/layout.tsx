@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 
 // Internal
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 import './globals.scss';
 import Loading from './loading';
 import LayoutProps from './interfaces';

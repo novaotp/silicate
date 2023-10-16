@@ -1,5 +1,5 @@
 
-import { Pool } from 'pg';
+import pool from '../../databases/postgres/index.js';
 
 /**
  * Handles account endpoints.
@@ -7,44 +7,18 @@ import { Pool } from 'pg';
  */
 class AccountEndpoints {
   /**
-   * Creates an instance of AccountEndpoints.
-   * @param {Pool} pool The database pool
-   */
-  constructor(pool) {
-    /** The database pool. */
-    this.pool = pool;
-  }
-
-  /**
    * Fetches a user's data.
-   * @param {Express.Request} req The request object
+   * @param {{ params: { userId: string} }} req The request object
    * @param {Express.Response} res The response object
    */
-  async read(req, res) {
+  static async read({ params: { userId } }, res) {
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
 
-      /** @type {{ jwt: string }} */
-      const body = req.body;
+      const query = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
+      const values = [userId];
 
-      const response = await fetch(process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use(), {
-        method: 'POST',
-        body: JSON.stringify({ jwt: body.jwt }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-      /** @type {import('../shared/interfaces/index.js').TokenResponseProps} */
-      const result = await response.json();
-
-      if (!result.success) {
-        return res.status(200).json({ success: false, message: 'Not authenticated' })
-      }
-
-      const fetchAccountQuery = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
-      const fetchAccountValues = [result.payload.payload.userID];
-
-      const { rows } = await client.query(fetchAccountQuery, fetchAccountValues);
+      const { rows } = await client.query(query, values);
 
       await client.release(true);
 

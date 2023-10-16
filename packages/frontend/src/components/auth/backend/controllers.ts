@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 // Internal
 import { AuthResponseProps, LoginProps, SignUpProps, } from "@shared/interfaces";
 import { serverRoute } from "@shared/classes/routes";
-import Requests from "@classes/requests";
+import Requests from "@utils/requests";
 
 /**
  * Calls the API with the given sign-up data and returns a response.

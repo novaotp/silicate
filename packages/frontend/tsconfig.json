@@ -23,9 +23,8 @@
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@public/*": ["public/*"],
-      "@core/*": ["src/core/*"],
-      "@hooks/*": ["src/core/hooks/*"],
-      "@classes/*": ["src/core/classes/*"],
+      "@hooks/*": ["src/lib/hooks/*"],
+      "@utils/*": ["src/utils/*"],
       "@components/*": ["src/components/*"],
       "@shared/*": ["../shared/*"],
     }

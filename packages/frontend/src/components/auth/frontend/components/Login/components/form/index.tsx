@@ -12,8 +12,8 @@ import { loginController, newCookie } from '@components/auth/backend/controllers
 import { useVerifyTokenWithJWT } from '@hooks/useVerifyToken';
 import { clientRoute } from '@shared/classes/routes';
 import { AuthResponseProps, LoginProps } from '@shared/interfaces';
-import Cookies from '@classes/cookies';
-import Dates from '@classes/dates';
+import Cookies from '@utils/cookies';
+import Dates from '@utils/dates';
 
 /** Returns the form of the log-in page. */
 const LoginForm = (): JSX.Element => {

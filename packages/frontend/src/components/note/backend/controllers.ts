@@ -3,11 +3,11 @@
 
 import { serverRoute } from "@shared/classes/routes";
 import ResponseProps, { AddNoteProps, EditNoteProps } from "@shared/interfaces";
-import useVerifyToken, { type UseVerifyTokenReturnProps } from "@/core/hooks/useVerifyToken";
-import Requests from "@/core/classes/requests";
+import useVerifyToken from "@hooks/useVerifyToken";
+import Requests from "@utils/requests";
 
 const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>): Promise<ResponseProps & { noteId?: number }> => {
-  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
+  const { success, result } = await useVerifyToken();
 
   if (!success) {
     return result as ResponseProps;
@@ -25,7 +25,7 @@ const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>):
 }
 
 const updateNoteController = async (data: Pick<EditNoteProps, 'id' | "title" | "content">): Promise<ResponseProps> => {
-  const { success, result }: UseVerifyTokenReturnProps = await useVerifyToken();
+  const { success, result } = await useVerifyToken();
 
   if (!success) {
     return result as ResponseProps;

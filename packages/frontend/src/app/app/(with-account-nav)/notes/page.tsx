@@ -5,7 +5,7 @@ import { Metadata } from "next";
 // Internal
 import useVerifyToken from "@hooks/useVerifyToken";
 import { Notes } from "@components/note";
-import Requests from "@classes/requests";
+import Requests from "@utils/requests";
 import { serverRoute } from "@shared/classes/routes";
 import { NoteProps, NotesResponseProps } from "@shared/interfaces";
 

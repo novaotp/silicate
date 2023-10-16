@@ -5,17 +5,19 @@
 
 /// Styles and fonts
 import styles from './index.module.scss';
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 
 /// Components
 import BackLink from "../shared/BackLink";
 
 /// Functions and objects
 import useNote from './hooks/useNote';
-import useActions from './hooks/useActions';
 import { clientRoute } from '@shared/classes/routes';
 import Editor from './components/Editor';
 import { usePathname } from 'next/navigation';
+import { updateNoteController } from '@/components/note/backend/controllers';
+import ResponseProps, { EditNoteProps } from '@shared/interfaces';
+import { FormEvent } from 'react';
 
 interface EditProps {
   /** The user's id. */
@@ -35,7 +37,30 @@ const Edit = ({ userID }: EditProps): JSX.Element => {
 
   /** The defined note. */
   const note = noteData!;
-  const { update, discard } = useActions({ note, updateNoteField });
+
+  /** Updates the note on the form's submit. */
+  const update = async (event: FormEvent): Promise<void> => {
+    event.preventDefault();
+
+    const data: Pick<EditNoteProps, 'id' | "title" | "content"> = {
+      id: note.id,
+      title: note.title,
+      content: note.content
+    }
+
+    const response: ResponseProps = await updateNoteController(data);
+
+    if (response.success) {
+      updateNoteField('initialTitle', note.title);
+      updateNoteField('initialContent', note.content);
+    }
+  }
+
+  /** Discards the changes and sets the values to their initial ones. */
+  const discard = (): void => {
+    updateNoteField('title', note.initialTitle);
+    updateNoteField('content', note.initialContent);
+  }
 
   return (
     <div className={styles.window}>

@@ -2,7 +2,7 @@
 'use client';
 
 // Internal
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 import styles from './index.module.scss';
 
 /** The {@link SubmitButton}'s props. */

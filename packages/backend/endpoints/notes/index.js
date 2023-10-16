@@ -1,28 +1,18 @@
 
-import { Pool } from 'pg';
+import pool from '../../databases/postgres/index.js';
 
 /**
  * Handles notes endpoints.
  * @class
  */
 class NotesEndpoints {
-  /**
-   * Creates an instance of NotesEndpoints.
-   * @param {Pool} pool The database pool
-   */
-  constructor(pool) {
-    /** The database pool. */
-    this.pool = pool;
-  }
-
-  /**
-   * Adds a new note in the database.
+  /** Adds a new note in the database.
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  async create(req, res) {
+  static async create(req, res) {
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
 
       /** @type { import('../shared/interfaces/index.js').AddNoteProps } */
       const body = req.body;
@@ -30,7 +20,7 @@ class NotesEndpoints {
       console.log(body)
 
       const now = Date.now();
-      const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id LIMIT 1;';
+      const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
       const newNoteValues = [body.userID, body.title, body.content, now, now];
 
       const { rows } = await client.query(newNoteQuery, newNoteValues);
@@ -51,9 +41,9 @@ class NotesEndpoints {
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  async readAll(req, res) {
+  static async readAll(req, res) {
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
 
       /** @type {{ userID: number }} */
       const body = req.body;
@@ -79,9 +69,9 @@ class NotesEndpoints {
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  async read(req, res) {
+  static async read(req, res) {
     try {
-      const client = await this.pool.connect();
+      const client = await pool.connect();
 
       /** @type {import('../shared/interfaces/index.js').ReadNoteProps} */
       const body = req.body;
@@ -107,7 +97,7 @@ class NotesEndpoints {
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  async update(req, res) {
+  static async update(req, res) {
     try {
       const client = await pool.connect();
 
@@ -136,7 +126,7 @@ class NotesEndpoints {
    * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  async delete(req, res) {
+  static async delete(req, res) {
     try {
       const client = await pool.connect();
 

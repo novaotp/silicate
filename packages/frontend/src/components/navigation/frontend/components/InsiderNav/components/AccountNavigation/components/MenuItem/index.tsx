@@ -7,7 +7,7 @@ import { type CSSProperties } from "react";
 
 // Internal
 import styles from './index.module.scss';
-import { poppins } from "@/core/fonts";
+import { poppins } from "@/fonts";
 
 interface MenuItemProps {
   /** An icon for the item. */

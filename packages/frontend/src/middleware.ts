@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Internal
 import { clientRoute } from "@shared/classes/routes";
 import { key, value, maxAge } from "@hooks/useTheme/config";
-import TokenVerifier, { VerifyReturnProps } from "@classes/tokenVerifier";
+import TokenVerifier from "@utils/tokenVerifier";
 
 /** Returns a custom middleware for the app. */
 const middleware = async (request: NextRequest) => {
@@ -67,7 +67,7 @@ const useAuth = (request: NextRequest): UseAuthReturnProps => {
       return false;
     }
 
-    const { success }: VerifyReturnProps = await TokenVerifier.verify(cookie.value);
+    const { success } = await TokenVerifier.verify(cookie.value);
 
     return success;
   }

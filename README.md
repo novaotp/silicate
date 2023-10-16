@@ -1,34 +1,48 @@
 # Silicate Project
 
-A simple solution for school life management  
+A simple solution for managing school life easily.
 
-### Features
+## Features
 
-- Creating gradebooks
-- Having conversations with friends or teachers
-- Creating notes
+- [x] Create gradebooks
+- [x] Create personal notes
+- [ ] Have conversations with friends or teachers
+- [ ] Have your personal agenda
+- [ ] An online community-driven resource library
 
-### Languages
+## Supported Languages
 
-- French
-- English
-- German
-- Italian
+- [x] French
+- [ ] English
+- [ ] German
+- [ ] Italian
 
+## Development
 
-## Getting Started
+### Getting Started
 
-Run the configure.ps1 or configure.sh script to configure the dependencies
+Run the configure.ps1 or configure.sh script to configure the dependencies.
 
-Open two terminals simultaneously  
+```powershell
+PS C:\path\to\directory> .\configure.ps1
+```
 
-On the first type :  
-`cd frontend && npm run dev`  
+OR
 
-And on the second type :  
-`cd backend/api && npm start`  
+```bash
+username@pc:~$ ./configure.sh
+```
 
-> Note : you can also run the run files (.ps1 or .sh) within your two terminals
+### Run the projects
+
+Open two terminals simultaneously
+
+```bash
+cd frontend && npm run dev    # Frontend
+cd backend/api && npm start   # Backend
+```
+
+> Note : you can also run the scripts/run files (.ps1 or .sh) within your two terminals
 
 ## API Calls
 
@@ -47,12 +61,7 @@ And on the second type :
 - `/friends/add` create a new friendship between two users
 - `/friends/remove` remove a friendship between two users
 
-## Autors
+## Authors
 
-#### Backend Developers
-
-- ENDERastronaute
-
-#### Frontend Developers
-
-- NovaOTP
+- NovaOTP (Sajidur Rahman)
+- ENDERastronaute (Leny Bressoud)

@@ -12,7 +12,7 @@ import { GradebookProps } from "@shared/interfaces";
 import { NoGradebooksFound, RenderGradebooks } from "./components";
 import styles from './index.module.scss';
 import InputField from '../shared/InputField';
-import { poppins } from '@/core/fonts';
+import { poppins } from '@/fonts';
 
 interface GradebooksProps {
   gradebooks: GradebookProps[];

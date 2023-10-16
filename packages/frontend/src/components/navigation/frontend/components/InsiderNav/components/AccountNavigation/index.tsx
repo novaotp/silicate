@@ -17,7 +17,7 @@ import styles from './index.module.scss';
 import { clientRoute } from '@shared/classes/routes';
 import MenuItem from './components/MenuItem';
 import useTheme from '@hooks/useTheme';
-import Cookies from '@classes/cookies';
+import Cookies from '@utils/cookies';
 
 interface AccountNavigationProps {
   /** The state of the account navigation. */

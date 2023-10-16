@@ -1,5 +1,5 @@
 
-type CustomFetcherProps = [string, string];
+type CustomFetcherProps = [string, number];
 
 interface UseAccountReturnProps {
   /** The account's data. */

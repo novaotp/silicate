@@ -2,7 +2,7 @@
 "use server";
 
 // Internal
-import Requests from "@classes/requests";
+import Requests from "@utils/requests";
 import { serverRoute } from "@shared/classes/routes";
 import { TokenResponseProps } from "@shared/interfaces";
 import VerifyReturnProps from "./interfaces";
@@ -21,9 +21,9 @@ class TokenVerifier {
    * Verifies the auth state of the user and returns true or false appropriately.
    * @param jwt The jwt payload to check
    */
-  public static async verify(jwt: string): Promise<VerifyReturnProps>;
+  public static async verify(jwt: string | undefined): Promise<VerifyReturnProps>;
 
-  public static async verify(jwt?: string): Promise<VerifyReturnProps> {
+  public static async verify(jwt?: string | undefined): Promise<VerifyReturnProps> {
     let token = jwt || Cookies.get('id');
 
     if (!token) {
