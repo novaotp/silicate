@@ -9,13 +9,14 @@
   .fields {
     position: relative;
     width: 250%;
-    height: 250px;
+    height: 160px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: transform 200ms ease-in-out;
+    transition: 200ms ease-in-out;
 
     &.active {
+      height: 250px;
       transform: translateX(-60%);
     }
 

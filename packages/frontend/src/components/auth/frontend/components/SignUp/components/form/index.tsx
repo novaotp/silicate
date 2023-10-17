@@ -2,7 +2,7 @@
 'use client';
 
 // React + Next
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 // Internal
@@ -14,6 +14,7 @@ import { AuthResponseProps, SignUpProps } from "@shared/interfaces";
 import Cookies from "@utils/cookies";
 import { signUpController } from "../../../../../backend/controllers";
 import Dates from "@utils/dates";
+import Button from "../../../shared/Button";
 
 /** Returns the form of the sign-up page. */
 const SignUpForm = (): JSX.Element => {
@@ -23,6 +24,7 @@ const SignUpForm = (): JSX.Element => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isStepTwo, setIsStepTwo] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
 
   /** Handles the signup process. */
@@ -43,7 +45,10 @@ const SignUpForm = (): JSX.Element => {
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
+    setIsProcessing(true);
+
     if (password !== confirmPassword) {
+      setIsProcessing(false);
       setPassword("");
       setConfirmPassword("");
       return alert("Passwords do not match");
@@ -52,6 +57,7 @@ const SignUpForm = (): JSX.Element => {
     const authResponse: AuthResponseProps = await signUp();
 
     if (!authResponse.success) {
+      setIsProcessing(false);
       setPassword("");
       setConfirmPassword("");
       return alert(authResponse.message);
@@ -65,6 +71,7 @@ const SignUpForm = (): JSX.Element => {
     
     Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
 
+    setIsProcessing(false);
     router.push(clientRoute.app.use());
   }
   
@@ -117,32 +124,12 @@ const SignUpForm = (): JSX.Element => {
         </div>
       </div>
       <div className={styles.buttons}>
-      {!isStepTwo && (
-          <SubmitButton
-            label="Continuer"
-            type='button'
-            onClick={() => {
-              if (!isStepTwo) {
-                setIsStepTwo(true);
-              }
-            }}
-          />
-        )}
-        {isStepTwo && (
-          <SubmitButton
-            backgroundColor="grey"
-            label="Retour"
-            type="button"
-            onClick={() => {
-              setIsStepTwo(false);
-            }}
-          />
-        )}
-        {isStepTwo && (
-          <SubmitButton
-            label="Créer mon compte"
-            type='submit'
-          />
+        { !isStepTwo && <Button label="Continuer" onClick={() => setIsStepTwo(true)} /> }
+        { isStepTwo && (
+          <>
+            <Button backgroundColor="grey" label="Retour" onClick={() => setIsStepTwo(false)} />
+            <SubmitButton label="Créer mon compte" isProcessing={isProcessing} />
+          </>
         )}
       </div>
     </form>

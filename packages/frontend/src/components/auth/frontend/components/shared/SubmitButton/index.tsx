@@ -9,26 +9,30 @@ import styles from './index.module.scss';
 interface SubmitButtonProps {
   /** The button's text. */
   label: string;
-  /** An optional type for the button. */
-  type?: 'button' | 'submit';
-  /** An optional onClick event. */
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  /** An optional background color. */
-  backgroundColor?: string;
+  /** If the submission is currently being handled. */
+  isProcessing: boolean;
 }
 
-/** A custom submit button. */
-const SubmitButton = ({ label, type, onClick, backgroundColor }: SubmitButtonProps): JSX.Element => {
+/**
+ * A custom submit button with an `isProcessing` property.
+ * 
+ * `isProcessing` should be used when the form is being handled.
+ * 
+ * While processing :
+ * - The text changes to `Chargement...`
+ * - The color changes to `grey`
+ */
+const SubmitButton = ({ label, isProcessing }: SubmitButtonProps): JSX.Element => {
   return (
     <button
       className={`${styles.button} ${poppins.className}`}
-      type={type ?? 'submit'}
-      onClick={onClick}
+      type='submit'
       style={{
-        backgroundColor: backgroundColor ?? "blue",
+        backgroundColor: isProcessing ? "grey" : "blue",
+        cursor: isProcessing? "not-allowed" : "pointer"
       }}
     >
-      {label}
+      {isProcessing ? "Chargement..." : label}
     </button>
   )
 }

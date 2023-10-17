@@ -19,6 +19,7 @@ import Dates from '@utils/dates';
 const LoginForm = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
 
   /** Handles the log-in process. */
@@ -38,20 +39,25 @@ const LoginForm = (): JSX.Element => {
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
+    setIsProcessing(true);
+
     const authResponse: AuthResponseProps = await logIn();
 
     if (!authResponse.success) {
+      setIsProcessing(false);
       return alert(authResponse.message);
     }
 
     const { success, result: tokenResponse } = await useVerifyTokenWithJWT(authResponse.jwt!);
 
     if (!success) {
+      setIsProcessing(false);
       router.push(clientRoute.auth.login.use())
     }
 
     Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
 
+    setIsProcessing(false);
     router.push(clientRoute.app.use());
   }
 
@@ -73,7 +79,7 @@ const LoginForm = (): JSX.Element => {
         value={password}
         onChange={setPassword}
       />
-      <SubmitButton label="Connexion" />
+      <SubmitButton isProcessing={isProcessing} label="Connexion" />
     </form>
   )
 }
