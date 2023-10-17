@@ -32,7 +32,7 @@ const useVerifyToken = async (): Promise<UseVerifyTokenReturnProps> => {
 
   const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
 
-  const response = await Requests.noStorePost(url, { jwt: cookie.value });
+  const response = await Requests.noStore.post(url, { jwt: cookie.value });
   const result: TokenResponseProps = await response.json();
 
   return {
@@ -52,7 +52,7 @@ const useVerifyToken = async (): Promise<UseVerifyTokenReturnProps> => {
 const useVerifyTokenWithJWT = async (jwt: string): Promise<UseVerifyTokenReturnProps> => {
   const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
 
-  const response = await Requests.noStorePost(url, { jwt });
+  const response = await Requests.noStore.post(url, { jwt });
   const result: TokenResponseProps = await response.json();
 
   return {

@@ -76,6 +76,9 @@ class NotesEndpoints {
       /** @type {import('../shared/interfaces/index.js').ReadNoteProps} */
       const body = req.body;
 
+      console.log("HEADERS", req.headers);
+      console.log("COOKIES", req.cookies);
+
       const fetchNoteQuery = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
       const fetchNoteValues = [body.id, body.userID];
 

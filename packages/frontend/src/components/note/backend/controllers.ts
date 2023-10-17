@@ -20,7 +20,7 @@ const addNoteController = async (data: Pick<AddNoteProps, 'title' | 'content'>):
 
   const url = process.env.API_SERVER_URL + serverRoute.notes.add.use();
   
-  const response = await Requests.noStorePost(url, userData);
+  const response = await Requests.noStore.post(url, userData);
   return await response.json();
 }
 
@@ -38,7 +38,7 @@ const updateNoteController = async (data: Pick<EditNoteProps, 'id' | "title" | "
 
   const url = process.env.API_SERVER_URL + serverRoute.notes.update.use();
 
-  const response = await Requests.noStorePost(url, userData);
+  const response = await Requests.noStore.post(url, userData);
   return await response.json();
 }
 

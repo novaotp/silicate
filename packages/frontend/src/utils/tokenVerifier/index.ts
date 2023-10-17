@@ -37,7 +37,7 @@ class TokenVerifier {
     }
 
     const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
-    const response = await Requests.noStorePost(url, { jwt: token });
+    const response = await Requests.noStore.post(url, { jwt: token });
     const result: TokenResponseProps = await response.json();
 
     return {

@@ -19,7 +19,7 @@ const customFetcher = async (props: CustomFetcherProps) => {
   const noteId = props[1];
   const userID = props[2];
 
-  const response = await Requests.post(url, { id: noteId, userID });
+  const response = await Requests.noStore.post(url, { id: noteId, userID });
   const result: NoteResponseProps = await response.json();
   const note: ReadNoteResponseProps = JSON.parse(result.note);
 

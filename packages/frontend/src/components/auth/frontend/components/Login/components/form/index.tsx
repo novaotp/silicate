@@ -44,6 +44,7 @@ const LoginForm = (): JSX.Element => {
     const authResponse: AuthResponseProps = await logIn();
 
     if (!authResponse.success) {
+      setPassword("");
       setIsProcessing(false);
       return alert(authResponse.message);
     }
@@ -51,6 +52,7 @@ const LoginForm = (): JSX.Element => {
     const { success, result: tokenResponse } = await useVerifyTokenWithJWT(authResponse.jwt!);
 
     if (!success) {
+      setPassword("");
       setIsProcessing(false);
       router.push(clientRoute.auth.login.use())
     }

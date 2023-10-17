@@ -9,7 +9,8 @@ class NoStoreRequests {
   async get(url: string): Promise<Response> {
     const init: RequestInit = {
       method: 'GET',
-      cache: "no-store"
+      cache: "no-store",
+      credentials: "include"
     }
     
     return await fetch(url, init);
@@ -28,7 +29,8 @@ class NoStoreRequests {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-      cache: "no-store"
+      cache: "no-store",
+      credentials: "include"
     }
     
     return await fetch(url, init);
