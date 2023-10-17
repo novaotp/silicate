@@ -4,7 +4,7 @@ import { serverRoute } from '../../shared/classes/routes/index.js';
 /**
  * Validates the payload and returns it if valid, otherwise returns 0.
  * @param {string} jwt The JWT payload
- * @return {Promise<number>} The user's id in the database or 0
+ * @return {Promise<{userId: number, message: string}>} The user's id in the database or 0
  */
 const getUserIdFromJWT = async (jwt) => {
   const url = process.env.API_SERVER_URL + serverRoute.auth.verifyToken.use();
@@ -21,10 +21,16 @@ const getUserIdFromJWT = async (jwt) => {
   const result = await response.json();
 
   if (!result.success) {
-    return 0;
+    return {
+      userId: 0,
+      message: result.message
+    }
   }
 
-  return result.payload.payload.userID;
+  return {
+    userId: result.payload.payload.userID,
+    message: result.message
+  };
 }
 
 export default getUserIdFromJWT;

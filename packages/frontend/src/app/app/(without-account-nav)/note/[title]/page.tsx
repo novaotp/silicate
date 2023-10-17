@@ -2,7 +2,6 @@
 // Next
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 
 // Internal
 import useVerifyToken from "@hooks/useVerifyToken";
@@ -10,7 +9,7 @@ import { clientRoute } from "@shared/classes/routes";
 import { Edit } from "@components/note";
 
 export const metadata: Metadata = {
-  title: `Editing note - Silicate`
+  title: "Editing note - Silicate"
 }
 
 /** The editing note page. */

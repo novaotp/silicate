@@ -24,7 +24,7 @@ const fetchNotes = async (): Promise<NoteProps[]> => {
   }
 
   const url = process.env.API_SERVER_URL + serverRoute.notes.use();
-  const response = await Requests.noStorePost(url, { userID: tokenResponse.payload!.payload.userID });
+  const response = await Requests.noStore.post(url, { userID: tokenResponse.payload!.payload.userID });
 
   const result: NotesResponseProps = await response.json();
   const notes: ({ user_id: number } & NoteProps)[] = JSON.parse(result.notes);
