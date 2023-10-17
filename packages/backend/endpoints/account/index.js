@@ -1,5 +1,6 @@
 
 import pool from '../../databases/postgres/index.js';
+import getUserIdFromJWT from '../../utils/userIdFromJWT.js';
 
 /**
  * Handles account endpoints.
@@ -8,12 +9,18 @@ import pool from '../../databases/postgres/index.js';
 class AccountEndpoints {
   /**
    * Fetches a user's data.
-   * @param {{ params: { userId: string} }} req The request object
+   * @param {Express.Request} req The request object
    * @param {Express.Response} res The response object
    */
-  static async read({ params: { userId } }, res) {
+  static async read(req, res) {
     try {
       const client = await pool.connect();
+
+      const userId = await getUserIdFromJWT(req.cookies.id);
+
+      if (userId === 0) {
+        return res.status(401).json({ success: false, message: 'Falsified JWT detected' })
+      }
 
       const query = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
       const values = [userId];
