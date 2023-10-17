@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 // Internal
 import styles from './page.module.scss';
-import { clientRoute } from '@shared/classes/routes';
+import { clientRoute } from '@shared/utils/routes';
 
 /** The main component of the landing page. */
 const LandingComponent = (): JSX.Element => {

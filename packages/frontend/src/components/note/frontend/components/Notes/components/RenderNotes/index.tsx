@@ -6,7 +6,7 @@ import Link from "next/link";
 
 // Internal
 import styles from './index.module.scss';
-import { clientRoute } from "@shared/classes/routes";
+import { clientRoute } from "@shared/utils/routes";
 import { NoteProps } from "@shared/interfaces";
 
 /** The {@link RenderNotes}'s props. */

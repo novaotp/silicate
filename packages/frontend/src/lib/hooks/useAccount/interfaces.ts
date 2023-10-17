@@ -1,6 +1,4 @@
 
-type CustomFetcherProps = [string, number];
-
 interface UseAccountReturnProps {
   /** The account's data. */
   account: Account;
@@ -17,8 +15,5 @@ interface Account {
   lastName: string;
 }
 
-export type {
-  CustomFetcherProps,
-  UseAccountReturnProps
-};
+export type { UseAccountReturnProps };
 export default Account;

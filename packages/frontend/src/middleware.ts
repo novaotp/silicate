@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Internal
-import { clientRoute } from "@shared/classes/routes";
+import { clientRoute } from "@shared/utils/routes";
 import { key, value, maxAge } from "@hooks/useTheme/config";
 import TokenVerifier from "@utils/tokenVerifier";
 

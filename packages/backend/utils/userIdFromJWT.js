@@ -1,5 +1,5 @@
 
-import { serverRoute } from '../../shared/classes/routes/index.js';
+import { serverRoute } from '../../shared/utils/routes/index.js';
 
 /**
  * Validates the payload and returns it if valid, otherwise returns 0.

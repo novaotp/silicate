@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import styles from './index.module.scss';
 import { InputField, SubmitButton } from "../../../shared";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
-import { clientRoute } from "@shared/classes/routes";
+import { clientRoute } from "@shared/utils/routes";
 import { AuthResponseProps, SignUpProps } from "@shared/interfaces";
 import Cookies from "@utils/cookies";
 import { signUpController } from "../../../../../backend/controllers";

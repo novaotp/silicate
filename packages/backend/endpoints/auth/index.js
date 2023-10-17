@@ -1,5 +1,5 @@
 
-import JWT from '../../../shared/classes/JWT.js';
+import JWT from '../../../shared/utils/JWT.js';
 import pool from '../../databases/postgres/index.js';
 
 /**

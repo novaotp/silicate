@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 // Internal
 import Requests from "@utils/requests";
 import UseVerifyTokenReturnProps from "./interfaces";
-import { serverRoute } from "@shared/classes/routes";
+import { serverRoute } from "@shared/utils/routes";
 import { TokenResponseProps } from "@shared/interfaces";
 
 /**

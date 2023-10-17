@@ -8,37 +8,16 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 // Internal
-import { serverRoute } from "@shared/classes/routes";
-import { NoteProps, NoteResponseProps, ReadNoteResponseProps } from "@shared/interfaces";
-import Requests from "@utils/requests";
-import Note, { CustomFetcherProps, UseNoteProps, UseNoteReturnProps } from "./interfaces";
-
-/** A custom fetcher for the {@link useNote} hook. */
-const customFetcher = async (props: CustomFetcherProps) => {
-  const url = props[0];
-  const noteId = props[1];
-  const userID = props[2];
-
-  const response = await Requests.noStore.post(url, { id: noteId, userID });
-  const result: NoteResponseProps = await response.json();
-  const note: ReadNoteResponseProps = JSON.parse(result.note);
-
-  const processedNote: NoteProps = {
-    id: note.id,
-    title: note.title,
-    content: note.content,
-    created_at: note.created_at,
-    updated_at: note.updated_at,
-    deleted_at: note.deleted_at
-  };
-
-  return processedNote;
-};
+import { newServerRoute as serverRoute } from "@shared/utils/routes";
+import Note, { UseNoteReturnProps } from "./interfaces";
+import getNoteId from "./getNoteId";
+import fetcher from "./fetcher";
 
 /** Fetches a specific note's data, comes with error and loading handling. */
-const useNote = ({ noteId, userID }: UseNoteProps): UseNoteReturnProps => {
+const useNote = (): UseNoteReturnProps => {
+  const id = getNoteId();
   const [note, setNote] = useState<Note>({
-    id: Number(noteId),
+    id: id,
     title: "",
     content: "",
     initialTitle: "",
@@ -46,8 +25,8 @@ const useNote = ({ noteId, userID }: UseNoteProps): UseNoteReturnProps => {
     created_at: 0,
     updated_at: 0
   });
-  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.notes.read.use();
-  const { data, error, isLoading } = useSWR([url, noteId, userID], customFetcher);
+  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.notes.read.client(id);
+  const { data, error, isLoading } = useSWR([url, id], fetcher);
 
   // Set default data
   useEffect(() => {

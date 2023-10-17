@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 
 // Internal
-import { serverRoute as oldServerRoute, newServerRoute as serverRoute } from '../shared/classes/routes/index.js';
+import { serverRoute as oldServerRoute, newServerRoute as serverRoute } from '../shared/utils/routes/index.js';
 import setupWebSocket from './setup/websocket/index.js';
 import { AuthEndpoints, FriendsEndpoints, NotesEndpoints, AccountEndpoints } from './endpoints/index.js';
 
@@ -26,17 +26,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post(oldServerRoute.auth.login.use(), AuthEndpoints.login);
-app.post(oldServerRoute.auth.signup.use(), AuthEndpoints.signup);
-app.post(oldServerRoute.auth.verifyToken.use(), AuthEndpoints.verifyToken);
+app.post(serverRoute.auth.login.use(), AuthEndpoints.login);
+app.post(serverRoute.auth.signup.use(), AuthEndpoints.signup);
+app.post(serverRoute.auth.verifyToken.use(), AuthEndpoints.verifyToken);
 
 app.post(oldServerRoute.friends.use(), FriendsEndpoints.readAll);
 app.post(oldServerRoute.friends.add.use(), FriendsEndpoints.create);
 app.post(oldServerRoute.friends.remove.use(), FriendsEndpoints.delete);
 
-app.post(oldServerRoute.notes.use(), NotesEndpoints.readAll);
+app.get(serverRoute.notes.readAll.server(), NotesEndpoints.readAll);
 app.post(oldServerRoute.notes.add.use(), NotesEndpoints.create);
-app.post(serverRoute.notes.read.server(), NotesEndpoints.read);
+app.get(serverRoute.notes.read.server(), NotesEndpoints.read);
 app.post(oldServerRoute.notes.update.use(), NotesEndpoints.update);
 app.post(oldServerRoute.notes.delete.use(), NotesEndpoints.delete);
 
