@@ -4,7 +4,7 @@
 import styles from './index.module.scss';
 import NavMenuLinkProps from './interfaces';
 import RecursiveLink from './RecursiveLinks';
-import { clientRoute } from '@shared/classes/routes';
+import { clientRoute } from '@shared/utils/routes';
 
 interface MenuProps {
   closeNav: () => void;

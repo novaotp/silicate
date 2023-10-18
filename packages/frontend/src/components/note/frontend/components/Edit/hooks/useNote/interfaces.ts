@@ -3,13 +3,6 @@ import Note from "../../interfaces";
 
 type CustomFetcherProps = [string, string, number];
 
-interface UseNoteProps {
-  /** The note's id. */
-  noteId: string;
-  /** The user's id. */
-  userID: number;
-}
-
 interface UseNoteReturnProps {
   /** The note itself or undefined. */
   note: Note | undefined;
@@ -25,5 +18,5 @@ interface UseNoteReturnProps {
   isLoading: any;
 }
 
-export type { CustomFetcherProps, UseNoteProps, UseNoteReturnProps };
+export type { CustomFetcherProps, UseNoteReturnProps };
 export default Note;

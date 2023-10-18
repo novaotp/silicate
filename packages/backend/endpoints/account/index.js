@@ -16,10 +16,10 @@ class AccountEndpoints {
     try {
       const client = await pool.connect();
 
-      const userId = await getUserIdFromJWT(req.cookies.id);
+      const { userId, message } = await getUserIdFromJWT(req.cookies.id);
 
       if (userId === 0) {
-        return res.status(401).json({ success: false, message: 'Falsified JWT detected' })
+        return res.status(401).json({ success: false, message: message })
       }
 
       const query = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';

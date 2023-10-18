@@ -1,7 +1,7 @@
 
 'use server';
 
-import { serverRoute } from "@shared/classes/routes";
+import { serverRoute } from "@shared/utils/routes";
 import ResponseProps, { AddNoteProps, EditNoteProps } from "@shared/interfaces";
 import useVerifyToken from "@hooks/useVerifyToken";
 import Requests from "@utils/requests";
