@@ -47,11 +47,15 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      /** @type {{ userID: number }} */
-      const body = req.body;
+      console.log(await getUserIdFromJWT(getJWTFromCookie(req)));
+      const { userId, message } = await getUserIdFromJWT(getJWTFromCookie(req));
+
+      if (userId === 0) {
+        return res.status(401).json({ success: false, message: message });
+      }
 
       const fetchNotesQuery = 'SELECT * FROM public.note WHERE user_id = $1;';
-      const fetchNotesValues = [body.userID];
+      const fetchNotesValues = [userId];
 
       const { rows } = await client.query(fetchNotesQuery, fetchNotesValues);
 
@@ -72,51 +76,30 @@ class NotesEndpoints {
    * @param {Express.Response} res The response object
    */
   static async read(req, res) {
-    let status = 200;
-    let client;
-    /** @type {import('../../../shared/interfaces/index.js').NoteResponseProps} */
-    let response = {};
-
     try {
       const client = await pool.connect();
 
-      /** @type {import('../shared/interfaces/index.js').ReadNoteProps} */
-      const body = req.body;
+      const { noteId } = req.params;
 
       const { userId, message } = await getUserIdFromJWT(getJWTFromCookie(req));
 
       if (userId === 0) {
-        status = 401;
-        response.success = false;
-        response.message = message;
-        response.note = undefined;
-        return;
+        return res.status(401).json({ success: false, message: message });
       }
 
       const fetchNoteQuery = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
-      const fetchNoteValues = [body.id, userId];
+      const fetchNoteValues = [noteId, userId];
 
       const { rows } = await client.query(fetchNoteQuery, fetchNoteValues);
 
-      status = 200;
-      response.success = true;
-      response.message = 'Fetched note successfully';
-      response.note = JSON.stringify(rows[0]);
+      await client.release(true);
+
+      return res.status(200).json({ success: true, message: 'Fetched notes successfully', note: JSON.stringify(rows[0]) });
 
     } catch (err) {
       console.error(err);
 
-      status = 500;
-      response.success = false;
-      response.message = 'Internal Server Error';
-      response.note = undefined;
-
-    } finally {
-      if (client) {
-        await client.release(true);
-      }
-
-      return 
+      return res.status(500).json({ success: false, message: 'Internal Server Error' })
     }
   }
 

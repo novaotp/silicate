@@ -8,9 +8,9 @@ import { useRouter } from 'next/navigation';
 // Internal
 import styles from './index.module.scss';
 import { InputField, SubmitButton } from "../../../shared";
-import { loginController, newCookie } from '@components/auth/backend/controllers';
+import { loginController } from '@components/auth/backend/controllers';
 import { useVerifyTokenWithJWT } from '@hooks/useVerifyToken';
-import { clientRoute } from '@shared/classes/routes';
+import { clientRoute } from '@shared/utils/routes';
 import { AuthResponseProps, LoginProps } from '@shared/interfaces';
 import Cookies from '@utils/cookies';
 import Dates from '@utils/dates';

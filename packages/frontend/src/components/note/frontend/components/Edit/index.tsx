@@ -1,36 +1,28 @@
 
 'use client';
 
+// React
+import { FormEvent } from 'react';
+
 // Internal
 
-/// Styles and fonts
+// -- Styles and fonts
 import styles from './index.module.scss';
 import { poppins } from '@/fonts';
 
-/// Components
+// -- Components
+import Editor from './components/Editor';
 import BackLink from "../shared/BackLink";
 
-/// Functions and objects
+// -- Functions and objects
 import useNote from './hooks/useNote';
-import { clientRoute } from '@shared/classes/routes';
-import Editor from './components/Editor';
-import { usePathname } from 'next/navigation';
+import { clientRoute } from '@shared/utils/routes';
 import { updateNoteController } from '@/components/note/backend/controllers';
 import ResponseProps, { EditNoteProps } from '@shared/interfaces';
-import { FormEvent } from 'react';
-
-interface EditProps {
-  /** The user's id. */
-  userID: number;
-}
-
-const getNoteId = (): string => {
-  return usePathname().split('/').pop()!;
-}
 
 /** Returns the main component of the editing note page. */
-const Edit = ({ userID }: EditProps): JSX.Element => {
-  const { note: noteData, updateNoteField, isError, isLoading } = useNote({ noteId: getNoteId(), userID });
+const Edit = (): JSX.Element => {
+  const { note: noteData, updateNoteField, isError, isLoading } = useNote();
 
   if (isError) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;

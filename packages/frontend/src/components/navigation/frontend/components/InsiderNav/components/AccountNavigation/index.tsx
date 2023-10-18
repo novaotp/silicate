@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import { clientRoute } from '@shared/classes/routes';
+import { clientRoute } from '@shared/utils/routes';
 import MenuItem from './components/MenuItem';
 import useTheme from '@hooks/useTheme';
 import Cookies from '@utils/cookies';
