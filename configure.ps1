@@ -1,8 +1,6 @@
 # Configure the repo (install npm modules etc.)
 
-Import-Module .\scripts\utils.psm1
-
-$root = Get-RootPath
+$root = Get-Location
 function Install-NpmModules ([string] $route, [string] $override) {
   [string] $prefix = "$route : "
   [string] $removingMessage = "Removing npm_modules...                  "
