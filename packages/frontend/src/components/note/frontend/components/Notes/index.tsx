@@ -1,17 +1,20 @@
 
+"use client";
+
 // Internal
-import { NoteProps } from "@shared/interfaces"
 import styles from './index.module.scss';
 import { NewNote, RenderNotes } from "./components";
-
-/** The {@link NoteComponent}'s props. */
-interface NotesProps {
-  /** An array of the user's notes. */
-  notes: NoteProps[];
-}
+import fetchNotes from './fetchNotes';
 
 /** Returns the main component of the notes page. */
-const Notes = ({ notes }: NotesProps): JSX.Element => {
+const Notes = (): JSX.Element => {
+  const { notes: notesData, isError, isLoading } = fetchNotes();
+
+  if (isError) return <p>An error occurred while fetching the data...</p>
+  if (isLoading) return <p>Loading...</p>
+
+  const notes = notesData!;
+
   return (
     <div className={styles.window}>
       <div className={styles.view}>

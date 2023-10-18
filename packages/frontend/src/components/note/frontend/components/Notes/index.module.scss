@@ -9,6 +9,6 @@ $add-button-height: 50px;
   .view {
     position: relative;
     width: 100%;
-    height: calc( 100% - $add-button-height );
+    height: calc( 100% - $add-button-height - 20px );
   }
 }
