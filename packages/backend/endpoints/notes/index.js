@@ -20,6 +20,8 @@ class NotesEndpoints {
 
       const { userId, message } = await getUserIdFromCookie(req);
 
+      console.log("User ID:", userId);
+
       if (userId === 0) {
         return res.status(401).json({ success: false, message: message });
       }

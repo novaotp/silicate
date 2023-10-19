@@ -17,7 +17,9 @@ import { clientRoute } from "@shared/utils/routes";
 const NewNote = () => {
   const router = useRouter();
 
-  const handleOnClick = async () => {
+  const handleOnClick = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+
     const result = await addNoteController({ title: "Ma note", content: "" });
 
     if (!result.noteId) {

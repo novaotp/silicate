@@ -22,7 +22,7 @@ const fetcher = async (url: string) => {
 };
 
 /** A client-side hook to get data on the account. */
-const useAccount = (userId: number): UseAccountReturnProps => {
+const useAccount = (): UseAccountReturnProps => {
   const [account, setAccount] = useState<Account>({
     firstName: "",
     lastName: ""

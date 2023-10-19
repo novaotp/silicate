@@ -101,7 +101,7 @@ class AuthEndpoints {
 	 */
 	static async verifyToken(req, res) {
 		try {
-			/** @type { import('../shared/interfaces/index.js').VerifyTokenProps } */
+			/** @type { import('../../../shared/interfaces/index.js').VerifyTokenProps } */
 			const body = req.body;
 
 			const payload = await JWT.verify(body.jwt);
@@ -109,6 +109,7 @@ class AuthEndpoints {
 			return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 
 		} catch (err) {
+			console.error(err);
 			if (err.code === 'ERR_JWS_INVALID') {
 				return res.status(401).json({ success: false, message: 'Invalid Token' })
 			}

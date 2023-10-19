@@ -12,11 +12,18 @@ import 'dotenv/config';
 import { serverRoute as oldServerRoute, newServerRoute as serverRoute } from '../shared/utils/routes/index.js';
 import setupWebSocket from './setup/websocket/index.js';
 import { AuthEndpoints, FriendsEndpoints, NotesEndpoints, AccountEndpoints } from './endpoints/index.js';
+import getUserIdFromCookie from './utils/getUserIdFromCookie/index.js';
 
 const app = express();
 const server = http.createServer(app);
 
 setupWebSocket(server);
+
+const unprotectedPaths = [
+  serverRoute.auth.login.use(),
+  serverRoute.auth.signup.use(),
+  serverRoute.auth.verifyToken.use()
+]
 
 app.use(cookieParser()); 
 app.use(cors({
@@ -25,6 +32,19 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+/* app.use(async (req, res, next) => {
+  if (unprotectedPaths.includes(req.url)) {
+    next();
+  }
+
+  const { userId, message } = await getUserIdFromCookie(req);
+
+  if (userId === 0) {
+    res.status(401).send(message);
+  } else {
+    next();
+  }
+}) */
 
 app.post(serverRoute.auth.login.use(), AuthEndpoints.login);
 app.post(serverRoute.auth.signup.use(), AuthEndpoints.signup);

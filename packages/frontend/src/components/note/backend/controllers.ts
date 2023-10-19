@@ -10,7 +10,7 @@ import Requests from "@utils/requests";
  * @param data The data for the request.
  */
 const addNoteController = async (data: CreateNoteRequestProps): Promise<CreateNoteResponseProps> => {
-  const url = process.env.API_SERVER_URL + serverRoute.notes.add.client();
+  const url = "http://localhost:4000" + serverRoute.notes.add.client();
   const response = await Requests.noStore.post(url, data);
 
   return await response.json();
