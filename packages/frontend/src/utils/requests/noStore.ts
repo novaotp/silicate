@@ -3,8 +3,6 @@ class NoStoreRequests {
   /**
    * Sends a GET request with no caching.
    * @param url The url for the request.
-   * @param data The data for the request.
-   * @returns A promise of a {@link Response} object.
    */
   async get(url: string): Promise<Response> {
     const init: RequestInit = {
@@ -20,7 +18,6 @@ class NoStoreRequests {
    * Sends a POST request with no caching.
    * @param url The url for the request.
    * @param data The data for the request.
-   * @returns A promise of a {@link Response} object.
    */
   async post(url: string, data: any): Promise<Response> {
     const init: RequestInit = {
@@ -29,6 +26,43 @@ class NoStoreRequests {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      cache: "no-store",
+      credentials: "include"
+    }
+    
+    return await fetch(url, init);
+  }
+
+  /**
+   * Sends a PUT request with no caching.
+   * @param url The url for the request.
+   * @param data The data for the request.
+   */
+  async put(url: string, data: any): Promise<Response> {
+    const init: RequestInit = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      cache: "no-store",
+      credentials: "include"
+    }
+    
+    return await fetch(url, init);
+  }
+
+  /**
+   * Sends a DELETE request with no caching.
+   * @param url The url for the request.
+   * @param data The data for the request.
+   */
+  async delete(url: string): Promise<Response> {
+    const init: RequestInit = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       cache: "no-store",
       credentials: "include"
     }

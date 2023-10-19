@@ -35,10 +35,10 @@ app.post(oldServerRoute.friends.add.use(), FriendsEndpoints.create);
 app.post(oldServerRoute.friends.remove.use(), FriendsEndpoints.delete);
 
 app.get(serverRoute.notes.readAll.server(), NotesEndpoints.readAll);
-app.post(oldServerRoute.notes.add.use(), NotesEndpoints.create);
 app.get(serverRoute.notes.read.server(), NotesEndpoints.read);
-app.post(oldServerRoute.notes.update.use(), NotesEndpoints.update);
-app.post(oldServerRoute.notes.delete.use(), NotesEndpoints.delete);
+app.post(serverRoute.notes.add.server(), NotesEndpoints.create);
+app.put(serverRoute.notes.update.server(), NotesEndpoints.update);
+app.delete(serverRoute.notes.delete.server(), NotesEndpoints.delete);
 
 app.get(serverRoute.account.read.server(), AccountEndpoints.read);
 

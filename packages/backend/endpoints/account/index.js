@@ -1,6 +1,6 @@
 
 import pool from '../../databases/postgres/index.js';
-import getUserIdFromJWT from '../../utils/userIdFromJWT.js';
+import getUserIdFromCookie from '../../utils/getUserIdFromCookie/index.js';
 
 /**
  * Handles account endpoints.
@@ -16,7 +16,7 @@ class AccountEndpoints {
     try {
       const client = await pool.connect();
 
-      const { userId, message } = await getUserIdFromJWT(req.cookies.id);
+      const { userId, message } = await getUserIdFromCookie(req);
 
       if (userId === 0) {
         return res.status(401).json({ success: false, message: message })

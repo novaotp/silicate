@@ -1,7 +1,6 @@
 
 import pool from '../../databases/postgres/index.js';
-import getJWTFromCookie from '../../utils/jwtFromCookie.js';
-import getUserIdFromJWT from '../../utils/userIdFromJWT.js';
+import getUserIdFromCookie from '../../utils/getUserIdFromCookie/index.js';
 
 /**
  * Handles notes endpoints.
@@ -16,16 +15,20 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      /** @type { import('../shared/interfaces/index.js').AddNoteProps } */
+      /** @type { import('../../../shared/interfaces/index.js').CreateNoteRequestProps } */
       const body = req.body;
 
-      console.log(body)
+      const { userId, message } = await getUserIdFromCookie(req);
+
+      if (userId === 0) {
+        return res.status(401).json({ success: false, message: message });
+      }
 
       const now = Date.now();
-      const newNoteQuery = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
-      const newNoteValues = [body.userID, body.title, body.content, now, now];
+      const query = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
+      const values = [userId, body.title, body.content, now, now];
 
-      const { rows } = await client.query(newNoteQuery, newNoteValues);
+      const { rows } = await client.query(query, values);
 
       await client.release(true);
 
@@ -47,7 +50,7 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      const { userId, message } = await getUserIdFromJWT(getJWTFromCookie(req));
+      const { userId, message } = await getUserIdFromCookie(req);
 
       if (userId === 0) {
         return res.status(401).json({ success: false, message: message });
@@ -79,8 +82,7 @@ class NotesEndpoints {
       const client = await pool.connect();
 
       const { noteId } = req.params;
-
-      const { userId, message } = await getUserIdFromJWT(getJWTFromCookie(req));
+      const { userId, message } = await getUserIdFromCookie(req);
 
       if (userId === 0) {
         return res.status(401).json({ success: false, message: message });
@@ -111,14 +113,21 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      /** @type {import('../shared/interfaces/index.js').EditNoteProps} */
+      /** @type {import('../../../shared/interfaces/index.js').UpdateNoteRequestProps} */
       const body = req.body;
 
-      const now = Date.now();
-      const updateNoteQuery = 'UPDATE public.note SET title = $1, content = $2, updated_at = $3 WHERE id = $4;';
-      const updateNoteValues = [body.title, body.content, now, body.id];
+      const { noteId } = req.params;
+      const { userId, message } = await getUserIdFromCookie(req);
 
-      await client.query(updateNoteQuery, updateNoteValues);
+      if (userId === 0) {
+        return res.status(401).json({ success: false, message: message });
+      }
+
+      const now = Date.now();
+      const query = 'UPDATE public.note SET title = $1, content = $2, updated_at = $3 WHERE id = $4 AND user_id = $5;';
+      const values = [body.title, body.content, now, noteId, userId];
+
+      await client.query(query, values);
 
       await client.release(true);
 
@@ -140,13 +149,17 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      /** @type { import('../shared/interfaces/index.js').RemoveNoteProps } */
-      const body = req.body;
+      const { noteId } = req.params;
+      const { userId, message } = await getUserIdFromCookie(req);
 
-      const deleteNoteQuery = 'DELETE FROM public.note WHERE id = $1 AND user_id = $2';
-      const deleteNoteValues = [body.id, body.userID];
+      if (userId === 0) {
+        return res.status(401).json({ success: false, message: message });
+      }
 
-      await client.query(deleteNoteQuery, deleteNoteValues);
+      const query = 'DELETE FROM public.note WHERE id = $1 AND user_id = $2';
+      const values = [noteId, userId];
+
+      await client.query(query, values);
 
       await client.release(true);
 

@@ -136,17 +136,16 @@ class NewServerRoute {
            * The server-side route to add a new note to the user.
            * 
            * Method : `post`
-           * @returns {'/notes/:noteId'}
+           * @returns {'/notes'}
            */
-          server: () => '/notes/:noteId',
+          server: () => '/notes',
           /**
            * The client-side route to add a new note to the user.
            * 
            * Method : `post`
-           * @param {string} noteId The id of the note to be added.
            * @returns {string}
            */
-          client: (noteId) => `/notes/${noteId}`
+          client: () => `/notes`
         },
         /** Deletes a note from the user. */
         delete: {
