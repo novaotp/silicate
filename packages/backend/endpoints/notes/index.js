@@ -47,7 +47,6 @@ class NotesEndpoints {
     try {
       const client = await pool.connect();
 
-      console.log(await getUserIdFromJWT(getJWTFromCookie(req)));
       const { userId, message } = await getUserIdFromJWT(getJWTFromCookie(req));
 
       if (userId === 0) {
