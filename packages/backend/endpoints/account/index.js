@@ -3,6 +3,11 @@ import pool from '../../databases/postgres/index.js';
 import getUserIdFromCookie from '../../utils/getUserIdFromCookie/index.js';
 
 /**
+ * @typedef {import('express').Request} Request
+ * @typedef {import('express').Response} Response
+ */
+
+/**
  * Handles account endpoints.
  * @class
  */

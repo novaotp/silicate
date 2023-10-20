@@ -7,14 +7,19 @@ import { useRouter } from "next/navigation";
 
 // Internal
 import styles from './index.module.scss';
-import { InputField, SubmitButton } from "../../../shared";
+
+/// -- Components --
+import { InputField, SubmitButton, Button } from "../../../shared";
+
+/// -- Functions and objects --
+import AuthController from "../../../../../backend/controllers";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
-import { clientRoute } from "@shared/utils/routes";
-import { AuthResponseProps, SignUpProps } from "@shared/interfaces";
 import Cookies from "@utils/cookies";
-import { signUpController } from "../../../../../backend/controllers";
 import Dates from "@utils/dates";
-import Button from "../../../shared/Button";
+
+/// -- Shared --
+import { clientRoute } from "@shared/utils/routes";
+import { SignUpRequestProps, SignUpResponseProps } from "@shared/interfaces";
 
 /** Returns the form of the sign-up page. */
 const SignUpForm = (): JSX.Element => {
@@ -27,18 +32,22 @@ const SignUpForm = (): JSX.Element => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
 
-  /** Handles the signup process. */
-  const signUp = async () => {
-    const data: SignUpProps = {
+  /** Resets the passwords. */
+  const resetPasswords = () => {
+    setPassword("");
+    setConfirmPassword("");
+  };
+
+  /** Handles the signup process and return the response. */
+  const signUp = async (): Promise<SignUpResponseProps> => {
+    const data: SignUpRequestProps = {
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password
     }
 
-    const response: AuthResponseProps = await signUpController(data);
-
-    return response;
+    return await AuthController.signUp(data);
   }
 
   /** Handles the form submission, including the account creation, alerting on error and redirections. */
@@ -49,30 +58,28 @@ const SignUpForm = (): JSX.Element => {
 
     if (password !== confirmPassword) {
       setIsProcessing(false);
-      setPassword("");
-      setConfirmPassword("");
+      resetPasswords();
       return alert("Passwords do not match");
     }
     
-    const authResponse: AuthResponseProps = await signUp();
+    const { success: signUpSuccess, message, jwt } = await signUp();
 
-    if (!authResponse.success) {
+    if (!signUpSuccess) {
       setIsProcessing(false);
-      setPassword("");
-      setConfirmPassword("");
-      return alert(authResponse.message);
+      resetPasswords();
+      return alert(message);
     }
 
-    const { success, result: tokenResponse } = await useVerifyTokenWithJWT(authResponse.jwt!);
+    const { success, payload } = await useVerifyTokenWithJWT(jwt!);
 
     if (!success) {
       router.push(clientRoute.auth.login.use());
     }
     
-    Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
+    Cookies.set({ key: "id", data: jwt!, maxAge: Dates.expiresToMaxAge(payload!.exp! * 1000) });
 
-    setIsProcessing(false);
     router.push(clientRoute.app.use());
+    setIsProcessing(false);
   }
   
   return (

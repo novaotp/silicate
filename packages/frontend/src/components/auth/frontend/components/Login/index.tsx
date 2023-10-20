@@ -1,5 +1,4 @@
 
-// Internal
 import { AlternativeLink } from '../shared';
 import styles from './index.module.scss';
 import { clientRoute } from '@shared/utils/routes';

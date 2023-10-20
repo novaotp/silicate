@@ -3,24 +3,28 @@ import pool from '../../databases/postgres/index.js';
 import getUserIdFromCookie from '../../utils/getUserIdFromCookie/index.js';
 
 /**
+ * @typedef {import('express').Request} Request
+ * @typedef {import('express').Response} Response
+ */
+
+/**
  * Handles notes endpoints.
  * @class
  */
 class NotesEndpoints {
-  /** Adds a new note in the database.
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
+  /**
+   * Adds a new note in the database.
+   * @param {Request} req The request object
+   * @param {Response} res The response object
    */
   static async create(req, res) {
     try {
       const client = await pool.connect();
 
       /** @type { import('../../../shared/interfaces/index.js').CreateNoteRequestProps } */
-      const body = req.body;
+      const { title, content } = req.body;
 
       const { userId, message } = await getUserIdFromCookie(req);
-
-      console.log("User ID:", userId);
 
       if (userId === 0) {
         return res.status(401).json({ success: false, message: message });
@@ -28,7 +32,7 @@ class NotesEndpoints {
 
       const now = Date.now();
       const query = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
-      const values = [userId, body.title, body.content, now, now];
+      const values = [userId, title, content, now, now];
 
       const { rows } = await client.query(query, values);
 
@@ -45,8 +49,8 @@ class NotesEndpoints {
 
   /**
    * Fetches all the user's notes.
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
+   * @param {Request} req The request object
+   * @param {Response} res The response object
    */
   static async readAll(req, res) {
     try {
@@ -76,13 +80,14 @@ class NotesEndpoints {
 
   /**
    * Fetches a specific note of a user.
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
+   * @param {Request} req The request object
+   * @param {Response} res The response object
    */
   static async read(req, res) {
     try {
       const client = await pool.connect();
 
+      /** @type {{ noteId: number}} */
       const { noteId } = req.params;
       const { userId, message } = await getUserIdFromCookie(req);
 
@@ -90,10 +95,10 @@ class NotesEndpoints {
         return res.status(401).json({ success: false, message: message });
       }
 
-      const fetchNoteQuery = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
-      const fetchNoteValues = [noteId, userId];
+      const query = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
+      const values = [noteId, userId];
 
-      const { rows } = await client.query(fetchNoteQuery, fetchNoteValues);
+      const { rows } = await client.query(query, values);
 
       if (rows.length === 0) {
         return res.status(404).json({ success: false, message: 'Note not found' });
@@ -112,16 +117,17 @@ class NotesEndpoints {
 
   /**
    * Updates an existing note.
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
+   * @param {Request} req The request object
+   * @param {Response} res The response object
    */
   static async update(req, res) {
     try {
       const client = await pool.connect();
 
       /** @type {import('../../../shared/interfaces/index.js').UpdateNoteRequestProps} */
-      const body = req.body;
+      const { title, content } = req.body;
 
+      /** @type {{ noteId: number}} */
       const { noteId } = req.params;
       const { userId, message } = await getUserIdFromCookie(req);
 
@@ -131,7 +137,7 @@ class NotesEndpoints {
 
       const now = Date.now();
       const query = 'UPDATE public.note SET title = $1, content = $2, updated_at = $3 WHERE id = $4 AND user_id = $5;';
-      const values = [body.title, body.content, now, noteId, userId];
+      const values = [title, content, now, noteId, userId];
 
       await client.query(query, values);
 
@@ -148,13 +154,14 @@ class NotesEndpoints {
 
   /**
    * Removes a note from the user.
-   * @param {Express.Request} req The request object
-   * @param {Express.Response} res The response object
+   * @param {Request} req The request object
+   * @param {Response} res The response object
    */
   static async delete(req, res) {
     try {
       const client = await pool.connect();
 
+      /** @type {{ noteId: number}} */
       const { noteId } = req.params;
       const { userId, message } = await getUserIdFromCookie(req);
 

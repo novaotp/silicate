@@ -28,7 +28,7 @@ class JWT {
 
   /**
    * Verifies the JWT.
-   * @param {string} token The JWT token to verify
+   * @param {string | undefined} token The JWT token to verify
    * @returns {Promise<JWTPayload>} The JWT payload after verification
    */
   static async verify(token) {

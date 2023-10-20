@@ -7,13 +7,19 @@ import { useRouter } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
+
+/// -- Components --
 import { InputField, SubmitButton } from "../../../shared";
-import { loginController } from '@components/auth/backend/controllers';
-import { useVerifyTokenWithJWT } from '@hooks/useVerifyToken';
-import { clientRoute } from '@shared/utils/routes';
-import { AuthResponseProps, LoginProps } from '@shared/interfaces';
-import Cookies from '@utils/cookies';
-import Dates from '@utils/dates';
+
+/// -- Functions and objects --
+import AuthController from "../../../../../backend/controllers";
+import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
+import Cookies from "@utils/cookies";
+import Dates from "@utils/dates";
+
+/// -- Shared --
+import { clientRoute } from "@shared/utils/routes";
+import { LoginRequestProps, LoginResponseProps } from "@shared/interfaces";
 
 /** Returns the form of the log-in page. */
 const LoginForm = (): JSX.Element => {
@@ -22,45 +28,49 @@ const LoginForm = (): JSX.Element => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
 
+  const resetPassword = () => {
+    setPassword(password);
+  }
+
   /** Handles the log-in process. */
-  const logIn = async (): Promise<AuthResponseProps> => {
-    const data: LoginProps = {
+  const logIn = async (): Promise<LoginResponseProps> => {
+    const data: LoginRequestProps = {
       email: email,
       password: password
     }
 
-    const response: AuthResponseProps = await loginController(data);
-
-    return response;
+    return await AuthController.login(data);
   }
 
-
-  /** Handles the form submission, including the account credentials check, alerting on error and redirections. */
+  /**
+   * Handles the form submission, including the account
+   * credentials check, alerting on error and redirections.
+   */
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     setIsProcessing(true);
 
-    const authResponse: AuthResponseProps = await logIn();
+    const { success: loginSuccess, message, jwt } = await logIn();
 
-    if (!authResponse.success) {
-      setPassword("");
+    if (!loginSuccess) {
       setIsProcessing(false);
-      return alert(authResponse.message);
+      resetPassword();
+      return alert(message);
     }
 
-    const { success, result: tokenResponse } = await useVerifyTokenWithJWT(authResponse.jwt!);
+    const { success, payload } = await useVerifyTokenWithJWT(jwt!);
 
     if (!success) {
-      setPassword("");
       setIsProcessing(false);
-      router.push(clientRoute.auth.login.use())
+      resetPassword();
+      return router.push(clientRoute.auth.login.use())
     }
 
-    Cookies.set({ key: "id", data: authResponse.jwt!, maxAge: Dates.expiresToMaxAge(tokenResponse.payload!.exp! * 1000) });
+    Cookies.set({ key: "id", data: jwt!, maxAge: Dates.expiresToMaxAge(payload!.exp! * 1000) });
 
     setIsProcessing(false);
-    router.push(clientRoute.app.use());
+    return router.push(clientRoute.app.use());
   }
 
   return (

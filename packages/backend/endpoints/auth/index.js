@@ -3,35 +3,35 @@ import JWT from '../../../shared/utils/JWT.js';
 import pool from '../../databases/postgres/index.js';
 
 /**
+ * @typedef {import('express').Request} Request
+ * @typedef {import('express').Response} Response
+ */
+
+/**
  * Handles authentication endpoints.
  * @class
  */
 class AuthEndpoints {
 	/**
 	 * Handles user login.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
 	static async login(req, res) {
 		try {
 			const client = await pool.connect();
 
-			/** @type { import('../../../shared/interfaces/index.js').LoginProps } */
-			const body = req.body;
+			/** @type { import('../../../shared/interfaces/index.js').LoginRequestProps } */
+			const { email, password } = req.body;
 
-			const userQuery = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
-			const userValues = [body.email];
+			const query = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
+			const values = [email];
 
-			const { rows } = await client.query(userQuery, userValues);
-
-			if (rows.length === 0) {
-				return res.status(400).json({ success: false, message: `User with email "${body.email}" does not exist` });
-			}
-
+			const { rows } = await client.query(query, values);
 			const user = rows[0];
 
-			if (user.password !== body.password) {
-				return res.status(400).json({ success: false, message: 'The passwords do not match' });
+			if (!user || user.password !== password) {
+				return res.status(400).json({ success: false, message: "Données erronées" });
 			}
 
 			await client.release(true);
@@ -48,38 +48,56 @@ class AuthEndpoints {
 	}
 
 	/**
+	 * Checks if the given email is already in use.
+	 * @param {string} email The email to check
+	 * @return {Promise<boolean>}
+	 */
+	static async isEmailUsed(email) {
+		try {
+			const client = await pool.connect();
+
+			const query = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
+			const values = [email];
+
+			const { rows } = await client.query(query, values);
+			const userExists = rows[0].exists;
+
+			if (userExists) {
+				return true;
+			}
+
+			await client.release(true);
+
+			return false;
+
+		} catch (err) {
+			console.error(err);
+
+			return false;
+		}
+	}
+
+	/**
 	 * Handles user signup.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
 	static async signup(req, res) {
 		try {
 			const client = await pool.connect();
 
-			/** @type { import('../shared/interfaces/index.js').SignUpProps } */
-			const body = req.body;
+			/** @type { import('../../../shared/interfaces/index.js').SignUpRequestProps } */
+			const { firstName, lastName, email, password } = req.body;
 
-			const userExistsQuery = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
-			const email = [body.email];
-
-			let queryResponse = await client.query(userExistsQuery, email);
-
-			const userExists = queryResponse.rows[0].exists;
-
-			if (userExists) {
-				return res.status(400).json({ success: false, message: 'User already exists' });
+			if (this.isEmailUsed(email)) {
+				return res.status(400).json({ success: false, message: 'Données erronées' });
 			}
 
-			const newAccountQuery = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)';
-			const newAccountValues = [body.firstName, body.lastName, body.email, body.password];
+			const query = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id;';
+			const values = [firstName, lastName, email, password];
 
-			await client.query(newAccountQuery, newAccountValues);
-
-			const getTokenQuery = 'SELECT id from public.user WHERE email = $1 LIMIT 1';
-
-			queryResponse = await client.query(getTokenQuery, email);
-
-			const userID = queryResponse.rows[0].id;
+			const { rows } = await client.query(query, values);
+			const userID = rows[0].id;
 
 			await client.release(true);
 
@@ -96,15 +114,15 @@ class AuthEndpoints {
 
 	/**
 	 * Verifies the user's token.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
 	static async verifyToken(req, res) {
 		try {
-			/** @type { import('../../../shared/interfaces/index.js').VerifyTokenProps } */
-			const body = req.body;
+			/** @type { import('../../../shared/interfaces/index.js').VerifyTokenRequestProps } */
+			const { jwt } = req.body;
 
-			const payload = await JWT.verify(body.jwt);
+			const payload = await JWT.verify(jwt);
 
 			return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 

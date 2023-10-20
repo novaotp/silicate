@@ -2,14 +2,19 @@
 import pool from '../../databases/postgres/index.js';
 
 /**
+ * @typedef {import('express').Request} Request
+ * @typedef {import('express').Response} Response
+ */
+
+/**
  * Handles friends endpoints.
  * @class
  */
 class FriendsEndpoints {
   /**
 	 * Adds a new friend in the database.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
   static async create(req, res) {
     /** @type { import('../shared/interfaces/index.js').FriendRequestProps } */
@@ -38,8 +43,8 @@ class FriendsEndpoints {
 
   /**
 	 * Fetches all the user's friends.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
   static async readAll(req, res) {
     /** @type { import('../shared/interfaces/index.js').AllFriendsRequestProps } */
@@ -68,8 +73,8 @@ class FriendsEndpoints {
 
   /**
 	 * Removes a friend from the user.
-	 * @param {Express.Request} req The request object
-	 * @param {Express.Response} res The response object
+	 * @param {Request} req The request object
+	 * @param {Response} res The response object
 	 */
   static async delete(req, res) {
     /** @type { import('../shared/interfaces/index.js').FriendRequestProps } */

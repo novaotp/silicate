@@ -1,10 +1,10 @@
 
 import { Server as IOServer } from 'socket.io';
-import http from 'http';
+import { Server, IncomingMessage, ServerResponse } from 'http';
 
 /**
  * Sets up the websocket for the server.
- * @param {http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>} server The server to append the websocket to.
+ * @param {Server<typeof IncomingMessage, typeof ServerResponse>} server The server to append the websocket to.
  */
 const setupWebSocket = (server) => {
   const io = new IOServer(server, {
