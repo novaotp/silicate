@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { Dashboard } from "@components/dashboard";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { clientRoute } from "@shared/classes/routes";
+import { clientRoute } from "@shared/utils/routes";
 import TokenVerifier from "@utils/tokenVerifier";
 
 export const metadata: Metadata = {

@@ -4,7 +4,7 @@ import { AccountReturnProps } from './account';
 import { AuthResponseProps, LoginProps, SignUpProps, TokenResponseProps, VerifyTokenProps } from './auth';
 import { AllFriendsRequestProps, FriendRequestProps } from './friend';
 import { GradeProps, GradebookProps, SubjectProps } from './gradebook';
-import { AddNoteProps, EditNoteProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
+import { CreateNoteRequestProps, CreateNoteResponseProps, UpdateNoteRequestProps, UpdateNoteResponseProps, DeleteNoteResponseProps, NoteProps, NoteResponseProps, NotesResponseProps, ReadNoteProps, ReadNoteResponseProps, RemoveNoteProps } from './note';
 
 export type {
   AccountReturnProps,
@@ -18,8 +18,11 @@ export type {
   GradeProps,
   GradebookProps,
   SubjectProps,
-  AddNoteProps,
-  EditNoteProps,
+  CreateNoteRequestProps,
+  CreateNoteResponseProps,
+  UpdateNoteRequestProps,
+  UpdateNoteResponseProps,
+  DeleteNoteResponseProps,
   NoteProps,
   NoteResponseProps,
   NotesResponseProps,

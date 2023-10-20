@@ -99,27 +99,27 @@ class NewServerRoute {
         /** Returns the list of notes associated with the user. */
         readAll: {
           /**
-           * The server-side route to fetch all the notes.
+           * The server-side route to fetch all the notes of the user.
            * 
            * Method : `get`
-           * @returns {'/notes'} The server-side endpoint to fetch all the notes.
+           * @returns {'/notes'}
            */
           server: () => '/notes',
           /**
-           * The client-side route to fetch all the notes.
+           * The client-side route to fetch all the notes of the user.
            * 
            * Method : `get`
-           * @returns {string} The client-side endpoint to fetch all the notes.
+           * @returns {string}
            */
           client: () => `/notes`,
         },
         /** Returns a specific note associated with the user. */
         read: {
           /**
-           * The server-side route to fetch a specific note.
+           * The server-side route to fetch a specific note of the user.
            * 
            * Method : `get`
-           * @returns {'/notes/:noteId'} The server-side endpoint to fetch a specific note.
+           * @returns {'/notes/:noteId'}
            */
           server: () => '/notes/:noteId',
           /**
@@ -133,20 +133,19 @@ class NewServerRoute {
         /** Adds a new note to the user. */
         add: {
           /**
-           * The server-side route to add a new note.
+           * The server-side route to add a new note to the user.
            * 
            * Method : `post`
-           * @returns {'/notes/:noteId'} The server-side endpoint to add a new note.
+           * @returns {'/notes'}
            */
-          server: () => '/notes/:noteId',
+          server: () => '/notes',
           /**
-           * The client-side route to add a new note.
+           * The client-side route to add a new note to the user.
            * 
            * Method : `post`
-           * @param {string} noteId The id of the note to be added.
-           * @returns {string} The client-side endpoint to add a new note.
+           * @returns {'/notes'}
            */
-          client: (noteId) => `/notes/${noteId}`
+          client: () => '/notes'
         },
         /** Deletes a note from the user. */
         delete: {

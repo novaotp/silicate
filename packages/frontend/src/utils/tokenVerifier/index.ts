@@ -3,7 +3,7 @@
 
 // Internal
 import Requests from "@utils/requests";
-import { serverRoute } from "@shared/classes/routes";
+import { serverRoute } from "@shared/utils/routes";
 import { TokenResponseProps } from "@shared/interfaces";
 import VerifyReturnProps from "./interfaces";
 import Cookies from "../cookies";

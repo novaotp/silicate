@@ -1,36 +1,30 @@
 
 'use client';
 
+// React
+import { FormEvent } from 'react';
+
 // Internal
 
-/// Styles and fonts
+// -- Styles and fonts --
 import styles from './index.module.scss';
 import { poppins } from '@/fonts';
 
-/// Components
+// -- Components --
+import Editor from './components/Editor';
 import BackLink from "../shared/BackLink";
 
-/// Functions and objects
+// -- Functions and objects --
 import useNote from './hooks/useNote';
-import { clientRoute } from '@shared/classes/routes';
-import Editor from './components/Editor';
-import { usePathname } from 'next/navigation';
-import { updateNoteController } from '@/components/note/backend/controllers';
-import ResponseProps, { EditNoteProps } from '@shared/interfaces';
-import { FormEvent } from 'react';
-
-interface EditProps {
-  /** The user's id. */
-  userID: number;
-}
-
-const getNoteId = (): string => {
-  return usePathname().split('/').pop()!;
-}
+import { clientRoute } from '@shared/utils/routes';
+import { deleteNoteController, updateNoteController } from '../../../../note/backend/controllers';
+import { UpdateNoteRequestProps } from '@shared/interfaces';
+import { useRouter } from 'next/navigation';
 
 /** Returns the main component of the editing note page. */
-const Edit = ({ userID }: EditProps): JSX.Element => {
-  const { note: noteData, updateNoteField, isError, isLoading } = useNote({ noteId: getNoteId(), userID });
+const Edit = (): JSX.Element => {
+  const router = useRouter();
+  const { note: noteData, updateNoteField, isError, isLoading } = useNote();
 
   if (isError) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;
@@ -42,18 +36,28 @@ const Edit = ({ userID }: EditProps): JSX.Element => {
   const update = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
-    const data: Pick<EditNoteProps, 'id' | "title" | "content"> = {
-      id: note.id,
+    const data: UpdateNoteRequestProps = {
       title: note.title,
       content: note.content
     }
 
-    const response: ResponseProps = await updateNoteController(data);
+    const response = await updateNoteController(note.id.toString(), data);
 
     if (response.success) {
       updateNoteField('initialTitle', note.title);
       updateNoteField('initialContent', note.content);
     }
+  }
+
+  /** Deletes the note and redirects to the /app/notes page. */
+  const destroy = async (): Promise<void> => {
+    const response = await deleteNoteController(note.id.toString());
+
+    if (!response.success) {
+      return alert(response.message);
+    }
+
+    return router.push(clientRoute.app.notes.use());
   }
 
   /** Discards the changes and sets the values to their initial ones. */
@@ -65,6 +69,7 @@ const Edit = ({ userID }: EditProps): JSX.Element => {
   return (
     <div className={styles.window}>
       <BackLink title="Mes Notes" href={clientRoute.app.notes.use()} />
+      <button onClick={destroy}>Delete</button>
       <form className={styles.form} method="POST" onSubmit={update}>
         <input
           className={`${styles.title} ${poppins.className}`}

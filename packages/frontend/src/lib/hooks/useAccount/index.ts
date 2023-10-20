@@ -9,15 +9,12 @@ import { useEffect, useState } from "react";
 
 // Internal
 import Requests from "@utils/requests";
-import Account, { UseAccountReturnProps, CustomFetcherProps } from "./interfaces";
-import { newServerRoute as serverRoute } from "@shared/classes/routes";
+import Account, { UseAccountReturnProps } from "./interfaces";
+import { newServerRoute as serverRoute } from "@shared/utils/routes";
 import { AccountReturnProps } from "@shared/interfaces";
 
 /** A custom fetcher for the {@link useAccount} hook. */
-const customFetcher = async (props: CustomFetcherProps) => {
-  let url = props[0];
-  const userId = props[1];
-
+const fetcher = async (url: string) => {
   const response = await Requests.noStore.get(url);
   const result: AccountReturnProps = await response.json();
 
@@ -25,14 +22,14 @@ const customFetcher = async (props: CustomFetcherProps) => {
 };
 
 /** A client-side hook to get data on the account. */
-const useAccount = (userId: number): UseAccountReturnProps => {
+const useAccount = (): UseAccountReturnProps => {
   const [account, setAccount] = useState<Account>({
     firstName: "",
     lastName: ""
   });
 
-  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.account.read.client(userId.toString());
-  const { data, error, isLoading } = useSWR([url, userId], customFetcher);
+  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.account.read.client();
+  const { data, error, isLoading } = useSWR(url, fetcher);
 
   useEffect(() => {
     if (data) {
