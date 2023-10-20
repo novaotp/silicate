@@ -1,5 +1,6 @@
-import Gradebooks from "./frontend/components/Gradebooks";
-import Grades from "./frontend/components/Grades";
-import Subjects from "./frontend/components/Subjects";
+
+import Gradebooks from "./components/Gradebooks";
+import Grades from "./components/Grades";
+import Subjects from "./components/Subjects";
 
 export { Gradebooks, Grades, Subjects }

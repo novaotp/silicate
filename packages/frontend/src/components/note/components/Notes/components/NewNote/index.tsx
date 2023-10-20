@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 // Internal
 import styles from "./index.module.scss";
 import { poppins } from "@/fonts";
-import { addNoteController } from "@components/note/backend/controllers";
+import { addNoteController } from "@components/note/controllers";
 import { clientRoute } from "@shared/utils/routes";
 
 /**

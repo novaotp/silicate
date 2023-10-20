@@ -1,3 +1,3 @@
-import Dashboard from "./frontend/components/Dashboard";
+import Dashboard from "./components/Dashboard";
 
 export { Dashboard };

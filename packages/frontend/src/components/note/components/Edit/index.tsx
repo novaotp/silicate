@@ -1,25 +1,25 @@
 
 'use client';
 
-// React
+// React + Next
 import { FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Internal
 
-// -- Styles and fonts --
+/// -- Styles and fonts --
 import styles from './index.module.scss';
 import { poppins } from '@/fonts';
 
-// -- Components --
+/// -- Components --
 import Editor from './components/Editor';
 import BackLink from "../shared/BackLink";
 
-// -- Functions and objects --
+/// -- Functions and objects --
 import useNote from './hooks/useNote';
 import { clientRoute } from '@shared/utils/routes';
-import { deleteNoteController, updateNoteController } from '../../../../note/backend/controllers';
+import { deleteNoteController, updateNoteController } from '@components/note/controllers';
 import { UpdateNoteRequestProps } from '@shared/interfaces';
-import { useRouter } from 'next/navigation';
 
 /** Returns the main component of the editing note page. */
 const Edit = (): JSX.Element => {

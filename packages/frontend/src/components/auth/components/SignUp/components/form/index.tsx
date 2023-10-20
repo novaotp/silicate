@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 import { InputField, SubmitButton, Button } from "../../../shared";
 
 /// -- Functions and objects --
-import { signUpController } from "../../../../../backend/controllers";
+import { signUpController } from "../../../../controllers";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import Cookies from "@utils/cookies";
 import Dates from "@utils/dates";
@@ -139,7 +139,7 @@ const SignUpForm = (): JSX.Element => {
             <Button backgroundColor="grey" label="Retour" onClick={() => setIsStepTwo(false)} />
             <SubmitButton label="Créer mon compte" isProcessing={isProcessing} />
           </>
-        )}
+        ) }
       </div>
     </form>
   )

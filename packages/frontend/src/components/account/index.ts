@@ -1,3 +1,4 @@
-import Profile from "./frontend/components/Profile";
+
+import Profile from "./components/Profile";
 
 export { Profile };

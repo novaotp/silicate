@@ -1,5 +1,5 @@
 
-import InsiderNav from "./frontend/components/InsiderNav";
-import OutsiderNav from "./frontend/components/OutsiderNav";
+import InsiderNav from "./components/InsiderNav";
+import OutsiderNav from "./components/OutsiderNav";
 
 export { InsiderNav, OutsiderNav };

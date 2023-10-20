@@ -10,10 +10,6 @@ import SilicateLogo from "@public/SilicateAppIconBlackVertical.png";
 import styles from "./index.module.scss";
 import Loading from '@/components/shared/Loading';
 
-interface DashboardProps {
-  userId: number;
-}
-
 /** The main component of the dashboard page. */
 const Dashboard = (): JSX.Element => {
   const { account, isError, isLoading } = useAccount();

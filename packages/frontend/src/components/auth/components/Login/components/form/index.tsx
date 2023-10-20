@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 import { InputField, SubmitButton } from "../../../shared";
 
 /// -- Functions and objects --
-import { loginController } from "../../../../../backend/controllers";
+import { loginController } from "../../../../controllers";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import Cookies from "@utils/cookies";
 import Dates from "@utils/dates";

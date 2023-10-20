@@ -1,5 +1,5 @@
 
-import Edit from "./frontend/components/Edit";
-import Notes from "./frontend/components/Notes";
+import Edit from "./components/Edit";
+import Notes from "./components/Notes";
 
 export { Edit, Notes };
