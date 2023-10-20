@@ -109,7 +109,6 @@ class AuthEndpoints {
 			return res.status(200).json({ success: true, message: 'Token verified successfully', payload: payload });
 
 		} catch (err) {
-			console.error(err);
 			if (err.code === 'ERR_JWS_INVALID') {
 				return res.status(401).json({ success: false, message: 'Invalid Token' })
 			}

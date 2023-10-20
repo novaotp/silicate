@@ -1,6 +1,4 @@
 
-'use server';
-
 import { newServerRoute as serverRoute } from "@shared/utils/routes";
 import { CreateNoteRequestProps, CreateNoteResponseProps, DeleteNoteResponseProps, UpdateNoteRequestProps, UpdateNoteResponseProps } from "@shared/interfaces";
 import Requests from "@utils/requests";
@@ -10,7 +8,7 @@ import Requests from "@utils/requests";
  * @param data The data for the request.
  */
 const addNoteController = async (data: CreateNoteRequestProps): Promise<CreateNoteResponseProps> => {
-  const url = "http://localhost:4000" + serverRoute.notes.add.client();
+  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.notes.add.client();
   const response = await Requests.noStore.post(url, data);
 
   return await response.json();
@@ -22,7 +20,7 @@ const addNoteController = async (data: CreateNoteRequestProps): Promise<CreateNo
  * @param data The data for the request.
  */
 const updateNoteController = async (noteId: string, data: UpdateNoteRequestProps): Promise<UpdateNoteResponseProps> => {
-  const url = process.env.API_SERVER_URL + serverRoute.notes.update.client(noteId);
+  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.notes.update.client(noteId);
   const response = await Requests.noStore.put(url, data);
 
   return await response.json();
@@ -33,7 +31,7 @@ const updateNoteController = async (noteId: string, data: UpdateNoteRequestProps
  * @param noteId The id of the note to delete.
  */
 const deleteNoteController = async (noteId: string): Promise<DeleteNoteResponseProps> => {
-  const url = process.env.API_SERVER_URL + serverRoute.notes.update.client(noteId);
+  const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.notes.update.client(noteId);
   const response = await Requests.noStore.delete(url);
 
   return await response.json();
