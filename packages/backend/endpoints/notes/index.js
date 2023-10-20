@@ -58,14 +58,14 @@ class NotesEndpoints {
         return res.status(401).json({ success: false, message: message });
       }
 
-      const fetchNotesQuery = 'SELECT * FROM public.note WHERE user_id = $1;';
-      const fetchNotesValues = [userId];
+      const query = 'SELECT * FROM public.note WHERE user_id = $1;';
+      const values = [userId];
 
-      const { rows } = await client.query(fetchNotesQuery, fetchNotesValues);
+      const { rows } = await client.query(query, values);
 
       await client.release(true);
 
-      return res.status(200).json({ success: true, message: 'Fetched notes successfully', notes: JSON.stringify(rows) });
+      return res.status(200).json({ success: true, message: 'Fetched notes successfully', notes: rows });
 
     } catch (err) {
       console.error(err);
@@ -95,9 +95,13 @@ class NotesEndpoints {
 
       const { rows } = await client.query(fetchNoteQuery, fetchNoteValues);
 
+      if (rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Note not found' });
+      }
+
       await client.release(true);
 
-      return res.status(200).json({ success: true, message: 'Fetched notes successfully', note: JSON.stringify(rows[0]) });
+      return res.status(200).json({ success: true, message: 'Fetched notes successfully', note: rows[0] });
 
     } catch (err) {
       console.error(err);

@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 // Internal
 import { poppins } from '@/fonts';
 import './globals.scss';
-import Loading from './loading';
+import Loading from '@components/shared/Loading';
 import LayoutProps from './interfaces';
 
 /** The main layout of the app. */

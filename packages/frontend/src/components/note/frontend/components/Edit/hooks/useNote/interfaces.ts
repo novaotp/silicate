@@ -5,7 +5,7 @@ type CustomFetcherProps = [string, string, number];
 
 interface UseNoteReturnProps {
   /** The note itself or undefined. */
-  note: Note | undefined;
+  note: Note;
   /**
    * A helper function to set values in the note.
    * @param key The key in the note to set.

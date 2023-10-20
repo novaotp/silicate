@@ -5,13 +5,14 @@
 import styles from './index.module.scss';
 import { NewNote, RenderNotes } from "./components";
 import fetchNotes from './fetchNotes';
+import Loading from '@components/shared/Loading';
 
 /** Returns the main component of the notes page. */
 const Notes = (): JSX.Element => {
   const { notes: notesData, isError, isLoading } = fetchNotes();
 
   if (isError) return <p>An error occurred while fetching the data...</p>
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <Loading text="Chargement de vos notes..." />
 
   const notes = notesData!;
 

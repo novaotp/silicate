@@ -11,8 +11,8 @@ import { addNoteController } from "@components/note/backend/controllers";
 import { clientRoute } from "@shared/utils/routes";
 
 /**
- * Returns a custom button for adding a new note
- * and redirecting to the editing page of said-note.
+ * Custom button for adding a new note and
+ * redirecting to the editing page of said-note.
  */
 const NewNote = () => {
   const router = useRouter();

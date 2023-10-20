@@ -11,21 +11,22 @@ import { useEffect, useState } from "react";
 import Requests from "@utils/requests";
 import Account, { UseAccountReturnProps } from "./interfaces";
 import { newServerRoute as serverRoute } from "@shared/utils/routes";
-import { AccountReturnProps } from "@shared/interfaces";
+import { ReadAccountResponseProps } from "@shared/interfaces";
 
 /** A custom fetcher for the {@link useAccount} hook. */
 const fetcher = async (url: string) => {
   const response = await Requests.noStore.get(url);
-  const result: AccountReturnProps = await response.json();
+  const result: ReadAccountResponseProps = await response.json();
 
-  return JSON.parse(result.data);
+  return result.account;
 };
 
 /** A client-side hook to get data on the account. */
 const useAccount = (): UseAccountReturnProps => {
   const [account, setAccount] = useState<Account>({
     firstName: "",
-    lastName: ""
+    lastName: "",
+    email: "",
   });
 
   const url = process.env.NEXT_PUBLIC_API_SERVER_URL + serverRoute.account.read.client();
@@ -33,12 +34,30 @@ const useAccount = (): UseAccountReturnProps => {
 
   useEffect(() => {
     if (data) {
-      setAccount({ ...account, firstName: data.first_name, lastName: data.last_name });
+      setAccount({
+        ...account,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
     }
-  }, [data])
+  }, [data]);
+
+  /**
+   * Update the value of a field in the account.
+   * @param field The field to update.
+   * @param value The new value
+   */
+  const updateAccountField = (field: keyof Account, value: string) => {
+    setAccount({
+    ...account,
+      [field]: value,
+    });
+  }
 
   return {
     account,
+    updateAccountField,
     isError: error,
     isLoading
   }

@@ -29,7 +29,15 @@ class AccountEndpoints {
 
       await client.release(true);
 
-      return res.status(200).json({ success: true, message: 'Fetched account data successfully', data: JSON.stringify(rows[0]) });
+      const data = {
+        id: rows[0].id,
+        firstName: rows[0].first_name,
+        lastName: rows[0].last_name,
+        email: rows[0].email,
+        password: rows[0].password
+      }
+
+      return res.status(200).json({ success: true, message: 'Fetched account data successfully', account: data });
 
     } catch (err) {
       console.error(err);

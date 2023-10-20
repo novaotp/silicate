@@ -5,9 +5,17 @@
 import useSWR from "swr";
 
 // Internal
-import fetcher from "./fetcher";
+import Requests from "@utils/requests";
 import FetchNotesReturnProps from "./interfaces";
 import { newServerRoute as serverRoute } from "@shared/utils/routes";
+import { NoteProps, ReadAllNotesResponseProps } from "@shared/interfaces";
+
+const fetcher = async (url: string): Promise<NoteProps[] | undefined> => {
+  const response = await Requests.noStore.get(url);
+  const result: ReadAllNotesResponseProps = await response.json();
+
+  return result.notes;
+};
 
 /** Fetches the notes. */
 const fetchNotes = (): FetchNotesReturnProps => {

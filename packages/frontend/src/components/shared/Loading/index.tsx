@@ -3,11 +3,16 @@
 import Image from 'next/image';
 
 // Internal
-import styles from './loading.module.scss';
+import styles from './index.module.scss';
 import SilicateLogo from "@public/SilicateAppIconBlackVertical.png";
 
-/** The loading screen. */
-const Loading = (): JSX.Element => {
+interface LoadingProps {
+  /** An optional text to display. Defaults to `Chargement...` */
+  text?: string;
+}
+
+/** A basic loading screen to be paired with `Suspense`. */
+const Loading = ({ text = "Chargement..." }: LoadingProps): JSX.Element => {
   return (
     <div className={styles.wrapper}>
       <Image
@@ -15,7 +20,7 @@ const Loading = (): JSX.Element => {
         alt="Silicate Logo"
         height={250}
       />
-      <p>Chargement...</p>
+      <p>{text}</p>
     </div>
   )
 }
