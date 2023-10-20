@@ -2,7 +2,7 @@
 'use client';
 
 // React + Next
-import { FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Internal
@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 import { InputField, SubmitButton } from "../../../shared";
 
 /// -- Functions and objects --
-import AuthController from "../../../../../backend/controllers";
+import { loginController } from "../../../../../backend/controllers";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import Cookies from "@utils/cookies";
 import Dates from "@utils/dates";
@@ -33,13 +33,13 @@ const LoginForm = (): JSX.Element => {
   }
 
   /** Handles the log-in process. */
-  const logIn = async (): Promise<LoginResponseProps> => {
+  const handleLogIn = async (): Promise<LoginResponseProps> => {
     const data: LoginRequestProps = {
       email: email,
       password: password
     }
 
-    return await AuthController.login(data);
+    return await loginController(data);
   }
 
   /**
@@ -51,26 +51,28 @@ const LoginForm = (): JSX.Element => {
 
     setIsProcessing(true);
 
-    const { success: loginSuccess, message, jwt } = await logIn();
+    const { success: loginSuccess, message, jwt } = await handleLogIn();
 
     if (!loginSuccess) {
+      alert(message);
       setIsProcessing(false);
       resetPassword();
-      return alert(message);
+      return;
     }
 
     const { success, payload } = await useVerifyTokenWithJWT(jwt!);
 
     if (!success) {
+      router.push(clientRoute.auth.login.use());
       setIsProcessing(false);
       resetPassword();
-      return router.push(clientRoute.auth.login.use())
+      return;
     }
 
     Cookies.set({ key: "id", data: jwt!, maxAge: Dates.expiresToMaxAge(payload!.exp! * 1000) });
 
-    setIsProcessing(false);
-    return router.push(clientRoute.app.use());
+    router.push(clientRoute.app.use());    
+    return setIsProcessing(false);
   }
 
   return (

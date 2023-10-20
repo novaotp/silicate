@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 import { InputField, SubmitButton, Button } from "../../../shared";
 
 /// -- Functions and objects --
-import AuthController from "../../../../../backend/controllers";
+import { signUpController } from "../../../../../backend/controllers";
 import { useVerifyTokenWithJWT } from "@hooks/useVerifyToken";
 import Cookies from "@utils/cookies";
 import Dates from "@utils/dates";
@@ -47,7 +47,7 @@ const SignUpForm = (): JSX.Element => {
       password: password
     }
 
-    return await AuthController.signUp(data);
+    return await signUpController(data);
   }
 
   /** Handles the form submission, including the account creation, alerting on error and redirections. */
@@ -57,17 +57,19 @@ const SignUpForm = (): JSX.Element => {
     setIsProcessing(true);
 
     if (password !== confirmPassword) {
+      alert("Passwords do not match");
       setIsProcessing(false);
       resetPasswords();
-      return alert("Passwords do not match");
+      return;
     }
     
     const { success: signUpSuccess, message, jwt } = await signUp();
 
     if (!signUpSuccess) {
+      alert(message);
       setIsProcessing(false);
       resetPasswords();
-      return alert(message);
+      return;
     }
 
     const { success, payload } = await useVerifyTokenWithJWT(jwt!);
@@ -79,7 +81,7 @@ const SignUpForm = (): JSX.Element => {
     Cookies.set({ key: "id", data: jwt!, maxAge: Dates.expiresToMaxAge(payload!.exp! * 1000) });
 
     router.push(clientRoute.app.use());
-    setIsProcessing(false);
+    return setIsProcessing(false);
   }
   
   return (
