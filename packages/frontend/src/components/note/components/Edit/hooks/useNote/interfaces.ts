@@ -4,7 +4,7 @@ import Note from "../../interfaces";
 type CustomFetcherProps = [string, string, number];
 
 interface UseNoteReturnProps {
-  /** The note itself or undefined. */
+  /** The note itself. */
   note: Note;
   /**
    * A helper function to set values in the note.

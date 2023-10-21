@@ -3,20 +3,20 @@
 
 // React + Next
 import { useEffect, useState } from "react";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 
 // SWR
 import useSWR from "swr";
 
 // Internal
+import Note, { UseNoteReturnProps } from "./interfaces";
 import Requests from "@utils/requests";
 import { clientRoute, newServerRoute as serverRoute } from "@shared/utils/routes";
-import Note, { UseNoteReturnProps } from "./interfaces";
-import { NoteProps, ReadNoteResponseProps } from "@shared/interfaces";
+import { ReadNoteResponseProps } from "@shared/interfaces";
 
-/** Returns the note id from the url casted as an int. */
-const getNoteId = (): number => {
-  return Number(usePathname().split('/').pop()!);
+/** Returns the note id from the url. */
+const getNoteId = (): string => {
+  return usePathname().split('/').pop()!;
 }
 
 /** A custom fetcher for the {@link useNote} hook. */
@@ -28,7 +28,6 @@ const fetcher = async (url: string): Promise<ReadNoteResponseProps> => {
 /** Fetches a specific note's data, comes with error and loading handling. */
 const useNote = (): UseNoteReturnProps => {
   const id = getNoteId();
-  const router = useRouter();
   const [note, setNote] = useState<Note>({
     id: id,
     title: "",
@@ -61,11 +60,6 @@ const useNote = (): UseNoteReturnProps => {
     }
   }, [response]);
 
-  /**
-   * A helper function to set values in the note.
-   * @param key The key in the note to set.
-   * @param value The new value of the key.
-   */
   const updateNoteField = (key: keyof Note, value: string | number): void => {
     setNote(prevNote => ({ ...prevNote, [key]: value }));
   };

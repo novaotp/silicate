@@ -1,47 +1,36 @@
 
 "use client";
 
+// Next
+import Link from 'next/link';
+
+// Internal
 import styles from './index.module.scss';
-import NavMenuLinkProps from './interfaces';
-import RecursiveLink from './RecursiveLinks';
-import { clientRoute } from '@shared/utils/routes';
+import links from './links';
 
 interface MenuProps {
   closeNav: () => void;
 }
 
-function getNavMenuLinks(): NavMenuLinkProps[] {
-  const links: NavMenuLinkProps[] = [
-    {
-      href: clientRoute.app.dashboard.use(),
-      label: 'Dashboard',
-    },
-    {
-      href: clientRoute.app.gradebooks.use(),
-      label: 'Gradebooks',
-    },
-    {
-      href: clientRoute.app.notes.use(),
-      label: 'Notes',
-    },
-    {
-      href: clientRoute.app.chat.use(),
-      label: 'Chat',
-    },
-  ]
-
-  return links;
-}
-
 /** Custom menu for the app's navigation. */
 const Menu = ({ closeNav }: MenuProps) => {
-  const links = getNavMenuLinks();
-
   return (
     <menu className={styles.navMenu}>
       <ul className={styles.linkList}>
         {
-          links.map((link: NavMenuLinkProps) => <RecursiveLink key={link.href} link={link} closeNav={closeNav} />)
+          links().map(({ href, label }) => {
+            return (
+              <li className={styles.li}>
+                <Link
+                  className={styles.link}
+                  onClick={closeNav}
+                  href={href}
+                >
+                  {label}
+                </Link>
+              </li>
+            )
+          })
         }
       </ul>
     </menu>

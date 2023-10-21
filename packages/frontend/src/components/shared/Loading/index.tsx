@@ -11,7 +11,7 @@ interface LoadingProps {
   text?: string;
 }
 
-/** A basic loading screen to be paired with `Suspense`. */
+/** A basic loading screen. */
 const Loading = ({ text = "Chargement..." }: LoadingProps): JSX.Element => {
   return (
     <div className={styles.wrapper}>

@@ -1,15 +1,15 @@
 
 interface Note {
   /** The id in the database. */
-  id: number,
+  id: string;
   /** The current title. */
-  title: string,
+  title: string;
   /** The current content. */
-  content: string,
+  content: string;
   /** The initial title. */
-  initialTitle: string,
+  initialTitle: string;
   /** The initial content. */
-  initialContent: string,
+  initialContent: string;
   /** The creation date in milliseconds. */
   created_at: number;
   /** The last update date in milliseconds. */

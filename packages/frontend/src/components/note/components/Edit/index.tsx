@@ -12,25 +12,22 @@ import styles from './index.module.scss';
 import { poppins } from '@/fonts';
 
 /// -- Components --
-import Editor from './components/Editor';
-import BackLink from "../shared/BackLink";
+import Editor, { Header } from './components';
 
 /// -- Functions and objects --
 import useNote from './hooks/useNote';
 import { clientRoute } from '@shared/utils/routes';
 import { deleteNoteController, updateNoteController } from '@components/note/controllers';
 import { UpdateNoteRequestProps } from '@shared/interfaces';
+import Loading from '@/components/shared/Loading';
 
 /** Returns the main component of the editing note page. */
 const Edit = (): JSX.Element => {
   const router = useRouter();
-  const { note: noteData, updateNoteField, isError, isLoading } = useNote();
+  const { note, updateNoteField, isError, isLoading } = useNote();
 
   if (isError) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-
-  /** The defined note. */
-  const note = noteData!;
+  if (isLoading) return <Loading />;
 
   /** Updates the note on the form's submit. */
   const update = async (event: FormEvent): Promise<void> => {
@@ -68,9 +65,8 @@ const Edit = (): JSX.Element => {
 
   return (
     <div className={styles.window}>
-      <BackLink title="Mes Notes" href={clientRoute.app.notes.use()} />
-      <button onClick={destroy}>Delete</button>
-      <form className={styles.form} method="POST" onSubmit={update}>
+      <Header destroy={destroy}></Header>
+      <form className={styles.form} onSubmit={update}>
         <input
           className={`${styles.title} ${poppins.className}`}
           type="text"
