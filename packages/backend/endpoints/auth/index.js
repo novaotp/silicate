@@ -48,48 +48,45 @@ class AuthEndpoints {
 	}
 
 	/**
-	 * Checks if the given email is already in use.
-	 * @param {string} email The email to check
-	 * @return {Promise<boolean>}
-	 */
-	static async isEmailUsed(email) {
-		try {
-			const client = await pool.connect();
-
-			const query = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1)';
-			const values = [email];
-
-			const { rows } = await client.query(query, values);
-			const userExists = rows[0].exists;
-
-			if (userExists) {
-				return true;
-			}
-
-			await client.release(true);
-
-			return false;
-
-		} catch (err) {
-			console.error(err);
-
-			return false;
-		}
-	}
-
-	/**
 	 * Handles user signup.
 	 * @param {Request} req The request object
 	 * @param {Response} res The response object
 	 */
 	static async signup(req, res) {
+		/**
+		 * Checks if the given email is already in use.
+		 * @param {string} email The email to check
+		 * @return {Promise<boolean>}
+		 */
+		const isEmailUsed = async (email) => {
+			try {
+				const client = await pool.connect();
+
+				const query = 'SELECT EXISTS(SELECT * FROM public.user WHERE email = $1 LIMIT 1);';
+				const values = [email];
+
+				const { rows } = await client.query(query, values);
+
+				console.log(rows);
+
+				await client.release(true);
+
+				return rows[0].exists;
+
+			} catch (err) {
+				console.error(err);
+
+				return false;
+			}
+		}
+
 		try {
 			const client = await pool.connect();
 
 			/** @type { import('../../../shared/interfaces/index.js').SignUpRequestProps } */
 			const { firstName, lastName, email, password } = req.body;
 
-			if (this.isEmailUsed(email)) {
+			if (await isEmailUsed(email)) {
 				return res.status(400).json({ success: false, message: 'Données erronées' });
 			}
 

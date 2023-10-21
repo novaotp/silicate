@@ -4,14 +4,14 @@
 // MUI Icons
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 
-// Next
+// React + Next
+import { useState } from "react";
 import Link from "next/link";
 
 // Internal
 import styles from './index.module.scss';
 import { clientRoute } from "@shared/utils/routes";
 import { NoteProps } from "@shared/interfaces";
-import { useState } from "react";
 
 /** The {@link RenderNotes}'s props. */
 interface RenderNotesProps {
