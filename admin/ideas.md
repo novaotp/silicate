@@ -1,3 +1,0 @@
-# Ideas
-
-Put ideas here.
