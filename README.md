@@ -30,7 +30,7 @@ PS C:\path\to\directory> .\configure.ps1
 OR
 
 ```bash
-username@pc:~$ ./configure.sh
+username@pc:~/path/to/directory$ ./configure.sh
 ```
 
 ### Run the projects
@@ -38,11 +38,9 @@ username@pc:~$ ./configure.sh
 Open two terminals simultaneously
 
 ```bash
-cd frontend && npm run dev    # Frontend
-cd backend/api && npm start   # Backend
+cd frontend | npm run dev    # Frontend
+cd backend/api | npm start   # Backend
 ```
-
-> Note : you can also run the scripts/run files (.ps1 or .sh) within your two terminals
 
 ## API Calls
 
@@ -54,12 +52,14 @@ cd backend/api && npm start   # Backend
 
 - `/auth/login` gives you a JWT if the user exists in the DB
 - `/auth/signup` create a new user in the DB and gives you a JWT
-- `/auth/verifytoken` verify the JWT and gives you the payload
+- `/auth/verifytoken` verify the JWT and gives you the payload (including the user's id)
 
 #### `/friends` (need a token)
 
-- `/friends/add` create a new friendship between two users
-- `/friends/remove` remove a friendship between two users
+- `/friends/:friendId` with method `POST` creates a new friendship between two users
+- `/friends/:friendId` with method `DELETE` removes a friendship between two users
+
+> The first user's id is stored as a JWT in the cookie `id`
 
 ## Authors
 
