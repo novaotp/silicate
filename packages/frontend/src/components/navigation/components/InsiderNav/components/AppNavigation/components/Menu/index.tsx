@@ -20,7 +20,7 @@ const Menu = ({ closeNav }: MenuProps) => {
         {
           links().map(({ href, label }) => {
             return (
-              <li className={styles.li}>
+              <li key={href} className={styles.li}>
                 <Link
                   className={styles.link}
                   onClick={closeNav}

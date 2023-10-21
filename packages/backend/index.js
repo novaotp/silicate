@@ -32,19 +32,19 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-/* app.use(async (req, res, next) => {
+app.use(async (req, res, next) => {
   if (unprotectedPaths.includes(req.url)) {
-    next();
+    return next();
   }
 
   const { userId, message } = await getUserIdFromCookie(req);
 
   if (userId === 0) {
-    res.status(401).send(message);
-  } else {
-    next();
+    return res.status(401).send(message);
   }
-}) */
+
+  return next();
+});
 
 app.post(serverRoute.auth.login.use(), AuthEndpoints.login);
 app.post(serverRoute.auth.signup.use(), AuthEndpoints.signup);
