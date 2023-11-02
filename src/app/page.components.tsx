@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 // Internal
 import styles from './page.module.scss';
-import { clientRoute } from '@shared/utils/routes';
 
 /** The main component of the landing page. */
 const LandingComponent = (): JSX.Element => {
@@ -21,9 +20,9 @@ const LandingComponent = (): JSX.Element => {
           en un clin d'œil et dis adieu au stress. C'est comme avoir un
           assistant perso pour ton école, mais en mieux !
         </p>
-        <Link className={`${styles.links} ${styles.signup}`} href={clientRoute.auth.signup.use()}>Inscris-toi</Link>
+        <Link className={`${styles.links} ${styles.signup}`} href='/auth/sign-up'>Inscris-toi</Link>
         <p className={styles.linksDelimitor}>ou</p>
-        <Link className={`${styles.links} ${styles.login}`} href={clientRoute.auth.login.use()}>Se connecter</Link>
+        <Link className={`${styles.links} ${styles.login}`} href='/auth/log-in'>Se connecter</Link>
       </div>
     </div>
   )
