@@ -6,7 +6,7 @@ import { type Metadata } from 'next';
 import LandingComponent from './page.components';
 
 export const metadata: Metadata = {
-  title: 'Silicate'
+  title: 'Home - Silicate'
 }
 
 /** The main page of the website. */

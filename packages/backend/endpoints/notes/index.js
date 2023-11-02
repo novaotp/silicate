@@ -31,9 +31,10 @@ class NotesEndpoints {
       }
 
       const now = Date.now();
-      const query = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
+      const query = 'INSERT INTO public.note (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
       const values = [userId, title, content, now, now];
 
+      /** @type {{ rows: import('../../../shared/models/note.js').Note[] }} */
       const { rows } = await client.query(query, values);
 
       await client.release(true);
@@ -65,6 +66,7 @@ class NotesEndpoints {
       const query = 'SELECT * FROM public.note WHERE user_id = $1;';
       const values = [userId];
 
+      /** @type {{ rows: import('../../../shared/models/note.js').Note[] }} */
       const { rows } = await client.query(query, values);
 
       await client.release(true);
@@ -98,6 +100,7 @@ class NotesEndpoints {
       const query = 'SELECT * FROM public.note WHERE id = $1 AND user_id = $2 LIMIT 1;';
       const values = [noteId, userId];
 
+      /** @type {{ rows: import('../../../shared/models/note.js').Note[] }} */
       const { rows } = await client.query(query, values);
 
       if (rows.length === 0) {

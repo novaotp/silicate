@@ -1,4 +1,6 @@
 
+import bcrypt from 'bcrypt';
+import hashPassword from '../../utils/hashPassword/index.js';
 import JWT from '../../../shared/utils/JWT.js';
 import pool from '../../databases/postgres/index.js';
 
@@ -27,10 +29,15 @@ class AuthEndpoints {
 			const query = 'SELECT * FROM public.user WHERE email = $1 LIMIT 1';
 			const values = [email];
 
+			/** @type {{ rows: import('../../../shared/models/user.js').User[] }} */
 			const { rows } = await client.query(query, values);
 			const user = rows[0];
 
-			if (!user || user.password !== password) {
+			if (!user || !bcrypt.compare(password, user.password)) {
+				if (!user) {
+					return res.status(400).json({ success: false, message: "Email inconnu" });
+				}
+
 				return res.status(400).json({ success: false, message: "Données erronées" });
 			}
 
@@ -67,8 +74,6 @@ class AuthEndpoints {
 
 				const { rows } = await client.query(query, values);
 
-				console.log(rows);
-
 				await client.release(true);
 
 				return rows[0].exists;
@@ -76,7 +81,7 @@ class AuthEndpoints {
 			} catch (err) {
 				console.error(err);
 
-				return false;
+				return true;
 			}
 		}
 
@@ -90,15 +95,16 @@ class AuthEndpoints {
 				return res.status(400).json({ success: false, message: 'Données erronées' });
 			}
 
-			const query = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id;';
-			const values = [firstName, lastName, email, password];
+			const query = 'INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *;';
+			const values = [firstName, lastName, email, await hashPassword(password)];
 
+			/** @type {{ rows: import('../../../shared/models/user.js').User[] }} */
 			const { rows } = await client.query(query, values);
-			const userID = rows[0].id;
+			const user = rows[0];
 
 			await client.release(true);
 
-			const jwt = await JWT.sign({ userID: userID });
+			const jwt = await JWT.sign({ userID: user.id });
 
 			return res.status(200).json({ success: true, message: 'Account created successfully', jwt: jwt });
 

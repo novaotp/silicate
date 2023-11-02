@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { Profile } from "@components/account";
 
 export const metadata: Metadata = {
-  title: "My Profile - Silicate"
+  title: "Mon profil - Silicate"
 }
 
 /** The profile page. */

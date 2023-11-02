@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import ClientRoute from '@shared/classes/routes/client.route';
+import ClientRoute from '@shared/utils/routes/client.route';
 
 /** A backlink for the gradebook pages. */
 const BackLink = () => {

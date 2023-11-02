@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { Notes } from "@components/note";
 
 export const metadata: Metadata = {
-  title: "My Notes - Silicate"
+  title: "Mes mémos - Silicate"
 }
 
 /** The notes page. */

@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { bookTitle, subjectTitle } = getTitles();
 
   return {
-    title: `Subject <${subjectTitle}> - Book <${bookTitle}> - Silicate`
+    title: `Sujet <${subjectTitle}> - Carnet de notes <${bookTitle}> - Silicate`
   }
 }
 

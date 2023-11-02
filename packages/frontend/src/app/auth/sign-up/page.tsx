@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { SignUp } from '@components/auth';
 
 export const metadata: Metadata = {
-  title: 'Sign up - Silicate'
+  title: 'Inscription - Silicate'
 }
 
 /** The sign-up page. */

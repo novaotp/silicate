@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = getTitle();
 
   return {
-    title: `Book <${title}> - Silicate`
+    title: `Carnet de notes <${title}> - Silicate`
   }
 }
 

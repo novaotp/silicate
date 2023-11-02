@@ -3,7 +3,7 @@
 
 // Internal
 import { SignUpRequestProps, SignUpResponseProps, LoginRequestProps, LoginResponseProps } from "@shared/interfaces";
-import { serverRoute } from "@shared/utils/routes";
+import { newServerRoute as serverRoute } from "@shared/utils/routes";
 import Requests from "@utils/requests";
 
 /** Calls the API with the given sign-up data and returns a response. */

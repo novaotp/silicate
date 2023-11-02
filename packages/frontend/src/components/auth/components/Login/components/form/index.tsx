@@ -29,7 +29,7 @@ const LoginForm = (): JSX.Element => {
   const router = useRouter();
 
   const resetPassword = () => {
-    setPassword(password);
+    setPassword("");
   }
 
   /** Handles the log-in process. */

@@ -7,7 +7,7 @@ import { Gradebooks } from "@components/gradebook";
 import { GradebookProps } from "@shared/interfaces";
 
 export const metadata: Metadata = {
-  title: "Gradebooks - Silicate"
+  title: "Mes carnets de notes - Silicate"
 }
 
 /** The gradebooks page. */
