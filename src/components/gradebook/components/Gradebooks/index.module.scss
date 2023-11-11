@@ -1,0 +1,21 @@
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  
+  .add {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--color-deepskyblue);
+    cursor: pointer;
+    color: white;
+  }
+}

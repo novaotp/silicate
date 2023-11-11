@@ -1,0 +1,17 @@
+@import "../../_styles/variables.module.scss";
+
+.add {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: $add-memo-height;
+  background-color: blue;
+  border: none;
+  outline: transparent;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+}
