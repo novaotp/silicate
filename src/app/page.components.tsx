@@ -8,7 +8,7 @@ import Link from 'next/link';
 import styles from './page.module.scss';
 
 /** The main component of the landing page. */
-const LandingComponent = (): JSX.Element => {
+export const LandingComponent = (): JSX.Element => {
   return (
     <div className={styles.window}>
       <div className={styles.section1}>
@@ -27,5 +27,3 @@ const LandingComponent = (): JSX.Element => {
     </div>
   )
 }
-
-export default LandingComponent;

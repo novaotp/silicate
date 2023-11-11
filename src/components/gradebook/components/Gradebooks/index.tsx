@@ -6,7 +6,7 @@ import { useRef } from 'react';
 
 // Internal
 import styles from './index.module.scss';
-import { poppins } from '@/fonts';
+import { poppins } from '@/assets/fonts';
 import RenderGradebooks, { NoGradebooksFound, NewGradebook } from "./components";
 import { GradebookProps } from "@shared/interfaces";
 

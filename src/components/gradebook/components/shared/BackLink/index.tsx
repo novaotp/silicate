@@ -10,11 +10,10 @@ import { usePathname } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import ClientRoute from '@shared/utils/routes/client.route';
 
 /** A backlink for the gradebook pages. */
 const BackLink = () => {
-  const href = ClientRoute.parent(usePathname());
+  const href = usePathname().split("/").at(-2)!;
 
   return (
     <div className={styles.wrapper}>

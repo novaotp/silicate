@@ -3,7 +3,7 @@
 import type { Metadata } from 'next';
 
 // Internal
-import { Login } from '@components/auth';
+import { Login } from './page.components';
 
 export const metadata: Metadata = {
   title: 'Connexion - Silicate'

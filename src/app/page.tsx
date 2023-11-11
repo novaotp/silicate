@@ -3,7 +3,7 @@
 import { type Metadata } from 'next';
 
 // Internal
-import LandingComponent from './page.components';
+import { LandingComponent } from './page.components';
 
 export const metadata: Metadata = {
   title: 'Home - Silicate'

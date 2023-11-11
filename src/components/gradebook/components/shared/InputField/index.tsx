@@ -1,5 +1,5 @@
 
-import { poppins } from '@/fonts';
+import { poppins } from '@/assets/fonts';
 import styles from './index.module.scss';
 
 interface InputFieldProps {

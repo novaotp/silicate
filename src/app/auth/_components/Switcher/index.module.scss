@@ -1,0 +1,48 @@
+.switcher {
+  position: relative;
+  width: 500px;
+  display: flex;
+  translate: 0 0;
+  transition: 200ms ease-in-out;
+
+  &.active {
+    translate: -260px 0;
+  }
+
+  .wrapper {
+    position: relative;
+    width: 240px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    &:first-of-type {
+      margin-right: 20px;
+    }
+
+    .toggle {
+      position: relative;
+      width: 100%;
+      height: 40px;
+      margin-top: 5px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-deepskyblue);
+      color: var(--color-white);
+      border: none;
+      outline: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+
+      &.continue {
+        margin-bottom: 50px;
+      }
+
+      &.return {
+        background-color: grey;
+      }
+    }
+  }
+}

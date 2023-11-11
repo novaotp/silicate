@@ -3,44 +3,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Internal
-import { key, value, maxAge } from "@hooks/useTheme/config";
-import { verify } from "./utils/verifyToken";
+import { key, value, maxAge } from "@libs/hooks/useTheme/config";
+import { verify } from "@utils/jwt";
 
 /** Returns a custom middleware for the app. */
-const middleware = async (request: NextRequest) => {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/auth')) {
-    if (pathname === '/auth') {
-      return NextResponse.redirect('/auth/log-in')
-    }
-
-    if (pathname === '/auth/log-in') {
-      if (await isAuthenticated(request)) {
-        return NextResponse.redirect('/app');
-      }
-    }
+  if (!(pathname.startsWith("/app") || pathname.startsWith("/auth"))) {
+    return NextResponse.next();
+  }
+  
+  if (pathname === '/auth/log-in' && await isAuthenticated(request)) {
+    return NextResponse.redirect(new URL('/app', request.url));
   }
 
-  if (pathname.startsWith('/app') || pathname.startsWith('/account')) {
+  if (pathname.startsWith('/app')) {
     if (!await isAuthenticated(request)) {
-      return NextResponse.redirect('/auth/log-in')
+      return NextResponse.redirect(new URL('/auth/log-in', request.url))
     }
 
-    let res: NextResponse<unknown>;
-    switch (pathname) {
-      case '/app':
-        res = NextResponse.redirect('/app/dashboard');
-        break;
-
-      case '/account':
-        res = NextResponse.redirect('/account/profile');
-        break;
-    
-      default:
-        res = NextResponse.next();
-        break;
-    }      
+    const res = NextResponse.next(); 
 
     if (!request.cookies.has('theme')) {
       res.cookies.set(key, value, { maxAge: maxAge });
@@ -50,21 +33,14 @@ const middleware = async (request: NextRequest) => {
   }
 }
 
-interface UseAuthReturnProps {
-  /** Checks if the user is authenticated. Returns true or false appropriately. */
-  isAuthenticated(): Promise<boolean>;
-}
-
-const isAuthenticated = async (request: NextRequest): Promise<boolean> => {
+async function isAuthenticated(request: NextRequest): Promise<boolean> {
   const cookie = request.cookies.get('id')?.value;
 
   if (!cookie) {
     return false;
   }
 
-  const { message, data } = await verify(cookie);
+  const payload = await verify(cookie);
 
-  return message === "" && data !== undefined;
+  return (payload.payload as any).userID !== undefined;
 }
-
-export default middleware;

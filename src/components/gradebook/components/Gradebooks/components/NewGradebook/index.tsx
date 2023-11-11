@@ -9,7 +9,7 @@ import 'react-day-picker/dist/style.css';
 
 // Internal
 import styles from './index.module.scss';
-import { poppins } from '@/fonts';
+import { poppins } from '@/assets/fonts';
 import InputField from '../../../shared/InputField';
 
 interface NewGradebookProps {

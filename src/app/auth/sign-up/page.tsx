@@ -3,7 +3,7 @@
 import type { Metadata } from 'next';
 
 // Internal
-import { SignUp } from '@components/auth';
+import { SignUp } from './page.components';
 
 export const metadata: Metadata = {
   title: 'Inscription - Silicate'
