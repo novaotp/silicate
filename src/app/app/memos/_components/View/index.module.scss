@@ -3,8 +3,8 @@
 .notes {
   position: relative;
   width: 100%;
-  min-height: calc(100% - $meta-height - $add-memo-height);
-  padding: 20px 0;
+  height: calc(100% - $meta-height - $add-memo-height - 20px - 20px);
+  margin-top: 20px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;

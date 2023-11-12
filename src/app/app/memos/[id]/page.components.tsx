@@ -12,17 +12,18 @@ import styles from './page.module.scss';
 import { poppins } from '@/assets/fonts';
 
 /// -- Components --
-import { Header, Editor } from './components';
+import { Header, Editor, Actions, Title } from './components';
 
 /// -- Functions and objects --
 import { Memo } from '@/models/memo';
 import { fetchMemo, updateMemo, deleteMemo } from './server';
+import { Loading } from '@/app/_components/Loading';
 
 /** Returns the main component of the editing note page. */
 export const Edit = (): JSX.Element => {
   const router = useRouter();
   const memoId = Number(useParams().id as string);
-  const [memo, setMemo] = useState<Memo>({} as Memo);
+  const [memo, setMemo] = useState<Memo | undefined>(undefined);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
@@ -45,11 +46,11 @@ export const Edit = (): JSX.Element => {
   const handleUpdate = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
-    const response = await updateMemo(memo.id, title, content);
+    const response = await updateMemo(memo!.id, title, content);
 
     if (response) {
       setMemo({
-        ...memo,
+        ...memo!,
         title: title,
         content: content,
       });
@@ -58,49 +59,34 @@ export const Edit = (): JSX.Element => {
 
   /** Deletes the note and redirects to the /app/notes page. */
   const destroy = async (): Promise<void> => {
+    if (!memo) {
+      return;
+    }
+
     await deleteMemo(memo.id);
     router.push('/app/memos');
   }
 
   /** Discards the changes and sets the values to their initial ones. */
   const discard = (): void => {
-    setTitle(memo.title);
-    setContent(memo.content);
+    setTitle(memo!.title);
+    setContent(memo!.content);
   }
 
   return (
     <div className={styles.window}>
-      <Header destroy={() => destroy()}></Header>
-      <form className={styles.form} onSubmit={handleUpdate}>
-        <input
-          className={`${styles.title} ${poppins.className}`}
-          type="text"
-          name="title"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="My memo's title..."
-        />
-        <div className={styles.content}>
-          <Editor content={content} updateContent={setContent} />
-        </div>
-        <div className={styles.actions}>
-          <button
-            className={`${styles.button} ${styles.cancel} ${poppins.className}`}
-            type="button"
-            onClick={discard}
-            disabled={memo.title === title && memo.content === content}
-          >
-            Annuler
-          </button>
-          <button
-            className={`${styles.button} ${styles.save} ${poppins.className}`}
-            type="submit"
-            disabled={memo.title === title && memo.content === content}
-          >
-            Sauvegarder
-          </button>
-        </div>
-      </form>
+      {
+        !memo
+          ? <Loading text="Chargement du mémo..." />
+          : <>
+              <Header destroy={() => destroy()} unsavedChanges={memo.title !== title || memo.content !== content} />
+              <form className={styles.form} onSubmit={handleUpdate}>
+                        <Title title={title} setTitle={setTitle} />
+                        <Editor content={content} setContent={setContent} />
+                        <Actions discard={discard} disabled={memo.title === title && memo.content === content} />
+              </form>
+            </>
+        }
     </div>
   )
 }

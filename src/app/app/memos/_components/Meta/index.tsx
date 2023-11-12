@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 // Internal
 import styles from './index.module.scss';
 import { useCustomSearchParams } from "@libs/hooks/useCustomSearchParams";
+import { poppins } from "@/assets/fonts";
 
 export const Meta = (): JSX.Element => {
   const router = useRouter();
@@ -34,25 +35,14 @@ export const Meta = (): JSX.Element => {
     }
   }, [debouncedSearch]);
 
-  const handleOnSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    event.preventDefault();
-
-    if (event.target.value === '') {
-      router.push(`${pathname}?${remove('search')}`);
-      return;
-    }
-
-    router.push(`${pathname}?${set('search', event.target.value)}`);
-  }
-
   return (
     <div className={styles.meta}>
       <input
-        className={styles.search}
+        className={`${styles.search} ${poppins.className}`}
         type="text"
         value={search}
         onChange={event => setSearch(event.target.value)}
-        placeholder="Search memo/s..."
+        placeholder="Cherche un mémo..."
       />
     </div>
   )

@@ -1,8 +1,9 @@
 
 "use client";
 
-// React
+// React + Next
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Internal
 import { fetchUser } from "./server";
@@ -10,12 +11,9 @@ import { useUserId } from "../useUserId";
 import { User } from "./interfaces";
 
 /** A client-side hook to get data on the account. */
-export const useUser = (): User => {
-  const [account, setAccount] = useState<User>({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+export const useUser = (): User | undefined => {
+  const router = useRouter();
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
     (async () => {
@@ -23,16 +21,18 @@ export const useUser = (): User => {
         const userId = await useUserId();
 
         if (!userId) {
+          router.push('/auth/log-in');
           return;
         }
 
-        const user = await fetchUser(userId);
+        const fetchedUser = await fetchUser(userId);
 
-        if (!user) {
+        if (!fetchedUser) {
+          router.push('/auth/log-in');
           return;
         }
 
-        setAccount(user);
+        setUser(fetchedUser);
 
       } catch (err) {
         console.error(err);
@@ -41,5 +41,5 @@ export const useUser = (): User => {
     })();
   }, []);
 
-  return account;
+  return user;
 }

@@ -1,23 +1,26 @@
+$margin: 20px;
+$wrapper-width: calc( 50% - ( $margin / 2 ) );
+
 .switcher {
   position: relative;
-  width: 500px;
+  width: 200%;
   display: flex;
   translate: 0 0;
   transition: 200ms ease-in-out;
 
   &.active {
-    translate: -260px 0;
+    translate: calc( -1 * ( $wrapper-width + $margin ) ) 0;
   }
 
   .wrapper {
     position: relative;
-    width: 240px;
+    width: $wrapper-width;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
 
     &:first-of-type {
-      margin-right: 20px;
+      margin-right: $margin;
     }
 
     .toggle {

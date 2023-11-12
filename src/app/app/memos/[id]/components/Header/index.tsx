@@ -14,15 +14,23 @@ import { poppins } from '@/assets/fonts';
 
 interface HeaderProps {
   /** Deletes the note and redirects to the /app/notes page. */
-  destroy: () => void;
+  destroy: () => void,
+  unsavedChanges: boolean,
 }
 
 /** A custom header in the editor. */
-export const Header = ({ destroy }: HeaderProps): JSX.Element => {
+export const Header = ({ destroy, unsavedChanges }: HeaderProps): JSX.Element => {
+  const handleOnLeave = () => {
+    if (unsavedChanges && !window.confirm("Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter?")) {
+      return;
+    }
+  }
+
   return (
     <div className={styles.wrapper}>
       <Link
         className={styles.link}
+        onClick={handleOnLeave}
         href='/app/memos'
       >
         <WestIcon />&nbsp;&nbsp;&nbsp;Mes Mémos
