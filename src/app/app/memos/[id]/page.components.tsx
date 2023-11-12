@@ -9,15 +9,14 @@ import { useParams, useRouter } from 'next/navigation';
 
 /// -- Styles and fonts --
 import styles from './page.module.scss';
-import { poppins } from '@/assets/fonts';
 
 /// -- Components --
-import { Header, Editor, Actions, Title } from './components';
+import { Header, Editor, Actions, Title } from './_components';
+import { Loading } from '@/app/_components/Loading';
 
 /// -- Functions and objects --
 import { Memo } from '@/models/memo';
 import { fetchMemo, updateMemo, deleteMemo } from './server';
-import { Loading } from '@/app/_components/Loading';
 
 /** Returns the main component of the editing note page. */
 export const Edit = (): JSX.Element => {
@@ -81,9 +80,9 @@ export const Edit = (): JSX.Element => {
           : <>
               <Header destroy={() => destroy()} unsavedChanges={memo.title !== title || memo.content !== content} />
               <form className={styles.form} onSubmit={handleUpdate}>
-                        <Title title={title} setTitle={setTitle} />
-                        <Editor content={content} setContent={setContent} />
-                        <Actions discard={discard} disabled={memo.title === title && memo.content === content} />
+                <Title title={title} setTitle={setTitle} />
+                <Editor content={content} setContent={setContent} />
+                <Actions discard={discard} disabled={memo.title === title && memo.content === content} />
               </form>
             </>
         }
