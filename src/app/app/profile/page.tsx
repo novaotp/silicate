@@ -3,7 +3,7 @@
 import { Metadata } from "next";
 
 // Internal
-import { Profile } from "@components/account";
+import { Profile } from "./page.components";
 
 export const metadata: Metadata = {
   title: "Mon profil - Silicate"

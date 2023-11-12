@@ -5,8 +5,7 @@
 import { useState } from "react";
 
 // Internal
-import styles from './index.module.scss';
-import { TopNavBar, AppNavigation, AccountNavigation } from "./components";
+import { TopNavBar, AppNavigation, AccountNavigation } from "./_components";
 
 /** The navigation component when the user is logged in. */
 export const InsiderNav = () => {

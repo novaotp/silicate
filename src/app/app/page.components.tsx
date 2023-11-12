@@ -5,7 +5,7 @@
 import Image from 'next/image';
 
 // Internal
-import { useUser } from "@libs/hooks/useAccount";
+import { useUser } from "@libs/hooks/useUser";
 import SilicateLogo from "@public/SilicateAppIconBlackVertical.png";
 import styles from "./page.module.scss";
 import { Loading } from '../_components/Loading';
