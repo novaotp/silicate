@@ -2,7 +2,7 @@
 "use server";
 
 import { db } from "@/database";
-import { User } from "./interfaces";
+import { User } from "@models/user";
 
 export const fetchUser = async (id: number): Promise<User | null> => {
   try{

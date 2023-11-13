@@ -3,8 +3,7 @@
 import { Metadata } from "next"
 
 // Internal
-import { Gradebooks } from "@components/gradebook";
-import { GradebookProps } from "@shared/interfaces";
+import { Gradebooks } from "./page.components";
 
 export const metadata: Metadata = {
   title: "Mes carnets de notes - Silicate"
@@ -12,13 +11,8 @@ export const metadata: Metadata = {
 
 /** The gradebooks page. */
 const Page = () => {
-  const gradebooks: GradebookProps[] = [
-    { name: "EPTM 2023-2024" },
-    { name: "MATU 2023-2024" }
-  ]; // TODO: await getGradebooks()
-
   return (
-    <Gradebooks gradebooks={gradebooks} />
+    <Gradebooks />
   )
 }
 

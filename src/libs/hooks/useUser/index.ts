@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 // Internal
 import { fetchUser } from "./server";
 import { useUserId } from "../useUserId";
-import { User } from "./interfaces";
+import { User } from "@models/user";
 
 /** A client-side hook to get data on the account. */
 export const useUser = (): User | undefined => {

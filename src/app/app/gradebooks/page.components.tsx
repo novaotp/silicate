@@ -2,21 +2,18 @@
 'use client';
 
 // React
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 // Internal
-import styles from './index.module.scss';
+import styles from './page.module.scss';
 import { poppins } from '@/assets/fonts';
-import RenderGradebooks, { NoGradebooksFound, NewGradebook } from "./components";
-import { GradebookProps } from "@shared/interfaces";
-
-interface GradebooksProps {
-  gradebooks: GradebookProps[];
-}
+import { Gradebook } from "@models/gradebook";
+import { NoGradebooksFound, NewGradebook, RenderGradebooks } from "./_components";
 
 /** Returns the main component of the gradebooks page. */
-const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
+export const Gradebooks = (): JSX.Element => {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [gradebooks, setGradebooks] = useState<Gradebook[]>([]);
 
   const handleAddGradebook = () => {
     dialogRef.current!.showModal();
@@ -25,7 +22,8 @@ const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
   return (
     <div className={styles.wrapper}>
       <NewGradebook dialogRef={dialogRef} />
-      { gradebooks.length > 0
+      {
+        gradebooks.length > 0
           ? <RenderGradebooks gradebooks={gradebooks} />
           : <NoGradebooksFound />
       }
@@ -38,5 +36,3 @@ const Gradebooks = ({ gradebooks }: GradebooksProps): JSX.Element => {
     </div>
   )
 }
-
-export default Gradebooks;
