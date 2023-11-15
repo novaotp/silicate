@@ -42,5 +42,5 @@ async function isAuthenticated(request: NextRequest): Promise<boolean> {
 
   const payload = await verify(cookie);
 
-  return (payload.payload as any).userID !== undefined;
+  return Object.values(payload).length !== 0;
 }

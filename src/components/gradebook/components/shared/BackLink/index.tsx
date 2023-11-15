@@ -13,7 +13,10 @@ import styles from './index.module.scss';
 
 /** A backlink for the gradebook pages. */
 const BackLink = () => {
-  const href = usePathname().split("/").at(-2)!;
+  const pathName = usePathname().split('/')!;
+  pathName.pop();
+  const href = pathName.join('/');
+  
 
   return (
     <div className={styles.wrapper}>

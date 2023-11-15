@@ -31,9 +31,12 @@ export const verify = async (token: string): Promise<JWTPayload> => {
 
   try {
     payload = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload;
+
   } catch {
     payload = (await jwtVerify(token, encodeString(process.env.JWT_SECRET!))).payload;
+
   } finally {
+
     return payload;
   }
 }
