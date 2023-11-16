@@ -16,7 +16,7 @@ const Page = async () => {
   const gradebooks: GradebookProps[] = await GetGradebooks();
   
   return (
-    <Gradebooks />
+    <Gradebooks gradebooks={gradebooks}/>
   )
 }
 

@@ -6,11 +6,14 @@ import { headers } from "next/headers";
 // Internal
 import { Subjects } from '@components/gradebook';
 import { SubjectProps } from '@shared/interfaces';
+import { GetSubjects } from './server';
 
 function getTitle(): string {
   const headersList = headers();
-  const pathname = headersList.get("x-invoke-path") || "";
-  const title = decodeURIComponent(pathname.split("/").at(-1)!);
+  const pathname = headersList.get("referer") || "";
+  const title = pathname.split("/").at(-1)!;
+
+  console.log(pathname);
 
   return title;
 }
@@ -24,14 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** The subjects page. */
-const Page = (): JSX.Element => {
-  const subjects: SubjectProps[] = [
-      { name: "Maths" },
-      { name: "Allemand" },
-      { name: "Français" },
-      { name: "Économie" },
-      { name: "Histoire" }
-  ]; // TODO: await getSubjects(bookTitle);
+const Page = async (): Promise<JSX.Element> => {
+  const subjects: SubjectProps[] = await GetSubjects();
 
   return (
     <Subjects subjects={subjects} />

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
 	id SERIAL PRIMARY KEY NOT NULL,
 	user_id INT NOT NULL,
 	name VARCHAR(50) NOT NULL,
+	description TEXT,
 	CONSTRAINT unique_gradebook UNIQUE(user_id, name),
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id)
 );

@@ -72,6 +72,16 @@ export const Edit = (): JSX.Element => {
     setContent(memo!.content);
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault();
+
+      const formEvent = new Event('submit', { cancelable: true }) as unknown as FormEvent;
+
+      handleUpdate(formEvent);
+    }
+  }
+
   return (
     <div className={styles.window}>
       {
@@ -81,7 +91,7 @@ export const Edit = (): JSX.Element => {
               <Header destroy={() => destroy()} unsavedChanges={memo.title !== title || memo.content !== content} />
               <form className={styles.form} onSubmit={handleUpdate}>
                 <Title title={title} setTitle={setTitle} />
-                <Editor content={content} setContent={setContent} />
+                <Editor content={content} setContent={setContent} onKeyDown={handleKeyDown} />
                 <Actions discard={discard} disabled={memo.title === title && memo.content === content} />
               </form>
             </>

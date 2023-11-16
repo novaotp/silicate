@@ -11,10 +11,11 @@ import { poppins } from '@/assets/fonts';
 interface EditorProps {
   content: string,
   setContent: Dispatch<SetStateAction<string>>,
+  onKeyDown: React.KeyboardEventHandler
 }
 
 /** A custom Markdown-enhanced editor for the notes. */
-export const Editor = ({ content, setContent }: EditorProps): JSX.Element => {
+export const Editor = ({ content, setContent, onKeyDown }: EditorProps): JSX.Element => {
   return (
     <div className={styles.wrapper}>
       <textarea
@@ -25,6 +26,7 @@ export const Editor = ({ content, setContent }: EditorProps): JSX.Element => {
         placeholder="Le contenu de mon mémo..."
         spellCheck="false"
         autoComplete='false'
+        onKeyDown={onKeyDown}
       />
     </div>
   )
