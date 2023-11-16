@@ -11,6 +11,7 @@ import 'react-day-picker/dist/style.css';
 import styles from './index.module.scss';
 import { poppins } from '@/assets/fonts';
 import InputField from '../../../shared/InputField';
+import { CreateGradebook } from '@/app/app/gradebooks/server';
 
 interface NewGradebookProps {
   /** The reference to the dialog. */
@@ -22,16 +23,23 @@ const NewGradebook = ({ dialogRef }: NewGradebookProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const ref = useRef<HTMLDialogElement>();
   const [range, setRange] = useState<Date | undefined>();
+  const [gradeBookName, setGradeBookName] = useState<string | undefined>()
+  const [gradeBookStartDate, setGradeBookStartDate] = useState<Date | undefined>()
+  const [gradeBookEndDate, setGradeBookEndDate] = useState<Date | undefined>()
 
   const openPeriod = () => {
 
   }
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    await CreateGradebook({ gradeBookName, gradeBookStartDate, gradeBookEndDate });
+    
+    window.location.reload();
   }
 
-  const closeModal = () => {
+  const closeModal = (event: FormEvent) => {
     dialogRef.current!.close();
   }
 
@@ -43,6 +51,7 @@ const NewGradebook = ({ dialogRef }: NewGradebookProps) => {
           label='Nom du gradebook'
           name='name'
           placeholder='Entrez le nom du gradebook ici...'
+          onChange={(evt: any) => {setGradeBookName(evt.target.value)}}
         />
         <button>
           Période
@@ -52,12 +61,14 @@ const NewGradebook = ({ dialogRef }: NewGradebookProps) => {
           label="Début"
           name="startDate"
           placeholder="Entrez la date de début ici..."
+          onChange={(evt: any) => {setGradeBookStartDate(evt.target.value)}}
         />
         <InputField
           type="date"
           label="Fin"
           name="endDate"
           placeholder="Entrez la date de fin ici..."
+          onChange={(evt: any) => {setGradeBookEndDate(evt.target.value)}}
         />
         <DayPicker
           mode="single"
@@ -71,7 +82,7 @@ const NewGradebook = ({ dialogRef }: NewGradebookProps) => {
         />
         <div className={styles.buttons}>
           <button className={`${styles.add} ${styles.button} ${poppins.className}`} onClick={closeModal} type="submit">Ajouter</button>
-          <button className={`${styles.close} ${styles.button} ${poppins.className}`} onClick={closeModal}>Close</button>
+          <button className={`${styles.close} ${styles.button} ${poppins.className}`} onClick={closeModal} type='reset'>Close</button>
         </div>
       </form>
     </dialog>

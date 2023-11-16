@@ -4,6 +4,12 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { encodeString } from '../textencoder';
 
+interface PayloadProps {
+  payload: {
+    userID: number
+  }
+}
+
 /**
  * Signs a payload to create a JWT and returns it.
  * @param payload The payload to sign
@@ -31,9 +37,12 @@ export const verify = async (token: string): Promise<JWTPayload> => {
 
   try {
     payload = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload;
+
   } catch {
     payload = (await jwtVerify(token, encodeString(process.env.JWT_SECRET!))).payload;
+
   } finally {
+
     return payload;
   }
 }

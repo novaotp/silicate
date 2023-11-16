@@ -11,10 +11,12 @@ interface InputFieldProps {
   placeholder: string;
   /** The name of the input field. */
   name: string;
+  /** The change callback of the input field */
+  onChange?: React.ChangeEventHandler
 }
 
 /** A text input field for the gradebokk pages. */
-const InputField = ({ type, label, placeholder, name }: InputFieldProps) => {
+const InputField = ({ type, label, placeholder, name, onChange }: InputFieldProps) => {
   return (
     <div className={styles.field}>
       <label htmlFor={name}>{label}</label>
@@ -25,6 +27,7 @@ const InputField = ({ type, label, placeholder, name }: InputFieldProps) => {
         name={name}
         autoComplete="off"
         required={true}
+        onChange={onChange}
       />
     </div>
   )
