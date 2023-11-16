@@ -1,47 +1,54 @@
-'use server'
+"use server";
 
-import { db } from "@/database"
+import { db } from "@/database";
 
 interface CreateGradeProps {
-    title: string;
-    value: string;
+  gradebookID: string;
+  subjectID: string;
+  name: string;
+  score: string;
+  weight: number;
 }
 
-export async function CreateSubject({ title, value }: CreateGradeProps): Promise<boolean> {
-    try {
+export const createGrade = async ({
+  gradebookID,
+  subjectID,
+  name,
+  score,
+  weight
+}: CreateGradeProps): Promise<boolean> => {
+  try {
+    const client = await db.connect();
 
-        const client = await db.connect();
+    const query = "INSERT INTO public.grade (gradebook_id, subject_id, score, weight, name) VALUES ($1, $2, $3, $4, $5)";
+    const values = [gradebookID, subjectID, score, weight, name];
 
-        const query = 'INSERT INTO public.subject (title, value) VALUES ($1, $2)';
+    await client.query(query, values);
+    client.release();
 
-        const values = [title, value];
+    return true;
 
-        await client.query(query, values);
+  } catch (err) {
+    console.log(err);
+    return false;
+    
+  }
+};
 
-        client.release();
+export const getGrades = async (subject_id: string, gradebook_id: string) => {
+  try {
+    const client = await db.connect();
 
-        return true;
+    const query = `SELECT * FROM public.grade WHERE subject_id = $1 AND gradebook_id = $2 ORDER BY name`;
+    const values = [subject_id, gradebook_id];
 
-    } catch (err) {
-        console.log(err);
-        
-        return false;
-    }
-}
+    const { rows } = await client.query(query);
+    client.release();
 
-export async function GetGrades(subject_id: string, gradebook_id: string){
-    try {
-        const client = await db.connect();
+    return rows;
 
-        const query = `SELECT * FROM public.grade WHERE subject_id = ${subject_id} AND gradebook_id = ${gradebook_id} ORDER BY name`;
+  } catch (err) {
+    return undefined;
 
-        const result = await client.query(query);
-
-        client.release();
-
-        return result.rows;
-
-    } catch (err) {
-        return [];
-    }
-}
+  }
+};

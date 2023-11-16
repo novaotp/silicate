@@ -4,7 +4,7 @@ import { Metadata } from "next"
 
 // Internal
 import { Gradebooks } from "@components/gradebook";
-import { GradebookProps } from "@shared/interfaces";
+import { Gradebook } from "@models/gradebook";
 import { GetGradebooks } from "./server";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 /** The gradebooks page. */
 const Page = async () => {
-  const gradebooks: GradebookProps[] = await GetGradebooks();
+  const gradebooks: Gradebook[] = await GetGradebooks();
   
   return (
     <Gradebooks gradebooks={gradebooks}/>

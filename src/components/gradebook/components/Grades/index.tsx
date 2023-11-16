@@ -11,7 +11,7 @@ interface GradesProps {
 }
 
 /** The main component of the grades page. */
-const Grades = ({ grades }: GradesProps) => {  
+const Grades = ({ grades }: GradesProps) => {
   return (
     <div className={styles.window}>
       <BackLink />

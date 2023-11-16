@@ -28,7 +28,6 @@
       "@components/*": ["src/components/*"],
       "@assets/*": ["src/assets/*"],
       "@models/*": ["src/models/*"],
-      "@shared/*": ["src/shared/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../shared/**/*.ts"],

@@ -5,14 +5,14 @@
 import { useState } from "react";
 
 // Internal
-import { SubjectProps } from "@shared/interfaces"
+import { Subject } from "@models/subject"
 import { NoSubjectsFound, RenderSubjects } from "./components";
 import BackLink from "../shared/BackLink";
 import SearchField from "../shared/SearchField";
 import styles from './index.module.scss';
 
 interface SubjectsProps {
-  subjects: SubjectProps[];
+  subjects: Subject[];
 }
 
 /** The main component of the subjects page. */

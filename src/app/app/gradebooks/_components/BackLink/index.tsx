@@ -12,7 +12,7 @@ import { usePathname } from 'next/navigation';
 import styles from './index.module.scss';
 
 /** A backlink for the gradebook pages. */
-const BackLink = () => {
+export const BackLink = () => {
   const href = usePathname().split("/").at(-2)!;
 
   return (
@@ -21,5 +21,3 @@ const BackLink = () => {
     </div>
   )
 }
-
-export default BackLink;
