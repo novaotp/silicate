@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 /** The gradebooks page. */
 const Page = async () => {
   const gradebooks: GradebookProps[] = await GetGradebooks();
-
+  
   return (
-    <Gradebooks gradebooks={gradebooks} />
+    <Gradebooks />
   )
 }
 
