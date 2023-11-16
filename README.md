@@ -21,25 +21,22 @@ A simple solution for managing school life easily.
 
 ### Getting Started
 
-Run the configure.ps1 or configure.sh script to configure the dependencies.
+1. Clone the repository
+
+```bash
+git clone https://github.com/novaotp/silicate
+```
+
+2. Install the dependencies
 
 ```powershell
-PS C:\path\to\directory> .\configure.ps1
+npm install
 ```
 
-OR
+3. Run the project
 
-```bash
-username@pc:~/path/to/directory$ ./configure.sh
-```
-
-### Run the projects
-
-Open two terminals simultaneously
-
-```bash
-cd frontend | npm run dev    # Frontend
-cd backend/api | npm start   # Backend
+```powershell
+npm run dev
 ```
 
 ## API Calls
