@@ -15,6 +15,7 @@ import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateGradebookProps, createGradebook } from '../../server';
 import { usePathname, useRouter } from 'next/navigation';
+import { reloadPage } from '@/utils/reloadPage';
 
 interface AddGradebookProps {
   dialogRef: RefObject<HTMLDialogElement>;
@@ -63,7 +64,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
     setName("");
     setDescription("");
     dialogRef.current!.close();
-    router.push(`${pathname}/${id}`);
+    reloadPage();
   }
 
   const closeModal = () => {

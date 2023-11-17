@@ -45,6 +45,46 @@ export const createGrade = async ({
   }
 };
 
+export interface UpdateGradeProps {
+  subjectId: string;
+  name: string;
+  score: string;
+  weight: number;
+  comment: string;
+}
+
+export const updateGrade = async ({
+  subjectId,
+  name,
+  score,
+  weight,
+  comment
+}: UpdateGradeProps): Promise<boolean> => {
+  try {
+    const userId = await useServerUserId();
+
+    if (!userId) {
+      return false;
+    }
+
+    const client = await db.connect();
+
+    const now = new Date();
+    const query = "UPDATE public.grade SET name = $1, score = $2, weight = $3, comment = $4, updated_at = $5 WHERE user_id = $6 AND subject_id = $7";
+    const values = [name, score, weight, comment, now, userId, subjectId];
+
+    await client.query(query, values);
+    client.release();
+
+    return true;
+
+  } catch (err) {
+    console.log(err);
+    return false;
+    
+  }
+};
+
 export const getGrades = async (subjectId: string) => {
   try {
     const userId = await useServerUserId();

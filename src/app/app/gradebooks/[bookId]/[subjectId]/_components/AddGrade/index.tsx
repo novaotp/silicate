@@ -9,6 +9,7 @@ import { poppins } from '@/assets/fonts';
 import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateGradeProps, createGrade } from '../../server';
+import { reloadPage } from '@/utils/reloadPage';
 
 interface AddGradeProps {
   dialogRef: RefObject<HTMLDialogElement>;
@@ -53,6 +54,7 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
     setWeight(1);
     setComment("");
     dialogRef.current!.close();
+    reloadPage();
   }
 
   const closeModal = () => {

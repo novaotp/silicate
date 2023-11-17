@@ -9,6 +9,7 @@ import { poppins } from '@/assets/fonts';
 import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateSubjectProps, createSubject } from '../../server';
+import { reloadPage } from '@/utils/reloadPage';
 
 interface AddSubjectProps {
   dialogRef: RefObject<HTMLDialogElement>;
@@ -47,7 +48,7 @@ export const AddSubject = ({ dialogRef }: AddSubjectProps) => {
     setName("");
     setDescription("");
     dialogRef.current!.close();
-    router.push(`/app/gradebooks/${gradebookId}/${id}`);
+    reloadPage();
   }
 
   const closeModal = () => {
