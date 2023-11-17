@@ -42,8 +42,6 @@ export const createMemo = async (title: string, content: string) => {
     const client = await db.connect();
     const userId = await useServerUserId();
 
-    console.log("User Id", userId);
-
     if (!userId) {
       return null;
     }

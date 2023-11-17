@@ -1,60 +1,64 @@
 
 "use client";
 
-// React + Next
-import { useCallback } from "react";
-import Link from "next/link";
+// React
+import { useEffect, useMemo, useRef } from "react";
 
 // Internal
 import styles from "./index.module.scss";
 import { useCustomSearchParams } from "@libs/hooks/useCustomSearchParams";
 import { Memo } from "@/models/memo";
+
+/// -- Components -- ///
 import { Loading } from "@/app/_components/Loading";
+import { EmptyView, MemoCard } from "./_components";
 
 interface ViewProps {
   memos: Memo[] | undefined,
 }
 
 export const View = ({ memos }: ViewProps): JSX.Element => {
+  const notesRef = useRef<HTMLUListElement>(null);
   const { searchParams } = useCustomSearchParams();
+  const searchQuery = searchParams.get('search') ?? '';
+  
+  useEffect(() => {
+    const notesElement = notesRef.current!;
 
-  const getMonth = (date: Date): string => date.toLocaleString('default', { month: 'long' }).slice(0, 3).toUpperCase();
-  const getDay = (date: Date): string => date.toLocaleString('default', { day: "2-digit" });
+    const handleScroll = () => {
+      const isBottom = notesElement.scrollHeight - notesElement.scrollTop === notesElement.clientHeight;
 
-  const sortMemos = useCallback((memos: Memo[]) => {
-    return memos.sort((memo1: Memo, memo2: Memo) => memo2.updated_at.getTime() - memo1.updated_at.getTime());
-  }, [memos]);
+      if (isBottom) {
+        notesElement.classList.add('no-shadow');
+      } else {
+        notesElement.classList.remove('no-shadow');
+      }
+    };
+
+    notesElement.addEventListener('scroll', handleScroll);
+
+    return () => {
+      notesElement.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  const sortedAndFilteredMemos = useMemo(() => {
+    if (!memos) return [];
+
+    return memos
+      .filter(memo => searchQuery === "" || memo.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      .sort((memo1, memo2) => memo2.updated_at.getTime() - memo1.updated_at.getTime());
+  }, [memos, searchQuery]);
 
   return (
-    <ul className={styles.notes}>
+    <ul className={styles.notes} ref={notesRef}>
       {
         !memos
-        ? <Loading text="Chargement de tes notes..." />
-        : memos.length === 0
-          ? <p>On dirait que tu n'as pas encore ajouté de mémos !</p>
-          : 
-            (
-              sortMemos(memos).map((memo: Memo) => {
-                const searchQuery = searchParams.get('search') ?? '';
-
-                if (searchQuery !== "" && !memo.title.toLowerCase().includes(searchQuery.toLowerCase())) {
-                  return;
-                }
-
-                return (
-                  <li key={memo.id} className={styles.note}>
-                    <Link className={styles.link} href={`/app/memos/${memo.id}`}>
-                      <div className={styles.updatedAt}>
-                        <p>{getMonth(memo.updated_at)}</p>
-                        <p>{getDay(memo.updated_at)}</p>
-                      </div>
-                      <div className={styles.data}>{memo.title}</div>
-                    </Link>
-                  </li>
-                )
-              })
-            )
+          ? <Loading text="Chargement de tes notes..." />
+          : sortedAndFilteredMemos.length === 0
+            ? <EmptyView isSearchQueryEmpty={searchQuery === ""} />
+            : sortedAndFilteredMemos.map((memo: Memo) => <MemoCard key={memo.id} memo={memo} />)
       }
     </ul>
-  )
+  );
 }

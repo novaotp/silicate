@@ -28,6 +28,11 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
 	user_id INT NOT NULL,
 	name VARCHAR(50) NOT NULL,
 	description TEXT,
+	from TIMESTAMPTZ NOT NULL,
+	to TIMESTAMPTZ NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	deleted_at TIMESTAMPTZ,
 	CONSTRAINT unique_gradebook UNIQUE(user_id, name),
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id)
 );

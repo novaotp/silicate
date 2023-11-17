@@ -1,5 +1,8 @@
 
 export interface Gradebook {
+  id: number,
   name: string,
-  user_id: number
+  description: string,
+  created_at: Date,
+  updated_at: Date
 }

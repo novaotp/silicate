@@ -1,19 +1,39 @@
 
 'use client';
 
-// React
-import { useRef, useState } from 'react';
+// React + Next
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Internal
+import { fetchGradebooks } from './server';
+import { Gradebook } from "@models/gradebook";
+
+/// -- Styles and Fonts -- ///
 import styles from './page.module.scss';
 import { poppins } from '@/assets/fonts';
-import { Gradebook } from "@models/gradebook";
-import { NoGradebooksFound, NewGradebook, RenderGradebooks } from "./_components";
+
+/// -- Components -- ///
+import { NoGradebooksFound, AddGradebook, RenderGradebooks, View, Meta } from "./_components";
 
 /** Returns the main component of the gradebooks page. */
 export const Gradebooks = (): JSX.Element => {
+  const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [gradebooks, setGradebooks] = useState<Gradebook[]>([]);
+  const [gradebooks, setGradebooks] = useState<Gradebook[] | undefined>(undefined);
+
+  useEffect(() => {
+    (async () => {
+      const gradebooks = await fetchGradebooks();
+
+      if (!gradebooks) {
+        router.push('/auth/log-in');
+        return;
+      }
+
+      setGradebooks(gradebooks);
+    })();
+  }, []);
 
   const handleAddGradebook = () => {
     dialogRef.current!.showModal();
@@ -21,18 +41,15 @@ export const Gradebooks = (): JSX.Element => {
 
   return (
     <div className={styles.wrapper}>
-      <NewGradebook dialogRef={dialogRef} />
-      {
-        gradebooks.length > 0
-          ? <RenderGradebooks gradebooks={gradebooks} />
-          : <NoGradebooksFound />
-      }
+      <Meta />
+      <View gradebooks={gradebooks} />
       <button
         className={`${styles.add} ${poppins.className}`}
         onClick={handleAddGradebook}
       >
         Ajouter un carnet de note
       </button>
+      <AddGradebook dialogRef={dialogRef} />
     </div>
   )
 }

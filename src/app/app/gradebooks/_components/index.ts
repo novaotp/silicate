@@ -1,7 +1,9 @@
 
 import { BackLink } from "./BackLink";
-import NewGradebook from "./NewGradebook";
+import { AddGradebook } from "./AddGradebook";
 import NoGradebooksFound from "./NoGradebooksFound";
 import RenderGradebooks from "./RenderGradebooks";
+import { View } from "./View";
+import { Meta } from "./Meta";
 
-export { NoGradebooksFound, NewGradebook, RenderGradebooks, BackLink };
+export { NoGradebooksFound, AddGradebook, RenderGradebooks, BackLink, View, Meta };

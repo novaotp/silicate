@@ -1,7 +1,1 @@
 *.sql linguist-detectable=true
-*.html linguist-detectable=false
-*.html.* linguist-detectable=false
-*.ps1 linguist-detectable=false
-*.psm1 linguist-detectable=false
-*.sh linguist-detectable=false
-*.css linguist-detectable=false
