@@ -7,6 +7,7 @@ import Link from "next/link";
 // Internal
 import styles from "./index.module.scss";
 import { Gradebook } from "@/models/gradebook";
+import { format } from "date-fns";
 
 interface GradebookCardProps {
   gradebook: Gradebook
@@ -36,6 +37,10 @@ export const GradebookCard = ({ gradebook }: GradebookCardProps): JSX.Element =>
     return `${day}.${month}.${year} à ${hours}:${minutes}`;
   }
 
+  const formatDate = (date: Date) => {
+    return format(date, 'dd.MM.yyyy');
+  }
+
   return (
     <li className={styles.note}>
       <Link href={`/app/gradebooks/${gradebook.id}`} className={styles.link}>
@@ -44,6 +49,9 @@ export const GradebookCard = ({ gradebook }: GradebookCardProps): JSX.Element =>
           &nbsp;
           &nbsp;
           <span className={styles.date}>{formattedDate(gradebook.updated_at)}</span>
+        </div>
+        <div>
+          <span className={styles.period}>{`Période : ${formatDate(gradebook.from)} - ${formatDate(gradebook.to)}`}</span>
         </div>
         <div className={styles.content}>
           {gradebook.description}

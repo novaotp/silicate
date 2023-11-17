@@ -49,12 +49,24 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
       to: range.to,
     }
 
-    await createGradebook(gradebook);
+    const success = await createGradebook(gradebook);
+
+    if (!success) {
+      alert("Une erreur est survenue lors de la création du carnet de note.");
+      return;
+    }
+
+    setRange(undefined);
+    setName("");
+    setDescription("");
+    dialogRef.current!.close();
   }
 
   const closeModal = () => {
     dialogRef.current!.close();
     setRange(undefined);
+    setName("");
+    setDescription("");
   }
 
   const openPeriodModal = () => {

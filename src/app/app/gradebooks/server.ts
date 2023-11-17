@@ -23,7 +23,7 @@ export const createGradebook = async ({ name, description, from, to }: CreateGra
     const client = await db.connect();
 
     const now = new Date();
-    const query = 'INSERT INTO public.gradebook (user_id, name, description, from, to, created_at, updated_at) VALUES ($1, $2)';
+    const query = 'INSERT INTO public.gradebook (user_id, name, description, start_period, end_period, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
     const values = [userId, name, description, from, to, now, now];
 
     await client.query(query, values);
@@ -58,8 +58,8 @@ export const fetchGradebooks = async (): Promise<Gradebook[] | null> => {
       id: row.id,
       name: row.name,
       description: row.description,
-      from: row.from,
-      to: row.to,
+      from: row.start_period,
+      to: row.end_period,
       created_at: row.created_at,
       updated_at: row.updated_at
     }));
