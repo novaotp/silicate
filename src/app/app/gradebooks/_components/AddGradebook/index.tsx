@@ -14,6 +14,7 @@ import { poppins } from '@/assets/fonts';
 import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateGradebookProps, createGradebook } from '../../server';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface AddGradebookProps {
   dialogRef: RefObject<HTMLDialogElement>;
@@ -21,6 +22,8 @@ interface AddGradebookProps {
 
 /** Adds a new gradebook to the user's gradebook list. */
 export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const periodRef = useRef<HTMLDialogElement>(null);
   const [name, setName] = useState<string>("");
@@ -49,9 +52,9 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
       to: range.to,
     }
 
-    const success = await createGradebook(gradebook);
+    const id = await createGradebook(gradebook);
 
-    if (!success) {
+    if (id === 0) {
       alert("Une erreur est survenue lors de la création du carnet de note.");
       return;
     }
@@ -60,6 +63,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
     setName("");
     setDescription("");
     dialogRef.current!.close();
+    router.push(`${pathname}/${id}`);
   }
 
   const closeModal = () => {
@@ -87,13 +91,13 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
         <InputField
           type='text'
           label='Nom'
-          placeholder='Entrez le nom du gradebook ici...'
+          placeholder='Entrez le nom du carnet de notes ici...'
           value={name}
           setValue={setName}
         />
         <TextArea
           label='Description'
-          placeholder='Entrez la description du gradebook ici...'
+          placeholder='Entrez une description du carnet de notes ici...'
           value={description}
           setValue={setDescription}
         />
@@ -125,7 +129,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
         </dialog>
         <div className={styles.buttons}>
           <button className={`${styles.add} ${styles.button} ${poppins.className}`} type="submit">Ajouter</button>
-          <button className={`${styles.close} ${styles.button} ${poppins.className}`} type="button" onClick={closeModal}>Close</button>
+          <button className={`${styles.close} ${styles.button} ${poppins.className}`} type="button" onClick={closeModal}>Annuler</button>
         </div>
       </form>
     </dialog>

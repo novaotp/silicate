@@ -39,25 +39,33 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
 
 CREATE TABLE IF NOT EXISTS public.subject (
 	id SERIAL PRIMARY KEY NOT NULL,
+	user_id INT NOT NULL,
+	gradebook_id INT NOT NULL,
 	name VARCHAR(50) NOT NULL,
-	abbrev VARCHAR(10) NOT NULL,
-	CONSTRAINT unique_subject_name UNIQUE(name),
-	CONSTRAINT unique_subject_abbrev UNIQUE(abbrev)
+	description TEXT,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	deleted_at TIMESTAMPTZ,
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id),
+	CONSTRAINT fk_gradebook_id FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.grade (
 	id SERIAL PRIMARY KEY NOT NULL,
-	gradebook_id INT NOT NULL,
+	user_id INT NOT NULL,
 	subject_id INT NOT NULL,
+	name VARCHAR(50) NOT NULL,
 	score VARCHAR(5) NOT NULL,
 	weight DECIMAL NOT NULL,
-	name VARCHAR(50) NOT NULL,
-	CONSTRAINT unique_grade UNIQUE(gradebook_id, subject_id, name),
+	comment TEXT,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	deleted_at TIMESTAMPTZ,
 	CONSTRAINT check_weight CHECK(
 		weight > 0
 		AND weight <= 100
 	),
-	CONSTRAINT fk_gradebook_id FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id),
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id),
 	CONSTRAINT fk_subject_id FOREIGN KEY (subject_id) REFERENCES public.subject(id)
 );
 

@@ -1,5 +1,10 @@
 
 export interface Grade {
-  title: string;
-  value: string;
+  id: string;
+  name: string;
+  score: string;
+  weight: number;
+  comment: string;
+  created_at: Date;
+  updated_at: Date;
 }

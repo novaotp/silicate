@@ -12,12 +12,12 @@ export interface CreateGradebookProps {
   to: Date
 }
 
-export const createGradebook = async ({ name, description, from, to }: CreateGradebookProps): Promise<boolean> => {
+export const createGradebook = async ({ name, description, from, to }: CreateGradebookProps): Promise<number> => {
   try {
     const userId = await useServerUserId();
 
     if (!userId) {
-      return false;
+      return 0;
     }
 
     const client = await db.connect();
@@ -26,14 +26,14 @@ export const createGradebook = async ({ name, description, from, to }: CreateGra
     const query = 'INSERT INTO public.gradebook (user_id, name, description, start_period, end_period, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
     const values = [userId, name, description, from, to, now, now];
 
-    await client.query(query, values);
+    const { rows } = await client.query(query, values);
     client.release();
 
-    return true;
+    return rows[0].id;
 
   } catch (err) {
     console.log(err);
-    return false;
+    return 0;
 
   }
 }

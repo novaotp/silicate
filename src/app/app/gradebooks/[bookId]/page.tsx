@@ -1,23 +1,18 @@
 
 // Next
 import { Metadata } from 'next';
-import { headers } from "next/headers";
 
 // Internal
-import { Subjects } from '@components/gradebook';
-import { Subject } from '@models/subject';
-import { GetSubjects } from './server';
+import { Subjects } from './page.components';
 
 export const metadata: Metadata = {
   title: "Mon carnet de notes - Silicate"
 }
 
 /** The subjects page. */
-const Page = async (): Promise<JSX.Element> => {
-  const subjects: Subject[] = await GetSubjects();
-
+const Page = (): JSX.Element => {
   return (
-    <Subjects subjects={subjects} />
+    <Subjects />
   )
 }
 

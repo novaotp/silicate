@@ -42,7 +42,7 @@ export const Meta = (): JSX.Element => {
         type="text"
         value={search}
         onChange={event => setSearch(event.target.value)}
-        placeholder="Cherche une note..."
+        placeholder="Cherche une branche..."
       />
     </div>
   )
