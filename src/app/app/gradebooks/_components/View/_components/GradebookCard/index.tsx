@@ -8,12 +8,16 @@ import Link from "next/link";
 import styles from "./index.module.scss";
 import { Gradebook } from "@/models/gradebook";
 import { format } from "date-fns";
+import { UpdateGradebook } from "../../../UpdateGradebook";
+import { useRef } from "react";
 
 interface GradebookCardProps {
   gradebook: Gradebook
 }
 
 export const GradebookCard = ({ gradebook }: GradebookCardProps): JSX.Element => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   const toTwoDigits = (number: number): string => {
     return number.toString().padStart(2, '0');
   }
@@ -57,6 +61,8 @@ export const GradebookCard = ({ gradebook }: GradebookCardProps): JSX.Element =>
           {gradebook.description}
         </div>
       </Link>
+      <button className={styles.edit} onClick={() => dialogRef.current!.showModal()}>:</button>
+      <UpdateGradebook gradebook={gradebook} dialogRef={dialogRef} />
     </li>
   )
 }

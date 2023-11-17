@@ -10,12 +10,15 @@ import { Gradebook } from "@/models/gradebook";
 import { format } from "date-fns";
 import { Subject } from "@/models/subject";
 import { useParams } from "next/navigation";
+import { useRef } from "react";
+import { UpdateSubject } from "../../../UpdateSubject";
 
 interface SubjectCardProps {
   subject: Subject
 }
 
 export const SubjectCard = ({ subject }: SubjectCardProps): JSX.Element => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const gradebookId = Number(useParams().bookId as string);
 
   const toTwoDigits = (number: number): string => {
@@ -48,16 +51,20 @@ export const SubjectCard = ({ subject }: SubjectCardProps): JSX.Element => {
   return (
     <li className={styles.note}>
       <Link href={`/app/gradebooks/${gradebookId}/${subject.id}`} className={styles.link}>
-        <div className={styles.header}>
-          <span className={styles.title}>{subject.name}</span>
-          &nbsp;
-          &nbsp;
-          <span className={styles.date}>{formattedDate(subject.updated_at)}</span>
-        </div>
-        <div className={styles.content}>
-          {subject.description}
+        <div>
+          <div className={styles.header}>
+            <span className={styles.title}>{subject.name}</span>
+            &nbsp;
+            &nbsp;
+            <span className={styles.date}>{formattedDate(subject.updated_at)}</span>
+          </div>
+          <div className={styles.content}>
+            {subject.description}
+          </div>
         </div>
       </Link>
+      <button onClick={() => dialogRef.current!.showModal()}>:</button>
+      <UpdateSubject subject={subject} dialogRef={dialogRef} />
     </li>
   )
 }

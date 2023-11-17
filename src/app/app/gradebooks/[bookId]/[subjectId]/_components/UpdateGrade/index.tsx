@@ -1,30 +1,22 @@
 
-// React
-import { useRef, type FormEvent, type RefObject, useState } from 'react';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+"use client";
 
-// Internal
-import styles from './index.module.scss';
-import { poppins } from '@/assets/fonts';
-import InputField from '../InputField';
-import { TextArea } from '../TextArea';
-import { CreateGradeProps, createGrade } from '../../server';
-import { reloadPage } from '@/utils/reloadPage';
+import { Grade } from "@/models/grade"
+import { useParams } from "next/navigation";
+import { FormEvent, RefObject, useRef, useState } from "react";
+import { UpdateGradeProps, deleteGrade, updateGrade } from "../../server";
+import { reloadPage } from "@/utils/reloadPage";
+import styles from "./index.module.scss";
+import { InputField, TextArea } from "..";
+import { poppins } from "@/assets/fonts";
 
-interface AddGradeProps {
-  dialogRef: RefObject<HTMLDialogElement>;
-}
-
-/** Adds a new gradebook to the user's gradebook list. */
-export const AddGrade = ({ dialogRef }: AddGradeProps) => {
+export const UpdateGrade = ({ grade, dialogRef }: { grade: Grade, dialogRef: RefObject<HTMLDialogElement> }): JSX.Element => {
   const params = useParams();
-  const router = useRouter();
-  const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
-  const [name, setName] = useState<string>("");
-  const [score, setScore] = useState<string>("");
-  const [weight, setWeight] = useState<number>(1);
-  const [comment, setComment] = useState<string>("");
+  const [name, setName] = useState<string>(grade.name);
+  const [score, setScore] = useState<string>(grade.score);
+  const [weight, setWeight] = useState<number>(grade.weight);
+  const [comment, setComment] = useState<string>(grade.comment);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -34,7 +26,8 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
       return;
     }
 
-    const subject: CreateGradeProps = {
+    const updatedgrade: UpdateGradeProps = {
+      gradeId: grade.id,
       subjectId: params.subjectId as string,
       name: name,
       score: score,
@@ -42,31 +35,30 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
       comment: comment,
     }
 
-    const success = await createGrade(subject);
+    const success = await updateGrade(updatedgrade);
 
     if (!success) {
-      alert("Une erreur est survenue lors de la création de la note.");
+      alert("Une erreur est survenue lors de l'édition de la note.");
       return;
     }
 
-    setName("");
-    setScore("");
-    setWeight(1);
-    setComment("");
     dialogRef.current!.close();
     reloadPage();
   }
 
   const closeModal = () => {
     dialogRef.current!.close();
-    setName("");
-    setScore("");
-    setWeight(1);
-    setComment("");
+  }
+
+  const handleDelete = () => {
+    dialogRef.current!.close();
+    deleteGrade(grade.id, params.subjectId as string);
+    reloadPage();
   }
 
   return (
     <dialog className={styles.dialog} ref={dialogRef}>
+      <button className={`${styles.delete} ${poppins.className}`} onClick={handleDelete}>Delete</button>
       <form ref={formRef} onSubmit={handleSubmit}>
         <InputField
           type='text'
@@ -96,7 +88,7 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
           setValue={setComment}
         />
         <div className={styles.buttons}>
-          <button className={`${styles.add} ${styles.button} ${poppins.className}`} type="submit">Ajouter</button>
+          <button className={`${styles.add} ${styles.button} ${poppins.className}`} type="submit">Modifier</button>
           <button className={`${styles.close} ${styles.button} ${poppins.className}`} type="button" onClick={closeModal}>Annuler</button>
         </div>
       </form>

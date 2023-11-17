@@ -36,6 +36,63 @@ export const createSubject = async ({ gradebookId, name, description }: CreateSu
   }
 }
 
+export interface UpdateSubjectProps {
+  gradebookId: string,
+  subjectId: string,
+  name: string;
+  description: string;
+}
+
+export const updateSubject = async ({ gradebookId, subjectId, name, description }: UpdateSubjectProps): Promise<boolean> => {
+  try {
+    const userId = await useServerUserId();
+
+    if (!userId) {
+      return false;
+    }
+
+    const client = await db.connect();
+
+    const query = 'UPDATE public.subject SET name = $1, description = $2, updated_at = $3 WHERE user_id = $4 AND gradebook_id = $5 AND id = $6';
+    const values = [name, description, new Date(), userId, gradebookId, subjectId];
+
+    await client.query(query, values);
+    client.release();
+
+    return true;
+
+  } catch (err) {
+    console.log(err);
+    return false;
+
+  }
+}
+
+export const deleteSubject = async (subjectId: string, gradebookId: string): Promise<boolean> => {
+  try {
+    const userId = await useServerUserId();
+
+    if (!userId) {
+      return false;
+    }
+
+    const client = await db.connect();
+
+    const query = 'DELETE FROM public.subject WHERE id = $1 AND user_id = $2 AND gradebook_id = $3';
+    const values = [subjectId, userId, gradebookId];
+
+    await client.query(query, values);
+    client.release();
+
+    return true;
+
+  } catch (err) {
+    console.log(err);
+    return false;
+
+  }
+}
+
 export const fetchSubjects = async (gradebookId: string): Promise<Subject[] | null> => {
   try {
     const userId = await useServerUserId();
