@@ -10,30 +10,41 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 
+  &[open=""] {
+    display: flex;
+  }
+
   .text {
     margin: 0;
     font-size: 16px;
-    text-align: center;
+    text-align: justify;
   }
-  
-  .actions {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-  
-    .yes {
-      background-color: #007bff;
-    }
-  
-    .no {
-      background-color: #dc3545;
+
+  .confirm {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+
+    .actions {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+
+      &.yes {
+        background-color: #007bff;
+      }
+
+      &.no {
+        background-color: #dc3545;
+      }
     }
   }
 }

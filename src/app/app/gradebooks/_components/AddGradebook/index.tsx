@@ -107,7 +107,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
           <button className={poppins.className} type="button" onClick={openPeriodModal}>
             {
               !range || !range.from || !range.to
-                ? <p>Période indéfini</p>
+                ? <p>Période indéfinie</p>
                 : <span>{formatDate(range.from)} - {formatDate(range.to)}</span>
             }
           </button>

@@ -2,10 +2,10 @@
 "use client";
 
 import { ChildrenProps } from '@/types/interfaces';
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useRef, RefObject } from 'react';
 
 interface AlertContextProps {
-  show: boolean;
+  alertRef: RefObject<HTMLDialogElement> | null,
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -14,7 +14,7 @@ interface AlertContextProps {
 }
 
 const AlertContext = createContext<AlertContextProps>({
-  show: false,
+  alertRef: null,
   message: "",
   onConfirm: () => {},
   onCancel: () => {},
@@ -25,27 +25,27 @@ const AlertContext = createContext<AlertContextProps>({
 export const useAlert = () => useContext(AlertContext);
 
 export const AlertProvider = ({ children }: ChildrenProps) => {
-  const [show, setShow] = useState<boolean>(false);
+  const alertRef = useRef<HTMLDialogElement | null>(null);
   const [message, setMessage] = useState<string>("");
   const [onConfirm, setOnConfirm] = useState<() => void>(() => {});
   const [onCancel, setOnCancel] = useState<() => void>(() => {});
 
   const showAlert = (message: string, onConfirm: () => void, onCancel: () => void) => {
     setMessage(message);
-    setShow(true);
     setOnConfirm(onConfirm);
     setOnCancel(onCancel);
+    if (alertRef) alertRef.current!.showModal();
   };
 
   const closeAlert = () => {
-    setShow(false);
     setMessage("");
     setOnConfirm(() => {});
     setOnCancel(() => {});
+    if (alertRef) alertRef.current!.close();
   };
 
   return (
-    <AlertContext.Provider value={{ show, message, onConfirm, onCancel, showAlert, closeAlert }}>
+    <AlertContext.Provider value={{ message, onConfirm, onCancel, showAlert, closeAlert, alertRef }}>
       {children}
     </AlertContext.Provider>
   );

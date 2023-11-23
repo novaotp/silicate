@@ -6,7 +6,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 // Internal
 import styles from './index.module.scss';
-import { useToast } from '@libs/contexts/ToastContext';
+import { useToast } from '@/libs/contexts/ToastContext';
 
 export const Toast = () => {
   const { message, progress, state, hideToast } = useToast();

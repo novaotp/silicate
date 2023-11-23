@@ -1,16 +1,15 @@
 
 "use client";
 
+import { poppins } from '@/assets/fonts';
 import styles from './index.module.scss';
 import { useAlert } from "@/libs/contexts/AlertContext";
 
 export const Alert = () => {
-  const { show, message, onConfirm, onCancel, closeAlert } = useAlert();
+  const { alertRef, message, onConfirm, onCancel, closeAlert } = useAlert();
 
-  if (!show) return null;
-
-  const handleConfirm = () => {
-    if (onConfirm) onConfirm();
+  const handleConfirm = async () => {
+    if (onConfirm) await onConfirm();
     closeAlert();
   };
 
@@ -20,10 +19,12 @@ export const Alert = () => {
   };
 
   return (
-    <dialog className={styles.alertModal}>
+    <dialog ref={alertRef} className={styles.alert}>
       <p className={styles.text}>{message}</p>
-      <button onClick={handleConfirm} className={`${styles.actions} ${styles.yes}`}>Yes</button>
-      <button onClick={handleCancel} className={`${styles.actions} ${styles.no}`}>No</button>
+      <div className={styles.confirm}>
+        <button onClick={handleConfirm} className={`${styles.actions} ${styles.yes} ${poppins.className}`}>Yes</button>
+        <button onClick={handleCancel} className={`${styles.actions} ${styles.no} ${poppins.className}`}>No</button>
+      </div>
     </dialog>
   );
 };

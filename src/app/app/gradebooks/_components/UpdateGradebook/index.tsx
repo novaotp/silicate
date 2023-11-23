@@ -17,6 +17,8 @@ import { CreateGradebookProps, UpdateGradebookProps, createGradebook, deleteGrad
 import { usePathname, useRouter } from 'next/navigation';
 import { reloadPage } from '@/utils/reloadPage';
 import { Gradebook } from '@/models/gradebook';
+import { useToast } from '@/libs/contexts/ToastContext';
+import { useAlert } from '@/libs/contexts/AlertContext';
 
 interface UpdateGradebookProps2 {
   gradebook: Gradebook,
@@ -25,6 +27,8 @@ interface UpdateGradebookProps2 {
 
 /** Adds a new gradebook to the user's gradebook list. */
 export const UpdateGradebook = ({ gradebook, dialogRef }: UpdateGradebookProps2) => {
+  const { showToast } = useToast();
+  const { showAlert } = useAlert();
   const formRef = useRef<HTMLFormElement>(null);
   const periodRef = useRef<HTMLDialogElement>(null);
   const [name, setName] = useState<string>(gradebook.name);
@@ -57,7 +61,7 @@ export const UpdateGradebook = ({ gradebook, dialogRef }: UpdateGradebookProps2)
     const success = await updateGradebook(updategradebook);
 
     if (!success) {
-      alert("Une erreur est survenue lors de la création du carnet de note.");
+      showToast("Une erreur est survenue lors de la création du carnet de note.", "error");
       return;
     }
 
@@ -66,7 +70,21 @@ export const UpdateGradebook = ({ gradebook, dialogRef }: UpdateGradebookProps2)
   }
 
   const closeModal = () => {
-    dialogRef.current!.close();
+    if (name === gradebook.name && description === gradebook.description) {
+      dialogRef.current!.close();
+      return;
+    }
+
+    showAlert(
+      "Vous avez des changements non sauvegardés. Êtes-vous sûr d'abandonner ?",
+      () => function() {
+        setName(gradebook.name);
+        setDescription(gradebook.description);
+        setRange({ from: gradebook.from, to: gradebook.to })
+        dialogRef.current!.close();
+      },
+      () => {}
+    );
   }
 
   const openPeriodModal = () => {
@@ -82,9 +100,15 @@ export const UpdateGradebook = ({ gradebook, dialogRef }: UpdateGradebookProps2)
   }
 
   const handleDelete = () => {
-    dialogRef.current!.close();
-    deleteGradebook(gradebook.id.toString());
-    reloadPage();
+    showAlert(
+      "Êtes-vous sûr de supprimer ce carnet de note ? Vous perdrez les branches et les notes associées.",
+      () => async function() {
+        dialogRef.current!.close();
+        await deleteGradebook(gradebook.id.toString());
+        reloadPage();
+      },
+      () => {}
+    );
   }
 
   return (

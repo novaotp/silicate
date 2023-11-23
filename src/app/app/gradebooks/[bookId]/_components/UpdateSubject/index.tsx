@@ -11,6 +11,8 @@ import { TextArea } from '../TextArea';
 import { CreateSubjectProps, UpdateSubjectProps, createSubject, deleteSubject, updateSubject } from '../../server';
 import { reloadPage } from '@/utils/reloadPage';
 import { Subject } from '@/models/subject';
+import { useToast } from '@/libs/contexts/ToastContext';
+import { useAlert } from '@/libs/contexts/AlertContext';
 
 interface UpdateSubjectProps2 {
   subject: Subject,
@@ -19,8 +21,10 @@ interface UpdateSubjectProps2 {
 
 /** Adds a new gradebook to the user's gradebook list. */
 export const UpdateSubject = ({ subject, dialogRef }: UpdateSubjectProps2) => {
+  const { showToast } = useToast();
+  const { showAlert } = useAlert();
   const params = useParams();
-  const gradebookId = useParams().bookId as string;
+  const gradebookId = useParams()!.bookId as string;
   const formRef = useRef<HTMLFormElement>(null);
   const [name, setName] = useState<string>(subject.name);
   const [description, setDescription] = useState<string>(subject.description);
@@ -43,7 +47,7 @@ export const UpdateSubject = ({ subject, dialogRef }: UpdateSubjectProps2) => {
     const success = await updateSubject(subjectUpdate);
 
     if (!success) {
-      alert("Une erreur est survenue lors de la création de la branche.");
+      showToast("Une erreur est survenue lors de la création de la branche.", "error");
       return;
     }
 
@@ -52,13 +56,32 @@ export const UpdateSubject = ({ subject, dialogRef }: UpdateSubjectProps2) => {
   }
 
   const closeModal = () => {
-    dialogRef.current!.close();
+    if (name === subject.name && description === subject.description) {
+      dialogRef.current!.close();
+      return;
+    }
+
+    showAlert(
+      "Vous avez des changements non sauvegardés. Êtes-vous sûr d'abandonner ?",
+      () => function() {
+        setName(subject.name);
+        setDescription(subject.description);
+        dialogRef.current!.close();
+      },
+      () => {}
+    );
   }
 
   const handleDelete = () => {
-    dialogRef.current!.close();
-    deleteSubject(subject.id.toString(), params.bookId as string);
-    reloadPage();
+    showAlert(
+      "Êtes-vous sûr de supprimer cette branche ? Vous perdrez les notes associées.",
+      () => async function() {
+        dialogRef.current!.close();
+        await deleteSubject(subject.id.toString(), params!.bookId as string);
+        reloadPage();
+      },
+      () => {}
+    );
   }
 
   return (

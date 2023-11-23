@@ -27,7 +27,7 @@ export const AverageGrade = ({ grades }: AverageGradeProps) => {
   return (
     <div className={styles.averageGrade}>
       <p className={styles.title}>Moyenne</p>
-      <p className={styles.score}>{score.toFixed(2)}</p> {/* Format the score to 2 decimal places */}
+      <p className={styles.score}>{grades && grades.length > 0 ? score.toFixed(2) : "?"}</p> {/* Format the score to 2 decimal places */}
     </div>
   )
 }

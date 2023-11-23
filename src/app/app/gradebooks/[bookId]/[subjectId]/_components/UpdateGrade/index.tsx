@@ -9,8 +9,12 @@ import { reloadPage } from "@/utils/reloadPage";
 import styles from "./index.module.scss";
 import { InputField, TextArea } from "..";
 import { poppins } from "@/assets/fonts";
+import { useToast } from "@/libs/contexts/ToastContext";
+import { useAlert } from "@/libs/contexts/AlertContext";
 
 export const UpdateGrade = ({ grade, dialogRef }: { grade: Grade, dialogRef: RefObject<HTMLDialogElement> }): JSX.Element => {
+  const { showToast } = useToast();
+  const { showAlert } = useAlert();
   const params = useParams();
   const formRef = useRef<HTMLFormElement>(null);
   const [name, setName] = useState<string>(grade.name);
@@ -28,7 +32,7 @@ export const UpdateGrade = ({ grade, dialogRef }: { grade: Grade, dialogRef: Ref
 
     const updatedgrade: UpdateGradeProps = {
       gradeId: grade.id,
-      subjectId: params.subjectId as string,
+      subjectId: params!.subjectId as string,
       name: name,
       score: score,
       weight: weight,
@@ -38,7 +42,7 @@ export const UpdateGrade = ({ grade, dialogRef }: { grade: Grade, dialogRef: Ref
     const success = await updateGrade(updatedgrade);
 
     if (!success) {
-      alert("Une erreur est survenue lors de l'édition de la note.");
+      showToast("Une erreur est survenue lors de l'édition de la note.", "error");
       return;
     }
 
@@ -47,13 +51,34 @@ export const UpdateGrade = ({ grade, dialogRef }: { grade: Grade, dialogRef: Ref
   }
 
   const closeModal = () => {
-    dialogRef.current!.close();
+    if (name === grade.name && score === grade.score && weight === grade.weight && comment === grade.comment) {
+      dialogRef.current!.close();
+      return;
+    }
+
+    showAlert(
+      "Vous avez des changements non sauvegardés. Êtes-vous sûr d'abandonner ?",
+      () => function() {
+        setName(grade.name);
+        setScore(grade.score);
+        setWeight(grade.weight);
+        setComment(grade.comment);
+        dialogRef.current!.close();
+      },
+      () => {}
+    );
   }
 
   const handleDelete = () => {
-    dialogRef.current!.close();
-    deleteGrade(grade.id, params.subjectId as string);
-    reloadPage();
+    showAlert(
+      "Êtes-vous sûr de supprimer cette branche ? Vous perdrez les notes associées.",
+      () => async function() {
+        dialogRef.current!.close();
+        await deleteGrade(grade.id, params!.subjectId as string);
+        reloadPage();
+      },
+      () => {}
+    );
   }
 
   return (
