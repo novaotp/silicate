@@ -6,7 +6,11 @@ import { Suspense } from 'react';
 import { poppins } from '@assets/fonts';
 import '@assets/styles/globals.scss';
 import { Loading } from './_components/Loading';
-import { ChildrenProps } from './interfaces';
+import { ChildrenProps } from '../types/interfaces';
+import { ToastProvider } from '@/libs/contexts/ToastContext';
+import { Toast } from './_components/Toast';
+import { AlertProvider } from '@/libs/contexts/AlertContext';
+import { Alert } from './_components/Alert';
 
 /** The main layout of the app. */
 const RootLayout = ({ children }: ChildrenProps): JSX.Element => {
@@ -20,7 +24,13 @@ const RootLayout = ({ children }: ChildrenProps): JSX.Element => {
       </head>
       <body className={poppins.className}>
         <Suspense fallback={<Loading />}>
-          {children}
+          <AlertProvider>
+            <Alert />
+            <ToastProvider>
+              <Toast />
+              {children}
+            </ToastProvider>
+          </AlertProvider>
         </Suspense>
       </body>
     </html>

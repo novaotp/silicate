@@ -4,7 +4,7 @@ import { type FormEvent } from "react";
 
 // Internal
 import styles from './index.module.scss';
-import { ChildrenProps } from "@/app/interfaces";
+import { ChildrenProps } from "@/types/interfaces";
 
 interface FormProps extends ChildrenProps {
   onSubmit: (event: FormEvent) => void,

@@ -78,7 +78,7 @@ export const deleteSubject = async (subjectId: string, gradebookId: string): Pro
 
     const client = await db.connect();
 
-    const query = 'DELETE FROM public.subject WHERE id = $1 AND user_id = $2 AND gradebook_id = $3';
+    const query = 'DELETE FROM public.subject WHERE id = $1 AND user_id = $2 AND gradebook_id = $3;';
     const values = [subjectId, userId, gradebookId];
 
     await client.query(query, values);

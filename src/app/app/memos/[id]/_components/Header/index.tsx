@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 // Internal
 import styles from './index.module.scss';
 import { poppins } from '@/assets/fonts';
+import { useAlert } from '@/libs/contexts/AlertContext';
 
 interface HeaderProps {
   /** Deletes the note and redirects to the /app/notes page. */
@@ -20,6 +21,7 @@ interface HeaderProps {
 
 /** A custom header in the editor. */
 export const Header = ({ destroy, unsavedChanges }: HeaderProps): JSX.Element => {
+  const { showAlert } = useAlert();
   const router = useRouter();
 
   const handleOnLeave = () => {
@@ -31,11 +33,11 @@ export const Header = ({ destroy, unsavedChanges }: HeaderProps): JSX.Element =>
   }
 
   const handleOnDelete = () => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce mémo ?")) {
-      return;
-    }
-
-    destroy();
+    showAlert(
+      "Êtes-vous sûr de vouloir supprimer ce mémo ?",
+      () => destroy,
+      () => {}
+    );
   }
 
   return (

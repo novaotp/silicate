@@ -28,7 +28,7 @@ export const AddMemo = () => {
   }
 
   return (
-    <button onClick={handleOnClick} className={`${styles.add} ${poppins.className}`}>
+    <button id="add-memo" onClick={handleOnClick} className={`${styles.add} ${poppins.className}`}>
       Ajouter un nouveau mémo
     </button>
   )

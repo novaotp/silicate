@@ -14,7 +14,7 @@ export const Meta = (): JSX.Element => {
   const router = useRouter();
   const pathname = usePathname();
   const { searchParams, set, remove } = useCustomSearchParams();
-  const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
+  const [search, setSearch] = useState<string>(searchParams!.get('search') ?? '');
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
 
   useEffect(() => {

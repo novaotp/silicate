@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 // Internal
 import styles from './layout.module.scss'
 import { InsiderNav } from './_components/InsiderNav';
-import { ChildrenProps } from '@app/interfaces';
+import { ChildrenProps } from '@/types/interfaces';
 
 /** The app's layout. */
 const Layout = ({ children }: ChildrenProps) => {

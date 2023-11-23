@@ -17,7 +17,7 @@ interface PayloadProps {
  */
 export const sign = async (payload: any): Promise<string> => {
   const issuedAt = Math.floor(Date.now() / 1000);
-  const expirationTime = issuedAt + (60 * 60) * 2; // two hours
+  const expirationTime = issuedAt + (60 * 60) * 336; // 14 days
 
   return await new SignJWT({ payload })
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })

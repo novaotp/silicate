@@ -9,6 +9,7 @@ import { setCookie } from 'cookies-next';
 // Internal
 import { verify } from '@/utils/jwt';
 import { logIn } from './server';
+import { useToast } from '@/libs/contexts/ToastContext';
 
 /// -- Components -- ///
 import {
@@ -26,6 +27,7 @@ export const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
+  const { showToast } = useToast();
 
   const resetPassword = () => {
     setPassword("");
@@ -37,15 +39,16 @@ export const Login = (): JSX.Element => {
     const jwt = await logIn(email, password);
 
     if (!jwt) {
-      alert("Invalid credentials");
+      showToast('Votre email ou mot de passe est incorrect.', "error");
       resetPassword();
       return;
     }
 
     const payload = await verify(jwt);
 
-    setCookie("id", jwt, { expires: new Date(payload.exp! * 1000) });
+    setCookie("id", jwt, { maxAge: payload.exp! - payload.iat! });
 
+    showToast('Vous êtes connecté avec succès.', "success");
     router.push('/app');
   }
 

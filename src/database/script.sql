@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS public.friendship (
 	second_user_id INT NOT NULL,
 	CONSTRAINT unique_friendship UNIQUE(first_user_id, second_user_id),
 	CONSTRAINT check_friendship CHECK(first_user_id < second_user_id),
-	CONSTRAINT fk_first_user_id FOREIGN KEY (first_user_id) REFERENCES public.user(id),
-	CONSTRAINT fk_second_user_id FOREIGN KEY (second_user_id) REFERENCES public.user(id)
+	CONSTRAINT fk_first_user_id FOREIGN KEY (first_user_id) REFERENCES public.user(id) ON DELETE CASCADE,
+	CONSTRAINT fk_second_user_id FOREIGN KEY (second_user_id) REFERENCES public.user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.gradebook (
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.gradebook (
 	updated_at TIMESTAMPTZ NOT NULL,
 	deleted_at TIMESTAMPTZ,
 	CONSTRAINT unique_gradebook UNIQUE(user_id, name),
-	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id)
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.subject (
@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS public.subject (
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	deleted_at TIMESTAMPTZ,
-	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id),
-	CONSTRAINT fk_gradebook_id FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id)
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE,
+	CONSTRAINT fk_gradebook_id FOREIGN KEY (gradebook_id) REFERENCES public.gradebook(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.grade (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.grade (
 		weight > 0
 		AND weight <= 100
 	),
-	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id),
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE,
 	CONSTRAINT fk_subject_id FOREIGN KEY (subject_id) REFERENCES public.subject(id)
 );
 
@@ -77,5 +77,5 @@ CREATE TABLE IF NOT EXISTS public.memo (
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	deleted_at TIMESTAMPTZ,
-	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id)
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE
 );

@@ -20,7 +20,7 @@ interface ViewProps {
 export const View = ({ memos }: ViewProps): JSX.Element => {
   const notesRef = useRef<HTMLUListElement>(null);
   const { searchParams } = useCustomSearchParams();
-  const searchQuery = searchParams.get('search') ?? '';
+  const searchQuery = searchParams!.get('search') ?? '';
   
   useEffect(() => {
     const notesElement = notesRef.current!;
