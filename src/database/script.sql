@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.grade (
 		AND weight <= 100
 	),
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE,
-	CONSTRAINT fk_subject_id FOREIGN KEY (subject_id) REFERENCES public.subject(id)
+	CONSTRAINT fk_subject_id FOREIGN KEY (subject_id) REFERENCES public.subject(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.memo (

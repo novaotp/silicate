@@ -19,7 +19,7 @@ export const AddMemo = () => {
   const router = useRouter();
 
   const handleOnClick = async () => {
-    const noteId = await createMemo("Ma note", "");
+    const noteId = await createMemo("Mon mémo", "");
 
     if (!noteId) {
       showToast('Une erreur est survenue lors de la création de votre mémo. Veuillez réessayer ultérieurement.', 'error')

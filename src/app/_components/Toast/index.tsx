@@ -22,9 +22,9 @@ export const Toast = () => {
       case "warning":
         return "orange";
       case "info":
-        return "lightblue";
+        return "blue";
       default:
-        return "lightblue";
+        return "blue";
     }
   }
 
