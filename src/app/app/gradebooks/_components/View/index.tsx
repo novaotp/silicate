@@ -21,7 +21,7 @@ interface ViewProps {
 export const View = ({ gradebooks }: ViewProps): JSX.Element => {
   const ref = useRef<HTMLUListElement>(null);
   const { searchParams } = useCustomSearchParams();
-  const searchQuery = searchParams.get('search') ?? '';
+  const searchQuery = searchParams!.get('search') ?? '';
 
   const sortedAndFilteredGradebooks = useMemo(() => {
     if (!gradebooks) return [];

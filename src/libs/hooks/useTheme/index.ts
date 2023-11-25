@@ -3,34 +3,18 @@
 
 // React + Next
 import { useState } from 'react';
+import { getCookie, setCookie } from 'cookies-next';
 
 // Internal
 import { key, maxAge, value } from './config';
-import { getCookie, setCookie } from 'cookies-next';
-
-interface UseThemeReturnProps {
-  /**
-   * The current theme.
-   * 
-   * Options :
-   * 
-   *  - light
-   *  - dark
-   */
-  theme: ThemeOption;
-  /** Switches the theme. */
-  switchTheme: () => void;
-}
-
-/** The theme options. */
-type ThemeOption = 'light' | 'dark';
+import { getServerSideTheme } from './server';
 
 /** A client-side hook to get and change the current theme. */
-const useTheme = (): UseThemeReturnProps => {
-  const [theme, setTheme] = useState<ThemeOption>(validateTheme());
+export const useTheme = () => {
+  const [theme, setTheme] = useState<string>(validateTheme());
 
-  function validateTheme(): ThemeOption {
-    const cookie: string | undefined = getCookie(key)?.toString();
+  function validateTheme() {
+    const cookie = getCookie(key)?.toString();
 
     if (!cookie || (cookie !== 'light' && cookie !== 'dark')) {
       setCookie(key, value, { maxAge: maxAge });
@@ -41,16 +25,13 @@ const useTheme = (): UseThemeReturnProps => {
   }
 
   const switchTheme = (): void => {
-    const newTheme: ThemeOption = theme === 'light' ? 'dark' : 'light';
+    const newTheme = theme === 'light' ? 'dark' : 'light';
 
-    setCookie(key, newTheme, { maxAge: maxAge });
     setTheme(newTheme);
+    setCookie(key, theme, { maxAge: maxAge });
   }
 
-  return {
-    theme,
-    switchTheme
-  }
+  return { theme, switchTheme };
 }
 
-export default useTheme;
+export { getServerSideTheme };
