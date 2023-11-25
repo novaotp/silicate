@@ -21,7 +21,7 @@ import { fetchMemo, updateMemo, deleteMemo } from './server';
 /** Returns the main component of the editing note page. */
 export const Edit = (): JSX.Element => {
   const router = useRouter();
-  const memoId = Number(useParams().id as string);
+  const memoId = Number(useParams()!.id as string);
   const [memo, setMemo] = useState<Memo | undefined>(undefined);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");

@@ -46,6 +46,7 @@ export const createGrade = async ({
 };
 
 export interface UpdateGradeProps {
+  gradeId: string;
   subjectId: string;
   name: string;
   score: string;
@@ -54,6 +55,7 @@ export interface UpdateGradeProps {
 }
 
 export const updateGrade = async ({
+  gradeId,
   subjectId,
   name,
   score,
@@ -70,8 +72,33 @@ export const updateGrade = async ({
     const client = await db.connect();
 
     const now = new Date();
-    const query = "UPDATE public.grade SET name = $1, score = $2, weight = $3, comment = $4, updated_at = $5 WHERE user_id = $6 AND subject_id = $7";
-    const values = [name, score, weight, comment, now, userId, subjectId];
+    const query = "UPDATE public.grade SET name = $1, score = $2, weight = $3, comment = $4, updated_at = $5 WHERE user_id = $6 AND subject_id = $7 AND id = $8";
+    const values = [name, score, weight, comment, now, userId, subjectId, gradeId];
+
+    await client.query(query, values);
+    client.release();
+
+    return true;
+
+  } catch (err) {
+    console.log(err);
+    return false;
+    
+  }
+};
+
+export const deleteGrade = async (gradeId: string, subjectId: string): Promise<boolean> => {
+  try {
+    const userId = await useServerUserId();
+
+    if (!userId) {
+      return false;
+    }
+
+    const client = await db.connect();
+
+    const query = "DELETE FROM public.grade WHERE id = $1 AND user_id = $2 AND subject_id = $3";
+    const values = [gradeId, userId, subjectId];
 
     await client.query(query, values);
     client.release();

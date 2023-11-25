@@ -30,7 +30,7 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
     event.preventDefault();
 
     if (!name) {
-      alert("Veuillez renseigner un nom pour votre branche.");
+      alert("Veuillez renseigner un nom pour votre note.");
       return;
     }
 
@@ -76,14 +76,14 @@ export const AddGrade = ({ dialogRef }: AddGradeProps) => {
           setValue={setName}
         />
         <InputField
-          type='text'
+          type='number'
           label='Score'
           placeholder={'Entrez le résultat de l\'examen ici...'}
           value={score}
           setValue={setScore}
         />
         <InputField
-          type='number'
+          type='text'
           label='Poids'
           placeholder={'Entrez le poids de l\'examen ici...'}
           value={weight}

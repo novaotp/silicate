@@ -1,0 +1,41 @@
+.toast {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  .message {
+    position: relative;
+    height: 100%;
+    flex-grow: 1;
+    padding: 0 10px;
+  }
+
+  .close {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 10px;
+    position: relative;
+    width: 45px;
+    aspect-ratio: 1;
+  }
+
+  .progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    background-color: white;
+    transition: width 0.3s linear;
+  }
+}

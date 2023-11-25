@@ -13,19 +13,23 @@ export const logIn = async (email: string, password: string): Promise<string | u
     const values = [email];
 
     const { rows } = await client.query(query, values);
+    client.release();
+
+    if (rows.length === 0) {
+      return undefined;
+    }
+
     const user = rows[0];
 
     if (!user || !compare(password, user.password)) {
       return undefined;
     }
 
-    client.release(true);
-
     return await sign({ userID: user.id });
 
   } catch (err) {
     console.error(err);
-
     return undefined;
+    
   }
 }

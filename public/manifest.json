@@ -1,0 +1,10 @@
+{
+  "name": "WebPush with Next.js",
+  "short_name": "WebPush",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#B12A34",
+  "background_color": "#B12A34",
+  "description": "Example PWA with WebPush!",
+  "related_applications": []
+}

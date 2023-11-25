@@ -18,6 +18,7 @@ import {
   Main,
   Switcher
 } from '../_components';
+import { useToast } from '@/libs/contexts/ToastContext';
 
 /** Returns the main component for the sign-up page. */
 export const SignUp = (): JSX.Element => {
@@ -27,6 +28,7 @@ export const SignUp = (): JSX.Element => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const router = useRouter();
+  const { showToast } = useToast();
 
   const handleOnSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
@@ -43,11 +45,12 @@ export const SignUp = (): JSX.Element => {
       password: password
     }
 
-    if (!signUp(data)) {
-      alert("Impossible d'enregistrer votre compte.");
+    if (!await signUp(data)) {
+      showToast('Impossible d\'enregistrer votre compte.', "error");
       return;
     }
 
+    showToast('Votre compte a bien été enregistré.', "success");
     router.push('/auth/log-in');
   }
   

@@ -17,4 +17,8 @@ export const links = [
     href: '/app/chat',
     label: 'Chat',
   },
+  {
+    href: '/app/agenda',
+    label: 'Agenda',
+  },
 ];

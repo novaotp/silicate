@@ -9,12 +9,16 @@ import styles from "./index.module.scss";
 import { format } from "date-fns";
 import { Grade } from "@/models/grade";
 import { poppins } from "@/assets/fonts";
+import { useRef } from "react";
+import { UpdateGrade } from "../../../UpdateGrade";
 
 interface GradeCardProps {
   grade: Grade
 }
 
 export const GradeCard = ({ grade }: GradeCardProps): JSX.Element => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   const toTwoDigits = (number: number): string => {
     return number.toString().padStart(2, '0');
   }
@@ -44,7 +48,7 @@ export const GradeCard = ({ grade }: GradeCardProps): JSX.Element => {
 
   return (
     <li className={styles.note}>
-      <button className={`${styles.link} ${poppins.className}`}>
+      <button className={`${styles.link} ${poppins.className}`} onClick={() => dialogRef.current!.showModal()}>
         <div className={styles.meta}>
           <div className={styles.header}>
             <span className={styles.title}>{grade.name}</span>
@@ -60,6 +64,7 @@ export const GradeCard = ({ grade }: GradeCardProps): JSX.Element => {
           <span>{grade.score}</span>
         </div>
       </button>
+      <UpdateGrade grade={grade} dialogRef={dialogRef} />
     </li>
   )
 }

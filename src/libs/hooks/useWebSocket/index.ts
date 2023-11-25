@@ -5,24 +5,21 @@
 import { io } from 'socket.io-client';
 
 // Internal
-import UseWebSocketReturnProps from './interfaces';
+import { useEffect } from 'react';
 
 /** A client-side hook to manage the websocket connection. */
-const useWebSocket = (): UseWebSocketReturnProps => {
-  const socket = io(process.env.NEXT_PUBLIC_API_SERVER_URL!, {
+const useWebSocket = () => {
+  const socket = io(`http://localhost:3000/api/socket`, {
     autoConnect: false
   });
 
-  const ensureSocketConnected = (): void => {
+  useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
-  }
+  }, []);
 
-  return {
-    socket,
-    ensureSocketConnected
-  }
+  return { socket };
 }
 
 export default useWebSocket;

@@ -16,6 +16,8 @@ import { TextArea } from '../TextArea';
 import { CreateGradebookProps, createGradebook } from '../../server';
 import { usePathname, useRouter } from 'next/navigation';
 import { reloadPage } from '@/utils/reloadPage';
+import { useToast } from '@/libs/contexts/ToastContext';
+import { useAlert } from '@/libs/contexts/AlertContext';
 
 interface AddGradebookProps {
   dialogRef: RefObject<HTMLDialogElement>;
@@ -23,6 +25,8 @@ interface AddGradebookProps {
 
 /** Adds a new gradebook to the user's gradebook list. */
 export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
+  const { showToast } = useToast();
+  const { showAlert } = useAlert();
   const pathname = usePathname();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -56,7 +60,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
     const id = await createGradebook(gradebook);
 
     if (id === 0) {
-      alert("Une erreur est survenue lors de la création du carnet de note.");
+      showToast("Une erreur est survenue lors de la création du carnet de note.", 'error');
       return;
     }
 
@@ -107,7 +111,7 @@ export const AddGradebook = ({ dialogRef }: AddGradebookProps) => {
           <button className={poppins.className} type="button" onClick={openPeriodModal}>
             {
               !range || !range.from || !range.to
-                ? <p>Période indéfini</p>
+                ? <p>Période indéfinie</p>
                 : <span>{formatDate(range.from)} - {formatDate(range.to)}</span>
             }
           </button>

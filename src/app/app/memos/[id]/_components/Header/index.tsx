@@ -11,31 +11,46 @@ import { useRouter } from 'next/navigation';
 // Internal
 import styles from './index.module.scss';
 import { poppins } from '@/assets/fonts';
+import { useAlert } from '@/libs/contexts/AlertContext';
+import { useToast } from '@/libs/contexts/ToastContext';
 
 interface HeaderProps {
   /** Deletes the note and redirects to the /app/notes page. */
-  destroy: () => void,
+  destroy: () => Promise<void>,
   unsavedChanges: boolean,
 }
 
 /** A custom header in the editor. */
 export const Header = ({ destroy, unsavedChanges }: HeaderProps): JSX.Element => {
+  const { showToast } = useToast();
+  const { showAlert } = useAlert();
   const router = useRouter();
 
   const handleOnLeave = () => {
-    if (unsavedChanges && !window.confirm("Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter?")) {
+    if (!unsavedChanges) {
+      router.push('/app/memos');
       return;
     }
 
-    router.push('/app/memos');
+    showAlert(
+      "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter?",
+      () => function() {
+        showToast("Mémo inchangé.", "info")
+        router.push('/app/memos')
+      },
+      () => {}
+    );
   }
 
   const handleOnDelete = () => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce mémo ?")) {
-      return;
-    }
-
-    destroy();
+    showAlert(
+      "Êtes-vous sûr de vouloir supprimer ce mémo ?",
+      () => async function() {
+        await destroy();
+        showToast("Mémo supprimé avec succès.", "success")
+      },
+      () => {}
+    );
   }
 
   return (
