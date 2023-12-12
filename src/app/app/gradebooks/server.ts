@@ -2,7 +2,7 @@
 'use server';
 
 import { db } from "@/database"
-import { useServerUserId } from "@/libs/hooks/useUserId";
+import { useServerUserId } from "@/libs/hooks/useUserId/server";
 import { Gradebook } from "@/models/gradebook";
 
 export interface CreateGradebookProps {

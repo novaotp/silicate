@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 // Internal
 import styles from './index.module.scss';
 import { useCustomSearchParams } from "@libs/hooks/useCustomSearchParams";
-import { poppins } from "@/assets/fonts";
+import { poppins } from "@/fonts";
 
 export const Meta = (): JSX.Element => {
   const router = useRouter();

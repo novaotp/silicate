@@ -10,8 +10,8 @@ import { useCustomSearchParams } from "@libs/hooks/useCustomSearchParams";
 import { Subject } from "@/models/subject";
 
 /// -- Components -- ///
-import { Loading } from "@/app/_components/Loading";
 import { EmptyView, SubjectCard } from "./_components";
+import { Loading } from "@/components/shared";
 
 interface ViewProps {
   subjects: Subject[] | undefined,
@@ -20,7 +20,7 @@ interface ViewProps {
 export const View = ({ subjects }: ViewProps): JSX.Element => {
   const ref = useRef<HTMLUListElement>(null);
   const { searchParams } = useCustomSearchParams();
-  const searchQuery = searchParams.get('search') ?? '';
+  const searchQuery = searchParams!.get('search') ?? '';
 
   const sortedAndFilteredSubjects = useMemo(() => {
     if (!subjects) return [];

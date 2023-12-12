@@ -1,5 +1,5 @@
 
-import { poppins } from '@/assets/fonts';
+import { poppins } from '@/fonts';
 import styles from './index.module.scss';
 import { Dispatch, SetStateAction } from 'react';
 

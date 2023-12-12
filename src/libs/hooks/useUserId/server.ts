@@ -7,13 +7,17 @@ import { cookies } from "next/headers";
 // Internal
 import { verify } from "@/utils/jwt";
 
-/** A server-side hook to get the user's id from his JWT. */
-export const useServerUserId = async (): Promise<number | null> => {
+/**
+ * A server-side hook to get the user's id from the JWT.
+ * @returns The id of the user, or `undefined` if not available
+ */
+export const useServerUserId = async (): Promise<number | undefined> => {
   try {
     const token = cookies().get('id')?.value;
 
     if (!token) {
-      return null;
+      console.error("No JWT defined for the user id.");
+      return undefined;
     }
 
     const payload = await verify(token);
@@ -21,8 +25,8 @@ export const useServerUserId = async (): Promise<number | null> => {
     return (payload.payload as any).userID;
 
   } catch (err) {
-    console.error("An error occurred while getting the user ID: ", err);
-    return null;
+    console.error("An error occurred while getting the user ID on the server-side : ", err);
+    return undefined;
 
   }
 }

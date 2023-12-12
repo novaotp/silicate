@@ -8,7 +8,7 @@ import { UpdateGradeProps, deleteGrade, updateGrade } from "../../server";
 import { reloadPage } from "@/utils/reloadPage";
 import styles from "./index.module.scss";
 import { InputField, TextArea } from "..";
-import { poppins } from "@/assets/fonts";
+import { poppins } from "@/fonts";
 import { useToast } from "@/libs/contexts/ToastContext";
 import { useAlert } from "@/libs/contexts/AlertContext";
 

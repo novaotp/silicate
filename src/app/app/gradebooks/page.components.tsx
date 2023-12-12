@@ -11,7 +11,7 @@ import { Gradebook } from "@models/gradebook";
 
 /// -- Styles and Fonts -- ///
 import styles from './page.module.scss';
-import { poppins } from '@/assets/fonts';
+import { poppins } from '@/fonts';
 
 /// -- Components -- ///
 import { NoGradebooksFound, AddGradebook, RenderGradebooks, View, Meta } from "./_components";

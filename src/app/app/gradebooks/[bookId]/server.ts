@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from "@/database"
-import { useServerUserId } from "@/libs/hooks/useUserId";
+import { useServerUserId } from "@/libs/hooks/useUserId/server";
 import { Subject } from "@/models/subject";
 
 export interface CreateSubjectProps {

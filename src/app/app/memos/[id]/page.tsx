@@ -3,7 +3,7 @@
 import { Metadata } from "next";
 
 // Internal
-import { Edit } from "./page.components";
+import { Edit } from "@components/app/memos/id";
 
 export const metadata: Metadata = {
   title: "Editing memo - Silicate"

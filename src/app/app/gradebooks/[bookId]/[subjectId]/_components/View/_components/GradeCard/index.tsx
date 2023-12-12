@@ -8,7 +8,7 @@ import Link from "next/link";
 import styles from "./index.module.scss";
 import { format } from "date-fns";
 import { Grade } from "@/models/grade";
-import { poppins } from "@/assets/fonts";
+import { poppins } from "@/fonts";
 import { useRef } from "react";
 import { UpdateGrade } from "../../../UpdateGrade";
 

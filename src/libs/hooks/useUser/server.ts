@@ -1,34 +1,21 @@
 
 "use server";
 
-import { db } from "@/database";
-import { User } from "@models/user";
+import { User } from "@/models/user";
+import { useServerUserId } from "../useUserId/server";
+import { getUser } from "./getUser"
 
-export const fetchUser = async (id: number): Promise<User | null> => {
-  try{
-    const client = await db.connect();
+/**
+ * A server-side hook to access the current user's data.
+ * @returns A {@link User | `User`} object, or `undefined` if an error occurred
+ */
+export const useUser = async (): Promise<User | undefined> => {
+  const id = await useServerUserId();
 
-    const query = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
-    const values = [id];
-
-    const { rows } = await client.query(query, values);
-    client.release(true);
-
-    const user = rows[0];
-
-    if (!user) {
-      return null;
-    }
-
-    return {
-      firstName: user.first_name,
-      lastName: user.last_name,
-      email: user.email,
-    } as User;
-    
-  } catch (err) {
-    console.error(err);
-    return null;
-  
+  if (!id) {
+    console.error("An error occurred while trying to fetch the user on the server side.");
+    return;
   }
+
+  return await getUser(id);
 }

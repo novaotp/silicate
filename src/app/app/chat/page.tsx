@@ -9,7 +9,7 @@ const Page = (): JSX.Element => {
   const { showToast } = useToast();
 
   return (
-    <p>hello chat <button onClick={() => showToast('hey there')}>show toast</button></p>
+    <p>hello chat <button onClick={() => showToast('hey there', "warning")}>show toast</button></p>
   )
 }
 

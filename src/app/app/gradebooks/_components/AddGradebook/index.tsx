@@ -10,7 +10,7 @@ import 'react-day-picker/dist/style.css';
 
 // Internal
 import styles from './index.module.scss';
-import { poppins } from '@/assets/fonts';
+import { poppins } from '@/fonts';
 import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateGradebookProps, createGradebook } from '../../server';

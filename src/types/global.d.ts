@@ -1,17 +1,15 @@
 
-import { Server } from 'socket.io';
+import { Server as NetServer, Socket } from "http";
+import { Server as SocketIOServer } from 'socket.io';
 import { NextApiResponse } from 'next';
 
-declare module 'http' {
-  interface ServerResponse extends NextApiResponse {
-    socket: ResponseSocket;
-  }
-}
-
-interface ResponseSocket extends NodeJS.Socket {
-  server: ResponseSocketServer;
-}
-
-interface ResponseSocketServer extends NodeJS.EventEmitter {
-  io?: Server;
-}
+declare module "next" {
+  interface NextApiResponse {
+    end(): unknown;
+    socket: Socket & {
+      server: NetServer & {
+        io: SocketIOServer;
+      };
+    };
+  };
+};

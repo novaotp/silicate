@@ -10,9 +10,9 @@ import { useCustomSearchParams } from "@libs/hooks/useCustomSearchParams";
 import { Memo } from "@/models/memo";
 
 /// -- Components -- ///
-import { Loading } from "@/app/_components/Loading";
 import { EmptyView, GradebookCard } from "./_components";
 import { Gradebook } from "@/models/gradebook";
+import { Loading } from "@/components/shared";
 
 interface ViewProps {
   gradebooks: Gradebook[] | undefined,

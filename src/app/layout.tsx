@@ -3,17 +3,16 @@
 import { Suspense } from 'react';
 
 // Internal
-import '@assets/styles/globals.scss';
-import { poppins } from '@assets/fonts';
+import './globals.css';
+import { poppins } from '@/fonts';
 import { ChildrenProps } from '../types/interfaces';
 
 /// -- Components -- ///
-import { Loading, Toast, Alert } from './_components';
+import { Loading, Toast, Alert } from '@components/shared';
 
 /// -- Libs -- ///
 import { ToastProvider } from '@/libs/contexts/ToastContext';
 import { AlertProvider } from '@/libs/contexts/AlertContext';
-import { getServerSideTheme } from '@/libs/hooks/useTheme';
 import { ThemeProvider } from '@/libs/contexts/ThemeContext';
 
 /** The main layout of the app. */

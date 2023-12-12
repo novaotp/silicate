@@ -12,7 +12,7 @@ import { Grade } from '@/models/grade';
 
 /// -- Components -- ///
 import { BackLink } from "../../_components";
-import { poppins } from '@/assets/fonts';
+import { poppins } from '@/fonts';
 import { Meta, AddGrade, View, AverageGrade } from './_components';
 
 /** The main component of the grades page. */

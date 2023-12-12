@@ -5,7 +5,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 
 // Internal
 import styles from './index.module.scss';
-import { poppins } from '@/assets/fonts';
+import { poppins } from '@/fonts';
 import InputField from '../InputField';
 import { TextArea } from '../TextArea';
 import { CreateGradeProps, createGrade } from '../../server';

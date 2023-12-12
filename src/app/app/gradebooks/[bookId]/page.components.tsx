@@ -11,7 +11,7 @@ import styles from './page.module.scss';
 import { Meta, View, AddSubject } from "./_components";
 import { fetchSubjects } from "./server";
 import { Subject } from "@/models/subject";
-import { poppins } from "@/assets/fonts";
+import { poppins } from "@/fonts";
 
 /** The main component of the subjects page. */
 export const Subjects = () => {
