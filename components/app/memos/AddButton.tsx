@@ -5,7 +5,7 @@
 import { useRouter } from "next/navigation";
 
 // Internal
-import { createMemo } from "./MemoList/server";
+import { createMemo } from "@data-access/memo";
 import { useToast } from "@/libs/contexts/ToastContext";
 
 /**

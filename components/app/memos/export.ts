@@ -1,6 +1,6 @@
 
 import { AddButton } from "./AddButton";
 import { MemoList } from "./MemoList";
-import { Meta } from "./Meta";
+import { Search } from "./Search";
 
-export { AddButton, Meta, MemoList };
+export { AddButton, Search, MemoList };

@@ -44,7 +44,7 @@ export const Edit = (): JSX.Element => {
       setTitle(fetchedMemo.title);
       setContent(fetchedMemo.content);
     })();
-  }, []);
+  }, [memoId]);
 
   /** Updates the note on the form's submit. */
   const handleUpdate = async (event: FormEvent): Promise<void> => {

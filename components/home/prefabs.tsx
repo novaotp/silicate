@@ -33,7 +33,7 @@ const AuthLink = ({ href, label, variant }: AuthLinkProps) => {
 
   return (
     <Link
-      className={`relative block w-full text-center p-3 my-5 rounded-lg bg-bg-color ${colors}`}
+      className={`relative w-full text-center p-3 my-5 rounded-lg bg-bg-color ${colors}`}
       href={href}
     >
       {label}

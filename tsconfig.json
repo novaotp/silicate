@@ -28,6 +28,7 @@
       "@components/*": ["components/*"],
       "@fonts": ["fonts/index.ts"],
       "@models/*": ["models/*"],
+      "@data-access/*": ["database/access/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
