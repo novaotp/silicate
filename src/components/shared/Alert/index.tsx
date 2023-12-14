@@ -1,9 +1,9 @@
 
 "use client";
 
-import { poppins } from '@/fonts';
+import { poppins } from '@fonts';
 import styles from './index.module.scss';
-import { useAlert } from "@/libs/contexts/AlertContext";
+import { useAlert } from "@libs/contexts/AlertContext";
 
 export const Alert = () => {
   const { alertRef, message, onConfirm, onCancel, closeAlert } = useAlert();

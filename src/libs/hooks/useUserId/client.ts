@@ -2,7 +2,7 @@
 "use client";
 
 import { getCookie } from "cookies-next";
-import { verify } from "@/utils/jwt";
+import { verify } from "@utils/jwt";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
