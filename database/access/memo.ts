@@ -1,30 +1,32 @@
 
 "use server";
 
-import { db } from "@/database";
-import { useServerUserId } from "@/libs/hooks/useUserId/server";
 import { Memo } from "@models/memo";
+import { query } from "../query";
+import { useUser } from "@/libs/hooks/useUser";
 
 /**
  * Gets the user's memos from the database.
  * @returns An array of {@link Memo | `Memo`} if successful, `undefined` otherwise.
  */
-export const getMemos = async (): Promise<Memo[] | undefined> => {
+export const getMemos = async (): Promise<Memo[] | null> => {
     try {
-        const client = await db.connect();
-        const userId = await useServerUserId();
+        const userId = await useUser();
 
         if (!userId) {
-            return undefined;
+            return null;
         }
 
-        const query = 'SELECT * FROM public.memo WHERE user_id = $1;';
-        const values = [userId];
+        const { success, dataOrError } = await query<Memo[]>('SELECT * FROM public.memo WHERE user_id = $1;', [userId]);
+        
+        if (!success) {
+            console.error(dataOrError as string);
+            return null;
+        }
 
-        const { rows } = await client.query(query, values);
-        client.release(true);
+        const data = dataOrError as Memo[];
 
-        const notes: Memo[] = rows.map((row) => ({
+        const memos: Memo[] = data.map((row) => ({
             id: row.id,
             title: row.title,
             content: row.content,
@@ -32,11 +34,11 @@ export const getMemos = async (): Promise<Memo[] | undefined> => {
             updated_at: row.updated_at,
         }));
 
-        return notes;
+        return memos;
 
     } catch (err) {
         console.error(err);
-        return undefined;
+        return null;
 
     }
 }

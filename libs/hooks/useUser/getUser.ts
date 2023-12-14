@@ -4,7 +4,12 @@
 import { db } from "@/database";
 import { User } from "@models/user";
 
-export const getUser = async (id: number): Promise<User | undefined> => {
+/**
+ * Gets the user's data from the database using his id.
+ * @param id The id of the user in the database
+ * @returns The {@link User | `User`} if found, `undefined` otherwise
+ */
+export const getUser = async (id: number): Promise<User | null> => {
   try{
     const client = await db.connect();
 
@@ -17,7 +22,7 @@ export const getUser = async (id: number): Promise<User | undefined> => {
     const user = rows[0];
 
     if (!user) {
-      return undefined;
+      return null;
     }
 
     return {
@@ -30,7 +35,7 @@ export const getUser = async (id: number): Promise<User | undefined> => {
     
   } catch (err) {
     console.error(err);
-    return undefined;
+    return null;
   
   }
 }

@@ -1,31 +1,24 @@
 
-'use client';
-
-// React
-import { useState } from "react";
+// MUI Icons
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubbleRounded';
+import EventRoundedIcon from '@mui/icons-material/EventRounded';
 
 // Internal
-import { TopNavBar, AppNavigation, AccountNavigation } from "./_components";
+import { Item } from './Item';
+import { More } from './More';
 
-/** The navigation component when the user is logged in. */
+/** Renders the navbar when the user is logged in. */
 export const InsiderNav = () => {
-  const [isAppNavOpen, setIsAppNavOpen] = useState<boolean>(false);
-  const [isAccountNavOpen, setIsAccountNavOpen] = useState<boolean>(false);
-
   return (
-    <>
-      <TopNavBar
-        openAppNav={() => setIsAppNavOpen(true)}
-        setAccountNavOpen={setIsAccountNavOpen}
-      />
-      <AppNavigation
-        isAppNavOpen={isAppNavOpen}
-        closeNav={() => setIsAppNavOpen(false)}
-      />
-      <AccountNavigation
-        isAccountNavOpen={isAccountNavOpen}
-        closeNav={() => setIsAccountNavOpen(false)}
-      />
-    </>
+    <nav className="relative w-full h-[70px] flex justify-evenly items-center bg-purple-600">
+      <Item href='/app' icon={<HomeRoundedIcon />} />
+      <Item href='/app/chat' icon={<ChatBubbleRoundedIcon />} />
+      <More icon={<MoreVertRoundedIcon />} />
+      <Item href='/app/calendar' icon={<EventRoundedIcon />} />
+      <Item href='/app/settings' icon={<SettingsRoundedIcon />} />
+    </nav>
   )
 }

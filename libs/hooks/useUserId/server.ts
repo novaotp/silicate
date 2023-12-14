@@ -11,7 +11,7 @@ import { verify } from "@/utils/jwt";
  * A server-side hook to get the user's id from the JWT.
  * @returns The id of the user, or `undefined` if not available
  */
-export const useServerUserId = async (): Promise<number | undefined> => {
+export const useUserId = async (): Promise<number | undefined> => {
   try {
     const token = cookies().get('id')?.value;
 

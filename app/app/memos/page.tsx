@@ -7,7 +7,7 @@ import { Metadata } from "next";
 // Internal
 import { getMemos } from "@data-access/memo";
 import { Loading } from "@components/shared";
-import { Search, MemoList, AddButton } from "@components/app/memos/export";
+import { Search, MemoList, AddButton } from "@/components/app/memos";
 
 export const metadata: Metadata = {
   title: "Mes mémos - Silicate"

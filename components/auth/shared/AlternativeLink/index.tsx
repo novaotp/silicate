@@ -20,12 +20,12 @@ interface AlternativeLinkProps {
 /** Returns a text with a redirecting hyperlink. */
 export const AlternativeLink = ({ text, href, label }: AlternativeLinkProps): JSX.Element => {
   return (
-    <p className={styles.text}>
-      {text}
+    <div className="relative flex text-xs text-gray-500">
+      <p>{text}</p>
       &nbsp;
-      <Link className={styles.link} href={href}>
+      <Link className="text-purple-900 underline" href={href}>
         {label}
       </Link>
-    </p>
+    </div>
   )
 }

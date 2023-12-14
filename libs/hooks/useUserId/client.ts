@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 /**
  * A client-side hook to get the user's id from his JWT.
  */
-export const useUserId = async (): Promise<number | undefined> => {
+export const useUserIdSync = (): number | undefined => {
   const router = useRouter();
   const [userId, setUserId] = useState<number | undefined>(undefined);
 

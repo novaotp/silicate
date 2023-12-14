@@ -1,12 +1,7 @@
 
 'use client';
 
-// React
 import { type Dispatch, type SetStateAction } from 'react';
-
-// Internal
-import { poppins } from '@/fonts';
-import styles from './index.module.scss';
 
 interface InputProps {
   /** The type of the input. Defaults to `text`. */
@@ -31,11 +26,11 @@ export const Input = ({ type = "text", label, placeholder, value, setValue }: In
   const name = label.split(" ").join("-").toLowerCase();
 
   return (
-    <div className={styles.field}>
+    <div className="relative w-full flex flex-col mb-[10px] last-of-type:mb-0">
       <label htmlFor={name}>{label}</label>
       <input
         type={type}
-        className={`${styles.input} ${poppins.className}`}
+        className="relative w-full h-[50px] px-[10px] border border-gray-400 rounded-md text-[14px]"
         placeholder={placeholder}
         name={name}
         value={value}
