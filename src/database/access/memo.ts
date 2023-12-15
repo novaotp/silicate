@@ -2,31 +2,29 @@
 "use server";
 
 import { Memo } from "@models/memo";
-import { query } from "../query";
-import { useUser } from "@/libs/hooks/useUser";
+import { db } from "..";
+import { useUserId } from "@/libs/hooks/useUserId";
 
 /**
  * Gets the user's memos from the database.
- * @returns An array of {@link Memo | `Memo`} if successful, `undefined` otherwise.
+ * @returns An array of {@link Memo | `Memo`} if successful, `null` otherwise.
  */
 export const getMemos = async (): Promise<Memo[] | null> => {
     try {
-        const userId = await useUser();
+        const client = await db.connect();
+        const userId = await useUserId();
 
         if (!userId) {
             return null;
         }
 
-        const { success, dataOrError } = await query<Memo[]>('SELECT * FROM public.memo WHERE user_id = $1;', [userId]);
-        
-        if (!success) {
-            console.error(dataOrError as string);
-            return null;
-        }
+        const query = 'SELECT * FROM public.memo WHERE user_id = $1;';
+        const values = [userId];
 
-        const data = dataOrError as Memo[];
+        const { rows } = await client.query(query, values);
+        client.release(true);
 
-        const memos: Memo[] = data.map((row) => ({
+        const memos: Memo[] = rows.map((row) => ({
             id: row.id,
             title: row.title,
             content: row.content,
@@ -46,15 +44,15 @@ export const getMemos = async (): Promise<Memo[] | null> => {
 /**
 * Fetches the memo associated with the given id.
 * @param id The id of the memo to fetch
-* @returns A {@link Memo | `Memo`} object or `undefined` if not found
+* @returns A {@link Memo | `Memo`} object or `null` if not found
 */
-export const getMemo = async (id: number): Promise<Memo | undefined> => {
+export const getMemo = async (id: number): Promise<Memo | null> => {
     try {
         const client = await db.connect();
-        const userId = await useServerUserId();
+        const userId = await useUserId();
 
         if (!userId) {
-            return undefined;
+            return null;
         }
 
         const query = 'SELECT * FROM public.memo WHERE id = $1 AND user_id = $2 LIMIT 1;';
@@ -73,7 +71,7 @@ export const getMemo = async (id: number): Promise<Memo | undefined> => {
 
     } catch (err) {
         console.error("An error occurred while fetching a note", err);
-        return undefined;
+        return null;
 
     }
 }
@@ -82,15 +80,15 @@ export const getMemo = async (id: number): Promise<Memo | undefined> => {
  * Creates a new memo for the user in the database.
  * @param title The new title of the memo
  * @param content The new content of the memo
- * @returns The id of the newly created memo, or `undefined` if an error occurred.
+ * @returns The id of the newly created memo, or `null` if an error occurred.
  */
-export const createMemo = async (title: string, content: string): Promise<number | undefined> => {
+export const createMemo = async (title: string, content: string): Promise<number | null> => {
     try {
         const client = await db.connect();
-        const userId = await useServerUserId();
+        const userId = await useUserId();
 
         if (!userId) {
-            return undefined;
+            return null;
         }
 
         const now = new Date();
@@ -106,7 +104,7 @@ export const createMemo = async (title: string, content: string): Promise<number
 
     } catch (err) {
         console.error("An error occurred while creating a note", err);
-        return undefined;
+        return null;
 
     }
 }
@@ -121,7 +119,7 @@ export const createMemo = async (title: string, content: string): Promise<number
 export const updateMemo = async (id: number, title: string, content: string): Promise<boolean> => {
     try {
         const client = await db.connect();
-        const userId = await useServerUserId();
+        const userId = await useUserId();
 
         if (!userId) {
             return false;
@@ -151,7 +149,7 @@ export const updateMemo = async (id: number, title: string, content: string): Pr
 export const deleteMemo = async (id: number): Promise<boolean> => {
     try {
         const client = await db.connect();
-        const userId = await useServerUserId();
+        const userId = await useUserId();
 
         if (!userId) {
             return false;

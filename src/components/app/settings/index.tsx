@@ -1,6 +1,7 @@
 
 import { ChildrenProps } from "@/types/interfaces";
 import { Item } from "./Item";
+import { ChangeTheme } from "./prefabs/ChangeTheme";
 
 interface BoxProps extends ChildrenProps {
     label: string;
@@ -23,3 +24,4 @@ export const Box = ({ label, children }: BoxProps) => {
 }
 
 Box.Item = Item;
+Box.ChangeTheme = ChangeTheme;

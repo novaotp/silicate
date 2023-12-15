@@ -69,6 +69,13 @@ CREATE TABLE IF NOT EXISTS public.grade (
 	CONSTRAINT fk_subject_id FOREIGN KEY (subject_id) REFERENCES public.subject(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS public.tag (
+	id SERIAL NOT NULL PRIMARY KEY,
+	user_id INT NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS public.memo (
 	id SERIAL PRIMARY KEY NOT NULL,
 	user_id INT NOT NULL,
@@ -78,4 +85,12 @@ CREATE TABLE IF NOT EXISTS public.memo (
 	updated_at TIMESTAMPTZ NOT NULL,
 	deleted_at TIMESTAMPTZ,
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public.tagged_memo (
+	id SERIAL PRIMARY KEY NOT NULL,
+	tag_id INT NOT NULL,
+	memo_id INT NOT NULL,
+	CONSTRAINT fk_tagged_memo_tag FOREIGN KEY (tag_id) REFERENCES public.tag (id),
+	CONSTRAINT fk_tagged_memo_memo FOREIGN KEY (memo_id) REFERENCES public.memo (id)
 );

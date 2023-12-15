@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 // Internal
 import { useAlert } from '@/libs/contexts/AlertContext';
 import { useToast } from '@/libs/contexts/ToastContext';
+import { revalidate } from './server';
 
 interface HeaderProps {
   /** Deletes the note and redirects to the /app/notes page. */
@@ -33,6 +34,7 @@ export const Header = ({ destroy, unsavedChanges }: HeaderProps): JSX.Element =>
 
   const handleOnLeave = () => {
     if (!unsavedChanges) {
+      revalidate('/app/memos');
       router.push('/app/memos');
       return;
     }

@@ -13,9 +13,11 @@ const Layout = ({ children }: ChildrenProps) => {
   const pathname = usePathname();
   const showNav = !pathname!.startsWith('/app/memos/') || pathname === '/app/memos';
 
+  const height = showNav ? "h-[calc(100%-70px)]" : "h-full";
+
   return (
     <div className="relative w-full h-full flex flex-col justify-between">
-      <main className={`relative w-full flex-grow flex flex-col overflow-y-scroll`}>
+      <main className={`relative w-full ${height} flex flex-col overflow-y-scroll`}>
         {children}
       </main>
 

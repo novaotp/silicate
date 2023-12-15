@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 // Internal
 import { Memo } from '@/models/memo';
-import { deleteMemo, getMemo, updateMemo } from './server';
+import { deleteMemo, getMemo, updateMemo } from '@data-access/memo';
 
 /// -- Components -- ///
 import { Header } from './Header';

@@ -22,8 +22,8 @@ export const AddButton = () => {
 
   return (
     <form action={handleNewMemo}>
-      <button className="absolute w-[60px] aspect-square bottom-5 right-5 rounded-xl bg-blue-500 text-white text-3xl">
-        <AddRoundedIcon />
+      <button className="absolute w-[60px] aspect-square bottom-5 right-5 flex justify-center items-center rounded-full bg-blue-500 text-white">
+        <AddRoundedIcon className="text-3xl" />
       </button>
     </form>
   )
