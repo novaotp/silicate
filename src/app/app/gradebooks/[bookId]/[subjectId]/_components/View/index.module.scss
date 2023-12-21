@@ -1,17 +1,19 @@
 @import "../../_styles/variables.module.scss";
 
 .notes {
-  position: relative;
-  width: 100%;
-  height: calc(100% - $meta-height - $add-memo-height - 60px - 20px - 20px - 90px);
-  margin-top: 20px;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    position: relative;
+    width: 100%;
+    height: calc(
+        100% - $meta-height - $add-memo-height - 60px - 20px - 20px - 90px
+    );
+    margin-top: 20px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }

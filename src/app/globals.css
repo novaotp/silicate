@@ -3,44 +3,45 @@
 @tailwind utilities;
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root[data-theme="light"] {
-  --background-color: #fff;
-  --primary-color: rgb(22, 22, 255);
-  --text-color: black;
-  --secondary-color: rgb(244, 244, 255);
-  --opposite-text-color: white;
-  --color-white: #ffffff;
-  --color-timberwolf: #d6d6d6;
-  --color-lavender: #f6e8ea;
-  --color-deepskyblue-light: #0ac2ff;
-  --color-deepskyblue: #5f54ff;
-  --color-electricblue: #0aebff;
+    --background-color: #fff;
+    --primary-color: rgb(22, 22, 255);
+    --text-color: black;
+    --secondary-color: rgb(244, 244, 255);
+    --opposite-text-color: white;
+    --color-white: #ffffff;
+    --color-timberwolf: #d6d6d6;
+    --color-lavender: #f6e8ea;
+    --color-deepskyblue-light: #0ac2ff;
+    --color-deepskyblue: #5f54ff;
+    --color-electricblue: #0aebff;
 }
 
 :root[data-theme="dark"] {
-  --background-color: #222222;
-  --primary-color: hsl(240, 89%, 66%);
-  --text-color: #fff;
-  --secondary-color: rgb(65, 65, 65);
-  --opposite-text-color: rgb(26, 26, 26);
+    --background-color: #222222;
+    --primary-color: hsl(240, 89%, 66%);
+    --text-color: #fff;
+    --secondary-color: rgb(65, 65, 65);
+    --opposite-text-color: rgb(26, 26, 26);
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
+html,
+body {
+    width: 100%;
+    height: 100%;
 }
 
 button {
-  border: none;
-  outline: transparent;
-  cursor: pointer;
+    border: none;
+    outline: transparent;
+    cursor: pointer;
 }
 
 ul {
-  list-style: none;
+    list-style: none;
 }

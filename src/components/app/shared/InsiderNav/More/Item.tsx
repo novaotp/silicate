@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { ReactNode } from "react";
@@ -13,18 +12,23 @@ interface ItemProps {
 
 /**
  * Renders a link for the main menu.
- * 
+ *
  * - Includes an icon.
  */
 export const Item = ({ onClick, href, icon, label }: ItemProps) => {
     return (
-        <li className="relative w-full h-[50px] flex justify-center items-center
-                       border-t border-x border-gray-400 last-of-type:border-b
-                       first-of-type:rounded-t-md last-of-type:rounded-b-md"
+        <li
+            className='relative flex h-[50px] w-full items-center justify-center
+                       border-x border-t border-gray-400 first-of-type:rounded-t-md
+                       last-of-type:rounded-b-md last-of-type:border-b'
         >
-            <Link onClick={onClick} href={href} className="relative w-full h-full px-5 flex justify-start items-center">
+            <Link
+                onClick={onClick}
+                href={href}
+                className='relative flex h-full w-full items-center justify-start px-5'
+            >
                 {icon}&nbsp;&nbsp;&nbsp;&nbsp;{label}
             </Link>
         </li>
-    )
-}
+    );
+};

@@ -1,25 +1,24 @@
-
-'use client';
+"use client";
 
 // Internal
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 import { Header, Menu } from "./components";
 
 interface AppNavigationProps {
-  /** The state of the app nav. */
-  isAppNavOpen: boolean;
-  /** Closes the nav. */
-  closeNav: () => void;
+    /** The state of the app nav. */
+    isAppNavOpen: boolean;
+    /** Closes the nav. */
+    closeNav: () => void;
 }
 
 /** The navigation related to the app. */
 const AppNavigation = ({ isAppNavOpen, closeNav }: AppNavigationProps) => {
-  return (
-    <div className={`${styles.nav} ${isAppNavOpen ? styles.open : ""}`}>
-      <Header closeNav={closeNav} />
-      <Menu closeNav={closeNav} />
-    </div>
-  )
-}
+    return (
+        <div className={`${styles.nav} ${isAppNavOpen ? styles.open : ""}`}>
+            <Header closeNav={closeNav} />
+            <Menu closeNav={closeNav} />
+        </div>
+    );
+};
 
 export default AppNavigation;

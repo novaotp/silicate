@@ -1,8 +1,7 @@
-
 export interface ChildrenProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export interface NameProp {
-  name: string;
+    name: string;
 }

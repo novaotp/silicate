@@ -1,4 +1,3 @@
-
 "use server";
 
 import { Memo } from "@models/memo";
@@ -18,7 +17,7 @@ export const getMemos = async (): Promise<Memo[] | null> => {
             return null;
         }
 
-        const query = 'SELECT * FROM public.memo WHERE user_id = $1;';
+        const query = "SELECT * FROM public.memo WHERE user_id = $1;";
         const values = [userId];
 
         const { rows } = await client.query(query, values);
@@ -33,19 +32,17 @@ export const getMemos = async (): Promise<Memo[] | null> => {
         }));
 
         return memos;
-
     } catch (err) {
         console.error(err);
         return null;
-
     }
-}
+};
 
 /**
-* Fetches the memo associated with the given id.
-* @param id The id of the memo to fetch
-* @returns A {@link Memo | `Memo`} object or `null` if not found
-*/
+ * Fetches the memo associated with the given id.
+ * @param id The id of the memo to fetch
+ * @returns A {@link Memo | `Memo`} object or `null` if not found
+ */
 export const getMemo = async (id: number): Promise<Memo | null> => {
     try {
         const client = await db.connect();
@@ -55,7 +52,8 @@ export const getMemo = async (id: number): Promise<Memo | null> => {
             return null;
         }
 
-        const query = 'SELECT * FROM public.memo WHERE id = $1 AND user_id = $2 LIMIT 1;';
+        const query =
+            "SELECT * FROM public.memo WHERE id = $1 AND user_id = $2 LIMIT 1;";
         const values = [id, userId];
 
         const { rows } = await client.query(query, values);
@@ -68,13 +66,11 @@ export const getMemo = async (id: number): Promise<Memo | null> => {
             created_at: rows[0].created_at,
             updated_at: rows[0].updated_at,
         } as Memo;
-
     } catch (err) {
         console.error("An error occurred while fetching a note", err);
         return null;
-
     }
-}
+};
 
 /**
  * Creates a new memo for the user in the database.
@@ -82,7 +78,10 @@ export const getMemo = async (id: number): Promise<Memo | null> => {
  * @param content The new content of the memo
  * @returns The id of the newly created memo, or `null` if an error occurred.
  */
-export const createMemo = async (title: string, content: string): Promise<number | null> => {
+export const createMemo = async (
+    title: string,
+    content: string
+): Promise<number | null> => {
     try {
         const client = await db.connect();
         const userId = await useUserId();
@@ -92,7 +91,8 @@ export const createMemo = async (title: string, content: string): Promise<number
         }
 
         const now = new Date();
-        const query = 'INSERT INTO public.memo (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;';
+        const query =
+            "INSERT INTO public.memo (user_id, title, content, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id;";
         const values = [userId, title, content, now, now];
 
         const { rows } = await client.query(query, values);
@@ -101,13 +101,11 @@ export const createMemo = async (title: string, content: string): Promise<number
         const noteId: number = rows[0].id;
 
         return noteId;
-
     } catch (err) {
         console.error("An error occurred while creating a note", err);
         return null;
-
     }
-}
+};
 
 /**
  * Updates a memo in the database with the given data.
@@ -116,7 +114,11 @@ export const createMemo = async (title: string, content: string): Promise<number
  * @param content The new content of the memo
  * @returns A boolean indicating wether or not the update was successful
  */
-export const updateMemo = async (id: number, title: string, content: string): Promise<boolean> => {
+export const updateMemo = async (
+    id: number,
+    title: string,
+    content: string
+): Promise<boolean> => {
     try {
         const client = await db.connect();
         const userId = await useUserId();
@@ -126,20 +128,19 @@ export const updateMemo = async (id: number, title: string, content: string): Pr
         }
 
         const now = new Date();
-        const query = 'UPDATE public.memo SET title = $1, content = $2, updated_at = $3 WHERE id = $4 AND user_id = $5;';
+        const query =
+            "UPDATE public.memo SET title = $1, content = $2, updated_at = $3 WHERE id = $4 AND user_id = $5;";
         const values = [title, content, now, id, userId];
 
         await client.query(query, values);
         client.release();
 
         return true;
-
     } catch (err) {
         console.error("An error occurred while updating a memo", err);
         return false;
-
     }
-}
+};
 
 /**
  * Deletes a memo from the database that matches the given id.
@@ -155,17 +156,15 @@ export const deleteMemo = async (id: number): Promise<boolean> => {
             return false;
         }
 
-        const query = 'DELETE FROM public.memo WHERE id = $1 AND user_id = $2;';
+        const query = "DELETE FROM public.memo WHERE id = $1 AND user_id = $2;";
         const values = [id, userId];
 
         await client.query(query, values);
         client.release();
 
         return true;
-
     } catch (err) {
         console.error("An error occurred while deleting a memo", err);
         return false;
-
     }
-}
+};

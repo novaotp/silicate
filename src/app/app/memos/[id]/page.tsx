@@ -1,4 +1,3 @@
-
 // Next
 import { Metadata } from "next";
 
@@ -6,14 +5,12 @@ import { Metadata } from "next";
 import { Edit } from "@components/app/memos/id";
 
 export const metadata: Metadata = {
-  title: "Editing memo - Silicate"
-}
+    title: "Editing memo - Silicate",
+};
 
 /** The editing memo page. */
 const Page = async (): Promise<JSX.Element> => {
-  return (
-    <Edit />
-  )
-}
+    return <Edit />;
+};
 
 export default Page;

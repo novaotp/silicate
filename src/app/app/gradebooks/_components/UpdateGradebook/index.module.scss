@@ -1,81 +1,80 @@
-
 .dialog {
-  position: relative;
-  width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  border: solid 1px grey;
-  border-radius: 15px;
-
-  .delete {
-    position: relative;
-    width: 100%;
-    height: 40px;
-    background-color: red;
-    border-radius: 10px;
-    color: white;
-  }
-
-  .period {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-
-    button {
-      position: relative;
-      width: 100%;
-      height: 40px;
-    }
-  }
-
-  .buttons {
-    position: relative;
-    width: 100%;
-    height: 40px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-
-    .button {
-      position: relative;
-      width: calc( 50% - 10px );
-      height: 100%;
-      color: white;
-      border-radius: 10px;
-      border: transparent;
-
-      &.add {
-        background-color: blue;
-      }
-
-      &.close {
-        background-color: grey;
-      }
-    }
-  }
-
-  .periodDialog {
     position: relative;
     width: 100%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px 0;
+    padding: 20px;
     border: solid 1px grey;
-    border-radius: 20px;
+    border-radius: 15px;
 
-    &::backdrop {
-      background: rgba(0, 0, 0, 0.5);
+    .delete {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        background-color: red;
+        border-radius: 10px;
+        color: white;
     }
 
-    .closePeriod {
-      position: relative;
-      width: calc( 100% - 40px);
-      height: 40px;
-      left: 20px;
-      background-color: lightgrey;
+    .period {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        button {
+            position: relative;
+            width: 100%;
+            height: 40px;
+        }
     }
-  }
+
+    .buttons {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+
+        .button {
+            position: relative;
+            width: calc(50% - 10px);
+            height: 100%;
+            color: white;
+            border-radius: 10px;
+            border: transparent;
+
+            &.add {
+                background-color: blue;
+            }
+
+            &.close {
+                background-color: grey;
+            }
+        }
+    }
+
+    .periodDialog {
+        position: relative;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px 0;
+        border: solid 1px grey;
+        border-radius: 20px;
+
+        &::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .closePeriod {
+            position: relative;
+            width: calc(100% - 40px);
+            height: 40px;
+            left: 20px;
+            background-color: lightgrey;
+        }
+    }
 }

@@ -1,49 +1,44 @@
-
 // React + Next
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import { Metadata } from "next";
-import { redirect } from 'next/navigation';
-import Image from 'next/image';
+import { redirect } from "next/navigation";
+import Image from "next/image";
 
 // Internal
 import { useUser } from "@libs/hooks/useUser/server";
 import SilicateLogo from "@public/SilicateAppIconBlackVertical.png";
-import { Loading } from '@components/shared';
+import { Loading } from "@components/shared";
 
 export const metadata: Metadata = {
-  title: "Dashboard - Silicate"
-}
+    title: "Dashboard - Silicate",
+};
 
 /**
  * Renders the dashboard page.
- * 
+ *
  * - Greets the user with his first name.
  */
 const Page = async (): Promise<JSX.Element> => {
-  const user = await useUser();
+    const user = await useUser();
 
-  if (!user) {
-    redirect('/auth/log-out');
-  }
+    if (!user) {
+        redirect("/auth/log-out");
+    }
 
-  return (
-    <div className="relative w-full h-full flex flex-col justify-center items-center p-5">
-      <Suspense fallback={<Loading text="Chargement de l'utilisateur..." />}>
-        <h1 className="text-3xl">
-          <span>Bonjour</span>
-          &nbsp;
-          <span className="font-bold">
-            {user.firstName}
-          </span>
-        </h1>
-        <Image
-          src={SilicateLogo}
-          alt="Silicate Logo"
-          height={300}
-        />
-      </Suspense>
-    </div>
-  )
-}
+    return (
+        <div className='relative flex h-full w-full flex-col items-center justify-center p-5'>
+            <Suspense
+                fallback={<Loading text="Chargement de l'utilisateur..." />}
+            >
+                <h1 className='text-3xl'>
+                    <span>Bonjour</span>
+                    &nbsp;
+                    <span className='font-bold'>{user.firstName}</span>
+                </h1>
+                <Image src={SilicateLogo} alt='Silicate Logo' height={300} />
+            </Suspense>
+        </div>
+    );
+};
 
 export default Page;

@@ -4,4 +4,4 @@ import NoSubjectsFound from "./NoSubjectsFound";
 import RenderSubjects from "./RenderSubjects";
 import { View } from "./View";
 
-export { NoSubjectsFound, RenderSubjects, AddSubject, Meta, View }
+export { NoSubjectsFound, RenderSubjects, AddSubject, Meta, View };

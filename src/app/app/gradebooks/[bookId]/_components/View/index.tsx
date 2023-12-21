@@ -1,4 +1,3 @@
-
 "use client";
 
 // React
@@ -14,31 +13,43 @@ import { EmptyView, SubjectCard } from "./_components";
 import { Loading } from "@/components/shared";
 
 interface ViewProps {
-  subjects: Subject[] | undefined,
+    subjects: Subject[] | undefined;
 }
 
 export const View = ({ subjects }: ViewProps): JSX.Element => {
-  const ref = useRef<HTMLUListElement>(null);
-  const { searchParams } = useCustomSearchParams();
-  const searchQuery = searchParams!.get('search') ?? '';
+    const ref = useRef<HTMLUListElement>(null);
+    const { searchParams } = useCustomSearchParams();
+    const searchQuery = searchParams!.get("search") ?? "";
 
-  const sortedAndFilteredSubjects = useMemo(() => {
-    if (!subjects) return [];
+    const sortedAndFilteredSubjects = useMemo(() => {
+        if (!subjects) return [];
 
-    return subjects
-      .filter(subjects => searchQuery === "" || subjects.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      .sort((subject1, subject2) => subject2.updated_at.getTime() - subject1.updated_at.getTime());
-  }, [subjects, searchQuery]);
+        return subjects
+            .filter(
+                (subjects) =>
+                    searchQuery === "" ||
+                    subjects.name
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+            )
+            .sort(
+                (subject1, subject2) =>
+                    subject2.updated_at.getTime() -
+                    subject1.updated_at.getTime()
+            );
+    }, [subjects, searchQuery]);
 
-  return (
-    <ul className={styles.notes} ref={ref}>
-      {
-        !subjects
-          ? <Loading text="Chargement des branches..." />
-          : sortedAndFilteredSubjects.length === 0
-            ? <EmptyView isSearchQueryEmpty={searchQuery === ""} />
-            : sortedAndFilteredSubjects.map((subject: Subject) => <SubjectCard key={subject.id} subject={subject} />)
-      }
-    </ul>
-  );
-}
+    return (
+        <ul className={styles.notes} ref={ref}>
+            {!subjects ? (
+                <Loading text='Chargement des branches...' />
+            ) : sortedAndFilteredSubjects.length === 0 ? (
+                <EmptyView isSearchQueryEmpty={searchQuery === ""} />
+            ) : (
+                sortedAndFilteredSubjects.map((subject: Subject) => (
+                    <SubjectCard key={subject.id} subject={subject} />
+                ))
+            )}
+        </ul>
+    );
+};

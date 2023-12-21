@@ -1,4 +1,3 @@
-
 "use client";
 
 // React + Next
@@ -13,22 +12,23 @@ import { User } from "@models/user";
  * @returns A {@link User | `User`} object, or `undefined` if an error occurred
  */
 export const useUserSync = (): User | null | undefined => {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+    const [user, setUser] = useState<User | null | undefined>(undefined);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const fetchedUser: User | null = await useUser();
+    useEffect(() => {
+        (async () => {
+            try {
+                const fetchedUser: User | null = await useUser();
 
-        setUser(fetchedUser);
+                setUser(fetchedUser);
+            } catch (err) {
+                console.error(
+                    "An error occurred while trying to fetch the user on the client-side",
+                    err
+                );
+                setUser(null);
+            }
+        })();
+    }, []);
 
-      } catch (err) {
-        console.error("An error occurred while trying to fetch the user on the client-side", err);
-        setUser(null);
-        
-      }
-    })();
-  }, []);
-
-  return user;
-}
+    return user;
+};

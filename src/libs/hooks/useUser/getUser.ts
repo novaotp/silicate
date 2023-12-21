@@ -1,4 +1,3 @@
-
 "use server";
 
 import { db } from "@/database";
@@ -10,32 +9,30 @@ import { User } from "@models/user";
  * @returns The {@link User | `User`} if found, `undefined` otherwise
  */
 export const getUser = async (id: number): Promise<User | null> => {
-  try{
-    const client = await db.connect();
+    try {
+        const client = await db.connect();
 
-    const query = 'SELECT * FROM public.user WHERE id = $1 LIMIT 1;';
-    const values = [id];
+        const query = "SELECT * FROM public.user WHERE id = $1 LIMIT 1;";
+        const values = [id];
 
-    const { rows } = await client.query(query, values);
-    client.release(true);
+        const { rows } = await client.query(query, values);
+        client.release(true);
 
-    const user = rows[0];
+        const user = rows[0];
 
-    if (!user) {
-      return null;
+        if (!user) {
+            return null;
+        }
+
+        return {
+            id: user.id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            password: user.password,
+        } as User;
+    } catch (err) {
+        console.error(err);
+        return null;
     }
-
-    return {
-      id: user.id,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      email: user.email,
-      password: user.password
-    } as User;
-    
-  } catch (err) {
-    console.error(err);
-    return null;
-  
-  }
-}
+};

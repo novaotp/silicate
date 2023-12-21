@@ -1,4 +1,3 @@
-
 import { useUserIdSync } from "./client";
 import { useUserId } from "./server";
 

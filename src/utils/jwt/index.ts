@@ -1,13 +1,12 @@
-
 "use server";
 
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
-import { encodeString } from '../textencoder';
+import { SignJWT, jwtVerify, type JWTPayload } from "jose";
+import { encodeString } from "../textencoder";
 
 interface PayloadProps {
-  payload: {
-    userID: number
-  }
+    payload: {
+        userID: number;
+    };
 }
 
 /**
@@ -16,16 +15,16 @@ interface PayloadProps {
  * @returns The signed JWT token
  */
 export const sign = async (payload: any): Promise<string> => {
-  const issuedAt = Math.floor(Date.now() / 1000);
-  const expirationTime = issuedAt + (60 * 60) * 336; // 14 days
+    const issuedAt = Math.floor(Date.now() / 1000);
+    const expirationTime = issuedAt + 60 * 60 * 336; // 14 days
 
-  return await new SignJWT({ payload })
-    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-    .setExpirationTime(expirationTime)
-    .setIssuedAt(issuedAt)
-    .setNotBefore(issuedAt)
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET));
-}
+    return await new SignJWT({ payload })
+        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+        .setExpirationTime(expirationTime)
+        .setIssuedAt(issuedAt)
+        .setNotBefore(issuedAt)
+        .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+};
 
 /**
  * Verifies the JWT and returns the payload.
@@ -33,16 +32,20 @@ export const sign = async (payload: any): Promise<string> => {
  * @returns The JWT payload after verification
  */
 export const verify = async (token: string): Promise<JWTPayload> => {
-  let payload: JWTPayload = {} as JWTPayload;
+    let payload: JWTPayload = {} as JWTPayload;
 
-  try {
-    payload = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload;
-
-  } catch {
-    payload = (await jwtVerify(token, encodeString(process.env.JWT_SECRET!))).payload;
-
-  } finally {
-
-    return payload;
-  }
-}
+    try {
+        payload = (
+            await jwtVerify(
+                token,
+                new TextEncoder().encode(process.env.JWT_SECRET)
+            )
+        ).payload;
+    } catch {
+        payload = (
+            await jwtVerify(token, encodeString(process.env.JWT_SECRET!))
+        ).payload;
+    } finally {
+        return payload;
+    }
+};

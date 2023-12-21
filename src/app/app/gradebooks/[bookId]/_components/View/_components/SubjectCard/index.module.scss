@@ -1,57 +1,57 @@
 .note {
-  position: relative;
-  width: 100%;
-  min-height: 70px;
-  overflow: hidden;
-  border-radius: 0;
-  margin-top: 15px;
-  border-radius: 15px;
-  display: flex;
-
-  &:first-of-type {
-    margin-top: 0;
-  }
-
-  .link {
     position: relative;
+    width: 100%;
+    min-height: 70px;
+    overflow: hidden;
+    border-radius: 0;
+    margin-top: 15px;
+    border-radius: 15px;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 100%;
-    color: black;
-    text-decoration: none;
-    background-color: #E6E6FA;
-    padding: 10px 15px;
 
-    .header {
-      position: relative;
-      display: flex;
-      width: 100%;
+    &:first-of-type {
+        margin-top: 0;
+    }
 
-      .date {
+    .link {
         position: relative;
-        font-size: 12px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-      }  
+        flex-grow: 1;
+        height: 100%;
+        color: black;
+        text-decoration: none;
+        background-color: #e6e6fa;
+        padding: 10px 15px;
+
+        .header {
+            position: relative;
+            display: flex;
+            width: 100%;
+
+            .date {
+                position: relative;
+                font-size: 12px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+
+        .content {
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 5px;
+            font-size: 12px;
+            color: rgb(97, 97, 97);
+        }
     }
 
-    .content {
-      position: relative;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 5px;
-      font-size: 12px;
-      color: rgb(97, 97, 97);
+    button {
+        position: relative;
+        height: 100%;
+        aspect-ratio: 1;
+        background-color: #c0c0fd;
     }
-  }
-
-  button {
-    position: relative;
-    height: 100%;
-    aspect-ratio: 1;
-    background-color: #c0c0fd;
-  }
 }

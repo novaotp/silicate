@@ -1,19 +1,16 @@
-
 // Next
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
 // Internal
-import { SignUp } from '@components/auth/sign-up';
+import { SignUp } from "@components/auth/sign-up";
 
 export const metadata: Metadata = {
-  title: 'Inscription - Silicate'
-}
+    title: "Inscription - Silicate",
+};
 
 /** The sign-up page. */
 const Page = (): JSX.Element => {
-  return (
-    <SignUp />
-  )
-}
+    return <SignUp />;
+};
 
 export default Page;

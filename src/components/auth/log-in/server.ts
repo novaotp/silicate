@@ -1,4 +1,3 @@
-
 "use server";
 
 // BCrypt
@@ -14,19 +13,20 @@ import { getUser } from "../auth.server";
  * @param password The password of the user to authenticate
  * @returns The JWT to store in the cookie if valid, otherwise `undefined`
  */
-export const checkCredentials = async (email: string, password: string): Promise<string | undefined> => {
-  try {
-    const user = await getUser(email);
+export const checkCredentials = async (
+    email: string,
+    password: string
+): Promise<string | undefined> => {
+    try {
+        const user = await getUser(email);
 
-    if (!user || !compare(password, user.password)) {
-      return undefined;
+        if (!user || !compare(password, user.password)) {
+            return undefined;
+        }
+
+        return await sign({ userID: user.id });
+    } catch (err) {
+        console.error(err);
+        return undefined;
     }
-
-    return await sign({ userID: user.id });
-
-  } catch (err) {
-    console.error(err);
-    return undefined;
-    
-  }
-}
+};
