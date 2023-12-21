@@ -100,12 +100,10 @@ class FriendsEndpoints {
 
             await client.release(true);
 
-            return res
-                .status(200)
-                .json({
-                    success: true,
-                    message: "Friend removed successfully",
-                });
+            return res.status(200).json({
+                success: true,
+                message: "Friend removed successfully",
+            });
         } catch (err) {
             console.error(err);
 

@@ -1,13 +1,8 @@
+
 "use server";
 
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import { encodeString } from "../textencoder";
-
-interface PayloadProps {
-    payload: {
-        userID: number;
-    };
-}
 
 /**
  * Signs a payload to create a JWT and returns it.
