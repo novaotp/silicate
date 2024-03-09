@@ -33,8 +33,9 @@ app.get('/users/:id', async (req, res) => {
                 firstName: user.first_name,
                 lastName: user.last_name,
                 email: user.email,
+                password: user.password,
                 joinedOn: user.created_at
-            }
+            } as User
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the users : ${err.message}`);
@@ -62,6 +63,7 @@ app.get('/users', async (req, res) => {
                     firstName: row.first_name,
                     lastName: row.last_name,
                     email: row.email,
+                    password: row.password,
                     joinedOn: row.created_at
                 } as User;
             })
