@@ -13,24 +13,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 
 		const userId = (await verify(jwt)).payload.userId;
-		
-		let user: User;
-		try {
-			const response = await fetch(`${BACKEND_URL}/users/${userId}`);
-			const result: ApiResponseWithData<User> = await response.json();
 
-			user = result.data;
-		} catch (err) {
-			event.cookies.delete("id", { path: "/" });
-			throw redirect(303, "/auth/login");
+		if (event.locals.user?.id !== userId) {
+			try {
+				const response = await fetch(`${BACKEND_URL}/users/${userId}`);
+				const result: ApiResponseWithData<User> = await response.json();
+
+				event.locals.user = result.data;
+			} catch {
+				event.locals.user = undefined;
+				event.cookies.delete("id", { path: "/" });
+				throw redirect(303, "/auth/login");
+			}
 		}
-
-		if (!user) {
-			event.cookies.delete("id", { path: "/" });
-			throw redirect(303, "/auth/login");
-		}
-
-		event.locals.user = user;
     }
 
 	const response = await resolve(event);
