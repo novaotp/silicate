@@ -4,11 +4,11 @@
     import AlternativeLink from '$lib/auth/AlternativeLink.svelte';
     import Input from '$lib/auth/Input.svelte';
     import Submit from '$lib/auth/Submit.svelte';
-	import { addToast } from '../../../stores/toast';
+	import { addToast } from '$stores/toast';
 
     export let form: ActionData;
 
-    onMount(async () => {
+    onMount(() => {
         if (form?.missing) {
             addToast({ type: 'error', message: 'Fill all the inputs.' });
         }
@@ -28,7 +28,7 @@
 
 <form
     method="POST"
-    class="relative mb-5 flex w-[70%] flex-col overflow-x-hidden gap-10 px-[2px]"
+    class="relative mb-5 flex w-[70%] max-w-[500px] flex-col overflow-x-hidden gap-10 px-[2px]"
 >
     <div>
         <Input

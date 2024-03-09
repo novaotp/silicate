@@ -17,7 +17,7 @@ A custom controlled input field with a label on top.
 -->
 
 <div class='relative mb-[10px] flex w-full flex-col last-of-type:mb-0'>
-    <label>
+    <label for={name}>
         {label}
         <input
             {...{ type }}
@@ -28,5 +28,5 @@ A custom controlled input field with a label on top.
             autoComplete='off'
             required={true}
         />
-</label>
+    </label>
 </div>
