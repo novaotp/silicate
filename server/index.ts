@@ -8,6 +8,43 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get('/users/:id', async (req, res) => {
+    try {
+        const client = await db.connect();
+
+        const { rows } = await client.query<RawUser>('SELECT * FROM public.user WHERE id = $1 LIMIT 1;', [req.params.id]);
+
+        client.release();
+
+        const user = rows[0];
+
+        if (!user) {
+            return res.send({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        return res.send({
+            success: true,
+            message: "Users read successfully",
+            data: {
+                id: user.id,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                joinedOn: user.created_at
+            }
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching the users : ${err.message}`);
+        return res.send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
 app.get('/users', async (req, res) => {
     try {
         const client = await db.connect();
