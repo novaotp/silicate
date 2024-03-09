@@ -1,21 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import type { Actions } from './$types';
 import { compare } from 'bcrypt';
-import { db } from '$database';
-import { type User } from '$database/models/User';
+import { type User } from '$libs/models/User';
 import { sign, verify } from '$utils/jwt';
-
-export const load: PageServerLoad = async ({ locals }) => {
-	if (locals.user) {
-		return {
-			user: {
-				email: locals.user.email
-			}
-		}
-	}
-
-	return;
-};
+import { BACKEND_URL } from '$env/static/private';
+import type { ApiResponseWithData } from '$libs/types/ApiResponse';
 
 export const actions = {
 	default: async ({ request, cookies }) => {
@@ -30,24 +19,10 @@ export const actions = {
 
 		let user: User | undefined = undefined;
 		try {
-			const client = await db.connect();
+			const response = await fetch(`${BACKEND_URL}/users`);
+			const result: ApiResponseWithData<User[]> = await response.json();
 
-			const { rows } = await client.query<User>(`
-					SELECT
-						id,
-						first_name as firstName,
-						last_name as lastName,
-						email,
-						password,
-						created_at as joinedOn
-					FROM public.user
-					WHERE email = '$1' LIMIT 1;
-				`, [email]
-			);
-
-			user = rows[0];
-
-			client.release();
+			user = result.data.find(user => user.email === email);
 		} catch (err) {
 			console.error(`Something went wrong whilst login a new user : ${(err as Error).message}`)
 			return fail(422, { email, dbError: true });
@@ -62,6 +37,6 @@ export const actions = {
 
 		cookies.set("id", jwt, { path: "/", maxAge: payload.exp! - payload.iat! });
 
-		throw redirect(307, "/app");
+		throw redirect(303, "/app");
 	},
 } satisfies Actions;

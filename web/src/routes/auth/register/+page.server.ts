@@ -1,7 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { hash } from 'bcrypt';
-import { db } from '$database';
+import { BACKEND_URL } from '$env/static/private';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -21,19 +20,24 @@ export const actions = {
 			return fail(422, { firstName, lastName, email, notMatching: true });
 		}
 
-		const hashedPassword = await hash(password, 15);
-
 		try {
-			const client = await db.connect();
-
-			await client.query("INSERT INTO public.user (first_name, last_name, email, password) VALUES ($1, $2, $3, $4);", [firstName, lastName, email, hashedPassword]);
-
-			client.release();
+			await fetch(`${BACKEND_URL}`, {
+				method: "POST",
+				body: JSON.stringify({
+					firstName,
+					lastName,
+					email,
+					password
+				}),
+				headers: {
+					"content-type": "application/json"
+				}
+			})
 		} catch (err) {
 			console.error(`Something went wrong whilst registering a new user : ${(err as Error).message}`)
 			return fail(422, { firstName, lastName, email, dbError: true });
 		}
 
-		throw redirect(307, "/auth/login");
+		throw redirect(303, "/auth/login");
 	},
 } satisfies Actions;

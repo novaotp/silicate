@@ -8,8 +8,9 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'$stores': './src/stores',
-			'$database': './src/database',
-			'$utils': './src/utils'
+			'$utils/*': './src/utils/*',
+			'$libs': '../libs',
+			'$': './'
 		}
 	}
 };
