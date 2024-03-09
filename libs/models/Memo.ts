@@ -1,5 +1,6 @@
 export interface RawMemo {
     id: number;
+    user_id: number,
     tag: string | null;
     title: string;
     content: string;
@@ -15,5 +16,5 @@ export interface Memo {
     title: string;
     content: string;
     /** A parsable date. */
-    lastSave: string,
+    lastChange: string,
 }
