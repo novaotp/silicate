@@ -3,11 +3,15 @@ import { db } from "./database/index.ts";
 import { User, type RawUser } from "../libs/models/User.ts";
 import { hash } from "bcrypt";
 import { Memo, RawMemo } from "../libs/models/Memo.ts";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors({
+    origin: "*"
+}));
 
 app.get('/users/:id', async (req, res) => {
     try {
