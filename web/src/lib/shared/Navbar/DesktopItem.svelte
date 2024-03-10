@@ -19,7 +19,7 @@ Renders a link for the floating menu.
 >
 	<a
 		{href}
-		class="relative flex flex-col h-full w-full items-center justify-center p-2 gap-3 text-center rounded-md hover:bg-stone-400 text-sm"
+		class="relative flex flex-col h-full w-full items-center justify-evenly gap-1 p-2 text-center rounded-md hover:bg-stone-400 text-xs"
 	>
 		<svelte:component this={icon} />
 		<span>{label}</span>

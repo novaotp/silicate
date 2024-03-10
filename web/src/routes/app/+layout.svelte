@@ -4,7 +4,7 @@
 
 <div class="relative h-full w-full flex flex-col md:flex-row">
 	<Navigation />
-	<main class="relative w-full h-[calc(100%-60px)] flex flex-col">
+	<main class="relative w-full h-[calc(100%-60px)] md:h-full flex flex-col">
 		<slot />
 	</main>
 </div>

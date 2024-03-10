@@ -3,7 +3,10 @@
 		IconMenu as MenuIcon,
 		IconX as CloseIcon,
 		IconLayersSubtract as MemoIcon,
-		IconStars as GradeIcon
+		IconStars as GradeIcon,
+
+        IconHome
+
 	} from '@tabler/icons-svelte';
 	import Item from './Item.svelte';
     import { fly } from 'svelte/transition';
@@ -43,7 +46,8 @@
 	</dialog>
 </div>
 
-<nav class="hidden md:flex flex-col justify-start items-center h-full w-[140px] p-5 bg-stone-300 gap-3">
+<nav class="hidden md:flex flex-col justify-start items-center h-full w-[100px] p-5 bg-stone-300 gap-3">
+	<DesktopItem href="/app" label="Home" icon={IconHome} />
 	<DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} />
-	<DesktopItem href="/app/gradebooks" label="Carnets de notes" icon={GradeIcon} />
+	<DesktopItem href="/app/gradebooks" label="Notes" icon={GradeIcon} />
 </nav>
