@@ -2,7 +2,11 @@
 export default {
     content: ['./src/**/*.svelte'],
     theme: {
-        extend: {},
+        extend: {
+            screens: {
+                "xsm": "480px"
+            }
+        },
     },
     plugins: [],
 }

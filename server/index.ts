@@ -226,7 +226,7 @@ app.get('/memos', async (req, res) => {
                     content: row.content,
                     lastChange: row.updated_at
                 } as Memo;
-            })
+            }).sort((a, b) => new Date(b.lastChange).getTime() - new Date(a.lastChange).getTime())
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the memos : ${err.message}`);
@@ -242,7 +242,7 @@ app.post('/memos', async (req, res) => {
         const { userId, tag, title, content } = req.body;
         const client = await db.connect();
 
-        const { rows } = await client.query<RawUser>(`
+        const { rows } = await client.query(`
             INSERT INTO public.memo (user_id, tag, title, content, updated_at)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING id;

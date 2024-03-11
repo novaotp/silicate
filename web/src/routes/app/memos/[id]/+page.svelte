@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { IconTag } from "@tabler/icons-svelte";
 	import type { PageData } from "./$types";
 
     export let data: PageData;

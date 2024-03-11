@@ -1,6 +1,6 @@
 {
 	"name": "silicate",
-	"version": "0.3.4",
+	"version": "0.4.0",
 	"private": false,
 	"author": "Sajidur Rahman",
 	"type": "module",
@@ -44,6 +44,7 @@
 		"@tabler/icons-svelte": "^2.46.0",
 		"bcrypt": "^5.1.1",
 		"jose": "^5.2.0",
+		"marked": "^12.0.1",
 		"uuid": "^9.0.1"
 	}
 }
