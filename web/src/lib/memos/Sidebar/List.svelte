@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Memo } from '$libs/models/Memo';
     import { setSelectedMemoId } from '$stores/memo';
+    import { parse } from 'marked';
 
     export let search: string;
     export let memos: Memo[] | undefined;
@@ -21,7 +22,9 @@
                     class="relative flex max-h-[200px] w-full flex-col bg-stone-300 p-3 rounded-lg lg:hidden"
                 >
                     <h2>{memo.title}</h2>
-                    <p class="line-clamp-3 text-xs">{memo.content}</p>
+                    <p class="line-clamp-3 text-xs">
+                        {@html parse(memo.content)}
+                    </p>
                 </a>
                 <button
                     class="relative hidden max-h-[200px] w-full flex-col bg-stone-300 p-3 rounded-lg lg:flex"
@@ -30,7 +33,6 @@
                     }
                 >
                     <h2>{memo.title}</h2>
-                    <p class="line-clamp-3 text-xs">{memo.content}</p>
                 </button>
             </li>
         {:else}

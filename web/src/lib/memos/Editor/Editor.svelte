@@ -39,7 +39,7 @@
         </header>
         {@const { tag, title, content, lastChange } = memo}
         <h1>{title}</h1>
-        <Content bind:content={memo.content} {bold} {italic} {isPreview} />
+        <Content bind:content={memo.content} {isPreview} />
         <p>Dernière modification : {new Date(lastChange).toLocaleString("fr-CH")}</p>
     {/if}
     <div class="flex gap-5">

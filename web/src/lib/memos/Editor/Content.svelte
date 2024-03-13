@@ -1,14 +1,13 @@
 <script lang="ts">
     import { parse } from 'marked';
+    import { createEventDispatcher } from 'svelte';
 
     export let content: string;
-    export const bold: boolean = true;
-    export const italic: boolean = false;
     export let isPreview: boolean;
 
-    $: modifiedContent = content;
+    const dispatch = createEventDispatcher();
 
-    const surroundSelection = (surround: string = "") => {
+    /* const surroundSelection = (surround: string = "") => {
         if (window.getSelection) {
             const selection = window.getSelection();
 
@@ -20,19 +19,18 @@
                 selection?.removeAllRanges();
                 selection?.addRange(range!);
         }
-    };
-    
+    }; */
 </script>
 
 {#if !isPreview}
     <textarea
-        bind:value={modifiedContent}
+        bind:value={content}
         class="relative w-full h-full"
-        on:click={() => surroundSelection()}
+        on:keyup={() => dispatch("edit")}
     ></textarea>
 {:else}
     <div class="relative w-full h-full">
-        {@html `${parse(modifiedContent)}
+        {@html `${parse(content)}
             <style>
                 @import url("./Content.styles.css");
             </style>`}
