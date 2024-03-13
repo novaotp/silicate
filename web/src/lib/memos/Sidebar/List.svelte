@@ -11,7 +11,7 @@
     <p>Une erreur est survenue.</p>
 {:else}
     <ul
-        class="relative w-full flex flex-col gap-5 overflow-scroll"
+        class="relative w-full flex flex-col gap-4 overflow-scroll"
     >
         {#each memos as memo}
             <li
