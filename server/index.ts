@@ -320,5 +320,5 @@ app.delete('/memos/:id', async (req, res) => {
 });
 
 app.listen(4000, () => {
-    console.log("Server running at port 4000")
+    console.log("[Server] Running on port 4000");
 });
