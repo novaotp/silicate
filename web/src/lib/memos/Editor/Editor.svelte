@@ -38,7 +38,7 @@
             </button>
         </header>
         {@const { tag, title, content, lastChange } = memo}
-        <h1>{title}</h1>
+        <h1 class:title={isPreview}>{title}</h1>
         <Content bind:content={memo.content} {isPreview} />
         <p>Dernière modification : {new Date(lastChange).toLocaleString("fr-CH")}</p>
     {/if}
@@ -51,3 +51,10 @@
         </button>
     </div>
 </main>
+
+<style>
+    .title {
+        font-size: 2em;
+        font-weight: 700;
+    }
+</style>
