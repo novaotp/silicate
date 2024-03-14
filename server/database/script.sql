@@ -21,3 +21,35 @@ CREATE TABLE public.memo (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES public.user (id)
 );
+
+CREATE TABLE public.priority (
+    id SERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO public.priority (name)
+VALUES ('Low'), ('Medium'), ('High');
+
+CREATE TABLE public.status (
+    id SERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO public.status (name)
+VALUES ('To Do'), ('In Progress'), ('Done');
+
+CREATE TABLE public.task (
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id INT NOT NULL,
+    priority_id INT,
+    status_id INT,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    category VARCHAR(255),
+    due TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES public.user (id),
+    CONSTRAINT fk_task_priority FOREIGN KEY (priority_id) REFERENCES public.priority (id),
+    CONSTRAINT fk_task_status FOREIGN KEY (status_id) REFERENCES public.status (id)
+);

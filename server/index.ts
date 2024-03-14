@@ -4,6 +4,7 @@ import { User, type RawUser } from "../libs/models/User.ts";
 import { hash } from "bcrypt";
 import { Memo, RawMemo } from "../libs/models/Memo.ts";
 import cors from "cors";
+import { router as taskRoutes } from "./routes/task.routes.ts";
 
 const app = express();
 
@@ -319,6 +320,8 @@ app.delete('/memos/:id', async (req, res) => {
     }
 });
 
-app.listen(4000, () => {
-    console.log("[Server] Running on port 4000");
+app.use("/tasks", taskRoutes);
+
+app.listen(8080, () => {
+    console.log("[Server] Running on port 8080");
 });
