@@ -77,8 +77,8 @@ router.get('/', async (req, res) => {
                 public.task.created_at,
                 public.task.updated_at
             FROM public.task
-            JOIN public.priority ON public.task.priority_id = public.priority.id
-            JOIN public.status ON public.task.status_id = public.status.id`
+            LEFT JOIN public.priority ON public.task.priority_id = public.priority.id
+            LEFT JOIN public.status ON public.task.status_id = public.status.id`
         );
 
         client.release();
