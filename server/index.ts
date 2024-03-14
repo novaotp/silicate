@@ -322,6 +322,6 @@ app.delete('/memos/:id', async (req, res) => {
 
 app.use("/tasks", taskRoutes);
 
-app.listen(8080, () => {
-    console.log("[Server] Running on port 8080");
+app.listen(4000, () => {
+    console.log("[Server] Running on port 4000");
 });
