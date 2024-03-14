@@ -5,7 +5,8 @@
         IconLayersSubtract as MemoIcon,
         IconStars as GradeIcon,
         IconHome,
-        IconLogout
+        IconLogout,
+        IconChecklist as TaskIcon
     } from '@tabler/icons-svelte';
     import Item from './Item.svelte';
     import { fly } from 'svelte/transition';
@@ -52,6 +53,12 @@
             />
             <Item
                 on:close={closeMenu}
+                href="/app/tasks"
+                label="Tâches"
+                icon={TaskIcon}
+            />
+            <Item
+                on:close={closeMenu}
                 href="/app/gradebooks"
                 label="Carnets de notes"
                 icon={GradeIcon}
@@ -73,6 +80,11 @@
             href="/app/memos"
             label="Mémos"
             icon={MemoIcon}
+        />
+        <DesktopItem
+            href="/app/tasks"
+            label="Tâches"
+            icon={TaskIcon}
         />
         <DesktopItem
             href="/app/gradebooks"
