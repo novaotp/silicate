@@ -21,7 +21,7 @@ export const actions = {
 		}
 
 		try {
-			await fetch(`${BACKEND_URL}`, {
+			await fetch(`${BACKEND_URL}/users`, {
 				method: "POST",
 				body: JSON.stringify({
 					firstName,
@@ -32,7 +32,7 @@ export const actions = {
 				headers: {
 					"content-type": "application/json"
 				}
-			})
+			});
 		} catch (err) {
 			console.error(`Something went wrong whilst registering a new user : ${(err as Error).message}`)
 			return fail(422, { firstName, lastName, email, dbError: true });
