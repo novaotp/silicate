@@ -4,26 +4,28 @@ import { Priority, RawTask, Status, Task } from "../../libs/models/Task";
 
 export const router = Router();
 
-router.get('/:id', async (req, res) => {
+router.get('/:id(d+)', async (req, res) => {
     try {
         const client = await db.connect();
 
+        console.log(`Id : ${req.params.id}`)
+
         const { rows } = await client.query<RawTask>(`
             SELECT
-                public.task.id,
-                public.task.user_id,
-                public.priority.name as "priority",
-                public.status.name as "status",
-                public.task.category,
-                public.task.title,
-                public.task.description,
-                public.task.due,
-                public.task.created_at,
-                public.task.updated_at
+                task.id,
+                task.user_id,
+                priority.name as "priority",
+                status.name as "status",
+                task.category,
+                task.title,
+                task.description,
+                task.due,
+                task.created_at,
+                task.updated_at
             FROM public.task
-            JOIN public.priority ON public.task.priority_id = public.priority.id
-            JOIN public.status ON public.task.status_id = public.status.id
-            WHERE public.task.id = $1
+            LEFT JOIN public.priority ON task.priority_id = priority.id
+            LEFT JOIN public.status ON task.status_id = status.id
+            WHERE task.id = $1
             LIMIT 1;`, [req.params.id]
         );
 
