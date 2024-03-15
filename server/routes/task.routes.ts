@@ -206,7 +206,7 @@ router.get("/statuses", async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<Status>('SELECT name FROM public.status;');
+        const { rows } = await client.query<Status>('SELECT name as "value" FROM public.status;');
 
         client.release();
 
@@ -228,7 +228,7 @@ router.get("/priorities", async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<Priority>('SELECT name FROM public.priority;');
+        const { rows } = await client.query<Priority>('SELECT name as "value" FROM public.priority;');
 
         client.release();
 
