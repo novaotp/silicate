@@ -24,3 +24,11 @@ export interface Task {
     /** A parsable date. */
     due: string | null,
 }
+
+export interface Status {
+    value: "To Do" | "In Progress" | "Done"
+}
+
+export interface Priority {
+    value: "Low" | "Medium" | "High"
+}

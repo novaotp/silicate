@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Task from '$lib/tasks/Task.svelte';
+    import View from '$/src/lib/tasks/View.svelte';
     import type { PageData } from './$types';
 
     export let data: PageData;
@@ -16,13 +16,7 @@
         {#await data.tasks}
             <p>Chargement des tâches...</p>
         {:then tasks}
-            <div class="flex flex-col gap-5">
-                {#each tasks as task}
-                    <Task {task} />
-                {:else}
-                    <p>Vous n'avez pas de tâches à réaliser en ce moment !</p>
-                {/each}
-            </div>
+            <View {tasks} statuses={data.statuses} />
         {/await}
     {/if}
 </main>

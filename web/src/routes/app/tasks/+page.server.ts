@@ -2,19 +2,40 @@ import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { BACKEND_URL } from "$env/static/private";
-import type { Task } from "$libs/models/Task";
+import type { Priority, Status, Task } from "$libs/models/Task";
 
-const fetchTasks = async (search: string = "", order: string = "due-asc", category: string = "all", status: string = "all"): Promise<Task[]> => {
+const fetchStatuses = async (): Promise<Status[]> => {
+    const response = await fetch(`${BACKEND_URL}/tasks/statuses`);
+    const { data }: ApiResponseWithData<Status[]> = await response.json();
+
+    return data;
+}
+
+const fetchPriorities = async (): Promise<Priority[]> => {
+    const response = await fetch(`${BACKEND_URL}/tasks/priority`);
+    const { data }: ApiResponseWithData<Priority[]> = await response.json();
+
+    return data;
+}
+
+const fetchTasks = async (search: string = "", order: string = "due-asc", category: string = "All", status: string = "All"): Promise<Task[]> => {
     const response = await fetch(`${BACKEND_URL}/tasks?search=${search}&order=${order}&category=${category}&status=${status}`);
     const { data }: ApiResponseWithData<Task[]> = await response.json();
 
     return data;
 }
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
+    const search = url.searchParams.get("search") ?? undefined;
+    const order = url.searchParams.get("order") ?? undefined;
+    const category = url.searchParams.get("category") ?? undefined;
+    const status = url.searchParams.get("status") ?? undefined;
+
     try {
         return {
-            tasks: fetchTasks()
+            tasks: fetchTasks(search, order, category, status),
+            statuses: await fetchStatuses(),
+            priorities: await fetchPriorities()
         }
     } catch (err) {
         return fail(422, { dbError: true });

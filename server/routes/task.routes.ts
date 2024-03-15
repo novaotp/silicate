@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../database";
-import { RawTask, Task } from "../../libs/models/Task";
+import { Priority, RawTask, Status, Task } from "../../libs/models/Task";
 
 export const router = Router();
 
@@ -193,6 +193,50 @@ router.delete('/:id', async (req, res) => {
         });
     } catch (err) {
         console.error(`Something went wrong whilst deleting a task : ${err.message}`);
+        return res.send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.get("/statuses", async (req, res) => {
+    try {
+        const client = await db.connect();
+
+        const { rows } = await client.query<Status>('SELECT name FROM public.status;');
+
+        client.release();
+
+        return res.send({
+            success: true,
+            message: "Statuses read successfully",
+            data: rows
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching the statuses : ${err.message}`);
+        return res.send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.get("/priorities", async (req, res) => {
+    try {
+        const client = await db.connect();
+
+        const { rows } = await client.query<Priority>('SELECT name FROM public.priority;');
+
+        client.release();
+
+        return res.send({
+            success: true,
+            message: "Priorities read successfully",
+            data: rows
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching the priorities : ${err.message}`);
         return res.send({
             success: false,
             message: "Internal Server Error"
