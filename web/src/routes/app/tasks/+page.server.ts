@@ -12,7 +12,7 @@ const fetchStatuses = async (): Promise<Status[]> => {
 }
 
 const fetchPriorities = async (): Promise<Priority[]> => {
-    const response = await fetch(`${BACKEND_URL}/tasks/priority`);
+    const response = await fetch(`${BACKEND_URL}/tasks/priorities`);
     const { data }: ApiResponseWithData<Priority[]> = await response.json();
 
     return data;
