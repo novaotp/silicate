@@ -32,3 +32,7 @@ export interface Status {
 export interface Priority {
     value: "Low" | "Medium" | "High"
 }
+
+export interface Category {
+    value: string
+}

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../database";
-import { Priority, RawTask, Status, Task } from "../../libs/models/Task";
+import { Category, Priority, RawTask, Status, Task } from "../../libs/models/Task";
 
 export const router = Router();
 
@@ -63,24 +63,78 @@ router.get('/:id(d+)', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
+    const handleQuery = (search: unknown | undefined, category: unknown | undefined, status: unknown | undefined, priority: unknown | undefined) => {
+        const query: string[] = [];
+        let paramId = 1;
+
+        const useParamId = () => {
+            const temp = paramId;
+            paramId++;
+            return temp;
+        }
+
+        if (search !== "") {
+            query.push(`task.title ILIKE %$${useParamId()}%`);
+        }
+
+        if (category !== "All") {
+            query.push(`task.category = $${useParamId()}`);
+        }
+
+        if (status !== "All") {
+            query.push(`status.name = $${useParamId()}`);
+        }
+
+        if (priority !== "All") {
+            query.push(`priority.name = $${useParamId()}`);
+        }
+
+        return query.length > 0 ? `WHERE ${query.join(" AND ")}` : "";
+    }
+
+    const handleBinding = (search: unknown | undefined, category: unknown | undefined, status: unknown | undefined, priority: unknown | undefined) => {
+        const binding: string[] = [];
+
+        if (search !== "") {
+            binding.push(search as string);
+        }
+
+        if (category !== "All") {
+            binding.push(category as string);
+        }
+
+        if (status !== "All") {
+            binding.push(status as string);
+        }
+
+        if (priority !== "All") {
+            binding.push(priority as string);
+        }
+
+        return binding;
+    }
+
     try {
+        const { search, category, status, priority } = req.query;
         const client = await db.connect();
 
         const { rows } = await client.query<RawTask>(`
             SELECT
-                public.task.id,
-                public.task.user_id,
-                public.priority.name as "priority",
-                public.status.name as "status",
-                public.task.category,
-                public.task.title,
-                public.task.description,
-                public.task.due,
-                public.task.created_at,
-                public.task.updated_at
+                task.id,
+                task.user_id,
+                priority.name as "priority",
+                status.name as "status",
+                task.category,
+                task.title,
+                task.description,
+                task.due,
+                task.created_at,
+                task.updated_at
             FROM public.task
-            LEFT JOIN public.priority ON public.task.priority_id = public.priority.id
-            LEFT JOIN public.status ON public.task.status_id = public.status.id`
+            LEFT JOIN public.priority ON task.priority_id = priority.id
+            LEFT JOIN public.status ON task.status_id = status.id
+            ${handleQuery(search, category, status, priority)}
+            `, handleBinding(search, category, status, priority)
         );
 
         client.release();
@@ -239,6 +293,28 @@ router.get("/priorities", async (req, res) => {
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the priorities : ${err.message}`);
+        return res.send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.get("/categories", async (req, res) => {
+    try {
+        const client = await db.connect();
+
+        const { rows } = await client.query<Category>('SELECT category as "value" FROM public.task;');
+
+        client.release();
+
+        return res.send({
+            success: true,
+            message: "Categories read successfully",
+            data: rows.filter(category => category.value !== null)
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching the categories : ${err.message}`);
         return res.send({
             success: false,
             message: "Internal Server Error"
