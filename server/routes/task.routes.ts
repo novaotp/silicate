@@ -120,8 +120,21 @@ router.get('/', async (req, res) => {
         return binding;
     }
 
+    const handleOrder = (order: string | undefined) => {
+        switch (order) {
+            case "due-asc":
+                return "ORDER BY task.due ASC"
+
+            case "due-desc":
+                return "ORDER BY task.due DESC"
+            
+            default:
+                return "ORDER BY task.due ASC"
+        }
+    }
+
     try {
-        const { search, category, status, priority } = req.query;
+        const { search, order, category, status, priority } = req.query;
         const client = await db.connect();
 
         const { rows } = await client.query<RawTask>(`
@@ -140,6 +153,7 @@ router.get('/', async (req, res) => {
             LEFT JOIN public.priority ON task.priority_id = priority.id
             LEFT JOIN public.status ON task.status_id = status.id
             ${handleQuery(search, category, status, priority)}
+            ${handleOrder(order as string)}
             `, handleBinding(search, category, status, priority)
         );
 
