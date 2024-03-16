@@ -25,14 +25,20 @@ export interface Task {
     due: string | null,
 }
 
-export interface Status {
-    value: "To Do" | "In Progress" | "Done"
+export interface RawStatus {
+    name: "To Do" | "In Progress" | "Done"
 }
 
-export interface Priority {
-    value: "Low" | "Medium" | "High"
+export type Status = RawStatus["name"]
+
+export interface RawPriority {
+    name: "Low" | "Medium" | "High"
 }
 
-export interface Category {
-    value: string
+export type Priority = RawPriority["name"]
+
+export interface RawCategory {
+    category: string
 }
+
+export type Category = RawCategory["category"]

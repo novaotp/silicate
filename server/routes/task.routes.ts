@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../database";
-import { Category, Priority, RawTask, Status, Task } from "../../libs/models/Task";
+import { Category, Priority, RawCategory, RawPriority, RawStatus, RawTask, Status, Task } from "../../libs/models/Task";
 
 export const router = Router();
 
@@ -73,20 +73,23 @@ router.get('/', async (req, res) => {
             return temp;
         }
 
-        if (search !== "") {
+        if (search && search !== "") {
             query.push(`task.title ILIKE %$${useParamId()}%`);
         }
 
-        if (category !== "All") {
-            query.push(`task.category = $${useParamId()}`);
+        if (category && category !== "All") {
+            const values = (category as string).split(",");
+            query.push(`(${values.map(() => `task.category = $${useParamId()}`).join(" OR ")})`);
         }
 
-        if (status !== "All") {
-            query.push(`status.name = $${useParamId()}`);
+        if (status && status !== "All") {
+            const values = (status as string).split(",");
+            query.push(`(${values.map(() => `status.name = $${useParamId()}`).join(" OR ")})`);
         }
 
-        if (priority !== "All") {
-            query.push(`priority.name = $${useParamId()}`);
+        if (priority && priority !== "All") {
+            const values = (priority as string).split(",");
+            query.push(`(${values.map(() => `priority.name = $${useParamId()}`).join(" OR ")})`);
         }
 
         return query.length > 0 ? `WHERE ${query.join(" AND ")}` : "";
@@ -95,20 +98,23 @@ router.get('/', async (req, res) => {
     const handleBinding = (search: unknown | undefined, category: unknown | undefined, status: unknown | undefined, priority: unknown | undefined) => {
         const binding: string[] = [];
 
-        if (search !== "") {
+        if (search && search !== "") {
             binding.push(search as string);
         }
 
-        if (category !== "All") {
-            binding.push(category as string);
+        if (category && category !== "All") {
+            const values = (category as string).split(",");
+            binding.push(...values);
         }
 
-        if (status !== "All") {
-            binding.push(status as string);
+        if (status && status !== "All") {
+            const values = (status as string).split(",");
+            binding.push(...values);
         }
 
-        if (priority !== "All") {
-            binding.push(priority as string);
+        if (priority && priority !== "All") {
+            const values = (priority as string).split(",");
+            binding.push(...values);
         }
 
         return binding;
@@ -260,14 +266,14 @@ router.get("/statuses", async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<Status>('SELECT name as "value" FROM public.status;');
+        const { rows } = await client.query<RawStatus>('SELECT name FROM public.status;');
 
         client.release();
 
         return res.send({
             success: true,
             message: "Statuses read successfully",
-            data: rows
+            data: rows.map(row => row.name) as Status[]
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the statuses : ${err.message}`);
@@ -282,14 +288,14 @@ router.get("/priorities", async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<Priority>('SELECT name as "value" FROM public.priority;');
+        const { rows } = await client.query<RawPriority>('SELECT name FROM public.priority;');
 
         client.release();
 
         return res.send({
             success: true,
             message: "Priorities read successfully",
-            data: rows
+            data: rows.map(row => row.name) as Priority[]
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the priorities : ${err.message}`);
@@ -304,14 +310,14 @@ router.get("/categories", async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<Category>('SELECT category as "value" FROM public.task;');
+        const { rows } = await client.query<RawCategory>('SELECT DISTINCT category FROM public.task;');
 
         client.release();
 
         return res.send({
             success: true,
             message: "Categories read successfully",
-            data: rows.filter(category => category.value !== null)
+            data: rows.filter(row => row.category !== null).map(row => row.category) as Category[]
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the categories : ${err.message}`);
