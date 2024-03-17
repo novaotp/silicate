@@ -74,7 +74,7 @@ router.get('/', async (req, res) => {
         }
 
         if (search && search !== "") {
-            query.push(`task.title ILIKE %$${useParamId()}%`);
+            query.push(`(task.title ILIKE '%' || $${useParamId()} || '%')`);
         }
 
         if (category && category !== "All") {
@@ -136,7 +136,7 @@ router.get('/', async (req, res) => {
     try {
         const { search, order, category, status, priority } = req.query;
         const client = await db.connect();
-
+        
         const { rows } = await client.query<RawTask>(`
             SELECT
                 task.id,
@@ -165,8 +165,8 @@ router.get('/', async (req, res) => {
             data: rows.map(row => {
                 return {
                     id: row.id,
-                    priority: row.priority,
-                    status: row.status,
+                    priority: row.priority !== "Aucune" ? row.priority : null,
+                    status: row.status !== "Aucun" ? row.status : null,
                     title: row.title,
                     description: row.description,
                     category: row.category,

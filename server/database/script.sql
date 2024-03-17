@@ -28,7 +28,7 @@ CREATE TABLE public.priority (
 );
 
 INSERT INTO public.priority (name)
-VALUES ('Low'), ('Medium'), ('High');
+VALUES ('Aucune'), ('Basse'), ('Moyenne'), ('Haute');
 
 CREATE TABLE public.status (
     id SERIAL NOT NULL PRIMARY KEY,
@@ -36,7 +36,7 @@ CREATE TABLE public.status (
 );
 
 INSERT INTO public.status (name)
-VALUES ('To Do'), ('In Progress'), ('Done');
+VALUES ('Aucun'), ('À faire'), ('En cours'), ('Terminé');
 
 CREATE TABLE public.task (
     id SERIAL NOT NULL PRIMARY KEY,

@@ -1,8 +1,8 @@
 export interface RawTask {
     id: number,
     user_id: number,
-    priority: string | null,
-    status: string | null,
+    priority: string,
+    status: string,
     category: string | null,
     title: string,
     description: string | null,
@@ -26,13 +26,13 @@ export interface Task {
 }
 
 export interface RawStatus {
-    name: "To Do" | "In Progress" | "Done"
+    name: "Aucun" | "À faire" | "En cours" | "Terminé"
 }
 
 export type Status = RawStatus["name"]
 
 export interface RawPriority {
-    name: "Low" | "Medium" | "High"
+    name: "Aucune" | "Basse" | "Moyenne" | "Haute"
 }
 
 export type Priority = RawPriority["name"]
