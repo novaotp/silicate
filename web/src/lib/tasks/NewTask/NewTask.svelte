@@ -116,7 +116,7 @@
                 </button>
             </div>
             {#if showDatePicker}
-                <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.1)] z-[60]">
+                <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.1)] z-[60]" transition:fade>
                     <div transition:fly={{ y: 50 }}>
                         <SveltyPicker pickerOnly format="dd.mm.yyyy hh:ii" mode="datetime" bind:value={due} on:cancel={() => (showDatePicker = false)} on:change={() => (showDatePicker = false)} />
                     </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { fly } from 'svelte/transition';
+    import { fade, fly } from 'svelte/transition';
 
     export let label: string;
     export let value: string;
@@ -65,7 +65,7 @@ Usage :
     </button>
 </div>
 {#if isOpen}
-    <div class="fixed top-0 left-0 w-full h-full flex items-end bg-[rgba(0,0,0,0.1)] z-[60]">
+    <div class="fixed top-0 left-0 w-full h-full flex items-end bg-[rgba(0,0,0,0.1)] z-[60]" transition:fade>
         <div class="relative w-full flex flex-col bg-white rounded-t-3xl shadow-2xl p-5 gap-2" transition:fly={{ y: 100 }}>
             {#each values as v}
                 <button
