@@ -1,9 +1,10 @@
 <script lang="ts">
-    import type { Category, Priority, Status } from "$libs/models/Task";
-    import type { Task } from "$libs/models/Task";
-    import { IconFilter } from "@tabler/icons-svelte";
-    import TaskComponent from "./Task.svelte";
-    import Filters from "./Filters.svelte";
+    import type { Category, Priority, Status } from '$libs/models/Task';
+    import type { Task } from '$libs/models/Task';
+    import { IconChecklist, IconFilter, IconPlus } from '@tabler/icons-svelte';
+    import TaskComponent from './Task/Task.svelte';
+    import Filters from './Filters/Filters.svelte';
+    import NewTask from './NewTask/NewTask.svelte';
 
     export let tasks: Task[];
     export let statuses: Status[];
@@ -15,7 +16,7 @@
     let showFilters: boolean = false;
 </script>
 
-<header class="relative w-full flex justify-between items-center z-50 pb-5">
+<header class="relative w-full flex justify-between items-center pb-5">
     <h1 class="text-xl">Tâches</h1>
     <button
         on:click={() => (showFilters = !showFilters)}
@@ -41,3 +42,10 @@
         <p>Vous n'avez pas de tâches à réaliser en ce moment !</p>
     {/each}
 </ul>
+<NewTask
+    on:click={() => (showFilters = false)}
+    bind:tasks
+    {statuses}
+    {priorities}
+    {categories}
+/>

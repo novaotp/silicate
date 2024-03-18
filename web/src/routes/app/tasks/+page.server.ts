@@ -1,38 +1,38 @@
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail } from "@sveltejs/kit";
-import type { PageLoad } from "./$types";
-import { PUBLIC_BACKEND_URL } from "$env/static/public";
+import type { PageServerLoad } from "./$types";
 import type { Category, Priority, Status, Task } from "$libs/models/Task";
+import { BACKEND_URL } from "$env/static/private";
 
 const fetchStatuses = async (): Promise<Status[]> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/statuses`);
+    const response = await fetch(`${BACKEND_URL}/tasks/statuses`);
     const { data }: ApiResponseWithData<Status[]> = await response.json();
 
     return data;
 }
 
 const fetchPriorities = async (): Promise<Priority[]> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/priorities`);
+    const response = await fetch(`${BACKEND_URL}/tasks/priorities`);
     const { data }: ApiResponseWithData<Priority[]> = await response.json();
 
     return data;
 }
 
 const fetchCategories = async (): Promise<Category[]> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/categories`);
+    const response = await fetch(`${BACKEND_URL}/tasks/categories`);
     const { data }: ApiResponseWithData<Category[]> = await response.json();
 
     return data;
 }
 
 const fetchTasks = async (search: string = "", order: string = "due-asc", category: string = "All", status: string = "All", priority: string = "All"): Promise<Task[]> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks?search=${search}&order=${order}&category=${category}&status=${status}&priority=${priority}`);
+    const response = await fetch(`${BACKEND_URL}/tasks?search=${search}&order=${order}&category=${category}&status=${status}&priority=${priority}`);
     const { data }: ApiResponseWithData<Task[]> = await response.json();
 
     return data;
 }
 
-export const load: PageLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url }) => {
     const search = url.searchParams.get("search") ?? undefined;
     const order = url.searchParams.get("order") ?? undefined;
     const category = url.searchParams.get("category") ?? undefined;
