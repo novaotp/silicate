@@ -4,7 +4,7 @@
     import type { User } from '$libs/models/User';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconPlus } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext, onMount } from 'svelte';
+    import { createEventDispatcher, getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
     import { fade, fly } from 'svelte/transition';
     import Selector from './Selector.svelte';
@@ -14,17 +14,16 @@
     import { page } from '$app/stores';
     import { addToast } from '$stores/toast';
 
+    export let task: Task | null;
+    export let showEditTask: boolean;
+
     export let tasks: Task[];
     export let statuses: Status[];
     export let priorities: Priority[];
     export let categories: Category[];
 
-    const dispatch = createEventDispatcher();
-
-    let showAddTask: boolean = false;
-
     $: {
-        if (showAddTask) {
+        if (showEditTask) {
             document.body.style.overflowY = "hidden";
         } else {
             document.body.style.overflowY = "auto";
@@ -33,8 +32,8 @@
 
     const user = getContext<Writable<User>>("user");
     
-    let title: string = "";
-    let description: string = "";
+    let title: string;
+    let description: string;
     let category: string = "Aucun";
     let priority: string = priorities.at(0)!;
     let status: string = statuses.at(0)!;
@@ -46,14 +45,6 @@
     let due: string | null = null;
 
     let showDatePicker: boolean = false;
-
-    const reset = () => {
-        title = "";
-        description = "";
-        category = "Aucun";
-        priority = priorities.at(0)!;
-        status = statuses.at(0)!;
-    }
 
     const addTask = async () => {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
@@ -88,32 +79,18 @@
             addToast({ type: "error", message: message });
         }
 
-        showAddTask = false;
-
-        reset();
+        showEditTask = false;
     };
 </script>
 
-<button
-    class="fixed bottom-5 right-5 size-[50px] shadow-xl rounded-lg flex justify-center items-center bg-blue-500"
-    on:click={() => {
-        showAddTask = true;
-        dispatch('click');
-    }}
->
-    <IconPlus class="text-white" />
-</button>
-{#if showAddTask}
+{#if showEditTask && task}
     <div
         role="dialog"
         class="fixed w-full h-full top-0 left-0 bg-white"
         transition:fly={{ y: 100 }}
     >
         <header class="flex justify-between items-center w-full h-[60px] px-5">
-            <button class="px-4 py-2 rounded-full text-sm" on:click={() => {
-                showAddTask = false;
-                reset();
-            }}>Annuler</button>
+            <button class="px-4 py-2 rounded-full text-sm" on:click={() => (showEditTask = false)}>Annuler</button>
             <button class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm" on:click={addTask}>Enregistrer</button>
         </header>
         <div class="relative w-full h-[calc(100%-60px)] p-5 pt-2 flex flex-col justify-start items-start gap-3">
@@ -129,7 +106,7 @@
                 </button>
             </div>
             {#if showDatePicker}
-                <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.1)] z-[60]" transition:fade>
+                <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.1)] z-[60]">
                     <div transition:fly={{ y: 50 }}>
                         <SveltyPicker pickerOnly format="dd.mm.yyyy hh:ii" mode="datetime" bind:value={due} on:cancel={() => (showDatePicker = false)} on:change={() => (showDatePicker = false)} />
                     </div>

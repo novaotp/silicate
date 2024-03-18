@@ -2,13 +2,16 @@
     import type { Task } from '$libs/models/Task';
     import { IconClock } from '@tabler/icons-svelte';
     import Tag from './Tag.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     export let task: Task;
 
     $: ({ priority, status, category, title, description, due } = task);
+
+    const dispatch = createEventDispatcher();
 </script>
 
-<div class="relative w-full p-5 flex flex-col justify-between items-start bg-blue-950 rounded-lg text-white gap-3">
+<button class="relative w-full p-5 flex flex-col justify-between items-start bg-blue-950 rounded-lg text-white gap-3" on:click={() => dispatch("click")}>
     {#if priority || status || category}
         <div class="flex gap-2">
             {#if priority}
@@ -42,4 +45,4 @@
             <span>{formattedDate}</span>
         </time>
     {/if}
-</div>
+</button>

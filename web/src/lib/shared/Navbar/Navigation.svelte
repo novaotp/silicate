@@ -31,6 +31,7 @@
                     </button>
                 </header>
                 <menu>
+                    <Item on:close={() => (showMenu = false)} href="/app" label="Dashboard" icon={IconHome} />
                     <Item on:close={() => (showMenu = false)} href="/app/memos" label="Mémos" icon={MemoIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/tasks" label="Tâches" icon={TaskIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/gradebooks" label="Carnets de notes" icon={GradeIcon} />
