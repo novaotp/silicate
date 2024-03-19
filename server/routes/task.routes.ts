@@ -226,9 +226,9 @@ router.put('/:id', async (req, res) => {
         const client = await db.connect();
 
         await client.query(`
-            UPDATE public.memo
-            SET priority = (SELECT id from public.priority WHERE name = $1),
-                status = (SELECT id from public.priority WHERE name = $2),
+            UPDATE public.task
+            SET priority_id = (SELECT id from public.priority WHERE name = $1),
+                status_id = (SELECT id from public.status WHERE name = $2),
                 category = $3,
                 title = $4,
                 description = $5,
