@@ -4,9 +4,9 @@
     import { IconFilter } from '@tabler/icons-svelte';
     import TaskComponent from './Task/Task.svelte';
     import Filters from './Filters/Filters.svelte';
-    import NewTask from './NewTask/NewTask.svelte';
-    import EditTask from './EditTask/EditTask.svelte';
-    import ViewTask from './ViewTask/ViewTask.svelte';
+    import NewTask from './FullScreenModals/NewTask/NewTask.svelte';
+    import EditTask from './FullScreenModals/EditTask/EditTask.svelte';
+    import ViewTask from './FullScreenModals/ViewTask/ViewTask.svelte';
 
     export let tasks: Task[];
     export let statuses: Status[];
