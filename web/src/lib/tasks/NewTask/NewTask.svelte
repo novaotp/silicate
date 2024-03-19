@@ -86,6 +86,7 @@
             tasks = data;
         } else {
             addToast({ type: "error", message: message });
+            return;
         }
 
         showAddTask = false;

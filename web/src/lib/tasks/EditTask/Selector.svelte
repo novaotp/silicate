@@ -91,9 +91,11 @@ Usage :
                     if (inputSelected && inputVal === "") {
                         showEmptyInputWarning = true;
                     } else {
-                        value = inputSelected ? inputVal : holdVal;
+                        const final = inputSelected ? inputVal : holdVal;
                         isOpen = false;
                         showEmptyInputWarning = false;
+
+                        dispatch("change", { value: final })
                     }
                 }}
             >

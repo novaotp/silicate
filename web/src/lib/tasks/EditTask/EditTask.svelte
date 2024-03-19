@@ -4,53 +4,57 @@
     import type { User } from '$libs/models/User';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconPlus } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
+    import { beforeUpdate, createEventDispatcher, getContext, onMount } from 'svelte';
     import type { Writable } from 'svelte/store';
     import { fade, fly } from 'svelte/transition';
     import Selector from './Selector.svelte';
-    import SveltyPicker, { parseDate } from 'svelty-picker';
+    import SveltyPicker, { formatDate, parseDate } from 'svelty-picker';
     import { fr } from 'svelty-picker/i18n';
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
     import { addToast } from '$stores/toast';
 
-    export let task: Task | null;
-    export let showEditTask: boolean;
-
     export let tasks: Task[];
     export let statuses: Status[];
     export let priorities: Priority[];
     export let categories: Category[];
+    export let id: number | null;
+    export let show: boolean;
+
+    let task: Task | undefined;
 
     $: {
-        if (showEditTask) {
+        if (show) {
             document.body.style.overflowY = "hidden";
         } else {
             document.body.style.overflowY = "auto";
         }
-    }
 
-    const user = getContext<Writable<User>>("user");
+        task = tasks.find(t => t.id === id)
+    }
     
-    let title: string;
-    let description: string;
-    let category: string = "Aucun";
-    let priority: string = priorities.at(0)!;
-    let status: string = statuses.at(0)!;
+    $: title = task?.title ?? "";
+    $: description = task?.description ?? "";
+    $: category = task?.category ?? "Aucun";
+    $: priority = task?.priority ?? "Aucune";
+    $: status = task?.status ?? "Aucun";
     /**
      * Is `string` because of svelte-picker (can be null but `bind:value` error).
      * 
      * Use `parseDate` from said-library to convert to `Date`.
      */
-    let due: string | null = null;
+    $: due = task?.due ? formatDate(new Date(task.due), 'dd.mm.yyyy hh:ii', fr, "standard") : null;
+
+    $: console.log(due!)
 
     let showDatePicker: boolean = false;
 
-    const addTask = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
-            method: 'POST',
+    const edit = async () => {
+        if (!task) return;
+
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${task.id}`, {
+            method: 'PUT',
             body: JSON.stringify({
-                userId: $user!.id,
                 priority,
                 status,
                 title,
@@ -77,28 +81,30 @@
             tasks = data;
         } else {
             addToast({ type: "error", message: message });
+            return;
         }
 
-        showEditTask = false;
+        show = false;
     };
 </script>
 
-{#if showEditTask && task}
+{#key id}
+{#if show && task}
     <div
         role="dialog"
         class="fixed w-full h-full top-0 left-0 bg-white"
         transition:fly={{ y: 100 }}
     >
         <header class="flex justify-between items-center w-full h-[60px] px-5">
-            <button class="px-4 py-2 rounded-full text-sm" on:click={() => (showEditTask = false)}>Annuler</button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm" on:click={addTask}>Enregistrer</button>
+            <button class="px-4 py-2 rounded-full text-sm" on:click={() => (show = false)}>Annuler</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm" on:click={edit}>Enregistrer</button>
         </header>
         <div class="relative w-full h-[calc(100%-60px)] p-5 pt-2 flex flex-col justify-start items-start gap-3">
             <!-- svelte-ignore a11y-autofocus -->
-            <input bind:value={title} class="relative w-full h-[50px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } px-5 rounded-lg" placeholder="Entrez le nom de la tâche..." required autofocus />
-            <Selector label="Priorité" bind:value={priority} values={priorities} />
-            <Selector label="Statut" bind:value={status} values={statuses} />
-            <Selector label="Catégorie" bind:value={category} values={["Aucun", ...categories]} acceptOther />
+            <input value={title} on:change={(event) => (title = event.currentTarget.value)} class="relative w-full h-[50px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } px-5 rounded-lg" placeholder="Entrez le nom de la tâche..." required autofocus />
+            <Selector label="Priorité" value={priority} on:change={e => priority = e.detail.value} values={priorities} />
+            <Selector label="Statut" value={status} on:change={e => status = e.detail.value} values={statuses} />
+            <Selector label="Catégorie" value={category} on:change={e => category = e.detail.value} values={["Aucun", ...categories]} acceptOther />
             <div class="relative w-full h-10 flex justify-between items-center [&>span]:absolute [&>span]:mx-auto">
                 <p>Échéance</p>
                 <button on:click={() => (showDatePicker = true)} class="text-sm relative px-3 py-2 bg-gray-200 rounded-lg">
@@ -108,11 +114,12 @@
             {#if showDatePicker}
                 <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.1)] z-[60]">
                     <div transition:fly={{ y: 50 }}>
-                        <SveltyPicker pickerOnly format="dd.mm.yyyy hh:ii" mode="datetime" bind:value={due} on:cancel={() => (showDatePicker = false)} on:change={() => (showDatePicker = false)} />
+                        <SveltyPicker pickerOnly format="dd.mm.yyyy hh:ii" mode="datetime" value={due} on:cancel={() => (showDatePicker = false)} on:dateChange={e => { due = e.detail.dateValue; showDatePicker = false }} />
                     </div>
                 </div>
             {/if}
-            <textarea bind:value={description} class="relative w-full h-[200px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } p-5 rounded-lg" placeholder="Une description explicative..."></textarea>
+            <textarea value={description} on:change={(event) => (description = event.currentTarget.value)} class="relative w-full h-[200px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } p-5 rounded-lg" placeholder="Une description explicative..."></textarea>
         </div>
     </div>
 {/if}
+{/key}
