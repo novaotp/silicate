@@ -4,8 +4,9 @@
     import { IconFilter } from '@tabler/icons-svelte';
     import TaskComponent from './Task/Task.svelte';
     import Filters from './Filters/Filters.svelte';
-    import NewTask from './NewTask/NewTask.svelte';
-    import EditTask from './EditTask/EditTask.svelte';
+    import NewTask from './FullScreenModals/NewTask/NewTask.svelte';
+    import EditTask from './FullScreenModals/EditTask/EditTask.svelte';
+    import ViewTask from './FullScreenModals/ViewTask/ViewTask.svelte';
 
     export let tasks: Task[];
     export let statuses: Status[];
@@ -14,9 +15,11 @@
     export let selectedStatuses: Status[];
     export let selectedPriorities: Priority[];
 
+    let loadingData: boolean = false;
     let showFilters: boolean = false;
+    let showViewTask: boolean = false;
     let showEditTask: boolean = false;
-    let editedTask: Task | null = null;
+    let editedTask: number | null = null;
 </script>
 
 <header class="relative w-full flex justify-between items-center pb-5">
@@ -30,6 +33,7 @@
     </button>
 </header>
 <Filters
+    bind:loadingData
     bind:tasks
     bind:selectedStatuses
     bind:selectedPriorities
@@ -38,16 +42,20 @@
     {categories}
     {showFilters}
 />
+{#if loadingData}
+    <p>Chargement des données...</p>
+{:else}
 <ul class="flex flex-col gap-5 mb-5">
     {#each tasks as task}
         <TaskComponent {task} on:click={() => {
-            editedTask = task;
-            showEditTask = true;
+            editedTask = task.id;
+            showViewTask = true;
         }} />
     {:else}
         <p>Vous n'avez pas de tâches à réaliser en ce moment !</p>
     {/each}
 </ul>
+{/if}
 <NewTask
     on:click={() => (showFilters = false)}
     bind:tasks
@@ -55,10 +63,18 @@
     {priorities}
     {categories}
 />
+<ViewTask
+    id={editedTask}
+    bind:show={showViewTask}
+    bind:tasks
+    on:edit={() => {
+        showViewTask = false;
+        showEditTask = true;
+    }}
+/>
 <EditTask
-    on:click={() => (showFilters = false)}
-    task={editedTask}
-    {showEditTask}
+    id={editedTask}
+    bind:show={showEditTask}
     bind:tasks
     {statuses}
     {priorities}

@@ -4,7 +4,7 @@
     import type { User } from '$libs/models/User';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconPlus } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext, onMount } from 'svelte';
+    import { createEventDispatcher, getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
     import { fade, fly } from 'svelte/transition';
     import Selector from './Selector.svelte';
@@ -13,6 +13,9 @@
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
     import { addToast } from '$stores/toast';
+    import FullScreen from '../shared/FullScreen.svelte';
+    import * as Header from '../shared/Header';
+    import Main from '../shared/Main.svelte';
 
     export let tasks: Task[];
     export let statuses: Status[];
@@ -86,12 +89,18 @@
             tasks = data;
         } else {
             addToast({ type: "error", message: message });
+            return;
         }
 
         showAddTask = false;
 
         reset();
     };
+
+    const cancel = () => {
+        showAddTask = false;
+        reset();
+    }
 </script>
 
 <button
@@ -104,19 +113,12 @@
     <IconPlus class="text-white" />
 </button>
 {#if showAddTask}
-    <div
-        role="dialog"
-        class="fixed w-full h-full top-0 left-0 bg-white"
-        transition:fly={{ y: 100 }}
-    >
-        <header class="flex justify-between items-center w-full h-[60px] px-5">
-            <button class="px-4 py-2 rounded-full text-sm" on:click={() => {
-                showAddTask = false;
-                reset();
-            }}>Annuler</button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm" on:click={addTask}>Enregistrer</button>
-        </header>
-        <div class="relative w-full h-[calc(100%-60px)] p-5 pt-2 flex flex-col justify-start items-start gap-3">
+    <FullScreen>
+        <Header.Root>
+            <Header.Button class="px-4 py-2 text-sm" on:click={cancel}>Annuler</Header.Button>
+            <Header.Button class="bg-blue-600 text-white px-4 py-2 text-sm" on:click={addTask}>Enregistrer</Header.Button>
+        </Header.Root>
+        <Main>
             <!-- svelte-ignore a11y-autofocus -->
             <input bind:value={title} class="relative w-full h-[50px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } px-5 rounded-lg" placeholder="Entrez le nom de la tâche..." required autofocus />
             <Selector label="Priorité" bind:value={priority} values={priorities} />
@@ -136,6 +138,6 @@
                 </div>
             {/if}
             <textarea bind:value={description} class="relative w-full h-[200px] text-sm bg-gray-200 { title !== "" ? "text-black" : "text-gray-500" } p-5 rounded-lg" placeholder="Une description explicative..."></textarea>
-        </div>
-    </div>
+        </Main>
+    </FullScreen>
 {/if}

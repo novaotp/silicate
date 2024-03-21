@@ -8,6 +8,7 @@
     import Selection from './Selection.svelte';
     import Order from './Order.svelte';
 
+    export let loadingData: boolean;
     export let tasks: Task[];
     export let statuses: Status[];
     export let priorities: Priority[];
@@ -33,12 +34,14 @@
         searchParams.set('priority', selectedPriorities.join(','));
         await goto(`/app/tasks?${searchParams}`);
 
+        loadingData = true;
         const response = await fetch(
             `${PUBLIC_BACKEND_URL}/tasks?${searchParams}`
         );
         const { data }: ApiResponseWithData<Task[]> = await response.json();
 
         tasks = data;
+        loadingData = false;
     };
 </script>
 
