@@ -1,10 +1,38 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { compare } from 'bcrypt';
 import { type User } from '$libs/models/User';
 import { sign, verify } from '$utils/jwt';
 import { BACKEND_URL } from '$env/static/private';
 import type { ApiResponseWithData } from '$libs/types/ApiResponse';
+
+export const load: PageServerLoad = async ({ cookies }) => {
+	const jwt = cookies.get("id");
+
+	if (!jwt) {
+		return;
+	}
+
+	const userId = (await verify(jwt)).payload.userId;
+
+	let user: User;
+	try {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}`);
+		const result: ApiResponseWithData<User> = await response.json();
+
+		user = result.data;
+	} catch (err) {
+		cookies.delete("id", { path: "/" });
+		return;
+	}
+
+	if (!user) {
+		cookies.delete("id", { path: "/" });
+		return;
+	}
+
+	throw redirect(303, "/app")
+};
 
 export const actions = {
 	default: async ({ request, cookies }) => {
