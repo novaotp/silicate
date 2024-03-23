@@ -34,9 +34,9 @@
             {/if}
         </div>
     {/if}
-    <h2 class="font-semibold">{title}</h2>
+    <h2 class="font-semibold text-start">{title}</h2>
     {#if description}
-        <p class="text-sm">{description}</p>
+        <p class="text-sm text-start">{description}</p>
     {/if}
     {#if due}
         {@const formattedDate = new Date(due).toLocaleString('fr-CH', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
