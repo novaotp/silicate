@@ -16,5 +16,7 @@
 {#if !data.user}
 	<p>Something went wrong.</p>
 {:else}
-	<h1>Salut {$user.firstName} {$user.lastName}</h1>
+	<main class="px-5 flex flex-col gap-5">
+		<h1 class="text-2xl font-semibold">Content de te revoir, {$user.firstName} !</h1>
+	</main>
 {/if}
