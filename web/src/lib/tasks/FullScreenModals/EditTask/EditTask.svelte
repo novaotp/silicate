@@ -44,8 +44,6 @@
      */
     $: due = task?.due ? formatDate(new Date(task.due), 'dd.mm.yyyy hh:ii', fr, 'standard') : null;
 
-    $: console.log(due!);
-
     let showDatePicker: boolean = false;
 
     const edit = async () => {
