@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TasksPage from '$/src/lib/tasks/TasksPage.svelte';
+    import TasksPage from '$lib/components/tasks/TasksPage.svelte';
     import type { PageData } from './$types';
 
     export let data: PageData;
@@ -11,7 +11,7 @@
 
 <main class="relative w-full h-full p-5 pt-0">
     {#if data.data?.dbError || !data.tasks}
-        <p>Une erreur est survenue : {data.data.dbError}</p>
+        <p>Une erreur est survenue.</p>
     {:else}
         {#await data.tasks}
             <p>Chargement des tâches...</p>

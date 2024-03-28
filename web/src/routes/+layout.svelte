@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ToastContainer from '$lib/shared/Toast/Container.svelte';
+    import ToastContainer from '$lib/components/shared/Toast/Container.svelte';
     import '../app.css';
 </script>
 

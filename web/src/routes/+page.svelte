@@ -2,30 +2,15 @@
     <title>Home - Silicate</title>
 </svelte:head>
 
-<main
-    class="relative flex h-full w-full flex-col justify-center bg-white p-8 gap-5"
->
-    <h1
-        class="bg-gradient-to-r from-purple-600 from-20% to-indigo-200 bg-clip-text text-4xl font-bold text-transparent inline-block"
-    >
-        Silicate
-    </h1>
-    <h2 class="text-xl font-semibold text-text-color">
-        L'appli pour gérer ta vie scolaire facilement
-    </h2>
+<main class="relative flex h-full w-full flex-col justify-center bg-white p-8 gap-5">
+    <h1 class="bg-gradient-to-r from-purple-600 from-20% to-indigo-200 bg-clip-text text-4xl font-bold text-transparent inline-block">Silicate</h1>
+    <h2 class="text-xl font-semibold text-text-color">L'appli pour gérer ta vie scolaire facilement</h2>
     <p class="text-justify text-gray-500">
-        Tu es étudiant et submergé par les devoirs, les cours et les dates
-        limites ? Pas de soucis ! Avec Silicate, organise-toi en un clin d'œil
-        et dis adieu au stress. C'est comme avoir un assistant perso pour ton
-        école, mais en mieux !
+        Tu es étudiant et submergé par les devoirs, les cours et les dates limites ? Pas de soucis ! Avec Silicate, organise-toi en un clin d'œil et
+        dis adieu au stress. C'est comme avoir un assistant perso pour ton école, mais en mieux !
     </p>
     <div class="relative flex flex-col gap-3 mt-8">
-        <a
-            class="relative w-full rounded-lg p-3 text-center bg-purple-600 text-white"
-            href="/auth/register"
-        >
-            Inscris-toi
-        </a>
+        <a class="relative w-full rounded-lg p-3 text-center bg-purple-600 text-white" href="/auth/register"> Inscris-toi </a>
         <span
             class="relative text-center text-gray-400
 				   before:absolute before:left-0 before:top-1/2 before:h-[1px] before:w-2/5 before:bg-gray-400 before:content-['']
@@ -33,10 +18,7 @@
         >
             ou
         </span>
-        <a
-            class="relative w-full rounded-lg bg-bg-color p-3 text-center bg-white text-purple-600 border border-purple-600"
-            href="/auth/login"
-        >
+        <a class="relative w-full rounded-lg bg-bg-color p-3 text-center bg-white text-purple-600 border border-purple-600" href="/auth/login">
             Se connecter
         </a>
     </div>

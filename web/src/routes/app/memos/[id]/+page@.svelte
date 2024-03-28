@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import MobileEditor from '$lib/memos/Editor/Editor.mobile.svelte';
+    import MobileEditor from '$lib/components/memos/Editor/Editor.mobile.svelte';
 
     export let data: PageData;
 

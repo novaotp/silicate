@@ -1,6 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
-import { verify } from "$utils/jwt";
+import { verify } from "$lib/utils/jwt";
 import type { User } from "$libs/models/User";
 import { BACKEND_URL } from "$env/static/private";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";

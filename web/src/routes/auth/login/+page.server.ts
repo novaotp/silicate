@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { compare } from 'bcrypt';
 import { type User } from '$libs/models/User';
-import { sign, verify } from '$utils/jwt';
+import { sign, verify } from '$lib/utils/jwt';
 import { BACKEND_URL } from '$env/static/private';
 import type { ApiResponseWithData } from '$libs/types/ApiResponse';
 
