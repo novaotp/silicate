@@ -1,7 +1,7 @@
 import { compareSync } from "bcrypt";
-import { ApiResponse, ApiResponseWithData } from "../../libs/types/ApiResponse";
+import { ApiResponse, ApiResponseWithData } from "../../../libs/types/ApiResponse";
 import dotenv from "dotenv";
-import { User } from "../../libs/models/User";
+import { User } from "../../../libs/models/User";
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../database";
-import { Category, Priority, RawCategory, RawPriority, RawStatus, RawTask, Status, Task } from "../../libs/models/Task";
+import { Category, Priority, RawCategory, RawPriority, RawStatus, RawTask, Status, Task } from "../../../libs/models/Task";
 
 export const router = Router();
 

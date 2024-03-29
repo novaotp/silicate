@@ -1,8 +1,8 @@
 import express from "express";
 import { db } from "./database/index.ts";
-import { User, type RawUser } from "../libs/models/User.ts";
+import { User, type RawUser } from "../../libs/models/User.ts";
 import { hash } from "bcrypt";
-import { Memo, RawMemo } from "../libs/models/Memo.ts";
+import { Memo, RawMemo } from "../../libs/models/Memo.ts";
 import cors from "cors";
 import { router as taskRoutes } from "./routes/task.routes.ts";
 
