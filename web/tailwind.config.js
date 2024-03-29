@@ -1,12 +1,13 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ['./src/**/*.svelte'],
     theme: {
-        extend: {
-            screens: {
-                "xsm": "480px"
-            }
-        },
+        screens: {
+            "xsm": "480px",
+            ...defaultTheme.screens,
+        }
     },
     plugins: [],
 }

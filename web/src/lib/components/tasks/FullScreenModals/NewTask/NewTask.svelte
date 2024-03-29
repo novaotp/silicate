@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import type { Task, Status, Priority, Category } from '$libs/models/Task';
+    import type { Task } from '$libs/models/Task';
     import type { User } from '$libs/models/User';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconPlus } from '@tabler/icons-svelte';
@@ -56,6 +56,11 @@
     };
 
     const addTask = async () => {
+        if (title.trimEnd() === "") {
+            addToast({ type: "info", message: "Entrez un titre à votre tâche." });
+            return;
+        }
+
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
             method: 'POST',
             body: JSON.stringify({
@@ -110,7 +115,7 @@
 {#if showAddTask}
     <FullScreen>
         <Header.Root>
-            <Header.Button class="px-4 py-2 text-sm" on:click={cancel}>Annuler</Header.Button>
+            <Header.Button class="py-2 text-sm" on:click={cancel}>Annuler</Header.Button>
             <Header.Button class="bg-blue-600 text-white px-4 py-2 text-sm" on:click={addTask}>Enregistrer</Header.Button>
         </Header.Root>
         <Main>
@@ -147,7 +152,7 @@
             {/if}
             <textarea
                 bind:value={description}
-                class="relative w-full h-[200px] text-sm bg-gray-200 {title !== '' ? 'text-black' : 'text-gray-500'} p-5 rounded-lg"
+                class="relative w-full h-[200px] text-sm bg-gray-200 text-black p-5 rounded-lg resize-none"
                 placeholder="Une description explicative..."
             ></textarea>
         </Main>

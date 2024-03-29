@@ -90,7 +90,7 @@
     {#if show && task}
         <FullScreen>
             <Header.Root>
-                <Header.Button class="px-4 py-2 text-sm" on:click={close}>Annuler</Header.Button>
+                <Header.Button class="py-2 text-sm" on:click={close}>Annuler</Header.Button>
                 <Header.Button class="bg-blue-600 text-white px-4 py-2 text-sm" on:click={edit}>Enregistrer</Header.Button>
             </Header.Root>
             <Main>
@@ -138,7 +138,7 @@
                 <textarea
                     value={description}
                     on:change={(event) => (description = event.currentTarget.value)}
-                    class="relative w-full h-[200px] text-sm bg-gray-200 {title !== '' ? 'text-black' : 'text-gray-500'} p-5 rounded-lg"
+                    class="relative w-full h-[200px] text-sm bg-gray-200 {description !== '' ? 'text-black' : 'text-gray-500'} p-5 rounded-lg resize-none"
                     placeholder="Une description explicative..."
                 ></textarea>
             </Main>

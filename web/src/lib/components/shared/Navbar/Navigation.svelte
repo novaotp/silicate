@@ -17,16 +17,16 @@
 
 <div class="md:hidden block">
     <nav class="relative w-full h-[60px] flex justify-start px-5 py-[10px]">
-        <button on:click={() => (showMenu = true)} class="relative h-full aspect-square flex justify-center items-center">
+        <button on:click={() => (showMenu = true)} class="relative h-full flex justify-center items-center">
             <MenuIcon />
         </button>
     </nav>
     {#if showMenu}
         <div class="md:hidden fixed flex h-full w-full top-0 left-0 justify-center items-center z-[100] bg-[rgba(0,0,0,0.1)]" transition:fade>
-            <div role="dialog" class="fixed z-50 m-auto w-[90%] rounded-md p-5 shadow-2xl bg-white" transition:fly={{ y: 50 }}>
-                <header class="relative mb-5 flex h-10 w-full items-center justify-between">
-                    <h2 class="text-2xl">Menu</h2>
-                    <button on:click={() => (showMenu = false)} class="relative aspect-square h-full flex justify-center items-center">
+            <div role="dialog" class="fixed z-50 mx-auto w-[calc(100%-40px)] rounded-md flex flex-col p-5 gap-4 shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+                <header class="relative flex w-full items-center justify-between">
+                    <h2 class="text-xl">Menu</h2>
+                    <button on:click={() => (showMenu = false)} class="relative h-full flex justify-center items-center">
                         <CloseIcon />
                     </button>
                 </header>

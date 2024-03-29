@@ -13,15 +13,15 @@
     export let type: 'success' | 'error' | 'info';
 
     $: icon = type === 'success' ? SuccessIcon : type === 'error' ? ErrorIcon : InfoIcon;
-    $: bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-300';
+    $: bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
 </script>
 
-<article class="w-80 mb-2 flex items-center rounded px-6 py-3 text-white {bgColor}" role="alert" transition:fade>
-    <svelte:component this={icon} class="w-[1.1em]" />
-    <div class="ml-4">
+<article class="relative w-full flex items-center gap-4 rounded px-4 py-2 text-white {bgColor}" role="alert" transition:fade>
+    <svelte:component this={icon} class="size-6" />
+    <p class="text-sm">
         <slot />
-    </div>
-    <button class="ml-auto border-none bg-transparent text-white" on:click={() => dispatch('dismiss')}>
-        <CloseIcon class="w-[0.8em]" />
+    </p>
+    <button class="border-none bg-transparent text-white" on:click={() => dispatch('dismiss')}>
+        <CloseIcon class="size-6" />
     </button>
 </article>

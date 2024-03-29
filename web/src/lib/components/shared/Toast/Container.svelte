@@ -4,7 +4,7 @@
 </script>
 
 {#if $toasts}
-    <section class="fixed top-10 right-10 w-full flex flex-col justify-center mt-4 z-[1000]">
+    <section class="fixed bottom-5 right-5 w-[calc(100%-40px)] max-w-[300px] flex flex-col justify-center gap-2 z-[1000]">
         {#each $toasts as toast (toast.id)}
             <Toast type={toast.type} on:dismiss={() => dismissToast(toast.id)}>
                 {toast.message}
