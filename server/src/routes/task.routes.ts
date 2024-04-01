@@ -56,25 +56,18 @@ router.get('/:id(d+)', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const { category }= req.query;
+        const { category, search }= req.query;
         const client = await db.connect();
-
-        const values: unknown[] = [await userIdFromAuthHeader(req)];
-
-        if (category !== "") {
-            values.push(category as string)
-        }
         
         const { rows } = await client.query<RawTask>(`
             SELECT *
             FROM public.task
             WHERE
                 user_id = $1
-                ${
-                    category !== "" ? "AND category = $2" : ""
-                }
+                ${category !== "" ? `AND category = '${category}'` : ""}
+                ${search !== "" ? `AND title ILIKE '%${search}%'` : ""}
             ;
-        `, values);
+        `, [await userIdFromAuthHeader(req)]);
 
         client.release();
 

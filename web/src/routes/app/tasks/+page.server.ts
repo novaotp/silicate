@@ -17,8 +17,8 @@ const fetchCategories = async (jwt: string): Promise<string[] | undefined> => {
     return result.success ? result.data : undefined;
 }
 
-const fetchTasks = async (jwt: string, category: string): Promise<Task[] | undefined> => {
-    const response = await fetch(`${BACKEND_URL}/tasks?category=${category}`, {
+const fetchTasks = async (jwt: string, category: string, search: string): Promise<Task[] | undefined> => {
+    const response = await fetch(`${BACKEND_URL}/tasks?category=${category}&search=${search}`, {
         method: "GET",
         headers: {
             "accept": "application/json",
@@ -31,11 +31,12 @@ const fetchTasks = async (jwt: string, category: string): Promise<Task[] | undef
 }
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
-    const category: string | null = url.searchParams.get("category") ?? "";
+    const search: string = url.searchParams.get("search") ?? "";
+    const category: string = url.searchParams.get("category") ?? "";
 
     try {
         return {
-            tasks: fetchTasks(cookies.get("id")!, category),
+            tasks: fetchTasks(cookies.get("id")!, category, search),
             categories: await fetchCategories(cookies.get("id")!)
         }
     } catch (err) {

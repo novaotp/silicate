@@ -19,9 +19,11 @@
         {:then tasks}
             {#if tasks}
                 <TasksPage {tasks} categories={data.categories} />
+            {:else}
+                <p>Une erreur est survenue lors du chargement des tâches.</p>
             {/if}
         {:catch}
-            <p>Une erreur est survenue lors du chargment des tâches.</p>
+            <p>Une erreur est survenue lors du chargement des tâches.</p>
         {/await}
     {/if}
 </main>
