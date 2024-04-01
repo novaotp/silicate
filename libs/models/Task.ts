@@ -20,7 +20,7 @@ export interface Task {
     description: string | null,
     steps: string | null,
     /** A parsable date. */
-    due: string | null,
+    due: string,
 }
 
 export interface RawCategory {

@@ -64,8 +64,8 @@ router.get('/', async (req, res) => {
             FROM public.task
             WHERE
                 user_id = $1
-                ${category !== "" ? `AND category = '${category}'` : ""}
-                ${search !== "" ? `AND title ILIKE '%${search}%'` : ""}
+                ${category && category !== "" ? `AND category = '${category}'` : ""}
+                ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
             ;
         `, [await userIdFromAuthHeader(req)]);
 

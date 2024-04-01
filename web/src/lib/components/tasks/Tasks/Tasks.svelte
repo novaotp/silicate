@@ -1,13 +1,13 @@
 <script lang="ts">
     import Category from './Category.svelte';
-    import { getCategories, getTasks } from '../types';
+    import { type PageContext } from '../types';
     import TaskComponent from './TaskComponent.svelte';
     import TaskDetails from './TaskDetails/TaskDetails.svelte';
     import Search from './Search.svelte';
     import { page } from '$app/stores';
+    import { getContext } from 'svelte';
 
-    const tasks = getTasks();
-    const categories = getCategories();
+    const { tasks, categories } = getContext<PageContext>("page");
 
     let viewedTaskId: number | null = null;
 
@@ -36,7 +36,7 @@
         {/each}
     </div>
     <div role="list" class="flex flex-col divide-y-[1px] divide-gray-300 mb-5">
-        {#each tasks as task}
+        {#each $tasks as task}
             <TaskComponent bind:task on:click={onTaskClick} />
         {:else}
             {#if $page.url.searchParams.get("search") !== null}

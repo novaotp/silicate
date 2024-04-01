@@ -2,14 +2,17 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
     import { IconCheck, IconChevronLeft, IconEdit, IconTrashX } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
+    import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
-    import type { PageContext } from '../../types';
+    import { type PageContext } from '../../types';
     import StepComponent from './Step.svelte';
     import { fly } from 'svelte/transition';
     import View from './View.svelte';
     import { invalidateAll } from '$app/navigation';
     import { browser } from '$app/environment';
+    import Edit from './Edit.svelte';
+    import { fetchTasks } from './utils';
+    import { page } from '$app/stores';
 
     const { tasks } = getContext<PageContext>('page');
     /** The id of the task to show. */
@@ -17,19 +20,62 @@
 
     $: task = $tasks.find((t) => t.id === id);
 
-    const dispatch = createEventDispatcher();
-
     let isInEditingMode: boolean = false;
     $: EditIcon = isInEditingMode ? IconCheck : IconEdit;
 
-    const edit = () => dispatch('edit');
+    const edit = async () => {
+        if (!task || !browser) return;
+
+        if (isInEditingMode) {
+            if (task.title.trimEnd() === "") {
+                addToast({ type: "info", message: "Un titre est requis." });
+                return;
+            }
+
+            const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${task.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    title: task.title,
+                    description: task.description,
+                    category: task.category,
+                    due: task.due,
+                    steps: task.steps
+                }),
+                headers: {
+                    "accept": "application/json",
+                    "authorization": getContext<string>('jwt'),
+                    "content-type": "application/json"
+                }
+            });
+            const { success, message }: ApiResponse = await response.json();
+
+            if (!success) {
+                addToast({ type: 'error', message });
+                return;
+            } else {
+                addToast({ type: 'success', message: "Tâche modifiée avec succès." });
+            }
+
+            const updatedTasks = await fetchTasks($page.url.searchParams.get("category") ?? "", $page.url.searchParams.get("search") ?? "")
+
+            if (!updatedTasks) {
+                addToast({ type: 'error', message: "Impossible de mettre à jour les tâches." });
+                return;
+            }
+
+            $tasks = updatedTasks;
+        }
+
+        isInEditingMode = !isInEditingMode;
+    };
+
     const destroy = async () => {
         if (!task || !browser) return;
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${task.id}`, {
             method: 'DELETE',
             headers: {
-                "authorization": getContext<string>("jwt")
+                "authorization": getContext<string>('jwt')
             }
         });
         const { success, message }: ApiResponse = await response.json();
@@ -54,14 +100,14 @@
                 <button class="rounded-full text-red-500 py-2" on:click={destroy}>
                     <IconTrashX />
                 </button>
-                <button class="rounded-full bg-blue-500 text-white px-4 py-2" on:click={() => (isInEditingMode = !isInEditingMode)}>
+                <button class="rounded-full bg-blue-500 text-white px-4 py-2" on:click={edit}>
                     <svelte:component this={EditIcon} />
                 </button>
             </div>
         </header>
         <div class="relative w-full h-full flex flex-col justify-start items-start">
             {#if isInEditingMode}
-                <p>Edit</p>
+                <Edit {task} />
             {:else}
                 <View {task} />
             {/if}
