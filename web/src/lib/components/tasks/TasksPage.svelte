@@ -1,48 +1,28 @@
 <script lang="ts">
-    import type { Category, Priority, Status } from '$libs/models/Task';
     import type { Task } from '$libs/models/Task';
-    import Filters from './Filters/Filters.svelte';
-    import NewTask from './FullScreenModals/NewTask/NewTask.svelte';
-    import EditTask from './FullScreenModals/EditTask/EditTask.svelte';
-    import ViewTask from './FullScreenModals/ViewTask/ViewTask.svelte';
     import { setContext } from 'svelte';
     import type { PageContext } from './types';
-    import Header from './Header.svelte';
     import { writable } from 'svelte/store';
-    import Tasks from './Tasks.svelte';
+    import Tabs from './Tabs.svelte';
+    import { page } from '$app/stores';
+    import Tasks from './Tasks/Tasks.svelte';
 
     export let tasks: Task[];
-    export let statuses: Status[];
-    export let priorities: Priority[];
-    export let categories: Category[];
-    export let selectedStatuses: Status[];
-    export let selectedPriorities: Priority[];
+    export let categories: string[];
 
     setContext<PageContext>('page', {
         tasks: writable(tasks),
-        statuses,
-        priorities,
-        categories,
-        selected: {
-            statuses: selectedStatuses,
-            priorities: selectedPriorities
-        }
+        categories
     });
 
-    let showFilters: boolean = false;
-    let showViewTask: boolean = false;
-    let showEditTask: boolean = false;
-    let editedTask: number | null = null;
-
-    const onEdit = () => {
-        showViewTask = false;
-        showEditTask = true;
-    };
+    $: currentTab = $page.url.searchParams.get("tab") ?? "";
 </script>
 
-<Header on:click={() => (showFilters = !showFilters)} />
-<Filters show={showFilters} on:close={() => (showFilters = !showFilters)} />
-<Tasks bind:editedTask bind:showViewTask />
-<NewTask on:click={() => (showFilters = false)} />
-<ViewTask id={editedTask} bind:show={showViewTask} on:edit={onEdit} />
-<EditTask id={editedTask} bind:show={showEditTask} />
+{#if currentTab === ""}
+    <Tasks />
+{:else}
+    <div class="relative w-full h-full flex justify-center items-center">
+        <p class="text-center">Cette fonctionnalité n'est pas encore disponible.</p>
+    </div>
+{/if}
+<Tabs />

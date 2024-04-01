@@ -1,10 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { compare } from 'bcrypt';
-import { type User } from '$libs/models/User';
-import { sign, verify } from '$lib/utils/jwt';
 import { BACKEND_URL } from '$env/static/private';
-import type { ApiResponseWithData } from '$libs/types/ApiResponse';
+import type { ApiResponse } from '$libs/types/ApiResponse';
+import type { LoginResponse } from '$libs/types/AuthResponse';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const jwt = cookies.get("id");
@@ -13,25 +11,26 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		return;
 	}
 
-	const userId = (await verify(jwt)).payload.userId;
-
-	let user: User;
 	try {
-		const response = await fetch(`${BACKEND_URL}/users/${userId}`);
-		const result: ApiResponseWithData<User> = await response.json();
+		const response = await fetch(`${BACKEND_URL}/auth/validate`, {
+			method: "POST",
+			body: JSON.stringify({ jwt }),
+			headers: {
+				"content-type": "application/json"
+			}
+		});
+		const { success }: ApiResponse = await response.json();
 
-		user = result.data;
+		if (!success) {
+			cookies.delete("id", { path: "/" });
+			return;
+		}
 	} catch (err) {
-		cookies.delete("id", { path: "/" });
+		console.error(`Something went wrong whilst validating a user in the login page : ${(err as Error).message}`)
 		return;
 	}
 
-	if (!user) {
-		cookies.delete("id", { path: "/" });
-		return;
-	}
-
-	throw redirect(303, "/app")
+	throw redirect(303, "/app");
 };
 
 export const actions = {
@@ -45,25 +44,28 @@ export const actions = {
 			return fail(422, { email, missing: true });
 		}
 
-		let user: User | undefined = undefined;
 		try {
-			const response = await fetch(`${BACKEND_URL}/users`);
-			const result: ApiResponseWithData<User[]> = await response.json();
+			const response = await fetch(`${BACKEND_URL}/auth/login`, {
+				method: "POST",
+				body: JSON.stringify({
+					email,
+					password
+				}),
+				headers: {
+					"content-type": "application/json"
+				}
+			});
+			const result: LoginResponse = await response.json();
 
-			user = result.data.find(user => user.email === email);
+			if (!result.success) {
+				return fail(422, { email, message: "Données erronées." });
+			}
+
+			cookies.set("id", result.jwt, { path: "/", maxAge: result.maxAge });
 		} catch (err) {
-			console.error(`Something went wrong whilst login a new user : ${(err as Error).message}`)
-			return fail(422, { email, dbError: true });
+			console.error(`Something went wrong whilst login a user : ${(err as Error).message}`)
+			return fail(422, { email, message: "Une erreur est survenue." });
 		}
-
-		if (!user || !(await compare(password, user.password))) {
-			return fail(422, { email, incorrect: true });
-		}
-
-		const jwt = await sign({ userId: user.id });
-		const payload = await verify(jwt);
-
-		cookies.set("id", jwt, { path: "/", maxAge: payload.exp! - payload.iat! });
 
 		throw redirect(303, "/app");
 	},

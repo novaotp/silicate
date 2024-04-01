@@ -1,32 +1,25 @@
 import { Router } from "express";
 import { db } from "../database";
-import { Category, Priority, RawCategory, RawPriority, RawStatus, RawTask, Status, Task } from "../../../libs/models/Task";
+import { RawCategory, RawTask, Task } from "../../../libs/models/Task";
+import { authenticated } from "../middlewares/authenticated";
+import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
 
 export const router = Router();
+
+router.use(authenticated);
 
 router.get('/:id(d+)', async (req, res) => {
     try {
         const client = await db.connect();
 
-        console.log(`Id : ${req.params.id}`)
-
         const { rows } = await client.query<RawTask>(`
-            SELECT
-                task.id,
-                task.user_id,
-                priority.name as "priority",
-                status.name as "status",
-                task.category,
-                task.title,
-                task.description,
-                task.due,
-                task.created_at,
-                task.updated_at
+            SELECT *
             FROM public.task
-            LEFT JOIN public.priority ON task.priority_id = priority.id
-            LEFT JOIN public.status ON task.status_id = status.id
-            WHERE task.id = $1
-            LIMIT 1;`, [req.params.id]
+            WHERE
+                id = $1
+                AND
+                user_id = $2
+            LIMIT 1;`, [req.params.id, await userIdFromAuthHeader(req)]
         );
 
         client.release();
@@ -34,28 +27,27 @@ router.get('/:id(d+)', async (req, res) => {
         const task = rows[0];
 
         if (!task) {
-            return res.send({
+            return res.status(404).send({
                 success: false,
                 message: "Task not found"
             });
         }
 
-        return res.send({
+        return res.status(200).send({
             success: true,
             message: "Task read successfully",
             data: {
                 id: task.id,
-                priority: task.priority,
-                status: task.status,
                 title: task.title,
                 description: task.description,
                 category: task.category,
-                due: task.due
+                due: task.due,
+                steps: task.steps
             } as Task
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching a task : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });
@@ -63,120 +55,46 @@ router.get('/:id(d+)', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    const handleQuery = (search: unknown | undefined, category: unknown | undefined, status: unknown | undefined, priority: unknown | undefined) => {
-        const query: string[] = [];
-        let paramId = 1;
-
-        const useParamId = () => {
-            const temp = paramId;
-            paramId++;
-            return temp;
-        }
-
-        if (search && search !== "") {
-            query.push(`(task.title ILIKE '%' || $${useParamId()} || '%')`);
-        }
-
-        if (category && category !== "All") {
-            const values = (category as string).split(",");
-            query.push(`(${values.map(() => `task.category = $${useParamId()}`).join(" OR ")})`);
-        }
-
-        if (status && status !== "All") {
-            const values = (status as string).split(",");
-            query.push(`(${values.map(() => `status.name = $${useParamId()}`).join(" OR ")})`);
-        }
-
-        if (priority && priority !== "All") {
-            const values = (priority as string).split(",");
-            query.push(`(${values.map(() => `priority.name = $${useParamId()}`).join(" OR ")})`);
-        }
-
-        return query.length > 0 ? `WHERE ${query.join(" AND ")}` : "";
-    }
-
-    const handleBinding = (search: unknown | undefined, category: unknown | undefined, status: unknown | undefined, priority: unknown | undefined) => {
-        const binding: string[] = [];
-
-        if (search && search !== "") {
-            binding.push(search as string);
-        }
-
-        if (category && category !== "All") {
-            const values = (category as string).split(",");
-            binding.push(...values);
-        }
-
-        if (status && status !== "All") {
-            const values = (status as string).split(",");
-            binding.push(...values);
-        }
-
-        if (priority && priority !== "All") {
-            const values = (priority as string).split(",");
-            binding.push(...values);
-        }
-
-        return binding;
-    }
-
-    const handleOrder = (order: string | undefined) => {
-        switch (order) {
-            case "due-asc":
-                return "ORDER BY task.due ASC"
-
-            case "due-desc":
-                return "ORDER BY task.due DESC"
-            
-            default:
-                return "ORDER BY task.due ASC"
-        }
-    }
-
     try {
-        const { search, order, category, status, priority } = req.query;
+        const { category }= req.query;
         const client = await db.connect();
+
+        const values: unknown[] = [await userIdFromAuthHeader(req)];
+
+        if (category !== "") {
+            values.push(category as string)
+        }
         
         const { rows } = await client.query<RawTask>(`
-            SELECT
-                task.id,
-                task.user_id,
-                priority.name as "priority",
-                status.name as "status",
-                task.category,
-                task.title,
-                task.description,
-                task.due,
-                task.created_at,
-                task.updated_at
+            SELECT *
             FROM public.task
-            LEFT JOIN public.priority ON task.priority_id = priority.id
-            LEFT JOIN public.status ON task.status_id = status.id
-            ${handleQuery(search, category, status, priority)}
-            ${handleOrder(order as string)}
-            `, handleBinding(search, category, status, priority)
-        );
+            WHERE
+                user_id = $1
+                ${
+                    category !== "" ? "AND category = $2" : ""
+                }
+            ;
+        `, values);
 
         client.release();
 
-        return res.send({
+        return res.status(200).send({
             success: true,
             message: "Tasks read successfully",
             data: rows.map(row => {
                 return {
                     id: row.id,
-                    priority: row.priority !== "Aucune" ? row.priority : null,
-                    status: row.status !== "Aucun" ? row.status : null,
                     title: row.title,
                     description: row.description,
                     category: row.category,
-                    due: row.due
+                    due: row.due,
+                    steps: row.steps
                 } as Task
             })
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the tasks : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });
@@ -185,35 +103,34 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { userId, priority, status, category, title, description, due } = req.body;
+        const { category, title, description, due, steps } = req.body;
         const client = await db.connect();
 
         const { rows } = await client.query(`
-            INSERT INTO public.task (user_id, priority_id, status_id, category, title, description, due)
+            INSERT INTO public.task (user_id, category, title, description, due, steps)
             VALUES (
                 $1,
-                (SELECT id from public.priority WHERE name = $2),
-                (SELECT id from public.status WHERE name = $3),
+                $2,
+                $3,
                 $4,
                 $5,
-                $6,
-                $7
+                $6
             )
             RETURNING id;
-        `, [userId, priority, status, category, title, description, due]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps]);
 
         client.release();
 
         const id = rows[0].id;
 
-        return res.send({
+        return res.status(201).send({
             success: true,
             message: "Task created successfully",
             data: id
         });
     } catch (err) {
         console.error(`Something went wrong whilst creating a task : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });
@@ -222,30 +139,32 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { priority, status, category, title, description, due } = req.body;
+        const { category, title, description, due, steps } = req.body;
         const client = await db.connect();
 
         await client.query(`
             UPDATE public.task
-            SET priority_id = (SELECT id from public.priority WHERE name = $1),
-                status_id = (SELECT id from public.status WHERE name = $2),
-                category = $3,
-                title = $4,
-                description = $5,
-                due = $6,
-                updated_at = $7
-            WHERE id = $8;
-        `, [priority, status, category, title, description, due, new Date(), req.params.id]);
+            SET category = $1,
+                title = $2,
+                description = $3,
+                due = $4,
+                steps = $5,
+                updated_at = $6
+            WHERE
+                id = $7
+                AND
+                user_id = $8;
+        `, [category, title, description, due, steps, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
-        return res.send({
+        return res.status(200).send({
             success: true,
             message: "Task updated successfully"
         });
     } catch (err) {
         console.error(`Something went wrong whilst updating a task : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });
@@ -258,62 +177,21 @@ router.delete('/:id', async (req, res) => {
 
         await client.query(`
             DELETE FROM public.task
-            WHERE id = $1;
-        `, [req.params.id]);
+            WHERE
+                id = $1
+                AND
+                user_id = $2;
+        `, [req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
-        return res.send({
+        return res.status(200).send({
             success: true,
             message: "Task deleted successfully"
         });
     } catch (err) {
         console.error(`Something went wrong whilst deleting a task : ${err.message}`);
-        return res.send({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-});
-
-router.get("/statuses", async (req, res) => {
-    try {
-        const client = await db.connect();
-
-        const { rows } = await client.query<RawStatus>('SELECT name FROM public.status;');
-
-        client.release();
-
-        return res.send({
-            success: true,
-            message: "Statuses read successfully",
-            data: rows.map(row => row.name) as Status[]
-        });
-    } catch (err) {
-        console.error(`Something went wrong whilst fetching the statuses : ${err.message}`);
-        return res.send({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-});
-
-router.get("/priorities", async (req, res) => {
-    try {
-        const client = await db.connect();
-
-        const { rows } = await client.query<RawPriority>('SELECT name FROM public.priority;');
-
-        client.release();
-
-        return res.send({
-            success: true,
-            message: "Priorities read successfully",
-            data: rows.map(row => row.name) as Priority[]
-        });
-    } catch (err) {
-        console.error(`Something went wrong whilst fetching the priorities : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });
@@ -328,14 +206,14 @@ router.get("/categories", async (req, res) => {
 
         client.release();
 
-        return res.send({
+        return res.status(200).send({
             success: true,
             message: "Categories read successfully",
-            data: rows.filter(row => row.category !== null).map(row => row.category) as Category[]
+            data: rows.filter(row => row.category !== null).map(row => row.category) as string[]
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the categories : ${err.message}`);
-        return res.send({
+        return res.status(500).send({
             success: false,
             message: "Internal Server Error"
         });

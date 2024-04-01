@@ -7,6 +7,7 @@
     export let data: LayoutServerData;
 
     setContext('user', writable(data.user));
+    setContext('jwt', data.jwt);
 </script>
 
 <div class="relative h-full w-full flex flex-col md:flex-row">

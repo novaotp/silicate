@@ -15,7 +15,6 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
-    password: string,
     /** A parsable date. */
     joinedOn: string,
 }

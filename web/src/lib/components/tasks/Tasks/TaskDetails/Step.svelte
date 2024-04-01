@@ -1,7 +1,6 @@
 <script lang="ts">
     import { IconDotsVertical } from '@tabler/icons-svelte';
-    import type { Step } from './type';
-    import { fly } from 'svelte/transition';
+    import type { Step } from './utils';
 
     export let step: Step;
 

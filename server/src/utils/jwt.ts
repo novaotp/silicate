@@ -1,8 +1,23 @@
-
-"use server";
-
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { encodeString } from "../textencoder";
+
+/**
+ * Encodes a string to Uint8Array.
+ * @param str The string to encode
+ */
+const encodeString = (str: string): Uint8Array => {
+    // Encode string to UTF-8
+    const utf8 = unescape(encodeURIComponent(str));
+
+    // Create a Uint8Array to hold the character codes
+    const uint8Array = new Uint8Array(utf8.length);
+
+    // Convert each character to a byte (character code) and add to Uint8Array
+    for (let i = 0; i < utf8.length; i++) {
+        uint8Array[i] = utf8.charCodeAt(i);
+    }
+
+    return uint8Array;
+};
 
 type CustomJWTPayload = JWTPayload & {
     payload: {
@@ -15,16 +30,21 @@ type CustomJWTPayload = JWTPayload & {
  * @param payload The payload to sign
  * @returns The signed JWT token
  */
-export const sign = async (payload: unknown): Promise<string> => {
+export const sign = async (payload: unknown) => {
     const issuedAt = Math.floor(Date.now() / 1000);
     const expirationTime = issuedAt + 60 * 60 * 336; // 14 days
 
-    return await new SignJWT({ payload })
+    const token = await new SignJWT({ payload })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
         .setExpirationTime(expirationTime)
         .setIssuedAt(issuedAt)
         .setNotBefore(issuedAt)
         .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+
+    return {
+        token,
+        maxAge: expirationTime - issuedAt
+    }
 };
 
 /**

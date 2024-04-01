@@ -9,21 +9,19 @@
     <title>Tâches - Silicate</title>
 </svelte:head>
 
-<main class="relative w-full h-full p-5 pt-0">
-    {#if data.data?.dbError || !data.tasks}
-        <p>Une erreur est survenue.</p>
+<main class="relative w-full h-full p-5 pt-0 flex flex-col justify-start">
+    {#if data.data?.message || !data.tasks || !data.categories}
+        <p>Une erreur est survenue lors du chargement.</p>
+        <p>Erreur : {data.data?.message}</p>
     {:else}
         {#await data.tasks}
             <p>Chargement des tâches...</p>
         {:then tasks}
-            <TasksPage
-                {tasks}
-                statuses={data.statuses}
-                priorities={data.priorities}
-                categories={data.categories}
-                selectedStatuses={data.selectedStatuses}
-                selectedPriorities={data.selectedPriorities}
-            />
+            {#if tasks}
+                <TasksPage {tasks} categories={data.categories} />
+            {/if}
+        {:catch}
+            <p>Une erreur est survenue lors du chargment des tâches.</p>
         {/await}
     {/if}
 </main>

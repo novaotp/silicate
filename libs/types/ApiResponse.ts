@@ -3,6 +3,11 @@ export interface ApiResponse {
     message: string
 }
 
-export interface ApiResponseWithData<T> extends ApiResponse {
+export type ApiResponseWithData<T> = {
+    success: true,
+    message: string,
     data: T
+} | {
+    success: false,
+    message: string
 }

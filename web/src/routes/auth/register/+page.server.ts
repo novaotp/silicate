@@ -21,7 +21,7 @@ export const actions = {
 		}
 
 		try {
-			await fetch(`${BACKEND_URL}/users`, {
+			await fetch(`${BACKEND_URL}/auth/register`, {
 				method: "POST",
 				body: JSON.stringify({
 					firstName,
@@ -30,6 +30,7 @@ export const actions = {
 					password
 				}),
 				headers: {
+					"accept": "application/json",
 					"content-type": "application/json"
 				}
 			});
