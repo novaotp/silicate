@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
                 user_id = $1
                 ${category && category !== "" ? `AND category = '${category}'` : ""}
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
-            ;
+            ORDER BY task.due ASC, task.updated_at DESC;
         `, [await userIdFromAuthHeader(req)]);
 
         client.release();
