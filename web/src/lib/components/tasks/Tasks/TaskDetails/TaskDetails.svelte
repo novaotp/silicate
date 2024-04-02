@@ -8,43 +8,65 @@
     import StepComponent from './Step.svelte';
     import { fly } from 'svelte/transition';
     import View from './View.svelte';
-    import { invalidateAll } from '$app/navigation';
-    import { browser } from '$app/environment';
     import Edit from './Edit.svelte';
     import { fetchTasks } from './utils';
     import { page } from '$app/stores';
 
     const { tasks } = getContext<PageContext>('page');
+
+    const jwt = getContext<string>('jwt');
+
     /** The id of the task to show. */
     export let id: number | null;
 
     $: task = $tasks.find((t) => t.id === id);
+    $: replica = task ? { ...task } : undefined;
 
     let isInEditingMode: boolean = false;
     $: EditIcon = isInEditingMode ? IconCheck : IconEdit;
 
+    $: category = $page.url.searchParams.get('category') ?? '';
+    $: search = $page.url.searchParams.get('search') ?? '';
+
+    const back = () => {
+        if (!isInEditingMode) {
+            id = null;
+            return;
+        }
+
+        const choice = window.confirm('Vous avez des changements non enregistrés. Souhaitez-vous continuer ?');
+
+        if (choice) {
+            isInEditingMode = false;
+            id = null;
+        }
+    };
+
     const edit = async () => {
-        if (!task || !browser) return;
+        if (!task || !replica) {
+            addToast({ type: 'error', message: 'Impossible de mettre à jour.' });
+            return;
+        }
 
         if (isInEditingMode) {
-            if (task.title.trimEnd() === "") {
-                addToast({ type: "info", message: "Un titre est requis." });
+            if (replica.title.trimEnd() === '') {
+                addToast({ type: 'info', message: 'Un titre est requis.' });
                 return;
             }
 
-            const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${task.id}`, {
+            const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${replica.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    title: task.title,
-                    description: task.description,
-                    category: task.category,
-                    due: task.due,
-                    steps: task.steps
+                    title: replica.title,
+                    description: replica.description,
+                    category: replica.category,
+                    due: replica.due,
+                    steps: replica.steps
                 }),
                 headers: {
-                    "accept": "application/json",
-                    "authorization": getContext<string>('jwt'),
-                    "content-type": "application/json"
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
                 }
             });
             const { success, message }: ApiResponse = await response.json();
@@ -53,13 +75,13 @@
                 addToast({ type: 'error', message });
                 return;
             } else {
-                addToast({ type: 'success', message: "Tâche modifiée avec succès." });
+                addToast({ type: 'success', message: 'Tâche modifiée avec succès.' });
             }
 
-            const updatedTasks = await fetchTasks($page.url.searchParams.get("category") ?? "", $page.url.searchParams.get("search") ?? "")
+            const updatedTasks = await fetchTasks(jwt, category, search);
 
             if (!updatedTasks) {
-                addToast({ type: 'error', message: "Impossible de mettre à jour les tâches." });
+                addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
                 return;
             }
 
@@ -70,12 +92,12 @@
     };
 
     const destroy = async () => {
-        if (!task || !browser) return;
+        if (!task || !replica) return;
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${task.id}`, {
             method: 'DELETE',
             headers: {
-                "authorization": getContext<string>('jwt')
+                authorization: jwt
             }
         });
         const { success, message }: ApiResponse = await response.json();
@@ -85,15 +107,25 @@
             return;
         }
 
-        await invalidateAll();
+        const updatedTasks = await fetchTasks(jwt, category, search);
+
+        if (!updatedTasks) {
+            addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
+            return;
+        } else {
+            addToast({ type: 'success', message: 'Tâche supprimée avec succès.' });
+        }
+
+        isInEditingMode = false;
+        $tasks = updatedTasks;
         id = null;
     };
 </script>
 
-{#if id !== null && task}
+{#if id !== null && task && replica}
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100]" transition:fly={{ x: -100 }}>
         <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100]">
-            <button class="rounded-full" on:click={() => (id = null)}>
+            <button class="rounded-full" on:click={back}>
                 <IconChevronLeft class="text-white" />
             </button>
             <div class="flex justify-between items-center gap-4">
@@ -107,7 +139,7 @@
         </header>
         <div class="relative w-full h-full flex flex-col justify-start items-start">
             {#if isInEditingMode}
-                <Edit {task} />
+                <Edit task={replica} />
             {:else}
                 <View {task} />
             {/if}

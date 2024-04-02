@@ -14,10 +14,11 @@
 </script>
 
 <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 custom-bg text-white">
-    <input bind:value={task.title} class="relative w-full flex justify-between items-center bg-transparent text-xl font-medium" required />
+    <input value={task.title} on:input={(e) => (task.title = e.currentTarget.value)} class="relative w-full flex justify-between items-center bg-transparent text-xl font-medium" required />
     {#if task.description}
         <textarea
-            bind:value={task.description}
+            value={task.description}
+            on:input={(e) => (task.description = e.currentTarget.value)}
             class="relative inline-block w-full text-sm bg-transparent text-justify line-clamp-5 rounded-lg resize-none overflow-hidden"
         ></textarea>
     {/if}

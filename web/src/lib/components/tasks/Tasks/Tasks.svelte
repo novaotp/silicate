@@ -9,7 +9,7 @@
 
     const { tasks, categories } = getContext<PageContext>("page");
 
-    let viewedTaskId: number | null = null;
+    export let viewedTaskId: number | null;
 
     $: {
         if (viewedTaskId !== null) {

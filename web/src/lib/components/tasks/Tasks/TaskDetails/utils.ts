@@ -31,7 +31,7 @@ export const calculateCompletion = (values: string | Step[]): number => {
     return completedCount / totalCount;
 };
 
-export const fetchTasks = async (category: string, search: string): Promise<Task[] | undefined> => {
+export const fetchTasks = async (jwt: string, category: string, search: string): Promise<Task[] | undefined> => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks?category=${category}&search=${search}`, {
         method: "GET",
         headers: {

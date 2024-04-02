@@ -10,6 +10,8 @@
     export let tasks: Task[];
     export let categories: string[];
 
+    let viewedTaskId: number | null = null;
+
     setContext<PageContext>('page', {
         tasks: writable(tasks),
         categories
@@ -19,10 +21,10 @@
 </script>
 
 {#if currentTab === ""}
-    <Tasks />
+    <Tasks bind:viewedTaskId />
 {:else}
     <div class="relative w-full h-full flex justify-center items-center">
         <p class="text-center">Cette fonctionnalité n'est pas encore disponible.</p>
     </div>
 {/if}
-<Tabs />
+<Tabs bind:viewedTaskId />
