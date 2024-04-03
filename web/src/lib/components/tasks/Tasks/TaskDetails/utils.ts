@@ -1,7 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
-import { getContext } from "svelte";
 
 export type Item = {
     label: string,
@@ -21,7 +20,7 @@ export const calculateCompletion = (values: string | Step[]): number => {
     const totalCount = values.length;
 
     for (const value of values) {
-        if (value.subSteps) {
+        if (!value.completed && value.subSteps) {
             completedCount += calculateCompletion(value.subSteps);
         } else {
             completedCount += value.completed ? 1 : 0;
@@ -36,7 +35,7 @@ export const fetchTasks = async (jwt: string, category: string, search: string):
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": getContext<string>("jwt")
+            "authorization": jwt
         }
     });
     const result: ApiResponseWithData<Task[]> = await response.json();

@@ -1,20 +1,23 @@
 <script lang="ts">
     import { IconDotsVertical } from '@tabler/icons-svelte';
-    import type { Step } from './utils';
+    import type { Step } from '../utils';
+    import { createEventDispatcher } from 'svelte';
 
     export let step: Step;
 
+    const dispatch = createEventDispatcher();
     let showSub: boolean = false;
 
     const onCompletedStep = () => {
         if (step.subSteps) {
-            step = {
-                ...step,
-                subSteps: step.subSteps.map((sub) => {
-                    return { label: sub.label, completed: step.completed };
-                })
-            };
+            const newState = step.completed;
+            step.completed = newState;
+            step.subSteps = step.subSteps.map((sub) => {
+                return { label: sub.label, completed: newState };
+            });
         }
+
+        dispatch('update');
     };
 
     const onCompletedAllSub = () => {
@@ -27,27 +30,23 @@
                 }
             }
 
-            step = {
-                ...step,
-                completed: allChecked
-            };
+            step.completed = allChecked;
         }
+
+        dispatch('update');
     };
 
     const newSubStep = () => {
-        const tempSubSteps = step.subSteps ?? [];
-        step = {
-            ...step,
-            subSteps: [...tempSubSteps, { label: '', completed: false }]
-        };
+        step.subSteps = [...step.subSteps ?? [], { label: '', completed: false }];
+        dispatch('update');
     };
 </script>
 
 <div class="flex flex-col">
-    <button on:click={() => (showSub = !showSub)} class="flex gap-2 w-full py-2 px-5 bg-gray-300 justify-between items-center">
+    <button on:click={() => (showSub = !showSub)} class="flex gap-2 w-full py-2 justify-between items-center">
         <div class="flex gap-2">
-            <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} class="z-[999]" />
-            <h3 class="text-sm">{step.label}</h3>
+            <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} />
+            <h3 class="text-sm {step.completed ? 'line-through' : ''}">{step.label}</h3>
             {#if step.subSteps && step.subSteps.length > 0}
                 {@const completedSubs = step.subSteps?.reduce((acc, curr) => acc + (curr.completed ? 1 : 0), 0)}
                 <span class="text-sm">{completedSubs}/{step.subSteps.length}</span>

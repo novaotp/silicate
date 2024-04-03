@@ -5,9 +5,9 @@
     import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
     import { type PageContext } from '../../types';
-    import StepComponent from './Step.svelte';
+    import StepComponent from './View/StepComponent.svelte';
     import { fly } from 'svelte/transition';
-    import View from './View.svelte';
+    import View from './View/View.svelte';
     import Edit from './Edit.svelte';
     import { fetchTasks } from './utils';
     import { page } from '$app/stores';
@@ -123,10 +123,10 @@
 </script>
 
 {#if id !== null && task && replica}
-    <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100]" transition:fly={{ x: -100 }}>
+    <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
         <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100]">
             <button class="rounded-full" on:click={back}>
-                <IconChevronLeft class="text-white" />
+                <IconChevronLeft />
             </button>
             <div class="flex justify-between items-center gap-4">
                 <button class="rounded-full text-red-500 py-2" on:click={destroy}>
@@ -141,14 +141,7 @@
             {#if isInEditingMode}
                 <Edit task={replica} />
             {:else}
-                <View {task} />
-            {/if}
-            {#if task.steps}
-                <div class="relative w-full flex flex-col">
-                    {#each JSON.parse(task.steps) as step}
-                        <StepComponent bind:step />
-                    {/each}
-                </div>
+                <View bind:task />
             {/if}
         </div>
     </div>
