@@ -164,6 +164,40 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.patch('/:id', async (req, res) => {
+    try {
+        const { category, title, description, due, steps } = req.body;
+        const client = await db.connect();
+
+        await client.query(`
+            UPDATE public.task
+            SET ${category ? `category = '${category}',` : ""}
+            ${title ? `title = '${title}',` : ""}
+            ${description ? `description = '${description}',` : ""}
+            ${due ? `due = '${due}',` : ""}
+            ${steps ? `steps = '${steps}',` : ""}
+                updated_at = $1
+            WHERE
+                id = $2
+                AND
+                user_id = $3;
+        `, [new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+
+        client.release();
+
+        return res.status(200).send({
+            success: true,
+            message: "Task updated successfully"
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a task : ${err.message}`);
+        return res.status(500).send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
 router.delete('/:id', async (req, res) => {
     try {
         const client = await db.connect();
