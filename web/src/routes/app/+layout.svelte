@@ -1,10 +1,19 @@
 <script lang="ts">
     import Navigation from '$lib/components/shared/Navbar/Navigation.svelte';
-    import { setContext } from 'svelte';
+    import { onMount, setContext } from 'svelte';
     import type { LayoutServerData } from './$types';
     import { writable } from 'svelte/store';
+    import { addToast } from '$lib/stores/toast';
+    import { goto } from '$app/navigation';
 
     export let data: LayoutServerData;
+
+    onMount(() => {
+        if (data.message) {
+            addToast({ type: "info", message: data.message });
+            goto("/auth/login");
+        }
+    })
 
     setContext('user', writable(data.user));
     setContext('jwt', data.jwt);

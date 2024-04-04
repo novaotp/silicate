@@ -61,7 +61,7 @@ export const actions = {
 				return fail(422, { email, message: "Données erronées." });
 			}
 
-			cookies.set("id", result.jwt, { path: "/", maxAge: result.maxAge });
+			cookies.set("id", result.jwt, { httpOnly: false, secure: false, path: "/", maxAge: result.maxAge });
 		} catch (err) {
 			console.error(`Something went wrong whilst login a user : ${(err as Error).message}`)
 			return fail(422, { email, message: "Une erreur est survenue." });
