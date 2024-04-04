@@ -1,14 +1,15 @@
 import { Router } from "express";
 import { db } from "../database";
-import { RawCategory, RawTask, Task } from "../../../libs/models/Task";
+import { Attachment, RawCategory, RawTask, Task } from "../../../libs/models/Task";
 import { authenticated } from "../middlewares/authenticated";
 import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
+import { upload } from '../middlewares/fileUploads';
 
 export const router = Router();
 
 router.use(authenticated);
 
-router.get('/:id(d+)', async (req, res) => {
+router.get('/:id(\\d+$)', async (req, res) => {
     try {
         const client = await db.connect();
 
@@ -42,7 +43,8 @@ router.get('/:id(d+)', async (req, res) => {
                 description: task.description,
                 category: task.category,
                 due: task.due,
-                steps: task.steps
+                steps: task.steps,
+                attachments: task.attachments
             } as Task
         });
     } catch (err) {
@@ -56,9 +58,9 @@ router.get('/:id(d+)', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const { category, search }= req.query;
+        const { category, search } = req.query;
         const client = await db.connect();
-        
+
         const { rows } = await client.query<RawTask>(`
             SELECT *
             FROM public.task
@@ -81,7 +83,8 @@ router.get('/', async (req, res) => {
                     description: row.description,
                     category: row.category,
                     due: row.due,
-                    steps: row.steps
+                    steps: row.steps,
+                    attachments: row.attachments
                 } as Task
             })
         });
@@ -94,23 +97,33 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', upload.array("attachments"), async (req, res) => {
     try {
         const { category, title, description, due, steps } = req.body;
         const client = await db.connect();
 
+        let attachments: Attachment[] | null = null;
+        if (req.files && (req.files.length as number) > 0) {
+            attachments = [];
+
+            for (const file of (req.files as Express.Multer.File[])) {
+                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
+            }
+        }
+
         const { rows } = await client.query(`
-            INSERT INTO public.task (user_id, category, title, description, due, steps)
+            INSERT INTO public.task (user_id, category, title, description, due, steps, attachments)
             VALUES (
                 $1,
                 $2,
                 $3,
                 $4,
                 $5,
-                $6
+                $6,
+                $7
             )
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, attachments]);
 
         client.release();
 
@@ -130,10 +143,19 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.array("attachments"), async (req, res) => {
     try {
         const { category, title, description, due, steps } = req.body;
         const client = await db.connect();
+
+        let attachments: Attachment[] | null = null;
+        if (req.files && (req.files.length as number) > 0) {
+            attachments = [];
+
+            for (const file of (req.files as Express.Multer.File[])) {
+                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
+            }
+        }
 
         await client.query(`
             UPDATE public.task
@@ -142,12 +164,13 @@ router.put('/:id', async (req, res) => {
                 description = $3,
                 due = $4,
                 steps = $5,
-                updated_at = $6
+                attachments = $6,
+                updated_at = $7
             WHERE
-                id = $7
+                id = $8
                 AND
-                user_id = $8;
-        `, [category, title, description, due, steps, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+                user_id = $9;
+        `, [category, title, description, due, steps, attachments, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
@@ -164,10 +187,19 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', upload.array("attachments"), async (req, res) => {
     try {
         const { category, title, description, due, steps } = req.body;
         const client = await db.connect();
+
+        let attachments: Attachment[] | null = null;
+        if (req.files && (req.files.length as number) > 0) {
+            attachments = [];
+
+            for (const file of (req.files as Express.Multer.File[])) {
+                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
+            }
+        }
 
         await client.query(`
             UPDATE public.task
@@ -176,6 +208,7 @@ router.patch('/:id', async (req, res) => {
             ${description ? `description = '${description}',` : ""}
             ${due ? `due = '${due}',` : ""}
             ${steps ? `steps = '${steps}',` : ""}
+            ${attachments ? `attachments = '${attachments}',` : ""}
                 updated_at = $1
             WHERE
                 id = $2
@@ -187,10 +220,10 @@ router.patch('/:id', async (req, res) => {
 
         return res.status(200).send({
             success: true,
-            message: "Task updated successfully"
+            message: "Task patched successfully"
         });
     } catch (err) {
-        console.error(`Something went wrong whilst updating a task : ${err.message}`);
+        console.error(`Something went wrong whilst patching a task : ${err.message}`);
         return res.status(500).send({
             success: false,
             message: "Internal Server Error"
@@ -240,6 +273,24 @@ router.get("/categories", async (req, res) => {
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the categories : ${err.message}`);
+        return res.status(500).send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.post('/attachment', async (req, res) => {
+    try {
+        const { path } = req.body;
+
+        // TODO : only allow if the path is owned by the user
+
+        res.setHeader("content-type", "Disposition");
+
+        return res.status(200).sendFile(path, { root: "." });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching an attachment : ${err.message}`);
         return res.status(500).send({
             success: false,
             message: "Internal Server Error"

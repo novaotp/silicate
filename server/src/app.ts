@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
+import path from "path";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ import { router as authRoutes } from "./routes/auth.routes.ts";
 
 const app = express();
 
+app.use(express.static(path.resolve('./public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({

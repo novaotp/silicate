@@ -37,19 +37,21 @@
     };
 
     const newSubStep = () => {
-        step.subSteps = [...step.subSteps ?? [], { label: '', completed: false }];
+        step.subSteps = [...(step.subSteps ?? []), { label: '', completed: false }];
         dispatch('update');
     };
+
+    const onLabelChange = () => dispatch("update");
 </script>
 
 <div class="flex flex-col">
     <button on:click={() => (showSub = !showSub)} class="flex gap-2 w-full py-2 justify-between items-center">
         <div class="flex gap-2">
             <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} />
-            <h3 class="text-sm {step.completed ? 'line-through' : ''}">{step.label}</h3>
+            <h3 class="text-sm {step.completed ? 'line-through text-gray-500' : ''}">{step.label}</h3>
             {#if step.subSteps && step.subSteps.length > 0}
                 {@const completedSubs = step.subSteps?.reduce((acc, curr) => acc + (curr.completed ? 1 : 0), 0)}
-                <span class="text-sm">{completedSubs}/{step.subSteps.length}</span>
+                <span class="text-sm {step.completed ? 'line-through text-gray-500' : ''}">{completedSubs}/{step.subSteps.length}</span>
             {/if}
         </div>
         <button class="relative" on:click|stopPropagation>
@@ -59,9 +61,9 @@
     {#if step.subSteps && step.subSteps.length > 0 && showSub}
         <ul class="flex flex-col ml-10 text-sm gap-1">
             {#each step.subSteps as sub}
-                <li>
+                <li class="flex gap-2">
                     <input type="checkbox" bind:checked={sub.completed} on:change={onCompletedAllSub} />
-                    <input bind:value={sub.label} />
+                    <input bind:value={sub.label} on:input={onLabelChange} class={sub.completed ? 'line-through text-gray-500' : ''} />
                 </li>
             {/each}
             <li>

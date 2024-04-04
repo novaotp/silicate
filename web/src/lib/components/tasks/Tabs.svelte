@@ -27,7 +27,8 @@
                 description: null,
                 category: null,
                 due: new Date(),
-                steps: null
+                steps: null,
+                attachment_paths: null
             }),
             headers: {
                 accept: 'application/json',

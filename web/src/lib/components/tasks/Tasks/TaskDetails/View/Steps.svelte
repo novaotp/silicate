@@ -89,26 +89,25 @@
     };
 </script>
 
-<h3>Étapes</h3>
-<div class="relative w-full flex flex-col p-5 rounded-lg border border-gray-300 gap-2">
-    <div class="flex justify-between text-sm">
-        <h3>Progression</h3>
-        <span>{progression}%</span>
+<div class="relative w-full flex flex-col justify-start gap-3">
+    <h3>Étapes</h3>
+    <div class="relative w-full flex flex-col p-5 rounded-lg border border-gray-300 gap-2">
+        <div class="flex justify-between text-sm">
+            <h3>Progression</h3>
+            <span>{progression}%</span>
+        </div>
+        <div class="relative w-full h-1 rounded-full bg-black">
+            <div class="relative h-full bg-yellow-400 duration-200 ease-in-out" style="width: {progression}%;"></div>
+        </div>
     </div>
-    <div class="relative w-full h-1 rounded-full bg-black">
-        <div class="relative h-full bg-yellow-400 duration-200 ease-in-out" style="width: {progression}%;"></div>
-    </div>
-</div>
-<div class="relative w-full flex flex-col">
-    {#each pending as step}
-        <StepComponent {step} on:update={update} />
-    {/each}
-</div>
-{#if done.length > 0}
-    <h3>Terminées</h3>
     <div class="relative w-full flex flex-col">
-        {#each done as step}
+        {#each pending as step}
             <StepComponent {step} on:update={update} />
         {/each}
+        {#if done.length > 0}
+            {#each done as step}
+                <StepComponent {step} on:update={update} />
+            {/each}
+        {/if}
     </div>
-{/if}
+</div>

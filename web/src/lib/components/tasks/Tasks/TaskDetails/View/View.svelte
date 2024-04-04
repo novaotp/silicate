@@ -4,9 +4,10 @@
     import Due from './Due.svelte';
     import Description from './Description.svelte';
     import Steps from './Steps.svelte';
+    import Attachments from './Attachments.svelte';
 
     export let task: Task;
-    $: ({ id, title, description, category, due, steps } = task);
+    $: ({ id, title, description, category, due, steps, attachments } = task);
 </script>
 
 <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-black">
@@ -14,6 +15,7 @@
     <Category value={category} />
     <Due value={due} />
     <Description value={description} />
+    <Attachments {id} bind:value={attachments} />
     {#if steps}
         {#key id}
             <Steps {id} bind:value={steps} />
