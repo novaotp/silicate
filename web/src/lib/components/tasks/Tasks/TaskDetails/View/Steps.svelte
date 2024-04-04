@@ -17,6 +17,10 @@
     $: category = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let timer: NodeJS.Timeout;
+    let isFetching = false;
     let updating: boolean = false;
     let steps = JSON.parse(value) as Step[];
 
@@ -25,46 +29,63 @@
     let done: Step[] = steps.filter((s) => s.completed);
 
     $: {
-        if (updating && steps) {
+        if (isFetching && updating) {
+            controller.abort();
+            clearTimeout(timer);
+            isFetching = false;
+        }
+
+        if (updating) {
             progression = (calculateCompletion(steps) * 100).toFixed(0);
             pending = steps.filter((s) => !s.completed);
             done = steps.filter((s) => s.completed);
 
             steps = [...steps];
             updating = false;
-            updateSteps();
+            timer = setTimeout(() => {
+                isFetching = true;
+                updateSteps();
+                isFetching = false;
+            }, 1000);
         }
     }
 
     const update = () => (updating = true);
 
     const updateSteps = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                steps: JSON.stringify(steps)
-            }),
-            headers: {
-                accept: 'application/json',
-                authorization: jwt,
-                'content-type': 'application/json'
+        try {
+            const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    steps: JSON.stringify(steps)
+                }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                },
+                signal
+            });
+            const { success, message }: ApiResponse = await response.json();
+
+            if (!success) {
+                addToast({ type: 'error', message });
+                return;
             }
-        });
-        const { success, message }: ApiResponse = await response.json();
 
-        if (!success) {
-            addToast({ type: 'error', message });
-            return;
+            const updatedTasks = await fetchTasks(jwt, category, search);
+
+            if (!updatedTasks) {
+                addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
+                return;
+            }
+
+            $tasks = updatedTasks;
+        } catch (err: any) {
+            if (err.name === 'AbortError') {
+                null;
+            }
         }
-
-        const updatedTasks = await fetchTasks(jwt, category, search);
-
-        if (!updatedTasks) {
-            addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
-            return;
-        }
-
-        $tasks = updatedTasks;
     };
 </script>
 
