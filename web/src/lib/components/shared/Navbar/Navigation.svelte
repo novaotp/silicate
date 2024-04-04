@@ -6,7 +6,10 @@
         IconStars as GradeIcon,
         IconHome,
         IconLogout,
-        IconChecklist as TaskIcon
+        IconChecklist as TaskIcon,
+
+        IconSettings
+
     } from '@tabler/icons-svelte';
     import Item from './Item.svelte';
     import { fade, fly } from 'svelte/transition';
@@ -35,6 +38,7 @@
                     <Item on:close={() => (showMenu = false)} href="/app/memos" label="Mémos" icon={MemoIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/tasks" label="Tâches" icon={TaskIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/gradebooks" label="Carnets de notes" icon={GradeIcon} />
+                    <Item on:close={() => (showMenu = false)} href="/app/settings" label="Paramètres" icon={IconSettings} />
                 </menu>
             </div>
         </div>
@@ -47,6 +51,7 @@
         <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} />
         <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} />
         <DesktopItem href="/app/gradebooks" label="Notes" icon={GradeIcon} />
+        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} />
     </ul>
     <ul class="relative w-full flex flex-col gap-3">
         <li class="relative flex w-full aspect-square items-center justify-center">
