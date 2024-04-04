@@ -1,20 +1,15 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import type { ActionData } from './$types';
     import AlternativeLink from '$lib/components/auth/AlternativeLink.svelte';
     import Input from '$lib/components/auth/Input.svelte';
     import Submit from '$lib/components/auth/Submit.svelte';
     import { addToast } from '$lib/stores/toast';
-    import { enhance } from '$app/forms';
+    import { applyAction, enhance } from '$app/forms';
+    import { page } from '$app/stores';
 
     export let form: ActionData;
 
-    onMount(() => {
-        if (form?.message) {
-            addToast({ type: 'error', message: form.message });
-            return;
-        }
-    });
+    let message: string | null = null;
 
     let email: string = form?.email ?? '';
     let password: string = '';
@@ -24,7 +19,20 @@
     <title>Connexion - Silicate</title>
 </svelte:head>
 
-<form method="POST" class="relative mb-5 flex w-[70%] max-w-[500px] flex-col overflow-x-hidden gap-10 px-[2px]" use:enhance>
+<form
+    method="POST"
+    class="relative mb-5 flex w-[70%] max-w-[500px] flex-col overflow-x-hidden gap-10 px-[2px]"
+    use:enhance={() => {
+        return async ({ result, update }) => {
+            await applyAction(result);
+            await update();
+            if (result.type === "failure" && $page.form && $page.form.message) {
+                addToast({ type: 'error', message: $page.form.message });
+            }
+            password = '';
+        };
+    }}
+>
     <div>
         <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
         <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
