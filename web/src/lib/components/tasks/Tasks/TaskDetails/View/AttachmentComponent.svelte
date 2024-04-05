@@ -1,14 +1,15 @@
 <script lang="ts">
-    import { PUBLIC_BACKEND_URL } from "$env/static/public";
-    import { getContext } from "svelte";
-    import { byteConverter, toTitleCase } from "./utils";
-    import * as AllIcons from "@tabler/icons-svelte";
+    import { PUBLIC_BACKEND_URL } from '$env/static/public';
+    import { getContext } from 'svelte';
+    import { byteConverter, toTitleCase } from './utils';
+    import * as AllIcons from '@tabler/icons-svelte';
+    import AttachmentPreview from './AttachmentPreview.svelte';
 
     export let path: string;
     export let name: string;
 
-    $: extension = name.split(".").at(-1)!;
-    
+    $: extension = name.split('.').at(-1)!;
+
     $: fileBlob = async () => {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/attachment`, {
             method: 'POST',
@@ -24,7 +25,7 @@
         return await response.blob();
     };
 
-    const jwt = getContext<string>("jwt");
+    const jwt = getContext<string>('jwt');
 
     $: icon = () => {
         const iconKey = `IconFileType${toTitleCase(extension)}`;
@@ -33,14 +34,14 @@
             /* @ts-ignore */
             return AllIcons[iconKey];
         } else {
-            return AllIcons["IconFileTypeTxt"];
+            return AllIcons['IconFileTypeTxt'];
         }
-    }
+    };
 
     /**
      * @see https://stackoverflow.com/a/59414837
      */
-     const download = async () => {
+    const download = async () => {
         const file = await fileBlob();
 
         let link = document.createElement('a');
@@ -53,10 +54,15 @@
         const file = await fileBlob();
 
         return file.size;
-    }
+    };
+
+    let showPreview = false;
 </script>
 
-<button class="relative flex justify-between items-center gap-5 min-w-40 max-w-80 px-4 py-2 rounded-lg border border-gray-300">
+<button
+    class="relative flex justify-between items-center gap-5 min-w-40 max-w-80 px-4 py-2 rounded-lg border border-gray-300"
+    on:click={() => (showPreview = true)}
+>
     <div class="relative h-full flex justify-center items-center">
         <svelte:component this={icon()} class="size-6" />
     </div>
@@ -70,4 +76,7 @@
             </div>
         {/await}
     </div>
+    {#if showPreview}
+        <AttachmentPreview bind:show={showPreview} {name} pendingBlob={fileBlob} />
+    {/if}
 </button>
