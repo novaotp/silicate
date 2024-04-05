@@ -9,6 +9,7 @@
     export let id: number;
     export const path: string = "";
     export let name: string;
+    export let signal: AbortSignal;
 
     $: extension = name.split('.').at(-1)!;
 
@@ -19,10 +20,10 @@
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment?name=${name}`, {
             method: 'GET',
             headers: {
-                accept: 'application/json',
                 authorization: jwt,
                 'content-type': 'application/json'
-            }
+            },
+            signal
         });
         const blob = await response.blob();
         loading = false;
@@ -78,8 +79,12 @@
             {#if showPreview}
                 <AttachmentPreview {name} {blob} on:delete on:close={() => (showPreview = false)} />
             {/if}
-        {:catch}
-            <p>Une erreur est survenue lors du chargement de la ressource.</p>
+        {:catch error}
+            {#if error.name === "AbortError"}
+                <p>La requête a été abandonnée.</p>
+            {:else}
+                <p>Une erreur est survenue lors du chargement de la ressource.</p>
+            {/if}
         {/await}
     </div>
 </button>

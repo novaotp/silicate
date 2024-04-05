@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { addToast } from '$lib/stores/toast';
     import { createEventDispatcher } from 'svelte';
     import { fade, fly } from 'svelte/transition';
 
@@ -14,6 +13,9 @@
         dispatch("close");
         dispatch("delete", name);
     }
+
+    let clientHeight: number;
+    let clientWidth: number;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
@@ -23,8 +25,10 @@
     transition:fade
 >
     <div class="relative w-[90%] bg-white flex flex-col justify-center items-center rounded-lg py-5 gap-5" transition:fly={{ y: 50 }}>
-        <h3>Aperçu de {name}</h3>
+        <h3 class="px-5">Aperçu de {name}</h3>
         <button on:click={deleteThis} class="relative bg-red-500 text-white px-4 py-2 rounded-lg z-[2000]">Supprimer</button>
-        <embed {src} class="relative w-full" />
+        <div bind:clientHeight bind:clientWidth>
+            <embed {src} class="relative" width="{window.innerWidth / 10 * 9}px" height="{window.innerHeight / 3 * 2}px" />
+        </div>
     </div>
 </div>

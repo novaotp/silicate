@@ -4,6 +4,7 @@ import { Attachment, Task } from "../../../../libs/models/Task";
 import { upload } from "../../middlewares/fileUploads";
 import { db } from "../../database";
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
+import mime from "mime";
 
 export const router = Router();
 
@@ -36,7 +37,7 @@ router.get('/:id/attachment', async (req, res) => {
             return res.status(404).send({ success: false, message: "No attachment found" })
         }
 
-        res.setHeader("content-type", "Disposition");
+        res.setHeader("Content-Type", mime.lookup(attachment.relativePathOnServer));
 
         return res.status(200).sendFile(attachment.relativePathOnServer, { root: "." });
     } catch (err) {

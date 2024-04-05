@@ -6,6 +6,7 @@
     import Steps from './Steps.svelte';
     import Attachments from './Attachments.svelte';
 
+    export let signal: AbortSignal;
     export let task: Task;
     $: ({ id, title, description, category, due, steps, attachments } = task);
 </script>
@@ -15,7 +16,7 @@
     <Category value={category} />
     <Due value={due} />
     <Description value={description} />
-    <Attachments {id} bind:value={attachments} />
+    <Attachments {id} bind:value={attachments} {signal} />
     {#if steps}
         {#key id}
             <Steps {id} bind:value={steps} />

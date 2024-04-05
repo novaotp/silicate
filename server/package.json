@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "",
   "main": "src/app.ts",
   "scripts": {
@@ -19,6 +19,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jose": "^5.2.3",
+    "mime-types": "^2.1.35",
     "multer": "^1.4.5-lts.1",
     "pg": "^8.11.3"
   },

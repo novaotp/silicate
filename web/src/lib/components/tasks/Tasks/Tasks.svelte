@@ -29,18 +29,26 @@
         viewedTaskId = event.detail;
     };
 
+    const controller = new AbortController();
+    const signal = controller.signal;
     const fetchTask = async (id: number) => {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
                 authorization: jwt
-            }
+            },
+            signal
         });
         const result: ApiResponseWithData<Task> = await response.json();
 
         return result.success ? result.data : undefined;
     };
+
+    const onEarlyBack = () => {
+        viewedTaskId = null;
+        controller.abort();
+    }
 </script>
 
 <div class="relative w-full h-full flex flex-col justify-start gap-5">
@@ -70,10 +78,13 @@
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
         {#await fetchTask(viewedTaskId)}
             <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-                <button class="rounded-full" on:click={() => (viewedTaskId = null)}>
+                <button class="rounded-full" on:click={onEarlyBack}>
                     <IconChevronLeft />
                 </button>
             </header>
+            <div class="relative w-full h-full flex justify-center items-center px-5">
+                <p>Chargement de la tâche...</p>
+            </div>
         {:then task}
             {#if task}
                 <TaskDetails {task} on:close={() => (viewedTaskId = null)} />

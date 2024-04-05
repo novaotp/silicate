@@ -26,18 +26,19 @@
     $: category = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const back = () => {
-        if (!isInEditingMode) {
-            dispatch('close');
-            return;
+        if (isInEditingMode) {
+            const leave = window.confirm('Vous avez des changements non enregistrés. Souhaitez-vous continuer ?');
+
+            if (!leave) return;
         }
 
-        const choice = window.confirm('Vous avez des changements non enregistrés. Souhaitez-vous continuer ?');
-
-        if (choice) {
-            isInEditingMode = false;
-            dispatch('close');
-        }
+        isInEditingMode = false;
+        controller.abort();
+        dispatch('close');
     };
 
     const edit = async () => {
@@ -117,7 +118,7 @@
     <title>{task.title} - Silicate</title>
 </svelte:head>
 
-<header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+<header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] glass">
     <button class="rounded-full" on:click={back}>
         <IconChevronLeft />
     </button>
@@ -134,6 +135,16 @@
     {#if isInEditingMode}
         <Edit task={replica} />
     {:else}
-        <View bind:task />
+        <View bind:task {signal} />
     {/if}
 </div>
+
+<style lang="scss">
+    $blur: 10px;
+
+    .glass {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur($blur);
+        -webkit-backdrop-filter: blur($blur);
+    }
+</style>

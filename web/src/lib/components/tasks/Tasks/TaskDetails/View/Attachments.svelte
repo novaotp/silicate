@@ -9,6 +9,7 @@
 
     export let id: number;
     export let value: string | null;
+    export let signal: AbortSignal;
 
     let attachments: Attachment[] = value ? JSON.parse(value) : [];
 
@@ -85,7 +86,7 @@
     </div>
     <div class="relative w-full flex flex-wrap justify-start items-start gap-3 text-black">
         {#each attachments as attachment}
-            <AttachmentComponent {id} path={attachment.relativePathOnServer} name={attachment.name} on:delete={deleteAttachment} />
+            <AttachmentComponent {id} path={attachment.relativePathOnServer} name={attachment.name} {signal} on:delete={deleteAttachment} />
         {/each}
         <input bind:this={newAttachmentNode} on:change={handleNewAttachments} multiple type="file" class="hidden" />
         <button on:click={() => newAttachmentNode.click()} class="border border-gray-300 rounded-lg p-4"><IconPlus /></button>
