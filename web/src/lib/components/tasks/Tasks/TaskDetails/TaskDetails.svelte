@@ -124,7 +124,7 @@
 
 {#if id !== null && task && replica}
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-        <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100]">
+        <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
             <button class="rounded-full" on:click={back}>
                 <IconChevronLeft />
             </button>
