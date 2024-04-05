@@ -38,6 +38,15 @@ export interface Attachment {
     name: string
 }
 
+export interface SubStep {
+    label: string,
+    completed: boolean,
+}
+
+export interface Step extends SubStep {
+    subSteps?: SubStep[]
+}
+
 export interface RawCategory {
     category: string
 }

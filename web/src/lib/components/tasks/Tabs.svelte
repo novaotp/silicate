@@ -4,12 +4,12 @@
     import { IconPlus } from '@tabler/icons-svelte';
     import { fetchTasks } from './Tasks/TaskDetails/utils';
     import { addToast } from '$lib/stores/toast';
-    import { getContext } from 'svelte';
+    import { createEventDispatcher, getContext } from 'svelte';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { PageContext } from './types';
 
-    export let viewedTaskId: number | null;
+    const dispatch = createEventDispatcher<{ newTask: number }>();
 
     const { tasks } = getContext<PageContext>('page');
 
@@ -53,7 +53,7 @@
         }
 
         $tasks = updatedTasks;
-        viewedTaskId = result.data;
+        dispatch('newTask', result.data);
     };
 </script>
 
@@ -61,7 +61,10 @@
     <button class="border-b-2 {currentTab === '' ? 'border-blue-500' : 'border-transparent'}" on:click={async () => await goto('/app/tasks')}>
         Tâches
     </button>
-    <button class="relative bottom-1/2 h-[50px] aspect-square rounded-full bg-blue-500 text-white flex justify-center items-center shadow-lg" on:click={add}>
+    <button
+        class="relative bottom-1/2 h-[50px] aspect-square rounded-full bg-blue-500 text-white flex justify-center items-center shadow-lg"
+        on:click={add}
+    >
         <IconPlus />
     </button>
     <button

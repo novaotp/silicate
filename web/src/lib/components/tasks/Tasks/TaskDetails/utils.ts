@@ -1,15 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import type { Task } from "$libs/models/Task";
+import type { Step, Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
-
-export type Item = {
-    label: string,
-    completed: boolean,
-}
-
-export type Step = Item & {
-    subSteps?: Item[]
-}
 
 export const calculateCompletion = (values: string | Step[]): number => {
     if (typeof values === 'string') {

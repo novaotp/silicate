@@ -18,13 +18,17 @@
     });
 
     $: currentTab = $page.url.searchParams.get("tab") ?? "";
+
+    const onNewTask = (event: CustomEvent<number>) => {
+        viewedTaskId = event.detail;
+    }
 </script>
 
-{#if currentTab === ""}
-    <Tasks bind:viewedTaskId />
-{:else}
+{#if currentTab === "project"}
     <div class="relative w-full h-full flex justify-center items-center">
         <p class="text-center">Cette fonctionnalité n'est pas encore disponible.</p>
     </div>
+{:else}
+    <Tasks bind:viewedTaskId />
 {/if}
-<Tabs bind:viewedTaskId />
+<Tabs on:newTask={onNewTask} />

@@ -4,13 +4,17 @@
     import { byteConverter, toTitleCase } from './utils';
     import * as AllIcons from '@tabler/icons-svelte';
     import AttachmentPreview from './AttachmentPreview.svelte';
+    import { addToast } from '$lib/stores/toast';
 
     export let path: string;
     export let name: string;
 
     $: extension = name.split('.').at(-1)!;
 
-    $: fileBlob = async () => {
+    let loading: boolean = true;
+    let showPreview: boolean = false;
+
+    $: fileBlobPromise = (async (path: string) => {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/attachment`, {
             method: 'POST',
             body: JSON.stringify({
@@ -22,12 +26,14 @@
                 'content-type': 'application/json'
             }
         });
-        return await response.blob();
-    };
+        const blob = await response.blob();
+        loading = false;
+        return blob;
+    })(path);
 
     const jwt = getContext<string>('jwt');
 
-    $: icon = () => {
+    $: icon = ((extension: string) => {
         const iconKey = `IconFileType${toTitleCase(extension)}`;
 
         if (Object.keys(AllIcons).includes(iconKey)) {
@@ -36,47 +42,46 @@
         } else {
             return AllIcons['IconFileTypeTxt'];
         }
-    };
+    })(extension);
 
     /**
      * @see https://stackoverflow.com/a/59414837
      */
-    const download = async () => {
-        const file = await fileBlob();
-
+    const download = (file: Blob) => {
         let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(file);
+        link.href = URL.createObjectURL(file);
         link.download = name;
         link.click();
     };
 
-    const size = async () => {
-        const file = await fileBlob();
-
-        return file.size;
+    const onClick = () => {
+        if (loading) {
+            addToast({ type: 'info', message: "Chargement de l'attachement" });
+        } else {
+            showPreview = true;
+        }
     };
-
-    let showPreview = false;
 </script>
 
-<button
-    class="relative flex justify-between items-center gap-5 min-w-40 max-w-80 px-4 py-2 rounded-lg border border-gray-300"
-    on:click={() => (showPreview = true)}
->
+<button on:click={onClick} class="relative flex justify-between items-center gap-5 min-w-40 max-w-80 px-4 py-2 rounded-lg border border-gray-300">
     <div class="relative h-full flex justify-center items-center">
-        <svelte:component this={icon()} class="size-6" />
+        <svelte:component this={icon} class="size-6" />
     </div>
     <div class="relative flex flex-col items-start max-w-40">
         <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40">{name}</span>
-        {#await size() then size}
+        {#await fileBlobPromise}
+            <p class="text-sm text-gray-500">Chargement...</p>
+        {:then blob}
             <div class="flex text-gray-500 text-sm">
-                <span>{byteConverter(size, 2)}</span>
+                <span>{byteConverter(blob.size, 2)}</span>
                 <span>&nbsp;-&nbsp;</span>
-                <button on:click|stopPropagation={download}>Télécharger</button>
+                <button on:click|stopPropagation={() => download(blob)}>Télécharger</button>
             </div>
+            {#if showPreview}
+                <AttachmentPreview {name} {blob} on:close={() => (showPreview = false)} />
+            {/if}
+        {:catch}
+            <p>Une erreur est survenue lors du chargement de la ressource.</p>
         {/await}
     </div>
-    {#if showPreview}
-        <AttachmentPreview bind:show={showPreview} {name} pendingBlob={fileBlob} />
-    {/if}
 </button>

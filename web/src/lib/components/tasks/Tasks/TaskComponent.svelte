@@ -1,16 +1,7 @@
 <script lang="ts">
-    import type { Task } from '$libs/models/Task';
+    import type { Step, Task } from '$libs/models/Task';
     import { IconCheck } from '@tabler/icons-svelte';
     import { createEventDispatcher } from 'svelte';
-
-    type Item = {
-        label: string;
-        completed: boolean;
-    };
-
-    type Step = Item & {
-        subSteps?: Item[];
-    };
 
     export let task: Task;
 

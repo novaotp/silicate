@@ -47,4 +47,6 @@
         {/each}
     </div>
 </div>
-<TaskDetails bind:id={viewedTaskId} />
+{#if viewedTaskId}
+    <TaskDetails id={viewedTaskId} on:close={() => (viewedTaskId = null)} />
+{/if}
