@@ -6,8 +6,14 @@
     import Search from './Search.svelte';
     import { page } from '$app/stores';
     import { getContext } from 'svelte';
+    import { PUBLIC_BACKEND_URL } from '$env/static/public';
+    import type { Task } from '$libs/models/Task';
+    import type { ApiResponseWithData } from '$libs/types/ApiResponse';
+    import { IconChevronLeft } from '@tabler/icons-svelte';
+    import { fly } from 'svelte/transition';
 
-    const { tasks, categories } = getContext<PageContext>("page");
+    const { tasks, categories } = getContext<PageContext>('page');
+    const jwt = getContext<string>('jwt');
 
     export let viewedTaskId: number | null;
 
@@ -21,6 +27,19 @@
 
     const onTaskClick = (event: CustomEvent<number>) => {
         viewedTaskId = event.detail;
+    };
+
+    const fetchTask = async (id: number) => {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                authorization: jwt
+            }
+        });
+        const result: ApiResponseWithData<Task> = await response.json();
+
+        return result.success ? result.data : undefined;
     };
 </script>
 
@@ -39,7 +58,7 @@
         {#each $tasks as task}
             <TaskComponent bind:task on:click={onTaskClick} />
         {:else}
-            {#if $page.url.searchParams.get("search") !== null}
+            {#if $page.url.searchParams.get('search') !== null}
                 <p>Aucune tâche ne correspond à ta recherche.</p>
             {:else}
                 <p>Vous n'avez pas de tâches à réaliser en ce moment !</p>
@@ -48,5 +67,19 @@
     </div>
 </div>
 {#if viewedTaskId}
-    <TaskDetails id={viewedTaskId} on:close={() => (viewedTaskId = null)} />
+    <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
+        {#await fetchTask(viewedTaskId)}
+            <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+                <button class="rounded-full" on:click={() => (viewedTaskId = null)}>
+                    <IconChevronLeft />
+                </button>
+            </header>
+        {:then task}
+            {#if task}
+                <TaskDetails {task} on:close={() => (viewedTaskId = null)} />
+            {:else}
+                <p>Une erreur est survenue.</p>
+            {/if}
+        {/await}
+    </div>
 {/if}

@@ -5,12 +5,11 @@
     import { createEventDispatcher, getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
     import { type PageContext } from '../../types';
-    import StepComponent from './View/StepComponent.svelte';
-    import { fly } from 'svelte/transition';
     import View from './View/View.svelte';
     import Edit from './Edit.svelte';
     import { fetchTasks } from './utils';
     import { page } from '$app/stores';
+    import type { Task } from '$libs/models/Task';
 
     const { tasks } = getContext<PageContext>('page');
 
@@ -18,10 +17,7 @@
 
     const dispatch = createEventDispatcher();
 
-    /** The id of the task to show. */
-    export let id: number;
-
-    $: task = $tasks.find((t) => t.id === id)!;
+    export let task: Task;
     $: replica = structuredClone(task);
 
     let isInEditingMode: boolean = false;
@@ -121,25 +117,23 @@
     <title>{task.title} - Silicate</title>
 </svelte:head>
 
-<div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-    <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-        <button class="rounded-full" on:click={back}>
-            <IconChevronLeft />
+<header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+    <button class="rounded-full" on:click={back}>
+        <IconChevronLeft />
+    </button>
+    <div class="flex justify-between items-center gap-4">
+        <button class="rounded-full text-red-500 py-2" on:click={destroy}>
+            <IconTrashX />
         </button>
-        <div class="flex justify-between items-center gap-4">
-            <button class="rounded-full text-red-500 py-2" on:click={destroy}>
-                <IconTrashX />
-            </button>
-            <button class="rounded-full bg-blue-500 text-white px-4 py-2" on:click={edit}>
-                <svelte:component this={EditIcon} />
-            </button>
-        </div>
-    </header>
-    <div class="relative w-full h-full flex flex-col justify-start items-start">
-        {#if isInEditingMode}
-            <Edit task={replica} />
-        {:else}
-            <View bind:task />
-        {/if}
+        <button class="rounded-full bg-blue-500 text-white px-4 py-2" on:click={edit}>
+            <svelte:component this={EditIcon} />
+        </button>
     </div>
+</header>
+<div class="relative w-full h-full flex flex-col justify-start items-start">
+    {#if isInEditingMode}
+        <Edit task={replica} />
+    {:else}
+        <View bind:task />
+    {/if}
 </div>

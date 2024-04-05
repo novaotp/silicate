@@ -5,7 +5,7 @@ import path from "path";
 
 dotenv.config();
 
-import { router as taskRoutes } from "./routes/task.routes.ts";
+import { router as taskRoutes } from "./routes/tasks/index.routes.ts";
 import { router as meRoutes } from "./routes/me.routes.ts";
 import { router as memoRoutes } from "./routes/memo.routes.ts";
 import { router as authRoutes } from "./routes/auth.routes.ts";

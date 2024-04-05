@@ -6,7 +6,8 @@
     import AttachmentPreview from './AttachmentPreview.svelte';
     import { addToast } from '$lib/stores/toast';
 
-    export let path: string;
+    export let id: number;
+    export const path: string = "";
     export let name: string;
 
     $: extension = name.split('.').at(-1)!;
@@ -14,12 +15,9 @@
     let loading: boolean = true;
     let showPreview: boolean = false;
 
-    $: fileBlobPromise = (async (path: string) => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/attachment`, {
-            method: 'POST',
-            body: JSON.stringify({
-                path: path
-            }),
+    $: fileBlobPromise = (async (name: string) => {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment?name=${name}`, {
+            method: 'GET',
             headers: {
                 accept: 'application/json',
                 authorization: jwt,
@@ -29,7 +27,7 @@
         const blob = await response.blob();
         loading = false;
         return blob;
-    })(path);
+    })(name);
 
     const jwt = getContext<string>('jwt');
 
@@ -78,7 +76,7 @@
                 <button on:click|stopPropagation={() => download(blob)}>Télécharger</button>
             </div>
             {#if showPreview}
-                <AttachmentPreview {name} {blob} on:close={() => (showPreview = false)} />
+                <AttachmentPreview {name} {blob} on:delete on:close={() => (showPreview = false)} />
             {/if}
         {:catch}
             <p>Une erreur est survenue lors du chargement de la ressource.</p>

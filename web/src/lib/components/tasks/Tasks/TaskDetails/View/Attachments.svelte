@@ -1,12 +1,9 @@
 <script lang="ts">
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import type { PageContext } from '$lib/components/tasks/types';
     import { addToast } from '$lib/stores/toast';
-    import type { ApiResponse } from '$libs/types/ApiResponse';
+    import type { ApiResponse, ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconPaperclip, IconPlus } from '@tabler/icons-svelte';
     import { getContext } from 'svelte';
-    import { fetchTasks } from '../utils';
-    import { page } from '$app/stores';
     import AttachmentComponent from './AttachmentComponent.svelte';
     import type { Attachment } from '$libs/models/Task';
 
@@ -15,42 +12,56 @@
 
     let attachments: Attachment[] = value ? JSON.parse(value) : [];
 
-    const { tasks } = getContext<PageContext>('page');
     const jwt = getContext<string>('jwt');
-
-    $: category = $page.url.searchParams.get('category') ?? '';
-    $: search = $page.url.searchParams.get('search') ?? '';
 
     let newAttachmentNode: HTMLInputElement;
 
-    const handleFiles = async (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                'existingAttachments': attachments,
-                'attachments': event.currentTarget.files
-            }),
+    const handleNewAttachments = async (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
+        if (!event.currentTarget.files) {
+            addToast({ type: "info", message: "Aucune ressource sélectionnée" });
+            return;
+        }
+
+        const data = new FormData()
+        for (const file of event.currentTarget.files) {
+            data.append('attachments', file)
+        }
+
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment`, {
+            method: 'POST',
+            body: data,
             headers: {
                 accept: 'application/json',
-                authorization: jwt,
-                contentType: 'multipart/form-data'
+                authorization: jwt
             }
         });
-        const { success, message }: ApiResponse = await response.json();
+        const result: ApiResponseWithData<Attachment[]> = await response.json();
 
-        if (!success) {
-            addToast({ type: 'error', message });
+        if (!result.success) {
+            addToast({ type: 'error', message: result.message });
             return;
         }
 
-        const updatedTasks = await fetchTasks(jwt, category, search);
+        attachments = [...attachments, ...result.data];
+    };
 
-        if (!updatedTasks) {
-            addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
+    const deleteAttachment = async (event: CustomEvent<string>) => {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment?name=${event.detail}`, {
+            method: 'DELETE',
+            headers: {
+                accept: 'application/json',
+                authorization: jwt
+            }
+        });
+        const result: ApiResponse = await response.json();
+
+        if (!result.success) {
+            addToast({ type: 'error', message: result.message });
             return;
         }
 
-        $tasks = updatedTasks;
+        attachments = attachments.filter(a => a.name !== event.detail);
+        addToast({ type: "success", message: "Ressource supprimée avec succès" })
     };
 </script>
 
@@ -61,9 +72,9 @@
     </div>
     <div class="relative w-full flex flex-wrap justify-start items-start gap-3 text-black">
         {#each attachments as attachment}
-            <AttachmentComponent path={attachment.relativePathOnServer} name={attachment.name} />
+            <AttachmentComponent {id} path={attachment.relativePathOnServer} name={attachment.name} on:delete={deleteAttachment} />
         {/each}
-        <input bind:this={newAttachmentNode} on:change={handleFiles} multiple type="file" class="hidden" />
+        <input bind:this={newAttachmentNode} on:change={handleNewAttachments} multiple type="file" class="hidden" />
         <button on:click={() => newAttachmentNode.click()} class="border border-gray-300 rounded-lg p-4"><IconPlus /></button>
     </div>
 </div>

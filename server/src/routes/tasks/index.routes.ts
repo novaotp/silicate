@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { db } from "../database";
-import { Attachment, RawCategory, RawTask, Task } from "../../../libs/models/Task";
-import { authenticated } from "../middlewares/authenticated";
-import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
-import { upload } from '../middlewares/fileUploads';
+import { db } from "../../database";
+import { Attachment, RawCategory, RawTask, Task } from "../../../../libs/models/Task";
+import { authenticated } from "../../middlewares/authenticated";
+import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
+import { upload } from '../../middlewares/fileUploads';
+import { router as attachmentRoutes } from "./attachment.routes";
 
 export const router = Router();
 
@@ -280,20 +281,4 @@ router.get("/categories", async (req, res) => {
     }
 });
 
-router.post('/attachment', async (req, res) => {
-    try {
-        const { path } = req.body;
-
-        // TODO : only allow if the path is owned by the user
-
-        res.setHeader("content-type", "Disposition");
-
-        return res.status(200).sendFile(path, { root: "." });
-    } catch (err) {
-        console.error(`Something went wrong whilst fetching an attachment : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-});
+router.use("/", attachmentRoutes);
