@@ -123,7 +123,7 @@ router.post('/', upload.array("attachments"), async (req, res) => {
                 $7
             )
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, attachments]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, JSON.stringify(attachments)]);
 
         client.release();
 
@@ -170,7 +170,7 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
                 id = $8
                 AND
                 user_id = $9;
-        `, [category, title, description, due, steps, attachments, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+        `, [category, title, description, due, steps, JSON.stringify(attachments), new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
@@ -208,7 +208,7 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
             ${description ? `description = '${description}',` : ""}
             ${due ? `due = '${due}',` : ""}
             ${steps ? `steps = '${steps}',` : ""}
-            ${attachments ? `attachments = '${attachments}',` : ""}
+            ${attachments ? `attachments = '${JSON.stringify(attachments)}',` : ""}
                 updated_at = $1
             WHERE
                 id = $2
