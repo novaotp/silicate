@@ -22,7 +22,7 @@
     on:click|stopPropagation={() => dispatch("close")}
     transition:fade
 >
-    <div class="relative w-[90%] bg-white flex flex-col justify-center items-center rounded-lg gap-5" transition:fly={{ y: 50 }}>
+    <div class="relative w-[90%] bg-white flex flex-col justify-center items-center rounded-lg py-5 gap-5" transition:fly={{ y: 50 }}>
         <h3>Aperçu de {name}</h3>
         <button on:click={deleteThis} class="relative bg-red-500 text-white px-4 py-2 rounded-lg z-[2000]">Supprimer</button>
         <embed {src} class="relative w-full" />

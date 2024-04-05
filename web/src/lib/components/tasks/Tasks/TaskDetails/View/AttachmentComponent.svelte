@@ -38,7 +38,7 @@
             /* @ts-ignore */
             return AllIcons[iconKey];
         } else {
-            return AllIcons['IconFileTypeTxt'];
+            return AllIcons['IconFileUnknown'];
         }
     })(extension);
 
@@ -61,11 +61,11 @@
     };
 </script>
 
-<button on:click={onClick} class="relative flex justify-between items-center gap-5 min-w-40 max-w-80 px-4 py-2 rounded-lg border border-gray-300">
+<button on:click={onClick} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg border border-gray-300">
     <div class="relative h-full flex justify-center items-center">
         <svelte:component this={icon} class="size-6" />
     </div>
-    <div class="relative flex flex-col items-start max-w-40">
+    <div class="relative flex flex-col items-start max-w-[calc(100%-24px-20px)]">
         <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40">{name}</span>
         {#await fileBlobPromise}
             <p class="text-sm text-gray-500">Chargement...</p>

@@ -24,8 +24,18 @@
 
         const data = new FormData()
         for (const file of event.currentTarget.files) {
-            data.append('attachments', file)
+            let [filename, extension] = file.name.split(".")
+
+            let index = 1;
+            while (attachments.find(a => a.name === `${filename}.${extension}`) !== undefined) {
+                filename = `${filename}(${index})`;
+                index++;
+            }
+
+            data.append('attachments', file, `${filename}.${extension}`)
         }
+
+        addToast({ type: "info", message: "Téléchargement des ressources" });
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment`, {
             method: 'POST',
@@ -43,6 +53,8 @@
         }
 
         attachments = [...attachments, ...result.data];
+        value = JSON.stringify(attachments);
+        addToast({ type: "success", message: "Ressources téléchargées" })
     };
 
     const deleteAttachment = async (event: CustomEvent<string>) => {
@@ -61,6 +73,7 @@
         }
 
         attachments = attachments.filter(a => a.name !== event.detail);
+        value = JSON.stringify(attachments);
         addToast({ type: "success", message: "Ressource supprimée avec succès" })
     };
 </script>
