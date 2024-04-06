@@ -9,13 +9,15 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { Task } from '$libs/models/Task';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
-    import { IconChevronLeft } from '@tabler/icons-svelte';
+    import { IconArchive, IconChevronLeft } from '@tabler/icons-svelte';
     import { fly } from 'svelte/transition';
 
     const { tasks, categories } = getContext<PageContext>('page');
     const jwt = getContext<string>('jwt');
 
     export let viewedTaskId: number | null;
+
+    $: archived = $page.url.searchParams.get("tab") === "archives";
 
     $: {
         if (viewedTaskId !== null) {
@@ -53,7 +55,7 @@
 
 <div class="relative w-full h-full flex flex-col justify-start gap-5">
     <header class="relative w-full flex justify-start items-center">
-        <h1 class="text-xl">Tâches</h1>
+        <h1 class="text-xl">Tâches {archived ? "Archivées" : ""}</h1>
     </header>
     <Search />
     <div role="list" class="relative w-full flex gap-2">
@@ -68,6 +70,11 @@
         {:else}
             {#if $page.url.searchParams.get('search') !== null}
                 <p>Aucune tâche ne correspond à ta recherche.</p>
+            {:else if archived}
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex flex-col justify-center items-center gap-5">
+                    <IconArchive class="size-20" />
+                    <p class="text-center">Vos tâches archivées s'afficheront ici.</p>
+                </div>
             {:else}
                 <p>Vous n'avez pas de tâches à réaliser en ce moment !</p>
             {/if}

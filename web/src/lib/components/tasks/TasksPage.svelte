@@ -24,11 +24,5 @@
     }
 </script>
 
-{#if currentTab === "project"}
-    <div class="relative w-full h-full flex justify-center items-center">
-        <p class="text-center">Cette fonctionnalité n'est pas encore disponible.</p>
-    </div>
-{:else}
-    <Tasks bind:viewedTaskId />
-{/if}
+<Tasks bind:viewedTaskId />
 <Tabs on:newTask={onNewTask} />

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { db } from "../../database";
-import { Attachment, RawCategory, RawTask, Task } from "../../../../libs/models/Task";
+import { RawCategory, RawTask, Task } from "../../../../libs/models/Task";
 import { authenticated } from "../../middlewares/authenticated";
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/fileUploads';
 import { router as attachmentRoutes } from "./attachment.routes";
+import { getAttachments } from './utils';
 
 export const router = Router();
 
@@ -106,17 +107,10 @@ router.post('/', upload.array("attachments"), async (req, res) => {
         const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
-        let attachments: Attachment[] | null = null;
-        if (req.files && (req.files.length as number) > 0) {
-            attachments = [];
-
-            for (const file of (req.files as Express.Multer.File[])) {
-                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
-            }
-        }
+        const attachments = getAttachments(req);
 
         const { rows } = await client.query(`
-            INSERT INTO public.task (user_id, category, title, description, due, steps, attachments)
+            INSERT INTO public.task (user_id, category, title, description, due, steps, attachments, archived)
             VALUES (
                 $1,
                 $2,
@@ -128,7 +122,7 @@ router.post('/', upload.array("attachments"), async (req, res) => {
                 $8
             )
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, JSON.stringify(attachments), archived]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, attachments ? JSON.stringify(attachments) : null, archived]);
 
         client.release();
 
@@ -153,14 +147,7 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
         const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
-        let attachments: Attachment[] | null = null;
-        if (req.files && (req.files.length as number) > 0) {
-            attachments = [];
-
-            for (const file of (req.files as Express.Multer.File[])) {
-                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
-            }
-        }
+        const attachments = getAttachments(req);
 
         await client.query(`
             UPDATE public.task
@@ -176,7 +163,7 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
                 id = $9
                 AND
                 user_id = $10;
-        `, [category, title, description, due, steps, JSON.stringify(attachments), archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+        `, [category, title, description, due, steps, attachments ? JSON.stringify(attachments) : null, archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
@@ -198,24 +185,17 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
         const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
-        let attachments: Attachment[] | null = null;
-        if (req.files && (req.files.length as number) > 0) {
-            attachments = [];
-
-            for (const file of (req.files as Express.Multer.File[])) {
-                attachments.push({ relativePathOnServer: file.path, name: file.originalname });
-            }
-        }
+        const attachments = getAttachments(req);
 
         await client.query(`
             UPDATE public.task
-            SET ${category ? `category = '${category}',` : ""}
-            ${title ? `title = '${title}',` : ""}
-            ${description ? `description = '${description}',` : ""}
-            ${due ? `due = '${due}',` : ""}
-            ${steps ? `steps = '${steps}',` : ""}
-            ${attachments ? `attachments = '${JSON.stringify(attachments)}',` : ""}
-            ${archived ? `archived = ${archived},` : ""}
+            SET ${category !== undefined ? `category = '${category}',` : ""}
+            ${title !== undefined ? `title = '${title}',` : ""}
+            ${description !== undefined ? `description = '${description}',` : ""}
+            ${due !== undefined ? `due = '${due}',` : ""}
+            ${steps !== undefined ? `steps = '${steps}',` : ""}
+            ${attachments !== undefined ? attachments === null ? `attachments = ${attachments},` : `attachments = '${JSON.stringify(attachments)}',` : ""}
+            ${archived !== undefined ? `archived = ${archived},` : ""}
                 updated_at = $1
             WHERE
                 id = $2
@@ -267,9 +247,14 @@ router.delete('/:id', async (req, res) => {
 
 router.get("/categories", async (req, res) => {
     try {
+        const { archived } = req.query;
         const client = await db.connect();
 
-        const { rows } = await client.query<RawCategory>('SELECT DISTINCT category FROM public.task;');
+        const { rows } = await client.query<RawCategory>(`
+            SELECT DISTINCT category
+            FROM public.task
+            WHERE archived is ${archived};
+        `);
 
         client.release();
 

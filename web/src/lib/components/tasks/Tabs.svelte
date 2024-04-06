@@ -16,6 +16,7 @@
     const jwt = getContext<string>('jwt');
 
     $: currentTab = $page.url.searchParams.get('tab') ?? '';
+    $: archived = $page.url.searchParams.get("tab") === "archives";
     $: category = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';
 
@@ -28,7 +29,8 @@
                 category: null,
                 due: new Date(),
                 steps: null,
-                attachment_paths: null
+                attachments: null,
+                archived: false
             }),
             headers: {
                 accept: 'application/json',
@@ -45,7 +47,7 @@
             addToast({ type: 'success', message: 'Tâche ajoutée avec succès.' });
         }
 
-        const updatedTasks = await fetchTasks(jwt, category, search);
+        const updatedTasks = await fetchTasks(jwt, category, search, archived);
 
         if (!updatedTasks) {
             addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
@@ -58,7 +60,7 @@
 </script>
 
 <menu class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]">
-    <button class="border-b-2 {currentTab === '' ? 'border-blue-500' : 'border-transparent'}" on:click={async () => await goto('/app/tasks')}>
+    <button class="border-b-2 {currentTab === '' ? 'border-blue-500' : 'border-transparent'}" on:click={async () => await goto('/app/tasks', { invalidateAll: true })}>
         Tâches
     </button>
     <button
@@ -68,9 +70,9 @@
         <IconPlus />
     </button>
     <button
-        class="border-b-2 {currentTab === 'projects' ? 'border-blue-500' : 'border-transparent'}"
-        on:click={async () => await goto('/app/tasks?tab=projects')}
+        class="border-b-2 {currentTab === 'archives' ? 'border-blue-500' : 'border-transparent'}"
+        on:click={async () => await goto('/app/tasks?tab=archives', { invalidateAll: true })}
     >
-        Projets
+        Archives
     </button>
 </menu>

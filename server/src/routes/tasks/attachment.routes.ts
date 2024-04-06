@@ -5,6 +5,7 @@ import { upload } from "../../middlewares/fileUploads";
 import { db } from "../../database";
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import mime from "mime";
+import { getAttachments } from "./utils";
 
 export const router = Router();
 
@@ -51,14 +52,7 @@ router.get('/:id/attachment', async (req, res) => {
 
 router.post("/:id/attachment", upload.array("attachments"), async (req, res) => {
     try {
-        let newAttachments: Attachment[] | null = null;
-        if (req.files && (req.files.length as number) > 0) {
-            newAttachments = [];
-
-            for (const file of (req.files as Express.Multer.File[])) {
-                newAttachments.push({ relativePathOnServer: file.path, name: file.originalname });
-            }
-        }
+        const newAttachments = getAttachments(req);
 
         if (!newAttachments) {
             return res.status(418).send({ success: false, message: "Adding attachments without sending them..." })

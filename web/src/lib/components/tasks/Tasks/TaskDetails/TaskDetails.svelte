@@ -1,7 +1,7 @@
 <script lang="ts">
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import { IconCheck, IconChevronLeft, IconEdit, IconTrashX } from '@tabler/icons-svelte';
+    import { IconCheck, IconChevronLeft, IconDotsVertical, IconEdit, IconTrashX } from '@tabler/icons-svelte';
     import { createEventDispatcher, getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
     import { type PageContext } from '../../types';
@@ -10,6 +10,7 @@
     import { fetchTasks } from './utils';
     import { page } from '$app/stores';
     import type { Task } from '$libs/models/Task';
+    import Settings from './Settings.svelte';
 
     const { tasks } = getContext<PageContext>('page');
 
@@ -20,11 +21,14 @@
     export let task: Task;
     $: replica = structuredClone(task);
 
+    let showSettings: boolean = false;
+
     let isInEditingMode: boolean = false;
     $: EditIcon = isInEditingMode ? IconCheck : IconEdit;
 
     $: category = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';
+    $: archived = $page.url.searchParams.get("tab") === "archives";
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -55,7 +59,8 @@
                     description: replica.description,
                     category: replica.category,
                     due: replica.due,
-                    steps: replica.steps
+                    steps: replica.steps,
+                    archived: replica.archived
                 }),
                 headers: {
                     accept: 'application/json',
@@ -72,7 +77,7 @@
                 addToast({ type: 'success', message: 'Tâche modifiée avec succès.' });
             }
 
-            const updatedTasks = await fetchTasks(jwt, category, search);
+            const updatedTasks = await fetchTasks(jwt, category, search, archived);
 
             if (!updatedTasks) {
                 addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
@@ -99,7 +104,7 @@
             return;
         }
 
-        const updatedTasks = await fetchTasks(jwt, category, search);
+        const updatedTasks = await fetchTasks(jwt, category, search, archived);
 
         if (!updatedTasks) {
             addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
@@ -112,6 +117,40 @@
         $tasks = updatedTasks;
         dispatch('close');
     };
+
+    const archive = async () => {
+        replica.archived = !replica.archived;
+
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${replica.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                archived: replica.archived
+            }),
+            headers: {
+                accept: 'application/json',
+                authorization: jwt,
+                'content-type': 'application/json'
+            }
+        });
+        const { success, message }: ApiResponse = await response.json();
+
+        if (!success) {
+            addToast({ type: 'error', message });
+            return;
+        } else {
+            const message = replica.archived ? "Tâche archivée et retirée" : "Archivage annulée";
+            addToast({ type: 'success', message: message });
+        }
+
+        const updatedTasks = await fetchTasks(jwt, category, search, archived);
+
+        if (!updatedTasks) {
+            addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
+            return;
+        }
+
+        $tasks = updatedTasks;
+    };
 </script>
 
 <svelte:head>
@@ -123,11 +162,11 @@
         <IconChevronLeft />
     </button>
     <div class="flex justify-between items-center gap-4">
-        <button class="rounded-full text-red-500 py-2" on:click={destroy}>
-            <IconTrashX />
-        </button>
         <button class="rounded-full bg-blue-500 text-white px-4 py-2" on:click={edit}>
             <svelte:component this={EditIcon} />
+        </button>
+        <button class="py-2" on:click={() => (showSettings = !showSettings)}>
+            <IconDotsVertical />
         </button>
     </div>
 </header>
@@ -138,6 +177,7 @@
         <View bind:task {signal} />
     {/if}
 </div>
+<Settings show={showSettings} archived={replica.archived} on:close={() => (showSettings = !showSettings)} on:destroy={destroy} on:archive={archive} />
 
 <style lang="scss">
     $blur: 10px;
