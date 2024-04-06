@@ -16,7 +16,7 @@ export const addToast = (toast: ToastData) => {
     const id = uuidv4();
 
     // Push the toast to the top of the list of toasts
-    toasts.update((all) => [{ id, ...toast }, ...all]);
+    toasts.update((all) => [...all, { id, ...toast }]);
 
     setTimeout(() => {
         dismissToast(id)

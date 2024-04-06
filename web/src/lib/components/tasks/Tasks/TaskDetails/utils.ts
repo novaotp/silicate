@@ -1,12 +1,53 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Step, Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
+import { v4 } from "uuid";
 
-export const calculateCompletion = (values: string | Step[]): number => {
-    if (typeof values === 'string') {
-        values = JSON.parse(values) as Step[];
+/** Made to deal with steps deletion, which would require a unique identifier. */
+export interface StepWithId {
+    id: string,
+    label: string,
+    completed: boolean,
+    subSteps?: {
+        id: string,
+        label: string,
+        completed: boolean
+    }[]
+}
+
+export const toStepWithId = (step: Step): StepWithId => {
+    if (step.subSteps) {
+        return {
+            id: v4(),
+            label: step.label,
+            completed: step.completed,
+            subSteps: step.subSteps.map(sub => { return { id: v4(), label: sub.label, completed: sub.completed } })
+        }
+    } else {
+        return {
+            id: v4(),
+            label: step.label,
+            completed: step.completed
+        }
     }
+}
 
+export const toStep = (stepWithId: StepWithId): Step => {
+    if (stepWithId.subSteps) {
+        return {
+            label: stepWithId.label,
+            completed: stepWithId.completed,
+            subSteps: stepWithId.subSteps.map(sub => { return { label: sub.label, completed: sub.completed } })
+        }
+    } else {
+        return {
+            label: stepWithId.label,
+            completed: stepWithId.completed
+        }
+    }
+}
+
+export const calculateCompletion = (values: StepWithId[]): number => {
     let completedCount = 0;
     const totalCount = values.length;
 

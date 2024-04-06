@@ -17,12 +17,12 @@
         on:click={() => dispatch('close')}
         transition:fade
     >
-        <div role="dialog" class="fixed w-full rounded-md flex flex-col p-5 gap-4 shadow-2xl bg-white" transition:fly={{ y: 50 }}>
-            <button on:click={() => dispatch("destroy")} class="relative w-full h-5 flex justify-start items-center gap-10">
+        <div role="dialog" class="fixed w-full rounded-md flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+            <button on:click={() => dispatch("destroy")} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
                 <IconTrash />
                 <span>Supprimer</span>
             </button>
-            <button on:click={() => dispatch("archive")} class="relative w-full h-5 flex justify-start items-center gap-10">
+            <button on:click={() => dispatch("archive")} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
                 {#if archived}
                     <IconArchiveOff />
                     <span>Retirer de l'archive</span>
