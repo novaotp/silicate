@@ -122,7 +122,7 @@ router.post('/', upload.array("attachments"), async (req, res) => {
                 $8
             )
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, attachments ? JSON.stringify(attachments) : null, archived]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived]);
 
         client.release();
 
@@ -163,7 +163,7 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
                 id = $9
                 AND
                 user_id = $10;
-        `, [category, title, description, due, steps, attachments ? JSON.stringify(attachments) : null, archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+        `, [category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
@@ -193,7 +193,7 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
             ${title !== undefined ? `title = '${title}',` : ""}
             ${description !== undefined ? `description = '${description}',` : ""}
             ${due !== undefined ? `due = '${due}',` : ""}
-            ${steps !== undefined ? `steps = '${steps}',` : ""}
+            ${steps !== undefined ? steps === null ? `steps = ${steps},` : `steps = '${JSON.stringify(steps)}',` : ""}
             ${attachments !== undefined ? attachments === null ? `attachments = ${attachments},` : `attachments = '${JSON.stringify(attachments)}',` : ""}
             ${archived !== undefined ? `archived = ${archived},` : ""}
                 updated_at = $1
