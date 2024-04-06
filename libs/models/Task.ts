@@ -4,11 +4,13 @@ export interface RawTask {
     title: string,
     category: string | null,
     description: string | null,
+    /** A parsable array. */
     steps: string | null,
     /** A parsable array. */
     attachments: string | null;
+    archived: boolean,
     /** A parsable date. */
-    due: string | null,
+    due: string,
     /** A parsable date. */
     created_at: string,
     /** A parsable date. */
@@ -20,10 +22,11 @@ export interface Task {
     title: string,
     category: string | null,
     description: string | null,
-    /** A parsable object. */
+    /** A parsable array of {@link Step}. */
     steps: string | null,
     /** A parsable object. */
     attachments: string | null,
+    archived: boolean,
     /** A parsable date. */
     due: string,
 }
@@ -31,7 +34,7 @@ export interface Task {
 export interface Attachment {
     relativePathOnServer: string,
     /** 
-     * The original name of the attachment when it was uploaded.
+     * The original name of the attachment when it was uploaded. Must be unique for display purposes.
      * 
      * When stored server-side, it is modified to ensure unicity (explains why {@link relativePathOnServer}'s filename is different).
      */

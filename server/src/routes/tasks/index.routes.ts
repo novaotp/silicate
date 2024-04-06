@@ -45,8 +45,9 @@ router.get('/:id(\\d+$)', async (req, res) => {
                 category: task.category,
                 due: task.due,
                 steps: task.steps,
-                attachments: task.attachments
-            } as Task
+                attachments: task.attachments,
+                archived: task.archived
+            } satisfies Task
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching a task : ${err.message}`);
@@ -59,7 +60,7 @@ router.get('/:id(\\d+$)', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { category, search, archived } = req.query;
         const client = await db.connect();
 
         const { rows } = await client.query<RawTask>(`
@@ -69,6 +70,7 @@ router.get('/', async (req, res) => {
                 user_id = $1
                 ${category && category !== "" ? `AND category = '${category}'` : ""}
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
+                ${archived && archived ? `AND archived is ${archived}` : ""}
             ORDER BY task.due ASC, task.updated_at DESC;
         `, [await userIdFromAuthHeader(req)]);
 
@@ -77,7 +79,7 @@ router.get('/', async (req, res) => {
         return res.status(200).send({
             success: true,
             message: "Tasks read successfully",
-            data: rows.map(row => {
+            data: rows.map<Task>(row => {
                 return {
                     id: row.id,
                     title: row.title,
@@ -85,8 +87,9 @@ router.get('/', async (req, res) => {
                     category: row.category,
                     due: row.due,
                     steps: row.steps,
-                    attachments: row.attachments
-                } as Task
+                    attachments: row.attachments,
+                    archived: row.archived
+                } satisfies Task
             })
         });
     } catch (err) {
@@ -100,7 +103,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', upload.array("attachments"), async (req, res) => {
     try {
-        const { category, title, description, due, steps } = req.body;
+        const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
         let attachments: Attachment[] | null = null;
@@ -121,10 +124,11 @@ router.post('/', upload.array("attachments"), async (req, res) => {
                 $4,
                 $5,
                 $6,
-                $7
+                $7,
+                $8
             )
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, JSON.stringify(attachments)]);
+        `, [await userIdFromAuthHeader(req), category, title, description, due, steps, JSON.stringify(attachments), archived]);
 
         client.release();
 
@@ -146,7 +150,7 @@ router.post('/', upload.array("attachments"), async (req, res) => {
 
 router.put('/:id', upload.array("attachments"), async (req, res) => {
     try {
-        const { category, title, description, due, steps } = req.body;
+        const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
         let attachments: Attachment[] | null = null;
@@ -166,12 +170,13 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
                 due = $4,
                 steps = $5,
                 attachments = $6,
-                updated_at = $7
+                archived = $7
+                updated_at = $8
             WHERE
-                id = $8
+                id = $9
                 AND
-                user_id = $9;
-        `, [category, title, description, due, steps, JSON.stringify(attachments), new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+                user_id = $10;
+        `, [category, title, description, due, steps, JSON.stringify(attachments), archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
@@ -190,7 +195,7 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
 
 router.patch('/:id', upload.array("attachments"), async (req, res) => {
     try {
-        const { category, title, description, due, steps } = req.body;
+        const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
 
         let attachments: Attachment[] | null = null;
@@ -210,6 +215,7 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
             ${due ? `due = '${due}',` : ""}
             ${steps ? `steps = '${steps}',` : ""}
             ${attachments ? `attachments = '${JSON.stringify(attachments)}',` : ""}
+            ${archived ? `archived = ${archived},` : ""}
                 updated_at = $1
             WHERE
                 id = $2

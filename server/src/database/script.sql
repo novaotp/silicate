@@ -31,6 +31,7 @@ CREATE TABLE public.task (
     due TIMESTAMPTZ NOT NULL,
     steps TEXT,
     attachments TEXT,
+    archived BOOLEAN NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES public.user (id)
