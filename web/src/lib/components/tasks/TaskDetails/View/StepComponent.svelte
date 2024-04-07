@@ -7,7 +7,6 @@
     export let step: StepWithId;
 
     const dispatch = createEventDispatcher<{ update: null, delete: string }>();
-    let showSub: boolean = true;
     let showStepMenu: boolean = false;
 
     const onCompletedStep = () => {
@@ -54,7 +53,7 @@
 <svelte:window on:click={() => (showStepMenu = false)}></svelte:window>
 
 <div class="relative w-full flex flex-col">
-    <button on:click={() => (showSub = !showSub)} class="flex gap-2 w-full py-2 justify-between items-center">
+    <button class="flex gap-2 w-full py-2 justify-between items-center">
         <div class="flex gap-2">
             <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} />
             <input bind:value={step.label} on:input={onLabelChange} class="text-sm w-full {step.completed ? 'line-through text-gray-500' : ''}" />
@@ -73,7 +72,7 @@
             {/if}
         </button>
     </button>
-    {#if step.subSteps && step.subSteps.length > 0 && showSub}
+    {#if step.subSteps && step.subSteps.length > 0}
         <ul class="flex flex-col ml-10 text-sm gap-2">
             {#each step.subSteps as sub}
                 <li class="flex gap-2">
