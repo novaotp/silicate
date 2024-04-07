@@ -18,7 +18,8 @@
 		"allowSyntheticDefaultImports": true,
 		"noUncheckedIndexedAccess": true,
 		"exactOptionalPropertyTypes": true,
-		"noPropertyAccessFromIndexSignature": true
+		"noPropertyAccessFromIndexSignature": true,
+		"types": ["vitest/globals"]
 	},
 	"include": [
 		"../libs/**/*",

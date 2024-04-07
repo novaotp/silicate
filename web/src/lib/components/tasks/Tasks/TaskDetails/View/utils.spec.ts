@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { byteConverter, toTitleCase } from "./utils";
 
 it("transforms a string to title case correctly", () => {

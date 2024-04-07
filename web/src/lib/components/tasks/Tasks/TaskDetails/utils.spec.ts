@@ -1,6 +1,5 @@
 // sum.test.js
 import type { Step } from '$libs/models/Task';
-import { expect, it } from 'vitest'
 import { calculateCompletion, toStepWithId, type StepWithId } from './utils';
 
 const steps: Step[] = [
