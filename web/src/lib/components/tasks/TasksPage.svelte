@@ -62,7 +62,13 @@
             document.body.style.overflowY = 'auto';
         }
     }
+
+    $: title = viewedTaskId ? $tasks.find(t => t.id === viewedTaskId)?.title : "Tâches";
 </script>
+
+<svelte:head>
+    <title>{title} - Silicate</title>
+</svelte:head>
 
 <div class="relative w-full h-full flex flex-col justify-start gap-5">
     <header class="relative w-full flex justify-start items-center">

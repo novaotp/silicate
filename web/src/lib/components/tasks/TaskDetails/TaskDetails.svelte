@@ -102,10 +102,6 @@
     };
 </script>
 
-<svelte:head>
-    <title>{title} - Silicate</title>
-</svelte:head>
-
 <div class="relative w-full h-full flex flex-col justify-start items-start">
     <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-black">
         <h2 class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium">{title}</h2>
