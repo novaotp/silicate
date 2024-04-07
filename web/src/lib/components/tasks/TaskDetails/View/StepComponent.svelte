@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconDotsVertical, IconCircleXFilled } from '@tabler/icons-svelte';
     import { createEventDispatcher } from 'svelte';
-    import type { StepWithId } from '../utils';
+    import type { StepWithId } from '../../utils';
     import { v4 } from 'uuid';
 
     export let step: StepWithId;
@@ -51,7 +51,7 @@
     const onLabelChange = () => dispatch("update");
 </script>
 
-<svelte:document on:click={() => (showStepMenu = false)}></svelte:document>
+<svelte:window on:click={() => (showStepMenu = false)}></svelte:window>
 
 <div class="relative w-full flex flex-col">
     <button on:click={() => (showSub = !showSub)} class="flex gap-2 w-full py-2 justify-between items-center">

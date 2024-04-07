@@ -1,15 +1,16 @@
 <script lang="ts">
-    import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import { IconChevronLeft, IconDotsVertical } from '@tabler/icons-svelte';
+    import { IconArchive, IconArchiveOff, IconTrash } from '@tabler/icons-svelte';
     import { createEventDispatcher, getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
-    import { type PageContext } from '../../types';
-    import { fetchTasks } from './utils';
+    import { type PageContext } from '../types';
     import { page } from '$app/stores';
     import type { Task } from '$libs/models/Task';
-    import Settings from './Settings.svelte';
     import { Attachments, Category, Description, Due, Steps } from './View';
+    import { fetchTasks } from '../utils';
+    import * as Utils from './TaskDetails';
+    import { fly } from 'svelte/transition';
+    import FullScreen from '$lib/components/shared/FullScreen.svelte';
 
     const { tasks } = getContext<PageContext>('page');
 
@@ -31,32 +32,13 @@
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const back = () => {
-        controller.abort();
-        dispatch('close');
-    };
-
     const edit = async () => {
         if (title.trimEnd() === '') {
             addToast({ type: 'info', message: 'Un titre est requis.' });
             return;
         }
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                title: title,
-                description: description,
-                category: category,
-                due: due
-            }),
-            headers: {
-                accept: 'application/json',
-                authorization: jwt,
-                'content-type': 'application/json'
-            }
-        });
-        const { success, message }: ApiResponse = await response.json();
+        const { success, message } = await Utils.edit(id, jwt, { title, description, due, category });
 
         if (!success) {
             addToast({ type: 'error', message });
@@ -76,17 +58,13 @@
     };
 
     const destroy = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
-            method: 'DELETE',
-            headers: {
-                authorization: jwt
-            }
-        });
-        const { success, message }: ApiResponse = await response.json();
+        const { success, message } = await Utils.destroy(id, jwt);
 
         if (!success) {
             addToast({ type: 'error', message });
             return;
+        } else {
+            addToast({ type: 'success', message: 'Tâche supprimée avec succès.' });
         }
 
         const updatedTasks = await fetchTasks(jwt, categorySearchParams, search, archived);
@@ -94,8 +72,6 @@
         if (!updatedTasks) {
             addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
             return;
-        } else {
-            addToast({ type: 'success', message: 'Tâche supprimée avec succès.' });
         }
 
         $tasks = updatedTasks;
@@ -105,18 +81,7 @@
     const archive = async () => {
         archived = !archived;
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                archived: archived
-            }),
-            headers: {
-                accept: 'application/json',
-                authorization: jwt,
-                'content-type': 'application/json'
-            }
-        });
-        const { success, message }: ApiResponse = await response.json();
+        const { success, message }: ApiResponse = await Utils.archive(id, jwt, archived);
 
         if (!success) {
             addToast({ type: 'error', message });
@@ -141,34 +106,34 @@
     <title>{title} - Silicate</title>
 </svelte:head>
 
-<header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] glass">
-    <button class="rounded-full" on:click={back}>
-        <IconChevronLeft />
-    </button>
-    <button class="py-2" on:click={() => (showSettings = !showSettings)}>
-        <IconDotsVertical />
-    </button>
-</header>
 <div class="relative w-full h-full flex flex-col justify-start items-start">
     <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-black">
         <h2 class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium">{title}</h2>
         <Category bind:value={category} />
         <Due bind:value={due} />
         {#if description}
-            <Description bind:value={description} on:edit={async () => await edit()} />
+            <Description bind:value={description} on:edit={edit} />
         {/if}
         <Attachments {id} bind:value={attachments} {signal} />
         <Steps {id} bind:value={steps} />
     </div>
 </div>
-<Settings show={showSettings} archived={archived} on:close={() => (showSettings = !showSettings)} on:destroy={destroy} on:archive={archive} />
-
-<style lang="scss">
-    $blur: 10px;
-
-    .glass {
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur($blur);
-        -webkit-backdrop-filter: blur($blur);
-    }
-</style>
+{#if showSettings}
+    <FullScreen on:click={() => dispatch('close')} class="flex justify-center items-end">
+        <div role="dialog" class="fixed w-full rounded-md flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+            <button on:click={destroy} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
+                <IconTrash />
+                <span>Supprimer</span>
+            </button>
+            <button on:click={archive} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
+                {#if archived}
+                    <IconArchiveOff />
+                    <span>Retirer de l'archive</span>
+                {:else}
+                    <IconArchive />
+                    <span>Archiver</span>
+                {/if}
+            </button>
+        </div>
+    </FullScreen>
+{/if}

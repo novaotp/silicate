@@ -1,7 +1,6 @@
 <script lang="ts">
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import { getContext } from 'svelte';
-    import { calculateCompletion, fetchTasks, toStep, toStepWithId } from '../utils';
     import StepComponent from './StepComponent.svelte';
     import type { ApiResponse } from '$libs/types/ApiResponse';
     import { addToast } from '$lib/stores/toast';
@@ -10,6 +9,7 @@
     import type { Step } from '$libs/models/Task';
     import { IconChecklist } from '@tabler/icons-svelte';
     import { v4 } from 'uuid';
+    import { calculateCompletion, fetchTasks, toStep, toStepWithId } from '../../utils';
 
     export let id: number;
     export let value: string | null;
