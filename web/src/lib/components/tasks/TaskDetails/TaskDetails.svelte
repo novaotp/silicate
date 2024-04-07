@@ -43,8 +43,6 @@
         if (!success) {
             addToast({ type: 'error', message });
             return;
-        } else {
-            addToast({ type: 'success', message: 'Tâche modifiée avec succès.' });
         }
 
         const updatedTasks = await fetchTasks(jwt, categorySearchParams, search, archived);
@@ -104,7 +102,7 @@
 
 <div class="relative w-full h-full flex flex-col justify-start items-start">
     <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-black">
-        <h2 class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium">{title}</h2>
+        <input bind:value={title} on:input={edit} class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium" />
         <Category bind:value={category} />
         <Due bind:value={due} />
         {#if description}
