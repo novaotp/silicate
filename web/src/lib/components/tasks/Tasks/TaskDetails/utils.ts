@@ -47,7 +47,12 @@ export const toStep = (stepWithId: StepWithId): Step => {
     }
 }
 
-export const calculateCompletion = (values: StepWithId[]): number => {
+/**
+ * Calculates the progression of a task.
+ * @param values The steps of the task
+ * @returns A value between `0` and `1`.
+ */
+export const calculateCompletion = (values: Step[] | StepWithId[]): number => {
     let completedCount = 0;
     const totalCount = values.length;
 

@@ -53,7 +53,7 @@
         link.click();
     };
 
-    const onClick = () => {
+    const openPreview = () => {
         if (loading) {
             addToast({ type: 'info', message: "Chargement de l'attachement" });
         } else {
@@ -62,7 +62,7 @@
     };
 </script>
 
-<button on:click={onClick} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg border border-gray-300">
+<button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg border border-gray-300">
     <div class="relative h-full flex justify-center items-center">
         <svelte:component this={icon} class="size-6" />
     </div>

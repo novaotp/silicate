@@ -11,6 +11,7 @@ export const toTitleCase = (str: string) => {
 }
 
 /**
+ * Transforms bytes into a number between 0 and 999 with the appropriate unit.
  * @see https://stackoverflow.com/a/74485111/20892950
  */
 export const byteConverter = (bytes: number, decimals: number): string => {
@@ -22,4 +23,3 @@ export const byteConverter = (bytes: number, decimals: number): string => {
 
     return `${size} ${SIZES[i]}`;
 }
-
