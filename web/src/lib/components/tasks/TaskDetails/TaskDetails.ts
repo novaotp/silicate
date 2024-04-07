@@ -4,9 +4,7 @@ import type { ApiResponse } from "$libs/types/ApiResponse";
 export const edit = async (id: number, jwt: string, data: unknown) => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify({
-            data
-        }),
+        body: JSON.stringify(data),
         headers: {
             accept: 'application/json',
             authorization: jwt,
