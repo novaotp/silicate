@@ -11,6 +11,7 @@
     const dispatch = createEventDispatcher<{ edit: null }>();
     let timer: NodeJS.Timeout;
     let expanded: boolean = false;
+    let textareaNode: HTMLTextAreaElement;
 
     /**
      * @see https://svelte.dev/repl/1c7c89b3a80c48708f0f07720fb37a53?version=4.2.12
@@ -54,10 +55,14 @@
     </div>
     <textarea
         {rows}
+        bind:this={textareaNode}
         bind:value
         use:resize
         spellcheck={false}
-        on:focus={() => (expanded = true)}
+        on:focus={() => {
+            expanded = true;
+            textareaNode.scrollIntoView({ behavior: "smooth" })
+        }}
         on:input={() => {
             clearTimeout(timer);
             timer = setTimeout(() => dispatch('edit'), 750);
