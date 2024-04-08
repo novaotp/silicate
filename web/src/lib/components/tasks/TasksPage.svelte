@@ -81,7 +81,7 @@
 <menu class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]">
     <button class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}" on:click={() => changeTab('')}> Tâches </button>
     <button
-        class="relative bottom-1/2 h-[50px] aspect-square rounded-full bg-primary-600 text-neutral-50 flex justify-center items-center shadow-lg"
+        class="relative bottom-[30px] h-[60px] aspect-square rounded-full bg-primary-600 text-neutral-50 flex justify-center items-center shadow-lg"
         on:click={add}
     >
         <IconPlus />

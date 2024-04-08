@@ -32,7 +32,7 @@
     $: console.log(groupedByYear2);
 </script>
 
-<div role="list" class="flex flex-col gap-5 mb-5">
+<div role="list" class="flex flex-col gap-5 mb-10">
     {#if $tasks.length === 0}
         {#if $page.url.searchParams.get('search') !== null}
             <p>Aucune tâche ne correspond à ta recherche.</p>
