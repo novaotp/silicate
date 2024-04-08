@@ -15,17 +15,17 @@ A custom controlled input field with a label on top.
 * Required : True
 -->
 
-<div class="relative mb-[10px] flex w-full flex-col last-of-type:mb-0">
-    <label for={name}>
+<div class="relative flex w-full flex-col gap-[10px]">
+    <label for={name} class="text-neutral-950">
         {label}
-        <input
-            {...{ type }}
-            {placeholder}
-            {name}
-            bind:value
-            class="relative h-[50px] w-full rounded-md border border-gray-400 px-[10px] text-[14px]"
-            autoComplete="off"
-            required={true}
-        />
     </label>
+    <input
+        {...{ type }}
+        {placeholder}
+        {name}
+        bind:value
+        class="relative h-[50px] w-full rounded-md bg-neutral-100 text-neutral-600 px-5 text-sm"
+        autoComplete="off"
+        required={true}
+    />
 </div>

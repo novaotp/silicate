@@ -72,21 +72,21 @@
 
 <div class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto">
     <header class="relative w-full flex justify-start items-center">
-        <h1 class="text-xl">Tâches {archived ? 'Archivées' : ''}</h1>
+        <h1 class="text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
     </header>
     <Search />
     <Categories />
     <TaskList on:click={(event) => (viewedTaskId = event.detail)} />
 </div>
 <menu class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]">
-    <button class="border-b-2 {currentTab === '' ? 'border-blue-500' : 'border-transparent'}" on:click={() => changeTab('')}> Tâches </button>
+    <button class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}" on:click={() => changeTab('')}> Tâches </button>
     <button
-        class="relative bottom-1/2 h-[50px] aspect-square rounded-full bg-blue-500 text-white flex justify-center items-center shadow-lg"
+        class="relative bottom-1/2 h-[50px] aspect-square rounded-full bg-primary-600 text-neutral-50 flex justify-center items-center shadow-lg"
         on:click={add}
     >
         <IconPlus />
     </button>
-    <button class="border-b-2 {currentTab === 'archives' ? 'border-blue-500' : 'border-transparent'}" on:click={() => changeTab('archives')}>
+    <button class="border-b-2 {currentTab === 'archives' ? 'border-primary-600' : 'border-transparent text-neutral-600'}" on:click={() => changeTab('archives')}>
         Archives
     </button>
 </menu>

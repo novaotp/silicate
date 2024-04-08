@@ -25,8 +25,8 @@
     transition:fade
 >
     <div class="relative w-[90%] bg-white flex flex-col justify-center items-center rounded-lg py-5 gap-5" transition:fly={{ y: 50 }}>
-        <h3 class="px-5">Aperçu de {name}</h3>
-        <button on:click={deleteThis} class="relative bg-red-500 text-white px-4 py-2 rounded-lg z-[2000]">Supprimer</button>
+        <h3 class="px-5 text-neutral-950">Aperçu de {name}</h3>
+        <button on:click={deleteThis} class="relative bg-accent-danger-500 text-neutral-50 px-4 py-2 rounded-lg z-[2000]">Supprimer</button>
         <div bind:clientHeight bind:clientWidth>
             <embed {src} class="relative" width="{window.innerWidth / 10 * 9}px" height="{window.innerHeight / 3 * 2}px" />
         </div>

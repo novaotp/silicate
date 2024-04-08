@@ -4,6 +4,7 @@
     import { fly } from 'svelte/transition';
     import SveltyPicker from 'svelty-picker';
     import { createEventDispatcher } from 'svelte';
+    import * as Button from "$lib/components/shared/Button";
 
     export let value: string;
 
@@ -16,13 +17,13 @@
 </script>
 
 <div class="relative w-full flex justify-between">
-    <div class="relative flex items-center gap-4 text-gray-500">
+    <div class="relative flex items-center gap-4 text-neutral-500">
         <IconCalendarClock />
         <span>Échéance</span>
     </div>
-    <button on:click={() => (show = true)} class="relative text-sm rounded-smd bg-blue-200 px-2 py-1">
+    <Button.Normal.Secondary on:click={() => (show = true)} size="small">
         {date}, {time}
-    </button>
+    </Button.Normal.Secondary>
 </div>
 {#if show}
     <FullScreen class="flex justify-center items-center">

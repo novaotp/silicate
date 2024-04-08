@@ -38,7 +38,7 @@
     </Switcher>
 </form>
 <form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center overflow-x-hidden hidden xl:flex">
-    <div class="flex gap-5">
+    <div class="relative flex flex-col gap-5">
         <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
         <Input label="Nom de famille" placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} />
     </div>

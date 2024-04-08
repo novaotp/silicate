@@ -9,6 +9,7 @@
     import { IconChecklist } from '@tabler/icons-svelte';
     import { v4 } from 'uuid';
     import { calculateCompletion, fetchTasks, toStep, toStepWithId, type PageContext } from '../../utils';
+    import * as Button from '$lib/components/shared/Button';
 
     export let id: number;
     export let value: string | null;
@@ -87,21 +88,23 @@
 </script>
 
 <div class="relative w-full flex flex-col justify-start gap-3">
-    <div class="text-gray-500 flex justify-between">
+    <div class="text-neutral-500 flex justify-between">
         <div class="flex gap-4">
             <IconChecklist />
             <h3>Étapes</h3>
         </div>
-        <button on:click={addStep} class="text-sm text-white px-3 py-1 bg-blue-500 rounded-lg">Ajouter</button>
+        <Button.Normal.Primary on:click={addStep} size="small">
+            Ajouter
+        </Button.Normal.Primary>
     </div>
     {#if steps.length > 0}
-        <div class="relative w-full flex flex-col p-5 rounded-lg border border-gray-300 gap-2">
-            <div class="flex justify-between text-sm">
+        <div class="relative w-full flex flex-col p-5 rounded-lg bg-neutral-100 gap-2">
+            <div class="flex justify-between text-sm text-neutral-950">
                 <h3>Progression</h3>
                 <span>{progression}%</span>
             </div>
-            <div class="relative w-full h-1 rounded-full bg-black">
-                <div class="relative h-full bg-yellow-400 duration-200 ease-in-out" style="width: {progression}%;"></div>
+            <div class="relative w-full h-1 rounded-full bg-neutral-950">
+                <div class="relative h-full bg-accent-success-500 duration-200 ease-in-out" style="width: {progression}%;"></div>
             </div>
         </div>
     {/if}

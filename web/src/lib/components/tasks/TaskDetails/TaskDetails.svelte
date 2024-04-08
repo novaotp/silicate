@@ -39,7 +39,11 @@
             return;
         }
 
-        const { success, message } = await Utils.edit(id, jwt, { title: replica.title, description: replica.description, due: replica.due ?? new Date(0) });
+        const { success, message } = await Utils.edit(id, jwt, {
+            title: replica.title,
+            description: replica.description,
+            due: replica.due ?? new Date(0)
+        });
 
         if (!success) {
             addToast({ type: 'error', message });
@@ -180,11 +184,15 @@
 </script>
 
 <div class="relative w-full h-full flex flex-col justify-start items-start">
-    <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-black">
-        <input value={replica.title} on:input={async (event) => {
-            replica.title = event.currentTarget.value;
-            await edit();
-        }} class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium" />
+    <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-primary-950">
+        <input
+            value={replica.title}
+            on:input={async (event) => {
+                replica.title = event.currentTarget.value;
+                await edit();
+            }}
+            class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium"
+        />
         {#if replica.category}
             <Category {id} bind:show={showCategoryChanger} bind:value={replica.category} on:edit={edit} />
         {/if}
@@ -226,7 +234,7 @@
             {#if replica.description === null}
                 <button
                     on:click={async () => {
-                        replica.description = "";
+                        replica.description = '';
                         await edit();
                     }}
                     class="relative w-full px-5 h-14 flex justify-start items-center gap-10"

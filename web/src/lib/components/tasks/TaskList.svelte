@@ -47,8 +47,8 @@
     {:else}
         {#each groupedByYear2 as [year, tasks]}
             <div role="list" class="flex flex-col">
-                <h2 class="text-xl">{year}</h2>
-                <div role="list" class="flex flex-col divide-y-[1px] divide-gray-300">
+                <h2 class="text-xl text-neutral-950">{year}</h2>
+                <div role="list" class="flex flex-col divide-y-[1px] divide-neutral-300">
                     {#each tasks as { id, title, due, steps } (id)}
                         <button
                             class="relative w-full h-20 py-5 gap-[30px] flex justify-between items-start cursor-pointer text-black"
@@ -58,28 +58,28 @@
                                 {@const month = new Date(due).toLocaleDateString('fr-CH', { month: 'short' }).replace('.', '')}
                                 {@const day = new Date(due).toLocaleDateString('fr-CH', { day: '2-digit' })}
                                 <time class="relative h-full aspect-square flex flex-col justify-center items-center">
-                                    <span class="text-gray-500 text-sm">{month}</span>
-                                    <span class="text-xl font-medium text-blue-500">{day}</span>
+                                    <span class="text-neutral-500 text-sm">{month}</span>
+                                    <span class="text-xl font-medium text-primary-600">{day}</span>
                                 </time>
                             {/if}
                             <div class="relative flex-grow h-full flex flex-col justify-center items-start gap-[2px]">
-                                <h2 class="text-start font-medium text-black">{title}</h2>
+                                <h2 class="text-start font-medium text-primary-950">{title}</h2>
                                 {#if due}
                                     {@const time = new Date(due)
                                         .toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })
                                         .split(':')
                                         .join('h')}
-                                    <time class="text-sm text-gray-500">{time}</time>
+                                    <time class="text-sm text-neutral-500">{time}</time>
                                 {:else}
-                                    <time class="text-sm text-gray-500">Aucune date spécifiée</time>
+                                    <time class="text-sm text-neutral-500">Aucune date spécifiée</time>
                                 {/if}
                             </div>
                             {#if steps}
                                 {@const completion = Number((calculateCompletion(JSON.parse(steps)) * 100).toFixed(0))}
-                                <div class="relative h-full aspect-square flex justify-center items-center text-gray-500 bg-white rounded-full">
+                                <div class="relative h-full aspect-square flex justify-center items-center text-neutral-500 bg-accent-success-100 rounded-full">
                                     <svg viewBox="0 0 36 36">
                                         <path
-                                            class="fill-none stroke-blue-500 stroke-2"
+                                            class="fill-none stroke-accent-success-500 stroke-2"
                                             d="M18 2.0845
                                         a 15.9155 15.9155 0 0 1 0 31.831
                                         a 15.9155 15.9155 0 0 1 0 -31.831"

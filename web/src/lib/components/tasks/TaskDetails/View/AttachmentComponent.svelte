@@ -62,16 +62,16 @@
     };
 </script>
 
-<button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg border border-gray-300">
+<button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg bg-neutral-100">
     <div class="relative h-full flex justify-center items-center">
-        <svelte:component this={icon} class="size-6" />
+        <svelte:component this={icon} class="size-6 text-neutral-600" />
     </div>
     <div class="relative flex flex-col items-start max-w-[calc(100%-24px-20px)]">
-        <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40">{name}</span>
+        <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40 text-neutral-950">{name}</span>
         {#await fileBlobPromise}
-            <p class="text-sm text-gray-500">Chargement...</p>
+            <p class="text-sm text-neutral-600">Chargement...</p>
         {:then blob}
-            <div class="flex text-gray-500 text-sm">
+            <div class="flex text-neutral-500 text-sm">
                 <span>{byteConverter(blob.size, 2)}</span>
                 <span>&nbsp;-&nbsp;</span>
                 <button on:click|stopPropagation={() => download(blob)}>Télécharger</button>

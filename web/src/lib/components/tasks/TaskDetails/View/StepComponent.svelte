@@ -3,6 +3,7 @@
     import { createEventDispatcher } from 'svelte';
     import type { StepWithId } from '../../utils';
     import { v4 } from 'uuid';
+    import * as Button from '$lib/components/shared/Button';
 
     export let step: StepWithId;
 
@@ -55,19 +56,23 @@
 <div class="relative w-full flex flex-col">
     <button class="flex gap-2 w-full py-2 justify-between items-center">
         <div class="flex gap-2">
-            <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} />
-            <input bind:value={step.label} on:input={onLabelChange} class="text-sm w-full {step.completed ? 'line-through text-gray-500' : ''}" />
+            <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} class="accent-accent-success-500" />
+            <input bind:value={step.label} on:input={onLabelChange} class="text-sm w-full {step.completed ? 'line-through text-neutral-500' : ''}" />
             {#if step.subSteps && step.subSteps.length > 0}
                 {@const completedSubs = step.subSteps?.reduce((acc, curr) => acc + (curr.completed ? 1 : 0), 0)}
-                <span class="text-sm {step.completed ? 'line-through text-gray-500' : ''}">{completedSubs}/{step.subSteps.length}</span>
+                <span class="text-sm {step.completed ? 'line-through text-neutral-500' : ''}">{completedSubs}/{step.subSteps.length}</span>
             {/if}
         </div>
         <button class="relative" on:click|stopPropagation>
             <button on:click={() => (showStepMenu = true)}><IconDotsVertical class="size-4" /></button>
             {#if showStepMenu}
-                <menu class="absolute top-[calc(100%+5px)] right-0 flex flex-col justify-center rounded-lg border border-gray-300 bg-white z-[1000]">
-                    <button class="relative px-3 py-2 text-sm" on:click={newSubStep}>Ajouter</button>
-                    <button class="relative px-3 py-2 text-sm" on:click={() => dispatch("delete", step.id)}>Supprimer</button>
+                <menu class="absolute top-[calc(100%+5px)] right-0 flex flex-col justify-center rounded-lg shadow-lg bg-white z-[1000]">
+                    <Button.Normal.Primary on:click={newSubStep} size="small" class="rounded-b-none">
+                        Ajouter
+                    </Button.Normal.Primary>
+                    <Button.Danger.Tertiary on:click={() => dispatch("delete", step.id)} size="small" class="rounded-t-none">
+                        Supprimer
+                    </Button.Danger.Tertiary>
                 </menu>
             {/if}
         </button>
@@ -76,8 +81,8 @@
         <ul class="flex flex-col ml-10 text-sm gap-2">
             {#each step.subSteps as sub}
                 <li class="flex gap-2">
-                    <input type="checkbox" bind:checked={sub.completed} on:change={onCompletedAllSub} />
-                    <input bind:value={sub.label} on:input={onLabelChange} class="w-full {sub.completed ? 'line-through text-gray-500' : ''}" />
+                    <input type="checkbox" bind:checked={sub.completed} on:change={onCompletedAllSub} class="accent-accent-success-500" />
+                    <input bind:value={sub.label} on:input={onLabelChange} class="w-full {sub.completed ? 'line-through text-neutral-500' : ''}" />
                     <button on:click={() => deleteSubStep(sub.id)}><IconCircleXFilled /></button>
                 </li>
             {/each}

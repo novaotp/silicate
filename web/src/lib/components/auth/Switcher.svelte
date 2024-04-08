@@ -6,25 +6,23 @@
 
 <div class="switcher {isToggled ? 'active' : ''}">
     <div class="wrapper">
-        <div>
+        <div class="flex flex-col gap-5">
             <slot name="names" />
         </div>
         <button
-            class="relative w-full h-10 flex justify-center items-center border-none rounded-xl mb-[60px] bg-purple-600 text-white"
+            class="relative px-4 py-2 flex justify-center items-center rounded-lg text-sm mb-[60px] bg-primary-600 text-primary-50"
             type="button"
-            on:click={() => {
-                isToggled = true;
-            }}
+            on:click={() => (isToggled = true)}
         >
             Continuer
         </button>
     </div>
     <div class="wrapper">
-        <div>
+        <div class="flex flex-col gap-5">
             <slot name="credentials" />
         </div>
         <button
-            class="relative w-full h-10 flex justify-center items-center border-none rounded-xl bg-gray-600 text-white"
+            class="relative px-4 py-2 flex justify-center items-center rounded-lg text-sm border border-primary-600 bg-primary-50 text-primary-600"
             type="button"
             on:click={() => {
                 isToggled = false;
@@ -56,6 +54,7 @@
             width: $wrapper-width;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             flex-direction: column;
             gap: 20px;
             padding: 0 5px;

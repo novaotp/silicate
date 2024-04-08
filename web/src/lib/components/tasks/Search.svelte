@@ -19,7 +19,7 @@
     $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
 </script>
 
-<div role="search" class="relative w-full h-10 rounded-lg flex justify-between items-center bg-gray-300">
+<div role="search" class="relative w-full h-10 rounded-lg flex justify-between items-center bg-neutral-100 text-neutral-700">
     <input
         bind:value={currentSearch}
         type="search"
@@ -32,7 +32,7 @@
         </button>
     {/if}
     <button on:click={search} class="relative size-10 rounded-r-lg flex justify-center items-center search-icon">
-        <IconSearch class="size-5" />
+        <IconSearch class="size-5 text-neutral-600" />
     </button>
 </div>
 
