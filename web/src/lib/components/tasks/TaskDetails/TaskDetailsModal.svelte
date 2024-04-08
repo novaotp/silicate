@@ -6,12 +6,18 @@
     import { createEventDispatcher, getContext } from 'svelte';
     import { fly } from 'svelte/transition';
     import TaskDetails from './TaskDetails.svelte';
+    import { page } from '$app/stores';
+    import type { PageContext } from '../utils';
+    import { goto } from '$app/navigation';
 
     export let viewedTaskId: number | null;
 
     let showSettings: boolean = false;
     const dispatch = createEventDispatcher<{ close: null }>();
     const jwt = getContext<string>('jwt');
+    const { categories } = getContext<PageContext>("page");
+
+    $: categorySearchParam = $page.url.searchParams.get("category");
 
     /**
      * Fetches a task with the given id.
@@ -46,15 +52,25 @@
             </div>
         {:then task}
             {#if task}
-                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] glass">
-                    <button class="rounded-full" on:click={() => dispatch('close')}>
+                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
+                    <button class="rounded-full" on:click={() => {
+                        dispatch('close');
+
+                        if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
+                            const searchParams = new URLSearchParams($page.url.searchParams);
+
+                            searchParams.delete('category');
+
+                            goto(`/app/tasks?${searchParams}`, { invalidateAll: true });
+                        }
+                    }}>
                         <IconChevronLeft />
                     </button>
                     <button class="py-2" on:click={() => (showSettings = !showSettings)}>
                         <IconDotsVertical />
                     </button>
                 </header>
-                <TaskDetails {task} on:close />
+                <TaskDetails {task} bind:showSettings on:close />
             {:else}
                 <p>Une erreur est survenue.</p>
             {/if}

@@ -5,11 +5,10 @@
     import type { ApiResponse } from '$libs/types/ApiResponse';
     import { addToast } from '$lib/stores/toast';
     import { page } from '$app/stores';
-    import type { PageContext } from '$lib/components/tasks/types';
     import type { Step } from '$libs/models/Task';
     import { IconChecklist } from '@tabler/icons-svelte';
     import { v4 } from 'uuid';
-    import { calculateCompletion, fetchTasks, toStep, toStepWithId } from '../../utils';
+    import { calculateCompletion, fetchTasks, toStep, toStepWithId, type PageContext } from '../../utils';
 
     export let id: number;
     export let value: string | null;

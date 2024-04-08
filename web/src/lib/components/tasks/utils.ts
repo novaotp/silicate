@@ -2,6 +2,12 @@ import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Step, Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import { v4 } from "uuid";
+import { type Writable } from 'svelte/store';
+
+export interface PageContext {
+    tasks: Writable<Task[]>;
+    categories: Writable<string[]>;
+};
 
 /** Made to deal with steps deletion, which would require a unique identifier. */
 export interface StepWithId {
@@ -76,6 +82,19 @@ export const fetchTasks = async (jwt: string, category: string, search: string, 
         }
     });
     const result: ApiResponseWithData<Task[]> = await response.json();
+
+    return result.success ? result.data : undefined;
+}
+
+export const fetchCategories = async (jwt: string, archived: boolean): Promise<string[] | undefined> => {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/categories?archived=${archived}`, {
+        method: "GET",
+        headers: {
+            "accept": "application/json",
+            "authorization": jwt
+        }
+    });
+    const result: ApiResponseWithData<string[]> = await response.json();
 
     return result.success ? result.data : undefined;
 }

@@ -1,25 +1,24 @@
 <script lang="ts">
     import type { Task } from '$libs/models/Task';
-    import { getContext, setContext } from 'svelte';
-    import type { PageContext } from './types';
+    import { getContext, onMount, setContext } from 'svelte';
     import { writable } from 'svelte/store';
     import { page } from '$app/stores';
     import { addTask } from './TasksPage';
     import { addToast } from '$lib/stores/toast';
-    import { calculateCompletion, fetchTasks } from './utils';
+    import { fetchTasks, type PageContext } from './utils';
     import { goto } from '$app/navigation';
-    import { IconCheck, IconPlus } from '@tabler/icons-svelte';
+    import { IconPlus } from '@tabler/icons-svelte';
     import Search from './Search.svelte';
     import Categories from './Categories.svelte';
     import TaskDetailsModal from './TaskDetails/TaskDetailsModal.svelte';
     import TaskList from './TaskList.svelte';
 
     export let data: Task[];
-    export let categories: string[];
+    export let categoriesData: string[];
 
     setContext<PageContext>('page', {
         tasks: writable(data),
-        categories
+        categories: writable(categoriesData)
     });
 
     const { tasks } = getContext<PageContext>('page');
@@ -49,10 +48,11 @@
         }
 
         $tasks = updatedTasks;
+        viewedTaskId = result.data!;
     };
 
     const changeTab = (tab: string) => {
-        goto(`/app/tasks${tab ? `tab=${tab}` : ''}`, { invalidateAll: true });
+        goto(`/app/tasks${tab ? `?tab=${tab}` : ''}`, { invalidateAll: true });
     };
 
     $: {
@@ -70,12 +70,12 @@
     <title>{title} - Silicate</title>
 </svelte:head>
 
-<div class="relative w-full h-full flex flex-col justify-start gap-5">
+<div class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto">
     <header class="relative w-full flex justify-start items-center">
         <h1 class="text-xl">Tâches {archived ? 'Archivées' : ''}</h1>
     </header>
     <Search />
-    <Categories {categories} />
+    <Categories />
     <TaskList on:click={(event) => (viewedTaskId = event.detail)} />
 </div>
 <menu class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]">

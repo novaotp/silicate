@@ -181,6 +181,18 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
 });
 
 router.patch('/:id', upload.array("attachments"), async (req, res) => {
+    const validSetter = (key: string, value: string | unknown[] | null | undefined) => {
+        if (value === undefined) {
+            return "";
+        } else if (value === null) {
+            return `${key} = NULL,`;
+        } else if (Array.isArray(value)) {
+            return `${key} = '${JSON.stringify(value)}',`;
+        } else {
+            return `${key} = '${value}',`;
+        }
+    }
+
     try {
         const { category, title, description, due, steps, archived } = req.body;
         const client = await db.connect();
@@ -189,12 +201,12 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
 
         await client.query(`
             UPDATE public.task
-            SET ${category !== undefined ? `category = '${category}',` : ""}
+            SET ${validSetter("category", category)}
             ${title !== undefined ? `title = '${title}',` : ""}
-            ${description !== undefined ? `description = '${description}',` : ""}
+            ${validSetter("description", description)}
             ${due !== undefined ? `due = '${due}',` : ""}
-            ${steps !== undefined ? steps === null ? `steps = ${steps},` : `steps = '${JSON.stringify(steps)}',` : ""}
-            ${attachments !== undefined ? attachments === null ? `attachments = ${attachments},` : `attachments = '${JSON.stringify(attachments)}',` : ""}
+            ${validSetter("steps", steps)}
+            ${validSetter("attachments", attachments)}
             ${archived !== undefined ? `archived = ${archived},` : ""}
                 updated_at = $1
             WHERE

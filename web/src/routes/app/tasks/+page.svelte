@@ -18,7 +18,7 @@
             <p>Chargement des tâches...</p>
         {:then tasks}
             {#if tasks}
-                <TasksPage data={tasks} categories={data.categories} />
+                <TasksPage data={tasks} categoriesData={data.categories} />
             {:else}
                 <p>Une erreur est survenue lors du chargement des tâches.</p>
             {/if}

@@ -1,8 +1,10 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { getContext } from 'svelte';
+    import type { PageContext } from './utils';
 
-    export let categories: string[];
+    const { categories } = getContext<PageContext>("page");
 
     $: undecodedCurrentCategory = $page.url.searchParams.get('category');
     $: currentCategory = undecodedCurrentCategory !== null ? decodeURI(undecodedCurrentCategory) : '';
@@ -20,16 +22,16 @@
     };
 </script>
 
-<div role="list" class="relative w-full flex gap-2">
+<div role="list" class="relative min-h-10 w-full flex flex-nowrap items-center gap-2 overflow-scroll">
     <button
         class="relative px-4 py-2 rounded-lg text-sm {currentCategory === '' ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}"
         on:click={() => changeCategory('')}
     >
         Tout
     </button>
-    {#each categories as category}
+    {#each $categories as category}
         <button
-            class="relative px-4 py-2 rounded-lg text-sm {currentCategory === '' ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}"
+            class="relative px-4 py-2 rounded-lg text-sm {currentCategory === category ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}"
             on:click={() => changeCategory(category)}
         >
             {category}

@@ -7,7 +7,7 @@ import type { ApiResponseWithData } from "$libs/types/ApiResponse";
  * @param jwt The `Authorization` header
  * @returns On success, returns the data, otherwise, returns a message error.
  */
-export const addTask = async (jwt: string): Promise<{ message: string | undefined, data: number | undefined }> => {
+export const addTask = async (jwt: string) => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
         method: 'POST',
         body: JSON.stringify({

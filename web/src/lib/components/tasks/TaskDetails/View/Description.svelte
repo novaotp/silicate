@@ -6,7 +6,7 @@
 
     const maxRows: number = 5;
     $: totalRows = (value.match(/\n/g) || []).length + 1 || 1;
-    $: rows = expanded ? totalRows : maxRows;
+    $: rows = totalRows > maxRows ? expanded ? totalRows : maxRows : totalRows;
 
     const dispatch = createEventDispatcher<{ edit: null }>();
     let timer: NodeJS.Timeout;
@@ -49,21 +49,24 @@
             <IconNotes />
             <h3>Description</h3>
         </div>
-        <button on:click={() => (expanded = !expanded)} class="text-sm text-gray-500">
-            { expanded ? "Réduire" : "Étendre" }
-        </button>
+        {#if totalRows > maxRows}
+            <button on:click={() => (expanded = !expanded)} class="text-sm text-gray-500">
+                { expanded ? "Réduire" : "Étendre" }
+            </button>
+        {/if}
     </div>
     <textarea
         {rows}
         bind:this={textareaNode}
-        bind:value
+        {value}
         use:resize
         spellcheck={false}
         on:focus={() => {
             expanded = true;
             textareaNode.scrollIntoView({ behavior: "smooth" })
         }}
-        on:input={() => {
+        on:input={(event) => {
+            value = event.currentTarget.value;
             clearTimeout(timer);
             timer = setTimeout(() => dispatch('edit'), 750);
         }}

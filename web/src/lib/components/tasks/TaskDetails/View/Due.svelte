@@ -1,19 +1,44 @@
 <script lang="ts">
+    import FullScreen from '$lib/components/shared/FullScreen.svelte';
     import { IconCalendarClock } from '@tabler/icons-svelte';
+    import { fly } from 'svelte/transition';
+    import SveltyPicker from 'svelty-picker';
+    import { createEventDispatcher } from 'svelte';
 
-    export let value: string | null;
+    export let value: string;
+
+    const dispatch = createEventDispatcher<{ edit: null }>();
+
+    $: date = new Date(value).toLocaleDateString('fr-CH', { day: '2-digit', month: 'long', year: 'numeric' });
+    $: time = new Date(value).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' }).split(':').join('h');
+
+    let show: boolean = false;
 </script>
 
-{#if value}
-    {@const date = new Date(value).toLocaleDateString('fr-CH', { day: '2-digit', month: 'long', year: 'numeric' })}
-    {@const time = new Date(value).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' }).split(':').join('h')}
-    <div class="relative w-full flex justify-between">
-        <div class="relative flex items-center gap-4 text-gray-500">
-            <IconCalendarClock />
-            <span>Échéance</span>
-        </div>
-        <time>
-            {date}, {time}
-        </time>
+<div class="relative w-full flex justify-between">
+    <div class="relative flex items-center gap-4 text-gray-500">
+        <IconCalendarClock />
+        <span>Échéance</span>
     </div>
+    <button on:click={() => (show = true)} class="relative text-sm rounded-smd bg-blue-200 px-2 py-1">
+        {date}, {time}
+    </button>
+</div>
+{#if show}
+    <FullScreen class="flex justify-center items-center">
+        <div transition:fly={{ y: 50 }}>
+            <SveltyPicker
+                pickerOnly
+                format="dd.mm.yyyy hh:ii"
+                mode="datetime"
+                {value}
+                on:cancel={() => (show = false)}
+                on:dateChange={(e) => {
+                    value = e.detail.dateValue;
+                    show = false;
+                    dispatch("edit")
+                }}
+            />
+        </div>
+    </FullScreen>
 {/if}
