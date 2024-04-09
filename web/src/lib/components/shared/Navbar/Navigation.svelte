@@ -37,7 +37,7 @@
                     <Item on:close={() => (showMenu = false)} href="/app" label="Dashboard" icon={IconHome} />
                     <Item on:close={() => (showMenu = false)} href="/app/memos" label="Mémos" icon={MemoIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/tasks" label="Tâches" icon={TaskIcon} />
-                    <Item on:close={() => (showMenu = false)} href="/app/gradebooks" label="Carnets de notes" icon={GradeIcon} />
+                    <Item on:close={() => (showMenu = false)} href="/app/mark-books" label="Carnets de notes" icon={GradeIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/settings" label="Paramètres" icon={IconSettings} />
                 </menu>
             </div>
@@ -50,7 +50,7 @@
         <DesktopItem href="/app" label="Home" icon={IconHome} />
         <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} />
         <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} />
-        <DesktopItem href="/app/gradebooks" label="Notes" icon={GradeIcon} />
+        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} />
         <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} />
     </ul>
     <ul class="relative w-full flex flex-col gap-3">
