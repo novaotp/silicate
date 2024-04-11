@@ -14,8 +14,8 @@ CREATE TABLE public.user (
 CREATE TABLE public.memo (
     id SERIAL NOT NULL PRIMARY KEY,
     user_id INT NOT NULL,
-    tag VARCHAR(30),
-    title VARCHAR(80) NOT NULL,
+    category VARCHAR(30),
+    title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

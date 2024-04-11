@@ -1,7 +1,7 @@
 export interface RawMemo {
     id: number;
     user_id: number,
-    tag: string | null;
+    category: string | null;
     title: string;
     content: string;
     /** A parsable date. */
@@ -12,7 +12,7 @@ export interface RawMemo {
 
 export interface Memo {
     id: number;
-    tag: string | null;
+    category: string | null;
     title: string;
     content: string;
     /** A parsable date. */
