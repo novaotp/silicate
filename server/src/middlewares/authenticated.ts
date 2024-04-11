@@ -7,7 +7,7 @@ import { ApiResponse } from '../../../libs/types/ApiResponse';
  * @returns `true` if valid, `false` otherwise.
  */
 const validate = async (jwt: string) => {
-    const response = await fetch(`${process.env.BACKEND_URL}/auth/validate`, {
+    const response = await fetch(`${process.env.APP_URL}/auth/validate`, {
         method: "POST",
         body: JSON.stringify({ jwt }),
         headers: {

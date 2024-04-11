@@ -12,9 +12,9 @@
     <div class="relative flex flex-col gap-3 mt-8">
         <a class="relative w-full rounded-lg p-3 text-center bg-primary-600 text-primary-50" href="/auth/register"> Inscris-toi </a>
         <span
-            class="relative text-center text-gray-400
-				   before:absolute before:left-0 before:top-1/2 before:h-[1px] before:w-2/5 before:bg-gray-400 before:content-['']
-				   after:absolute after:right-0 after:top-1/2 after:h-[1px] after:w-2/5 after:bg-gray-400 after:content-['']"
+            class="relative text-center text-neutral-200
+				   before:absolute before:left-0 before:top-1/2 before:h-[1px] before:w-2/5 before:bg-neutral-200 before:content-['']
+				   after:absolute after:right-0 after:top-1/2 after:h-[1px] after:w-2/5 after:bg-neutral-200 after:content-['']"
         >
             ou
         </span>

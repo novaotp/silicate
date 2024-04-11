@@ -11,7 +11,7 @@ export const router = Router();
 
 router.get('/:id/attachment', async (req, res) => {
     try {
-        const response = await fetch(`${process.env.BACKEND_URL}/tasks/${req.params.id}`, {
+        const response = await fetch(`${process.env.APP_URL}/tasks/${req.params.id}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
@@ -58,7 +58,7 @@ router.post("/:id/attachment", upload.array("attachments"), async (req, res) => 
             return res.status(418).send({ success: false, message: "Adding attachments without sending them..." })
         }
 
-        const response = await fetch(`${process.env.BACKEND_URL}/tasks/${req.params.id}`, {
+        const response = await fetch(`${process.env.APP_URL}/tasks/${req.params.id}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
@@ -103,7 +103,7 @@ router.post("/:id/attachment", upload.array("attachments"), async (req, res) => 
 
 router.delete("/:id/attachment", async (req, res) => {
     try {
-        const response = await fetch(`${process.env.BACKEND_URL}/tasks/${req.params.id}`, {
+        const response = await fetch(`${process.env.APP_URL}/tasks/${req.params.id}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
