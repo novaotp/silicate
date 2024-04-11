@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { Task } from '$libs/models/Task';
-    import { getContext, onMount, setContext } from 'svelte';
+    import { getContext, setContext } from 'svelte';
     import { writable } from 'svelte/store';
     import { page } from '$app/stores';
     import { addTask } from './TasksPage';
     import { addToast } from '$lib/stores/toast';
-    import { fetchTasks, type PageContext } from './utils';
+    import { changeSearchParams, fetchTasks, type PageContext } from './utils';
     import { goto } from '$app/navigation';
     import { IconPlus } from '@tabler/icons-svelte';
     import Search from './Search.svelte';
@@ -24,7 +24,7 @@
     const { tasks } = getContext<PageContext>('page');
     const jwt = getContext<string>('jwt');
 
-    let viewedTaskId: number | null = null;
+    $: viewedTaskId = $page.url.searchParams.get('id');
     $: currentTab = $page.url.searchParams.get('tab') ?? '';
     $: archived = $page.url.searchParams.get('tab') === 'archives';
     $: category = $page.url.searchParams.get('category') ?? '';
@@ -48,11 +48,12 @@
         }
 
         $tasks = updatedTasks;
-        viewedTaskId = result.data!;
+
+        changeSearchParams("id", result.data!);
     };
 
     const changeTab = (tab: string) => {
-        goto(`/app/tasks${tab ? `?tab=${tab}` : ''}`, { invalidateAll: true });
+        changeSearchParams("tab", tab, { refetchData: true, removeOther: true });
     };
 
     $: {
@@ -63,7 +64,7 @@
         }
     }
 
-    $: title = viewedTaskId ? $tasks.find(t => t.id === viewedTaskId)?.title : "Tâches";
+    $: title = viewedTaskId ? $tasks.find(t => t.id === Number(viewedTaskId))?.title : "Tâches";
 </script>
 
 <svelte:head>
@@ -76,7 +77,7 @@
     </header>
     <Search />
     <Categories />
-    <TaskList on:click={(event) => (viewedTaskId = event.detail)} />
+    <TaskList />
 </div>
 <menu class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]">
     <button class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}" on:click={() => changeTab('')}> Tâches </button>
@@ -90,4 +91,4 @@
         Archives
     </button>
 </menu>
-<TaskDetailsModal {viewedTaskId} on:close={() => (viewedTaskId = null)} />
+<TaskDetailsModal />

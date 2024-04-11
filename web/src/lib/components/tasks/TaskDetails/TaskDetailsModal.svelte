@@ -3,21 +3,19 @@
     import type { Task } from '$libs/models/Task';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import { IconChevronLeft, IconDotsVertical } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
+    import { getContext } from 'svelte';
     import { fly } from 'svelte/transition';
     import TaskDetails from './TaskDetails.svelte';
     import { page } from '$app/stores';
-    import type { PageContext } from '../utils';
+    import { changeSearchParams, type PageContext } from '../utils';
     import { goto } from '$app/navigation';
 
-    export let viewedTaskId: number | null;
-
     let showSettings: boolean = false;
-    const dispatch = createEventDispatcher<{ close: null }>();
     const jwt = getContext<string>('jwt');
-    const { categories } = getContext<PageContext>("page");
+    const { categories } = getContext<PageContext>('page');
 
-    $: categorySearchParam = $page.url.searchParams.get("category");
+    $: viewedTaskId = $page.url.searchParams.get('id');
+    $: categorySearchParam = $page.url.searchParams.has('category') ? decodeURI($page.url.searchParams.get('category')!) : null;
 
     /**
      * Fetches a task with the given id.
@@ -41,9 +39,9 @@
 
 {#if viewedTaskId}
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-        {#await fetchTask(viewedTaskId)}
+        {#await fetchTask(Number(viewedTaskId))}
             <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-                <button class="rounded-full" on:click={() => dispatch('close')}>
+                <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
                     <IconChevronLeft />
                 </button>
             </header>
@@ -53,17 +51,20 @@
         {:then task}
             {#if task}
                 <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
-                    <button class="rounded-full" on:click={() => {
-                        dispatch('close');
-
-                        if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
+                    <button
+                        class="rounded-full"
+                        on:click={async () => {
                             const searchParams = new URLSearchParams($page.url.searchParams);
+                            searchParams.delete('id');
 
-                            searchParams.delete('category');
+                            if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
+                                searchParams.delete('category');
+                            }
 
-                            goto(`/app/tasks?${searchParams}`, { invalidateAll: true });
-                        }
-                    }}>
+                            viewedTaskId = null;
+                            setTimeout(() => goto(`/app/tasks?${searchParams}`, { invalidateAll: true }), 400);
+                        }}
+                    >
                         <IconChevronLeft />
                     </button>
                     <button class="py-2" on:click={() => (showSettings = !showSettings)}>

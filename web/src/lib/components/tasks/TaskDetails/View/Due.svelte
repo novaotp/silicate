@@ -1,10 +1,9 @@
 <script lang="ts">
-    import FullScreen from '$lib/components/shared/FullScreen.svelte';
     import { IconCalendarClock } from '@tabler/icons-svelte';
     import { fly } from 'svelte/transition';
     import SveltyPicker from 'svelty-picker';
     import { createEventDispatcher } from 'svelte';
-    import * as Button from "$lib/components/shared/Button";
+    import { Button, FullScreen, Card } from "$lib/ui";
 
     export let value: string;
 
@@ -21,13 +20,13 @@
         <IconCalendarClock />
         <span>Échéance</span>
     </div>
-    <Button.Normal.Secondary on:click={() => (show = true)} size="small">
+    <Button.Normal on:click={() => (show = true)} variant="secondary" size="small">
         {date}, {time}
-    </Button.Normal.Secondary>
+    </Button.Normal>
 </div>
 {#if show}
-    <FullScreen class="flex justify-center items-center">
-        <div transition:fly={{ y: 50 }}>
+    <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (show = false)}>
+        <Card options={{ y: 50 }} class="bg-transparent p-0">
             <SveltyPicker
                 pickerOnly
                 format="dd.mm.yyyy hh:ii"
@@ -40,6 +39,6 @@
                     dispatch("edit")
                 }}
             />
-        </div>
-    </FullScreen>
+        </Card>
+    </FullScreen.Backdrop>
 {/if}

@@ -2,7 +2,9 @@ import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Step, Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import { v4 } from "uuid";
-import { type Writable } from 'svelte/store';
+import { get, type Writable } from 'svelte/store';
+import { goto } from "$app/navigation";
+import { page } from "$app/stores";
 
 export interface PageContext {
     tasks: Writable<Task[]>;
@@ -97,4 +99,44 @@ export const fetchCategories = async (jwt: string, archived: boolean): Promise<s
     const result: ApiResponseWithData<string[]> = await response.json();
 
     return result.success ? result.data : undefined;
+}
+
+type ChangeSearchParamsOptions = {
+    refetchData?: boolean,
+    removeOther?: boolean
+}
+
+/**
+ * Changes a search param and navigates to the new url. Removes it if it's `''` or `null`.
+ * @param key The key of the search param
+ * @param value The new value of the search param. Set `null` or `''` to remove it.
+ * @param invalidateAll Whether the data should be re-fetched or not.
+ */
+export const changeSearchParams = (key: string, value: string | number | null, options?: ChangeSearchParamsOptions): void => {
+    if (typeof value === "number") {
+        value = value.toString();
+    }
+
+    const refetchData = options?.refetchData ?? false;
+    const removeOther = options?.removeOther ?? false;
+
+    const searchParams = new URLSearchParams(get(page).url.searchParams);
+
+    if (removeOther) {
+        if (value === "" || value === null) {
+            goto('/app/tasks');
+            return;
+        }
+
+        goto(`/app/tasks?${key}=${encodeURI(value)}`, { invalidateAll: refetchData });
+        return;
+    }
+
+    if (value === '' || value === null) {
+        searchParams.delete(key);
+    } else {
+        searchParams.set(key, encodeURI(value));
+    }
+
+    goto(`/app/tasks?${searchParams}`, { invalidateAll: refetchData });
 }

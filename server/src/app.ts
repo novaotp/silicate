@@ -16,7 +16,7 @@ app.use(express.static(path.resolve('./public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin: "*"
+    origin: process.env.FRONTEND_URL
 }));
 
 app.use("/auth", authRoutes);
@@ -24,10 +24,10 @@ app.use("/me", meRoutes);
 app.use("/memos", memoRoutes);
 app.use("/tasks", taskRoutes);
 
-if (!process.env.BACKEND_PORT) {
+if (!process.env.APP_PORT) {
     throw new Error("Set a backend port.")
 }
 
-app.listen(process.env.BACKEND_PORT, () => {
-    console.log(`[Server] Running on port ${process.env.BACKEND_PORT}`);
+app.listen(process.env.APP_PORT, () => {
+    console.log(`[Server] Running on port ${process.env.APP_PORT}`);
 });

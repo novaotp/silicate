@@ -10,12 +10,7 @@ const handleInvalid = (cookies: Cookies, message: string) => {
 }
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
-    const jwt = cookies.get("id");
-
-    if (!jwt) {
-        console.log("No token found.")
-        return handleInvalid(cookies, "No token found.");
-    }
+    const jwt = cookies.get("id")!;
 
     try {
         const response = await fetch(`${BACKEND_URL}/me`, {

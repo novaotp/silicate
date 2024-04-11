@@ -14,6 +14,7 @@
     import Item from './Item.svelte';
     import { fade, fly } from 'svelte/transition';
     import DesktopItem from './DesktopItem.svelte';
+    import { FullScreen, Card } from "$lib/ui";
 
     let showMenu: boolean = false;
 </script>
@@ -25,8 +26,8 @@
         </button>
     </nav>
     {#if showMenu}
-        <div class="md:hidden fixed flex h-full w-full top-0 left-0 justify-center items-center z-[100] bg-[rgba(0,0,0,0.1)]" transition:fade>
-            <div role="dialog" class="fixed z-50 mx-auto w-[calc(100%-40px)] rounded-md flex flex-col p-5 gap-4 shadow-2xl bg-neutral-50" transition:fly={{ y: 50 }}>
+        <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (showMenu = false)}>
+            <Card class="mx-auto w-[calc(100%-40px)] flex flex-col gap-4" options={{ y: 50 }}>
                 <header class="relative flex w-full items-center justify-between">
                     <h2 class="text-xl">Menu</h2>
                     <button on:click={() => (showMenu = false)} class="relative h-full flex justify-center items-center">
@@ -40,8 +41,8 @@
                     <Item on:close={() => (showMenu = false)} href="/app/mark-books" label="Carnets de notes" icon={GradeIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/settings" label="Paramètres" icon={IconSettings} />
                 </menu>
-            </div>
-        </div>
+            </Card>
+        </FullScreen.Backdrop>
     {/if}
 </div>
 

@@ -1,14 +1,12 @@
 <script lang="ts">
-    import FullScreen from '$lib/components/shared/FullScreen.svelte';
-    import { IconCircleXFilled, IconPointFilled, IconTag } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
-    import { fly } from 'svelte/transition';
+    import { IconCircleXFilled, IconTag } from '@tabler/icons-svelte';
+    import { getContext } from 'svelte';
     import { fetchCategories, fetchTasks, type PageContext } from '../../utils';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import { addToast } from '$lib/stores/toast';
     import { page } from '$app/stores';
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import * as Button from '$lib/components/shared/Button';
+    import { Button, Card, FullScreen } from '$lib/ui';
 
     export let id: number;
     export let value: string;
@@ -92,12 +90,12 @@
         <IconTag />
         <span>Catégorie</span>
     </div>
-    <Button.Warning.Primary on:click={() => (show = true)} size="small">
+    <Button.Warning on:click={() => (show = true)} variant="primary" size="small">
         {value}
-    </Button.Warning.Primary>
+    </Button.Warning>
 </div>
 {#if show}
-    <FullScreen
+    <FullScreen.Backdrop
         class="flex justify-center items-center px-5"
         on:click={() => {
             if (tempValue === '') {
@@ -109,11 +107,7 @@
     >
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div
-            class="relative w-full flex flex-col justify-center items-center bg-white rounded-lg p-5 text-sm gap-5"
-            on:click|stopPropagation
-            transition:fly={{ y: 100 }}
-        >
+        <Card class="w-full flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
                 <label for="category" class="text-neutral-500">Catégorie</label>
                 <div class="relative w-full h-[50px] flex justify-between rounded-smd text-neutral-700 bg-neutral-100">
@@ -130,30 +124,28 @@
                     </button>
                 </div>
                 {#if tempValue === ''}
-                    <span class="text-accent-danger-500 text-xs"> Entrez une valeur ou supprimez la. </span>
+                    <span class="text-accent-danger-500 text-xs">Entrez une valeur ou supprimez la.</span>
                 {/if}
             </div>
             <div class="relative w-full flex flex-wrap justify-start gap-5">
                 {#each filteredCategories as category}
-                    <button
-                        on:click|stopPropagation={() => (tempValue = category)}
-                        class="relative px-4 rounded-smd py-2 text-sm flex justify-start items-center border border-primary-600 bg-primary-50 text-primary-600"
-                    >
+                    <Button.Normal variant="secondary" on:click={() => (tempValue = category)} class="flex justify-start items-center">
                         {category}
-                    </button>
+                    </Button.Normal>
                 {:else}
                     <span>Aucune suggestion disponible.</span>
                 {/each}
-                <Button.Danger.Primary
+                <Button.Danger
+                    variant="primary"
                     on:click={async () => {
                         tempValue = '';
                         show = false;
-                        await editCategory();
+                        setTimeout(async () => await editCategory(), 400);
                     }}
                 >
                     Supprimer
-                </Button.Danger.Primary>
+                </Button.Danger>
             </div>
-        </div>
-    </FullScreen>
+        </Card>
+    </FullScreen.Backdrop>
 {/if}

@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { BACKEND_URL } from '$env/static/private';
+import type { ApiResponse } from '$libs/types/ApiResponse';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -21,7 +22,7 @@ export const actions = {
 		}
 
 		try {
-			await fetch(`${BACKEND_URL}/auth/register`, {
+			const response = await fetch(`${BACKEND_URL}/auth/register`, {
 				method: "POST",
 				body: JSON.stringify({
 					firstName,
@@ -34,6 +35,11 @@ export const actions = {
 					"content-type": "application/json"
 				}
 			});
+			const result: ApiResponse = await response.json();
+
+			if (!result.success) {
+				return fail(422, { firstName, lastName, email, message: "Une erreur est survenue." })
+			}
 		} catch (err) {
 			console.error(`Something went wrong whilst registering a new user : ${(err as Error).message}`)
 			return fail(422, { firstName, lastName, email, dbError: true });

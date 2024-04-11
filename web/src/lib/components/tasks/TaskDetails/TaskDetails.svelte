@@ -10,8 +10,8 @@
     import { fetchTasks } from '../utils';
     import * as Utils from './TaskDetails';
     import { fly } from 'svelte/transition';
-    import FullScreen from '$lib/components/shared/FullScreen.svelte';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
+    import { Button, FullScreen } from '$lib/ui';
 
     export let showSettings: boolean;
 
@@ -205,14 +205,14 @@
     </div>
 </div>
 {#if showSettings}
-    <FullScreen on:click={() => (showSettings = false)} class="flex justify-center items-end z-[999]">
-        <div role="dialog" class="fixed w-full rounded-md flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+    <FullScreen.Backdrop on:click={() => (showSettings = false)} class="flex justify-center items-end z-[999]">
+        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
             {#if !replica.category}
                 <button
                     on:click={async () => {
                         replica.category = 'Ma catégorie';
                         showCategoryChanger = true;
-                        await addCategory();
+                        setTimeout(async () => await addCategory(), 400);
                     }}
                     class="relative w-full px-5 h-14 flex justify-start items-center gap-10"
                 >
@@ -222,7 +222,7 @@
             {:else}
                 <button
                     on:click={async () => {
-                        await removeCategory();
+                        setTimeout(async () => await removeCategory(), 400);
                         replica.category = null;
                     }}
                     class="relative w-full px-5 h-14 flex justify-start items-center gap-10"
@@ -254,11 +254,7 @@
                     <span>Supprimer la description</span>
                 </button>
             {/if}
-            <button on:click={destroy} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
-                <IconTrash />
-                <span>Supprimer</span>
-            </button>
-            <button on:click={archive} class="relative w-full px-5 h-14 flex justify-start items-center gap-10">
+            <Button.Normal variant="secondary" on:click={archive} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
                 {#if archived}
                     <IconArchiveOff />
                     <span>Retirer de l'archive</span>
@@ -266,7 +262,11 @@
                     <IconArchive />
                     <span>Archiver</span>
                 {/if}
-            </button>
+            </Button.Normal>
+            <Button.Danger variant="secondary" on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+                <IconTrash />
+                <span>Supprimer</span>
+            </Button.Danger>
         </div>
-    </FullScreen>
+    </FullScreen.Backdrop>
 {/if}

@@ -2,14 +2,12 @@
     import { page } from '$app/stores';
     import { IconArchive, IconCheck } from '@tabler/icons-svelte';
     import { createEventDispatcher, getContext } from 'svelte';
-    import { calculateCompletion, type PageContext } from './utils';
+    import { calculateCompletion, changeSearchParams, type PageContext } from './utils';
     import type { Task } from '$libs/models/Task';
 
     const { tasks } = getContext<PageContext>('page');
 
     $: archived = $page.url.searchParams.get('tab') === 'archives';
-
-    const dispatch = createEventDispatcher<{ click: number }>();
 
     let groupedByYear: Record<number, Task[]> = {};
     let groupedByYear2: [string, Task[]][] = [];
@@ -29,7 +27,9 @@
         groupedByYear2 = Object.entries(groupedByYear);
     }
 
-    $: console.log(groupedByYear2);
+    const showTask = async (id: number) => {
+        changeSearchParams("id", id);
+    }
 </script>
 
 <div role="list" class="flex flex-col gap-5 mb-10">
@@ -52,7 +52,7 @@
                     {#each tasks as { id, title, due, steps } (id)}
                         <button
                             class="relative w-full h-20 py-5 gap-[30px] flex justify-between items-start cursor-pointer text-black"
-                            on:click={() => dispatch('click', id)}
+                            on:click={() => showTask(id)}
                         >
                             {#if due}
                                 {@const month = new Date(due).toLocaleDateString('fr-CH', { month: 'short' }).replace('.', '')}
