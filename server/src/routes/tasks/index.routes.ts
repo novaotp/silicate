@@ -80,7 +80,7 @@ router.get('/', async (req, res) => {
         return res.status(200).send({
             success: true,
             message: "Tasks read successfully",
-            data: rows.map<Task>(row => {
+            data: rows.map(row => {
                 return {
                     id: row.id,
                     title: row.title,
@@ -111,16 +111,7 @@ router.post('/', upload.array("attachments"), async (req, res) => {
 
         const { rows } = await client.query(`
             INSERT INTO public.task (user_id, category, title, description, due, steps, attachments, archived)
-            VALUES (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5,
-                $6,
-                $7,
-                $8
-            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id;
         `, [await userIdFromAuthHeader(req), category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived]);
 
@@ -265,8 +256,11 @@ router.get("/categories", async (req, res) => {
         const { rows } = await client.query<RawCategory>(`
             SELECT DISTINCT category
             FROM public.task
-            WHERE archived is ${archived};
-        `);
+            WHERE
+                archived is ${archived}
+                AND
+                user_id = $1;
+        `, [await userIdFromAuthHeader(req)]);
 
         client.release();
 
