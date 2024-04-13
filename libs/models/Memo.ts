@@ -18,3 +18,7 @@ export interface Memo {
     /** A parsable date. */
     lastChange: string,
 }
+
+export interface RawCategory {
+    category: string | null
+}
