@@ -1,10 +1,14 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import * as Button from "$lib/components/shared/Button"
+    import { Button } from "$lib/ui";
 </script>
 
+<svelte:head>
+    <title>Paramètres - Silicate</title>
+</svelte:head>
+
 <main class="relative w-full h-full flex flex-col justify-center items-center">
-    <Button.Danger.Primary on:click={() => goto("/auth/logout")}>
+    <Button.Danger variant="primary" on:click={() => goto("/auth/logout")}>
         Déconnexion
-    </Button.Danger.Primary>
+    </Button.Danger>
 </main>
