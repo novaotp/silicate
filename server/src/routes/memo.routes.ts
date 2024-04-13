@@ -124,7 +124,7 @@ router.put('/:id', async (req, res) => {
 
         await client.query(`
             UPDATE public.memo
-            SET tag = $1,
+            SET category = $1,
                 title = $2,
                 content = $3,
                 updated_at = $4
