@@ -46,7 +46,7 @@
 
         $memos = res.data;
 
-        changeSearchParams('id', result.data!);
+        changeSearchParams('id', result.data);
     };
 </script>
 
