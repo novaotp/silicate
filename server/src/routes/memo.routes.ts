@@ -5,7 +5,7 @@ import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
 
 export const router = Router();
 
-router.get('/:id', async (req, res) => {
+router.get('/:id(\\d+$)', async (req, res) => {
     try {
         const client = await db.connect();
 
@@ -169,6 +169,32 @@ router.delete('/:id', async (req, res) => {
         });
     } catch (err) {
         console.error(`Something went wrong whilst deleting a memo : ${err.message}`);
+        return res.status(500).send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.get("/categories", async (req, res) => {
+    try {
+        const client = await db.connect();
+
+        const { rows } = await client.query<RawMemo>(`
+            SELECT DISTINCT category
+            FROM public.memo
+            WHERE user_id = $1;
+        `, [await userIdFromAuthHeader(req)]);
+
+        client.release();
+
+        return res.status(200).send({
+            success: true,
+            message: "Memo categories read successfully",
+            data: rows.filter(row => row.category !== null).map(row => row.category) as string[]
+        });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching the memos' categories : ${err.message}`);
         return res.status(500).send({
             success: false,
             message: "Internal Server Error"
