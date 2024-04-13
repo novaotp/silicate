@@ -1,6 +1,6 @@
 {
 	"name": "silicate",
-	"version": "0.8.4",
+	"version": "0.8.5",
 	"private": true,
 	"author": "Sajidur Rahman",
 	"type": "module",
@@ -44,8 +44,10 @@
 	},
 	"dependencies": {
 		"@tabler/icons-svelte": "^2.46.0",
+		"clsx": "^2.1.0",
 		"marked": "^12.0.1",
 		"svelty-picker": "5.2.5",
+		"tailwind-merge": "^2.2.2",
 		"uuid": "^9.0.1"
 	}
 }
