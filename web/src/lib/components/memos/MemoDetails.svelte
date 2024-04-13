@@ -6,6 +6,7 @@
     import type { Memo } from '$libs/models/Memo';
     import { MemoRequests } from '$lib/requests/memos';
     import { getContext } from 'svelte';
+    import Inner from './Inner.MemoDetails.svelte';
 
     $: viewedMemoId = $page.url.searchParams.get('id');
 
@@ -27,9 +28,7 @@
                 {#if !result.success}
                     <p>Impossible de charger le mémo.</p>
                 {:else}
-                    {@const { title, content } = result.data}
-                    <input value={title} />
-                    <textarea value={content}></textarea>
+                    <Inner memo={result.data} />
                 {/if}
             </div>
         {:catch}

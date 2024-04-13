@@ -1,6 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Memo } from "$libs/models/Memo";
-import type { ApiResponseWithData } from "$libs/types/ApiResponse";
+import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 
 export class MemoRequests {
     private jwt: string;
@@ -35,6 +35,24 @@ export class MemoRequests {
         return await response.json();
     };
 
+    /**
+     * Updates a memo in the database.
+     * @returns On success, returns the id, otherwise, returns `undefined`.
+     */
+    public async updateMemo(id: string | number, options: UpdateMemoOptionsProps): Promise<ApiResponse> {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({ ...options }),
+            headers: {
+                accept: 'application/json',
+                authorization: this.jwt,
+                'content-type': 'application/json'
+            }
+        });
+
+        return await response.json();
+    };
+
     public async getMemo(id: string | number): Promise<ApiResponseWithData<Memo>> {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
             method: "GET",
@@ -58,4 +76,10 @@ export class MemoRequests {
 
         return await response.json();
     }
+}
+
+interface UpdateMemoOptionsProps {
+    title: string,
+    content: string,
+    category: string | null
 }

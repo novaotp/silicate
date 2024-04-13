@@ -24,7 +24,6 @@
         categories: writable(categoriesData)
     });
     const jwt = getContext<string>('jwt');
-
     const requests = new MemoRequests(jwt);
 
     const addMemo = async () => {

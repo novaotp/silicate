@@ -10,14 +10,16 @@
     };
 </script>
 
-<div role="list" class="flex flex-col gap-5 mb-10">
+<div role="list" class="grid grid-cols-[repeat(2,minmax(calc(50%-10px),1fr))] grid-flow-dense gap-5 mb-10">
     {#each $memos as { id, title, content } (id)}
         <button
-            class="relative w-[calc(50%-20px)] p-5 gap-[10px] flex flex-col justify-between items-start cursor-pointer"
+            class="relative w-full p-5 gap-[10px] flex flex-col justify-between items-start border border-neutral-300 rounded-lg"
             on:click={() => showMemo(id)}
         >
             <h2 class="text-neutral-950">{title}</h2>
-            <p class="text-xs text-neutral-500 line-clamp-5">{content}</p>
+            {#if content !== ""}
+                <p class="text-xs text-neutral-500 line-clamp-5">{content}</p>
+            {/if}
         </button>
     {:else}
         {#if $page.url.searchParams.get('search') !== null}
