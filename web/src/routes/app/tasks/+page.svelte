@@ -1,9 +1,19 @@
 <script lang="ts">
-    import TasksPage from '$lib/components/tasks/TasksPage.svelte';
+    import { TaskList, TaskDetailsModal, AddTask, Categories, Search } from '$lib/components/tasks';
+    import TaskContextProvider from '$lib/components/tasks/TaskContextProvider.svelte';
+    import { changeSearchParams } from '$lib/components/tasks/utils';
     import { Skeleton, Separator } from '$lib/ui';
     import type { PageData } from './$types';
+    import { page } from '$app/stores';
 
     export let data: PageData;
+
+    $: currentTab = $page.url.searchParams.get('tab') ?? '';
+    $: archived = $page.url.searchParams.get('tab') === 'archives';
+
+    const changeTab = (tab: string) => {
+        changeSearchParams('tab', tab, { refetchData: true, removeOther: true });
+    };
 </script>
 
 <svelte:head>
@@ -16,7 +26,7 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full p-5 pt-0 flex flex-col justify-start">
+<div class="relative w-full h-full p-5 pt-0 flex flex-col justify-start">
     {#if data.data?.message || !data.tasks || !data.categories}
         <p>Une erreur est survenue lors du chargement.</p>
         <p>Erreur : {data.data?.message}</p>
@@ -64,7 +74,34 @@
             </div>
         {:then tasks}
             {#if tasks}
-                <TasksPage data={tasks} categoriesData={data.categories} />
+                <TaskContextProvider {tasks} categories={data.categories}>
+                    <main class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto">
+                        <header class="relative w-full flex justify-start items-center">
+                            <h1 class="text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
+                        </header>
+                        <Search />
+                        <Categories />
+                        <TaskList />
+                    </main>
+                    <menu
+                        class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]"
+                    >
+                        <button
+                            class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}"
+                            on:click={() => changeTab('')}
+                        >
+                            Tâches
+                        </button>
+                        <AddTask />
+                        <button
+                            class="border-b-2 {currentTab === 'archives' ? 'border-primary-600' : 'border-transparent text-neutral-600'}"
+                            on:click={() => changeTab('archives')}
+                        >
+                            Archives
+                        </button>
+                    </menu>
+                    <TaskDetailsModal />
+                </TaskContextProvider>
             {:else}
                 <p>Une erreur est survenue lors du chargement des tâches.</p>
             {/if}
@@ -72,4 +109,4 @@
             <p>Une erreur est survenue lors du chargement des tâches.</p>
         {/await}
     {/if}
-</main>
+</div>
