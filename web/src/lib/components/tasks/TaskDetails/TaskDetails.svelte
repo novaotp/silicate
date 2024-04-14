@@ -30,6 +30,7 @@
     $: search = $page.url.searchParams.get('search') ?? '';
     $: archivedSearchParam = $page.url.searchParams.get('tab') === 'archives';
 
+    let timer: NodeJS.Timeout;
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -189,7 +190,10 @@
             value={replica.title}
             on:input={async (event) => {
                 replica.title = event.currentTarget.value;
-                await edit();
+                clearTimeout(timer);
+                timer = setTimeout(async () => {
+                    await edit();
+                }, 750);
             }}
             class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium"
         />
