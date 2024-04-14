@@ -1,5 +1,6 @@
 <script lang="ts">
-    import MemosPage from '$lib/components/memos/MemosPage.svelte';
+    import { AddMemo, Categories, MemoDetails, MemoList, Search } from '$lib/components/memos';
+    import MemoContextProvider from '$lib/components/memos/MemoContextProvider.svelte';
     import type { PageData } from './$types';
 
     export let data: PageData;
@@ -19,7 +20,17 @@
         <p>Chargement de tes mémos...</p>
     {:then memos}
         {#if memos && data.categories}
-            <MemosPage memosData={memos} categoriesData={data.categories} />
+            {@const categories = data.categories}
+            <MemoContextProvider {memos} {categories}>
+                <header class="relative w-full flex justify-start items-center">
+                    <h1 class="text-xl text-primary-950">Mémos</h1>
+                </header>
+                <Search />
+                <Categories />
+                <AddMemo />
+                <MemoList />
+                <MemoDetails />
+            </MemoContextProvider>
         {:else}
             <p>Impossible de charger les mémos.</p>
         {/if}
