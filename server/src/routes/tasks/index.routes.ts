@@ -1,10 +1,11 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import { db } from "../../database";
-import { RawCategory, RawTask, Task } from "../../../../libs/models/Task";
+import { RawCategory, RawTask, Task, Attachment } from '../../../../libs/models/Task';
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/fileUploads';
 import { router as attachmentRoutes } from "./attachment.routes";
 import { getAttachments } from './utils';
+import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/dynamicQueryBuilder';
 
 export const router = Router();
 
@@ -169,39 +170,40 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
 });
 
 router.patch('/:id', upload.array("attachments"), async (req, res) => {
-    const validSetter = (key: string, value: string | unknown[] | null | undefined) => {
-        if (value === undefined) {
-            return "";
-        } else if (value === null) {
-            return `${key} = NULL,`;
-        } else if (Array.isArray(value)) {
-            return `${key} = '${JSON.stringify(value)}',`;
-        } else {
-            return `${key} = '${value}',`;
-        }
+    const buildPatchObjects = (req: Request, attachments: Attachment[] | null): BuildPatchObject[] => {
+        const { category, title, description, due, steps, archived } = req.body;
+
+        const patchObjects: BuildPatchObject[] = [
+            { column: "category", value: category },
+            { column: "title", value: title },
+            { column: "description", value: description },
+            { column: "due", value: due },
+            { column: "steps", value: steps },
+            { column: "archived", value: archived },
+            { column: "attachments", value: attachments },
+            { column: "updated_at", value: new Date() }
+        ];
+
+        return patchObjects;
     }
 
     try {
-        const { category, title, description, due, steps, archived } = req.body;
+        const attachments = getAttachments(req);
+        const patchObjects = buildPatchObjects(req, attachments);
         const client = await db.connect();
 
-        const attachments = getAttachments(req);
+        // eslint-disable-next-line prefer-const
+        let { statements, id } = buildPatchStatements(patchObjects);
+        const values = buildPatchValues(patchObjects);
 
         await client.query(`
             UPDATE public.task
-            SET ${validSetter("category", category)}
-            ${title !== undefined ? `title = '${title}',` : ""}
-            ${validSetter("description", description)}
-            ${due !== undefined ? `due = '${due}',` : ""}
-            ${validSetter("steps", steps)}
-            ${validSetter("attachments", attachments)}
-            ${archived !== undefined ? `archived = ${archived},` : ""}
-                updated_at = $1
+            SET ${statements}
             WHERE
-                id = $2
+                id = $${id++}
                 AND
-                user_id = $3;
-        `, [new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+                user_id = $${id++};
+        `, [...values, req.params.id, await userIdFromAuthHeader(req)]);
 
         client.release();
 
