@@ -7,6 +7,11 @@
 
 <svelte:head>
     <title>Mes mémos - Silicate</title>
+    <meta
+        name="description"
+        content="N'oublie rien. Crée et gère des mémos en ligne pour un esprit clair et organisé.
+        Inscris-toi et gère ta vie étudiante comme un pro !"
+    />
 </svelte:head>
 
 <main class="relative w-full h-full p-5 pt-0 flex flex-col justify-start gap-5 overflow-auto">

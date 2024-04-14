@@ -1,5 +1,10 @@
 <svelte:head>
     <title>Home - Silicate</title>
+    <meta
+        name="description"
+        content="Organise-toi efficacement, lutte contre la procrastination et atteins tes objectifs grâce à nos outils et fonctionnalités performants.
+        Inscris-toi dès aujourd'hui et décolle vers la réussite !"
+    />
 </svelte:head>
 
 <main class="relative flex h-full w-full flex-col justify-center bg-white p-8 gap-5">

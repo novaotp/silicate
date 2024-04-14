@@ -11,6 +11,11 @@
 
 <svelte:head>
     <title>Dashboard - Silicate</title>
+    <meta
+        name="description"
+        content="Gagne du temps et reste informé grâce à notre tableau de bord intuitif qui te donne un aperçu rapide de tes tâches, projets et échéances.
+        Inscris-toi et améliore ta productivité dès aujourd'hui !"
+    />
 </svelte:head>
 
 {#if !data.user}
