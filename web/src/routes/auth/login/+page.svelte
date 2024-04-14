@@ -17,6 +17,12 @@
 
 <svelte:head>
     <title>Connexion - Silicate</title>
+    <meta
+        name="description"
+        content="Reprenez exactement là où vous en étiez.
+        Visualisez vos progrès, vos notes et accédez à vos outils favoris.
+        Connecte-toi dès maintenant !"
+    />
 </svelte:head>
 
 <form

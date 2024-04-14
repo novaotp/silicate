@@ -16,6 +16,11 @@
 
 <svelte:head>
     <title>Inscription - Silicate</title>
+    <meta
+        name="description"
+        content="Prends le contrôle de ton organisation, débloque ton plein potentiel et fonce vers la réussite ! 
+        Inscris-toi et découvre un monde de possibilités !"
+    />
 </svelte:head>
 
 <form method="POST" class="relative mb-5 flex w-[70%] flex-col overflow-x-hidden xl:hidden">

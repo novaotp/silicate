@@ -8,6 +8,12 @@
 
 <svelte:head>
     <title>Tâches - Silicate</title>
+    <meta
+        name="description"
+        content="Ne manque plus jamais une deadline ou une session d'étude importante.
+        Définis des rappels, reçois des notifications et priorise efficacement tes tâches.
+        Inscris-toi et gère ta vie étudiante comme un pro !"
+    />
 </svelte:head>
 
 <main class="relative w-full h-full p-5 pt-0 flex flex-col justify-start">
@@ -25,7 +31,7 @@
                 </div>
                 <div class="w-full flex flex-col">
                     <Skeleton class="w-20 h-8" />
-                    {#each {length: 3} as _, i}
+                    {#each { length: 3 } as _, i}
                         <div class="w-full h-20 py-5 flex gap-[30px]">
                             <Skeleton class="h-full aspect-square" />
                             <div class="flex-grow flex flex-col justify-between items-start">
@@ -41,7 +47,7 @@
                 </div>
                 <div class="w-full flex flex-col">
                     <Skeleton class="w-20 h-8" />
-                    {#each {length: 2} as _, i}
+                    {#each { length: 2 } as _, i}
                         <div class="w-full h-20 py-5 flex gap-[30px]">
                             <Skeleton class="h-full aspect-square" />
                             <div class="flex-grow flex flex-col justify-between items-start">
