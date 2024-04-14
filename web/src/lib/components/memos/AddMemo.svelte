@@ -37,6 +37,6 @@
     };
 </script>
 
-<Button.Normal on:click={addMemo} class="fixed bottom-5 right-5 p-0 rounded-lg w-[50px] aspect-square flex justify-center items-center">
+<Button.Normal on:click={addMemo} class="fixed bottom-5 right-5 p-0 rounded-lg w-[50px] aspect-square flex justify-center items-center z-30">
     <IconPlus />
 </Button.Normal>
