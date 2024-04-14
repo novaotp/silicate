@@ -2,12 +2,9 @@ import { Router } from "express";
 import { db } from "../database";
 import { RawUser, User } from "../../../libs/models/User";
 import { hash } from "bcrypt";
-import { authenticated } from "../middlewares/authenticated";
 import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
 
 export const router = Router();
-
-router.use(authenticated);
 
 router.get('/', async (req, res) => {
     try {

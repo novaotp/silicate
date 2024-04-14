@@ -9,6 +9,7 @@ import { router as taskRoutes } from "./routes/tasks/index.routes.ts";
 import { router as meRoutes } from "./routes/me.routes.ts";
 import { router as memoRoutes } from "./routes/memo.routes.ts";
 import { router as authRoutes } from "./routes/auth.routes.ts";
+import { authenticated } from './middlewares/authenticated';
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.use(cors({
 }));
 
 app.use("/auth", authRoutes);
+
+app.use(authenticated);
+
 app.use("/me", meRoutes);
 app.use("/memos", memoRoutes);
 app.use("/tasks", taskRoutes);

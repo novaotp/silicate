@@ -1,15 +1,12 @@
 import { Router } from "express";
 import { db } from "../../database";
 import { RawCategory, RawTask, Task } from "../../../../libs/models/Task";
-import { authenticated } from "../../middlewares/authenticated";
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/fileUploads';
 import { router as attachmentRoutes } from "./attachment.routes";
 import { getAttachments } from './utils';
 
 export const router = Router();
-
-router.use(authenticated);
 
 router.get('/:id(\\d+$)', async (req, res) => {
     try {
