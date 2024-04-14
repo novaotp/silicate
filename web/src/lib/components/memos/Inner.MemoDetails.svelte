@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { MemoRequests } from "$lib/requests/memos";
-    import { addToast } from "$lib/stores/toast";
-    import type { Memo } from "$libs/models/Memo";
-    import { getContext } from "svelte";
-    import type { MemoPageContext } from "./utils";
+    import { MemoRequests } from '$lib/requests/memos';
+    import { addToast } from '$lib/stores/toast';
+    import type { Memo } from '$libs/models/Memo';
+    import { getContext } from 'svelte';
+    import type { MemoPageContext } from './utils';
 
     export let memo: Memo;
     let replica = { ...memo };
@@ -12,8 +12,10 @@
     const jwt = getContext<string>('jwt');
     const requests = new MemoRequests(jwt);
 
-    const edit = async (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
-        replica.title = event.currentTarget.value;
+    let timer: NodeJS.Timeout;
+
+    const edit = async (key: 'title' | 'content', newValue: string) => {
+        replica[key] = newValue;
 
         const result = await requests.updateMemo(memo.id, {
             title: replica.title,
@@ -22,17 +24,29 @@
         });
 
         if (!result.success) {
-            addToast({ type: 'error', message: "Impossible de mettre à jour le mémo." });
+            addToast({ type: 'error', message: 'Impossible de mettre à jour le mémo.' });
             return;
         }
 
         memo = replica;
-        $memos = $memos.map(m => m.id !== memo.id ? m : replica);
-    }
+        $memos = $memos.map((m) => (m.id !== memo.id ? m : replica));
+    };
+
+    const editMemo = async (key: 'title' | 'content', newValue: string) => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            await edit(key, newValue);
+        }, 500);
+    };
 </script>
 
 <input
     value={replica.title}
-    on:input={edit}
+    on:input={async (event) => await edit('title', event.currentTarget.value)}
     class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium"
 />
+<textarea
+    class="relative w-full flex-grow text-sm resize-none"
+    value={replica.content}
+    on:input={async (event) => await editMemo('content', event.currentTarget.value)}
+></textarea>

@@ -24,7 +24,7 @@
         {#await requests.getMemo(viewedMemoId)}
             <p>Chargement du mémo...</p>
         {:then result}
-            <div class="relative w-full h-full flex flex-col justify-start items-start pt-[60px]">
+            <div class="relative w-full h-full flex flex-col justify-start items-start p-5 pt-[60px] gap-5">
                 {#if !result.success}
                     <p>Impossible de charger le mémo.</p>
                 {:else}

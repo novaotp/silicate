@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { ApiResponse } from '$libs/types/ApiResponse';
     import { IconArchive, IconArchiveOff, IconNotes, IconNotesOff, IconTag, IconTagOff, IconTrash } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
+    import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
-    import { fetchCategories, type PageContext } from '../utils';
+    import { changeSearchParams, fetchCategories, type PageContext } from '../utils';
     import { page } from '$app/stores';
     import type { Task } from '$libs/models/Task';
     import { Attachments, Category, Description, Due, Steps } from './View';
@@ -18,8 +18,6 @@
     const { tasks, categories } = getContext<PageContext>('page');
 
     const jwt = getContext<string>('jwt');
-
-    const dispatch = createEventDispatcher();
 
     export let task: Task;
 
@@ -79,7 +77,7 @@
         }
 
         $tasks = updatedTasks;
-        dispatch('close');
+        changeSearchParams("id", null)
     };
 
     const archive = async () => {
