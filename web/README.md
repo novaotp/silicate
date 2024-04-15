@@ -16,7 +16,7 @@ This sub-project contains the code for the frontend of Silicate.
 
 3. Run the application.
 
-    ````bash
+    ```bash
     npm run dev
     ```
 
