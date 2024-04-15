@@ -5,12 +5,12 @@
 
     const { memos } = getContext<MemoPageContext>('page');
 
-    const showMemo = async (id: number) => {
+    const showMemo = (id: number) => {
         changeSearchParams('id', id);
     };
 </script>
 
-<div role="list" class="grid grid-cols-[repeat(2,minmax(calc(50%-10px),1fr))] grid-flow-dense gap-5 mb-20">
+<div role="list" class="grid {$memos.length > 0 ? "grid-cols-[repeat(2,minmax(calc(50%-10px),1fr))]" : "grid-cols-1"} grid-flow-dense gap-5 mb-20">
     {#each $memos as { id, title, content } (id)}
         <button
             class="relative w-full p-5 gap-[10px] flex flex-col justify-between items-start border border-neutral-300 rounded-lg"

@@ -1,60 +1,159 @@
 <script lang="ts">
-    import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import type { Memo } from '$libs/models/Memo';
-    import type { ApiResponseWithData } from '$libs/types/ApiResponse';
-    import { selectedMemoId } from '$lib/stores/memo';
-    import Content from './Content.svelte';
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+    import { Editor } from '@tiptap/core';
+    import { IconBold, IconHeading, IconItalic, IconList, IconStrikethrough } from '@tabler/icons-svelte';
+    import Document from '@tiptap/extension-document';
+    import BulletList from '@tiptap/extension-bullet-list';
+    import ListItem from '@tiptap/extension-list-item';
+    import Paragraph from '@tiptap/extension-paragraph';
+    import Text from '@tiptap/extension-text';
+    import Bold from '@tiptap/extension-bold';
+    import Italic from '@tiptap/extension-italic';
+    import Strike from '@tiptap/extension-strike';
+    import Heading from "@tiptap/extension-heading";
 
-    let loading: boolean = false;
-    let memo: Memo | undefined = undefined;
+    export let content: string;
+    let element: HTMLDivElement;
+    let editor: Editor;
+    let showHeadings: boolean = false;
 
-    let bold: boolean = false;
-    let italic: boolean = false;
+    const dispatch = createEventDispatcher<{ edit: string }>();
 
-    let isPreview: boolean = false;
+    onMount(() => {
+        editor = new Editor({
+            element: element,
+            extensions: [Document, Paragraph, Text, BulletList, ListItem, Bold, Italic, Strike, Heading],
+            content: content,
+            editorProps: {
+                attributes: {
+                    class: 'my-editor'
+                }
+            },
+            onTransaction: () => {
+                // force re-render so `editor.isActive` works as expected
+                editor = editor;
+            }
+        });
+    });
 
-    selectedMemoId.subscribe(async (newId: number | null) => {
-        if (!newId) return;
-
-        memo = undefined;
-
-        loading = true;
-
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${newId}`);
-        const { data }: ApiResponseWithData<Memo> = await response.json();
-
-        memo = { ...data };
-        loading = false;
+    onDestroy(() => {
+        if (editor) {
+            editor.destroy();
+        }
     });
 </script>
 
-<main class="relative hidden flex-col lg:flex h-full flex-grow p-5">
-    {#if !$selectedMemoId || !memo}
-        <p>Choisissez un mémo pour pouvoir l'éditer.</p>
-    {:else}
-        <header class="relative w-full h-20 mb-10 bg-indigo-700">
-            <button on:click={() => (isPreview = !isPreview)}>
-                {isPreview ? 'Show editor' : 'Show preview'}
+<div bind:this={element} class="relative w-full h-full editor" on:input={() => dispatch('edit', editor.getHTML())} />
+
+<div class="relative w-full min-h-[60px] gap-[10px] bg-neutral-100 rounded-lg p-[10px] text-sm flex">
+    {#if editor}
+        <div class="relative w-[40px]">
+            <button
+                on:click={() => (showHeadings = !showHeadings)}
+                class="relative h-full aspect-square flex justify-center items-center rounded z-50 {showHeadings ? 'bg-neutral-200' : ''}"
+            >
+                <IconHeading />
             </button>
-        </header>
-        {@const { tag, title, content, lastChange } = memo}
-        <h1 class:title={isPreview}>{title}</h1>
-        <Content bind:content={memo.content} {isPreview} />
-        <p>Dernière modification : {new Date(lastChange).toLocaleString('fr-CH')}</p>
+            <div class="absolute {showHeadings ? 'flex' : 'hidden'} bottom-[calc(100%+20px)] bg-neutral-100 w-full aspect-square flex-col">
+                <button
+                    class="relative h-full aspect-square flex justify-center items-center rounded"
+                    on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                    class:active={editor.isActive('heading', { level: 1 })}
+                >
+                    H1
+                </button>
+                <button
+                    class="relative h-full aspect-square flex justify-center items-center rounded"
+                    on:click={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                    class:active={editor.isActive('heading', { level: 2 })}
+                >
+                    H2
+                </button>
+                <button
+                    class="relative h-full aspect-square flex justify-center items-center rounded"
+                    on:click={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                    class:active={editor.isActive('heading', { level: 3 })}
+                >
+                    H3
+                </button>
+                <button
+                    class="relative h-full aspect-square flex justify-center items-center rounded"
+                    on:click={() => editor.chain().focus().setParagraph().run()}
+                    class:active={editor.isActive('paragraph')}
+                >
+                    P
+                </button>
+            </div>
+        </div>
+        <button
+            on:click={() => editor.chain().focus().toggleBold().run()}
+            class:active={editor.isActive('bold')}
+            class="relative h-full aspect-square flex justify-center items-center rounded z-50 {showHeadings ? 'bg-neutral-200' : ''}"
+        >
+            <IconBold />
+        </button>
+        <button
+            on:click={() => editor.chain().focus().toggleItalic().run()}
+            class:active={editor.isActive('italic')}
+            class="relative h-full aspect-square flex justify-center items-center rounded z-50 {showHeadings ? 'bg-neutral-200' : ''}"
+        >
+            <IconItalic />
+        </button>
+        <button
+            on:click={() => editor.chain().focus().toggleStrike().run()}
+            class:active={editor.isActive('strike')}
+            class="relative h-full aspect-square flex justify-center items-center rounded z-50 {showHeadings ? 'bg-neutral-200' : ''}"
+        >
+            <IconStrikethrough />
+        </button>
+        <button
+            on:click={() => editor.chain().focus().toggleBulletList().run()}
+            class:active={editor.isActive('bulletList')}
+            class="relative h-full aspect-square flex justify-center items-center rounded z-50 {showHeadings ? 'bg-neutral-200' : ''}"
+        >
+            <IconList />
+        </button>
     {/if}
-    <div class="flex gap-5">
-        <button on:click={() => (bold = !bold)} class="bg-blue-600">
-            Gras | mtn : {bold}
-        </button>
-        <button on:click={() => (italic = !italic)} class="bg-blue-600">
-            Italique | mtn : {italic}
-        </button>
-    </div>
-</main>
+</div>
 
 <style>
-    .title {
-        font-size: 2em;
-        font-weight: 700;
+    :global(.my-editor) {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    :global(.my-editor h1) {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    :global(.my-editor h2) {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    :global(.my-editor h3) {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    :global(.my-editor p) {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    :global(.my-editor ul) {
+        list-style: square;
+        margin-left: 20px;
+    }
+
+    :global(.my-editor ul ul) {
+        list-style: circle;
+        margin-left: 20px;
+    }
+
+    button.active {
+        background: black;
+        color: white;
     }
 </style>

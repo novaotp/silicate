@@ -1,9 +1,8 @@
 <script lang="ts">
     import { page } from '$app/stores';
     import { FullScreen } from '$lib/ui';
-    import { IconChevronLeft } from '@tabler/icons-svelte';
+    import { IconChevronLeft, IconDotsVertical } from '@tabler/icons-svelte';
     import { changeSearchParams } from './utils';
-    import type { Memo } from '$libs/models/Memo';
     import { MemoRequests } from '$lib/requests/memos';
     import { getContext } from 'svelte';
     import Inner from './Inner.MemoDetails.svelte';
@@ -12,6 +11,7 @@
 
     const jwt = getContext<string>('jwt');
     const requests = new MemoRequests(jwt);
+    let showSettings: boolean = false;
 </script>
 
 {#if viewedMemoId}
@@ -19,6 +19,9 @@
         <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
             <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
                 <IconChevronLeft />
+            </button>
+            <button class="py-2" on:click={() => (showSettings = !showSettings)}>
+                <IconDotsVertical />
             </button>
         </header>
         {#await requests.getMemo(viewedMemoId)}
@@ -28,7 +31,7 @@
                 {#if !result.success}
                     <p>Impossible de charger le mémo.</p>
                 {:else}
-                    <Inner memo={result.data} />
+                    <Inner memo={result.data} bind:showSettings />
                 {/if}
             </div>
         {:catch}

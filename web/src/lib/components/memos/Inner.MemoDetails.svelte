@@ -3,8 +3,13 @@
     import { addToast } from '$lib/stores/toast';
     import type { Memo } from '$libs/models/Memo';
     import { getContext } from 'svelte';
-    import type { MemoPageContext } from './utils';
+    import { changeSearchParams, type MemoPageContext } from './utils';
+    import Editor from './Editor/Editor.svelte';
+    import { Button, FullScreen } from '$lib/ui';
+    import { IconTrash } from '@tabler/icons-svelte';
+    import { fly } from 'svelte/transition';
 
+    export let showSettings: boolean;
     export let memo: Memo;
     let replica = { ...memo };
 
@@ -32,21 +37,48 @@
         $memos = $memos.map((m) => (m.id !== memo.id ? m : replica));
     };
 
-    const editMemo = async (key: 'title' | 'content', newValue: string) => {
-        clearTimeout(timer);
-        timer = setTimeout(async () => {
-            await edit(key, newValue);
-        }, 500);
+    const destroy = async () => {
+        const { success, message } = await requests.deleteMemo(replica.id);
+
+        if (!success) {
+            addToast({ type: 'error', message });
+            return;
+        } else {
+            addToast({ type: 'success', message: 'Tâche supprimée avec succès.' });
+        }
+
+        $memos = $memos.filter((m) => m.id !== replica.id);
+
+        changeSearchParams('id', null);
     };
 </script>
 
 <input
     value={replica.title}
-    on:input={async (event) => await edit('title', event.currentTarget.value)}
+    on:input={async (event) => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            await edit('title', event.currentTarget.value);
+        }, 750);
+    }}
     class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium"
 />
-<textarea
-    class="relative w-full flex-grow text-sm resize-none"
-    value={replica.content}
-    on:input={async (event) => await editMemo('content', event.currentTarget.value)}
-></textarea>
+<Editor
+    content={replica.content}
+    on:edit={async (event) => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            await edit('content', event.detail);
+        }, 750);
+    }}
+/>
+{#if showSettings}
+    <FullScreen.Backdrop on:click={() => (showSettings = false)} class="flex justify-center items-end z-[999]">
+        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+            <Button.Danger variant="secondary" on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+                <IconTrash />
+                <span>Supprimer</span>
+            </Button.Danger>
+        </div>
+    </FullScreen.Backdrop>
+{/if}

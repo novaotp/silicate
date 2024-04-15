@@ -53,6 +53,17 @@ export class MemoRequests {
         return await response.json();
     };
 
+    /** Deletes a memo in the database. */
+    public async deleteMemo(id: number): Promise<ApiResponse> {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
+            method: 'DELETE',
+            headers: {
+                authorization: this.jwt
+            }
+        });
+        return await response.json() as ApiResponse;
+    }
+
     public async getMemo(id: string | number): Promise<ApiResponseWithData<Memo>> {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
             method: "GET",
