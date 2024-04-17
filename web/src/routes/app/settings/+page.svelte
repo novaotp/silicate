@@ -13,5 +13,5 @@
 </svelte:head>
 
 <main class="relative w-full h-full flex flex-col justify-center items-center">
-    <Button.Danger variant="primary" on:click={() => goto('/auth/logout')}>Déconnexion</Button.Danger>
+    <Button.Danger variant="primary" on:click={async () => await goto('/auth/logout')}>Déconnexion</Button.Danger>
 </main>

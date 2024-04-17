@@ -61,7 +61,7 @@
             await edit('title', event.currentTarget.value);
         }, 750);
     }}
-    class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium"
+    class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium h-10"
 />
 <Editor
     content={replica.content}
