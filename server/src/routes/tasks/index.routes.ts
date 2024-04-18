@@ -1,11 +1,12 @@
 import { Request, Router } from "express";
 import { db } from "../../database";
-import { RawCategory, RawTask, Task, Attachment } from '../../../../libs/models/Task';
+import { RawCategory, RawTask, Task } from '../../../../libs/models/Task';
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/fileUploads';
 import { router as attachmentRoutes } from "./attachment.routes";
 import { getAttachments } from './utils';
 import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/dynamicQueryBuilder';
+import { stringifyOrNull } from "../../utils/stringifyOrNull";
 
 export const router = Router();
 
@@ -169,8 +170,8 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
     }
 });
 
-router.patch('/:id', upload.array("attachments"), async (req, res) => {
-    const buildPatchObjects = (req: Request, attachments: Attachment[] | null): BuildPatchObject[] => {
+router.patch('/:id', async (req, res) => {
+    const buildPatchObjects = (req: Request): BuildPatchObject[] => {
         const { category, title, description, due, steps, archived } = req.body;
 
         const patchObjects: BuildPatchObject[] = [
@@ -178,9 +179,8 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
             { column: "title", value: title },
             { column: "description", value: description },
             { column: "due", value: due },
-            { column: "steps", value: steps },
+            { column: "steps", value: stringifyOrNull(steps) },
             { column: "archived", value: archived },
-            { column: "attachments", value: attachments },
             { column: "updated_at", value: new Date() }
         ];
 
@@ -188,8 +188,7 @@ router.patch('/:id', upload.array("attachments"), async (req, res) => {
     }
 
     try {
-        const attachments = getAttachments(req);
-        const patchObjects = buildPatchObjects(req, attachments);
+        const patchObjects = buildPatchObjects(req);
         const client = await db.connect();
 
         // eslint-disable-next-line prefer-const
