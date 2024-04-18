@@ -6,21 +6,20 @@
     import { addToast } from '$lib/stores/toast';
     import { applyAction, enhance } from '$app/forms';
     import { page } from '$app/stores';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
 
     export let form: ActionData;
-
-    let message: string | null = null;
 
     let email: string = form?.email ?? '';
     let password: string = '';
 </script>
 
 <svelte:head>
-    <title>Connexion - Silicate</title>
+    <title>Connexion - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
-        content="Reprenez exactement là où vous en étiez.
-        Visualisez vos progrès, vos notes et accédez à vos outils favoris.
+        content="Reprends exactement là où tu en étais.
+        Visualise tes progrès, tes notes et accédez à tes outils favoris.
         Connecte-toi dès maintenant !"
     />
 </svelte:head>

@@ -4,6 +4,7 @@
     import Input from '$lib/components/auth/Input.svelte';
     import Switcher from '$lib/components/auth/Switcher.svelte';
     import Submit from '$lib/components/auth/Submit.svelte';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
 
     export let form: ActionData;
 
@@ -15,7 +16,7 @@
 </script>
 
 <svelte:head>
-    <title>Inscription - Silicate</title>
+    <title>Inscription - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Prends le contrôle de ton organisation, débloque ton plein potentiel et fonce vers la réussite ! 

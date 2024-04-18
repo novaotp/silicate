@@ -1,10 +1,11 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
     import { Button } from '$lib/ui';
 </script>
 
 <svelte:head>
-    <title>Paramètres - Silicate</title>
+    <title>Paramètres - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Prends le contrôle de ton expérience et configure tes paramètres pour une utilisation optimale.

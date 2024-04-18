@@ -1,5 +1,9 @@
+<script lang="ts">
+    import { PUBLIC_APP_NAME } from "$env/static/public";
+</script>
+
 <svelte:head>
-    <title>Home - Silicate</title>
+    <title>Home - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Organise-toi efficacement, lutte contre la procrastination et atteins tes objectifs grâce à nos outils et fonctionnalités performants.
@@ -8,10 +12,10 @@
 </svelte:head>
 
 <main class="relative flex h-full w-full flex-col justify-center bg-white p-8 gap-5">
-    <h1 class="text-5xl font-extrabold text-primary-600">Silicate</h1>
+    <h1 class="text-5xl font-extrabold text-primary-600">{PUBLIC_APP_NAME}</h1>
     <h2 class="text-xl font-semibold text-primary-900">L'appli pour gérer ta vie scolaire facilement</h2>
     <p class="text-justify text-neutral-500">
-        Tu es étudiant et submergé par les devoirs, les cours et les dates limites ? Pas de soucis ! Avec Silicate, organise-toi en un clin d'œil et
+        Tu es étudiant et submergé par les devoirs, les cours et les dates limites ? Pas de soucis ! Avec {PUBLIC_APP_NAME}, organise-toi en un clin d'œil et
         dis adieu au stress. C'est comme avoir un assistant perso pour ton école, mais en mieux !
     </p>
     <div class="relative flex flex-col gap-3 mt-8">

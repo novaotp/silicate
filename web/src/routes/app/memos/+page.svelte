@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_APP_NAME } from '$env/static/public';
     import { AddMemo, Categories, MemoDetails, MemoList, Search } from '$lib/components/memos';
     import MemoContextProvider from '$lib/components/memos/MemoContextProvider.svelte';
     import type { PageData } from './$types';
@@ -7,7 +8,7 @@
 </script>
 
 <svelte:head>
-    <title>Mes mémos - Silicate</title>
+    <title>Mes mémos - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="N'oublie rien. Crée et gère des mémos en ligne pour un esprit clair et organisé.

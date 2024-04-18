@@ -3,6 +3,7 @@
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
     import type { PageData } from './$types';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
 
     export let data: PageData;
 
@@ -10,7 +11,7 @@
 </script>
 
 <svelte:head>
-    <title>Dashboard - Silicate</title>
+    <title>Dashboard - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Gagne du temps et reste informé grâce à notre tableau de bord intuitif qui te donne un aperçu rapide de tes tâches, projets et échéances.

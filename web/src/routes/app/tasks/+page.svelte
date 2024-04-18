@@ -5,6 +5,7 @@
     import { Skeleton, Separator } from '$lib/ui';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
 
     export let data: PageData;
 
@@ -17,7 +18,7 @@
 </script>
 
 <svelte:head>
-    <title>Tâches - Silicate</title>
+    <title>Tâches - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Ne manque plus jamais une deadline ou une session d'étude importante.
