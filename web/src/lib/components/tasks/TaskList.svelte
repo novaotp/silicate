@@ -5,7 +5,7 @@
     import { calculateCompletion, changeSearchParams, type PageContext } from './utils';
     import type { Task } from '$libs/models/Task';
 
-    const { tasks } = getContext<PageContext>('page');
+    const { tasks, viewedTaskId } = getContext<PageContext>('page');
 
     $: archived = $page.url.searchParams.get('tab') === 'archives';
 
@@ -27,8 +27,8 @@
         groupedByYear2 = Object.entries(groupedByYear);
     }
 
-    const showTask = async (id: number) => {
-        changeSearchParams("id", id);
+    const showTask = (id: number) => {
+        $viewedTaskId = id;
     }
 </script>
 
@@ -51,7 +51,7 @@
                 <div role="list" class="flex flex-col divide-y-[1px] divide-neutral-300">
                     {#each tasks as { id, title, due, steps } (id)}
                         <button
-                            class="relative w-full h-20 py-5 gap-[30px] flex justify-between items-start cursor-pointer text-black"
+                            class="relative w-full h-20 py-4 gap-[30px] flex justify-between items-start cursor-pointer text-black"
                             on:click={() => showTask(id)}
                         >
                             {#if due}
@@ -62,8 +62,8 @@
                                     <span class="text-xl font-medium text-primary-600">{day}</span>
                                 </time>
                             {/if}
-                            <div class="relative flex-grow h-full flex flex-col justify-center items-start gap-[2px]">
-                                <h2 class="text-start font-medium text-primary-950">{title}</h2>
+                            <div class="relative flex-grow h-full flex flex-col justify-center items-start">
+                                <h2 class="text-start font-medium text-primary-950 line-clamp-1">{title}</h2>
                                 {#if due}
                                     {@const time = new Date(due)
                                         .toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })

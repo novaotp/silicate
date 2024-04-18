@@ -12,9 +12,8 @@
 
     let showSettings: boolean = false;
     const jwt = getContext<string>('jwt');
-    const { categories } = getContext<PageContext>('page');
+    const { categories, viewedTaskId } = getContext<PageContext>('page');
 
-    $: viewedTaskId = $page.url.searchParams.get('id');
     $: categorySearchParam = $page.url.searchParams.has('category') ? decodeURI($page.url.searchParams.get('category')!) : null;
 
     /**
@@ -23,8 +22,8 @@
      * @param jwt The `Authorization` header
      * @returns The data if it succeeded, `undefined` otherwise.
      */
-    export const fetchTask = async (id: number) => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+    export const fetchTask = async () => {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${$viewedTaskId}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
@@ -35,13 +34,18 @@
 
         return result.success ? result.data : undefined;
     };
+
+    const closeModal = () => {
+        $viewedTaskId = null;
+    }
 </script>
 
-{#if viewedTaskId}
+{#key viewedTaskId}
+{#if $viewedTaskId}
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-        {#await fetchTask(Number(viewedTaskId))}
+        {#await fetchTask()}
             <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-                <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
+                <button class="rounded-full" on:click={closeModal}>
                     <IconChevronLeft />
                 </button>
             </header>
@@ -53,16 +57,14 @@
                 <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
                     <button
                         class="rounded-full"
-                        on:click={async () => {
-                            const searchParams = new URLSearchParams($page.url.searchParams);
-                            searchParams.delete('id');
+                        on:click={() => {
+                            closeModal();
 
                             if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
+                                const searchParams = new URLSearchParams($page.url.searchParams);
                                 searchParams.delete('category');
+                                setTimeout(() => goto(`/app/tasks?${searchParams}`, { invalidateAll: true }), 400);
                             }
-
-                            viewedTaskId = null;
-                            setTimeout(() => goto(`/app/tasks?${searchParams}`, { invalidateAll: true }), 400);
                         }}
                     >
                         <IconChevronLeft />
@@ -78,6 +80,7 @@
         {/await}
     </div>
 {/if}
+{/key}
 
 <style lang="scss">
     $blur: 10px;

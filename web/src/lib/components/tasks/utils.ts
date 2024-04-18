@@ -7,8 +7,9 @@ import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 
 export interface PageContext {
-    tasks: Writable<Task[]>;
-    categories: Writable<string[]>;
+    tasks: Writable<Task[]>,
+    categories: Writable<string[]>,
+    viewedTaskId: Writable<number | null>
 };
 
 /** Made to deal with steps deletion, which would require a unique identifier. */

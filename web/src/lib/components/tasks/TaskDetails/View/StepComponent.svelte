@@ -3,7 +3,7 @@
     import { createEventDispatcher } from 'svelte';
     import type { StepWithId } from '../../utils';
     import { v4 } from 'uuid';
-    import * as Button from '$lib/components/shared/Button';
+    import { Button } from '$lib/ui';
 
     export let step: StepWithId;
 
@@ -67,12 +67,12 @@
             <button on:click={() => (showStepMenu = true)}><IconDotsVertical class="size-4" /></button>
             {#if showStepMenu}
                 <menu class="absolute top-[calc(100%+5px)] right-0 flex flex-col justify-center rounded-lg shadow-lg bg-white z-[1000]">
-                    <Button.Normal.Primary on:click={newSubStep} size="small" class="rounded-b-none">
+                    <Button.Normal variant="primary" on:click={newSubStep} size="small" class="rounded-b-none">
                         Ajouter
-                    </Button.Normal.Primary>
-                    <Button.Danger.Tertiary on:click={() => dispatch("delete", step.id)} size="small" class="rounded-t-none">
+                    </Button.Normal>
+                    <Button.Danger variant="tertiary" on:click={() => dispatch("delete", step.id)} size="small" class="rounded-t-none">
                         Supprimer
-                    </Button.Danger.Tertiary>
+                    </Button.Danger>
                 </menu>
             {/if}
         </button>

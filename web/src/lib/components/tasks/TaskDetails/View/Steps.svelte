@@ -9,7 +9,7 @@
     import { IconChecklist } from '@tabler/icons-svelte';
     import { v4 } from 'uuid';
     import { calculateCompletion, fetchTasks, toStep, toStepWithId, type PageContext } from '../../utils';
-    import * as Button from '$lib/components/shared/Button';
+    import { Button } from '$lib/ui';
 
     export let id: number;
     export let value: string | null;
@@ -21,6 +21,7 @@
     $: search = $page.url.searchParams.get('search') ?? '';
     $: archived = $page.url.searchParams.get("tab") === "archives";
 
+    let timer: NodeJS.Timeout;
     let updating: boolean = false;
 
     let steps = ((value ? JSON.parse(value) : []) as Step[]).map(s => toStepWithId(s));
@@ -31,13 +32,16 @@
 
     $: {
         if (updating) {
+            clearTimeout(timer);
             progression = (calculateCompletion(steps) * 100).toFixed(0);
             pending = steps.filter((s) => !s.completed);
             done = steps.filter((s) => s.completed);
 
             steps = [...steps];
             updating = false;
-            updateSteps();
+            timer = setTimeout(async () => {
+                await updateSteps();
+            }, 750);
         }
     }
 
@@ -87,15 +91,15 @@
     }
 </script>
 
-<div class="relative w-full flex flex-col justify-start gap-3">
+<div class="relative w-full flex flex-col justify-start gap-3 text-neutral-950">
     <div class="text-neutral-500 flex justify-between">
         <div class="flex gap-4">
             <IconChecklist />
             <h3>Étapes</h3>
         </div>
-        <Button.Normal.Primary on:click={addStep} size="small">
+        <Button.Normal variant="primary" on:click={addStep} size="small">
             Ajouter
-        </Button.Normal.Primary>
+        </Button.Normal>
     </div>
     {#if steps.length > 0}
         <div class="relative w-full flex flex-col p-5 rounded-lg bg-neutral-100 gap-2">

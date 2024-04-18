@@ -9,7 +9,8 @@
 
     setContext<PageContext>('page', {
         tasks: writable(tasks),
-        categories: writable(categories)
+        categories: writable(categories),
+        viewedTaskId: writable(null)
     });
 </script>
 
