@@ -14,6 +14,6 @@
     }
 </script>
 
-<button class="relative rounded-smd {sizeClasses[size]} {colorClasses[variant]} {$$restProps['class'] || ''}" on:click>
+<button class="relative rounded {sizeClasses[size]} {colorClasses[variant]} {$$restProps['class'] || ''}" on:click>
     <slot />
 </button>

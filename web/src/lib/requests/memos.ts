@@ -87,6 +87,19 @@ export class MemoRequests {
 
         return await response.json();
     }
+
+    public async getCategories(): Promise<string[] | undefined> {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/categories`, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "authorization": this.jwt
+            }
+        });
+        const result: ApiResponseWithData<string[]> = await response.json();
+    
+        return result.success ? result.data : undefined;
+    }
 }
 
 interface UpdateMemoOptionsProps {
