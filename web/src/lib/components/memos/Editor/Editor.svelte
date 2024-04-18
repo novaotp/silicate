@@ -1,7 +1,11 @@
 <script lang="ts">
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-    import { Editor } from '@tiptap/core';
+    import { Editor, isActive } from '@tiptap/core';
     import {
+        IconAlignCenter,
+        IconAlignJustified,
+        IconAlignLeft,
+        IconAlignRight,
         IconArrowBackUp,
         IconArrowForwardUp,
         IconBold,
@@ -11,9 +15,12 @@
         IconIndentIncrease,
         IconItalic,
         IconLetterCase,
+        IconLink,
         IconList,
+        IconListNumbers,
         IconSeparator,
-        IconStrikethrough
+        IconStrikethrough,
+        IconUnlink
     } from '@tabler/icons-svelte';
     import Document from '@tiptap/extension-document';
     import BulletList from '@tiptap/extension-bullet-list';
@@ -27,6 +34,8 @@
     import Heading from '@tiptap/extension-heading';
     import HorizontalRule from '@tiptap/extension-horizontal-rule';
     import History from '@tiptap/extension-history';
+    import OrderedList from '@tiptap/extension-ordered-list';
+    import TextAlign from '@tiptap/extension-text-align';
 
     export let content: string;
     let element: HTMLDivElement;
@@ -42,7 +51,24 @@
     onMount(() => {
         editor = new Editor({
             element: element,
-            extensions: [Document, Paragraph, Text, BulletList, ListItem, Bold, Italic, Strike, Heading, Underline, HorizontalRule, History],
+            extensions: [
+                Document,
+                Paragraph,
+                Text,
+                BulletList,
+                ListItem,
+                Bold,
+                Italic,
+                Strike,
+                Heading,
+                Underline,
+                HorizontalRule,
+                History,
+                TextAlign.configure({
+                    types: ['heading', 'paragraph'],
+                }),
+                OrderedList
+            ],
             content: content,
             editorProps: {
                 attributes: {
@@ -65,7 +91,7 @@
 
 <div
     bind:this={element}
-    class="relative w-full min-h-[calc(100%-200px)] outline-none"
+    class="relative w-full h-[calc(100%-140px)] outline-none overflow-auto"
     on:input={() => {
         dispatch('edit', editor.getHTML());
     }}
@@ -123,6 +149,31 @@
             >
                 <IconStrikethrough class="size-5" />
             </button>
+            <button
+                on:click={() => {
+                    if (editor.isActive({ textAlign: 'left' })) {
+                        editor.chain().focus().setTextAlign('center').run();
+                    } else if (editor.isActive({ textAlign: 'center' })) {
+                        editor.chain().focus().setTextAlign('right').run();
+                    } else if (editor.isActive({ textAlign: 'right' })) {
+                        editor.chain().focus().setTextAlign('justify').run();
+                    } else if (editor.isActive({ textAlign: 'justify' })) {
+                        editor.chain().focus().setTextAlign('left').run();
+                    }
+
+                    dispatch('edit', editor.getHTML());
+                }}
+            >
+                {#if editor.isActive({ textAlign: 'left' })}
+                    <IconAlignLeft />
+                {:else if editor.isActive({ textAlign: 'center' })}
+                    <IconAlignCenter />
+                {:else if editor.isActive({ textAlign: 'right' })}
+                    <IconAlignRight />
+                {:else if editor.isActive({ textAlign: 'justify' })}
+                    <IconAlignJustified />
+                {/if}
+            </button>
         {:else if showListOptions}
             <button
                 on:click={() => editor.chain().focus().toggleBulletList().run()}
@@ -130,6 +181,13 @@
                 class="relative h-full aspect-square flex justify-center items-center rounded z-50"
             >
                 <IconList class="size-5" />
+            </button>
+            <button
+                on:click={() => editor.chain().focus().toggleOrderedList().run()}
+                class:active={editor.isActive('orderedList')}
+                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+            >
+                <IconListNumbers class="size-5" />
             </button>
             <button
                 on:click={() => editor.chain().focus().liftListItem('listItem').run()}
@@ -267,6 +325,16 @@
     :global(.my-editor ul ul) {
         list-style: circle;
         margin-left: 20px;
+    }
+
+    :global(.my-editor ol) {
+        list-style: decimal;
+        margin-left: 20px;
+    }
+
+    :global(.my-editor a) {
+        text-decoration: underline;
+        color: blue;
     }
 
     button.active {
