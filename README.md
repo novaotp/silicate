@@ -8,11 +8,11 @@ A solution for managing school life easily and stress-free.
 
 Core features include :
 -   [X] Create tasks
--   [ ] Create memos (in progress)
+-   [X] Create memos
+-   [ ] Push notifications to remind students about tasks (in progress)
 -   [ ] Create gradebooks
 -   [ ] Have your personal agenda
 -   [ ] A calendar to view your tasks and schedule
--   [ ] Push notifications to remind students about tasks
 
 ### Later on
 
