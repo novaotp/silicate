@@ -1,33 +1,36 @@
 <script lang="ts">
-    import Greet from '../lib/Greet.svelte';
+    import { env } from "../utils/env";
 </script>
 
-<main class="container">
-    <h1>Welcome to Tauri!</h1>
-    <div class="row">
-        <a href="https://vitejs.dev" target="_blank">
-            <img src="/vite.svg" class="logo vite" alt="Vite Logo" />
+<svelte:head>
+    <title>Home - {env.VITE_APP_NAME}</title>
+    <meta
+        name="description"
+        content="Organise-toi efficacement, lutte contre la procrastination et atteins tes objectifs grâce à nos outils et fonctionnalités performants.
+        Inscris-toi dès aujourd'hui et décolle vers la réussite !"
+    />
+</svelte:head>
+
+<main class="relative flex h-full w-full flex-col justify-center bg-white p-8 gap-5">
+    <h1 class="text-5xl font-extrabold text-primary-600">{env.VITE_APP_NAME}</h1>
+    <h2 class="text-xl font-semibold text-primary-900">L'appli pour gérer ta vie scolaire facilement</h2>
+    <p class="text-justify text-neutral-500">
+        Tu es étudiant et submergé par les devoirs, les cours et les dates limites ? Pas de soucis ! Avec {env.VITE_APP_NAME}, organise-toi en un clin d'œil et
+        dis adieu au stress. C'est comme avoir un assistant perso pour ton école, mais en mieux !
+    </p>
+    <div class="relative flex flex-col gap-3 mt-8">
+        <a class="relative w-full rounded-lg p-3 text-center bg-primary-600 text-primary-50" href="/#/auth/register">
+            Inscris-toi
         </a>
-        <a href="https://tauri.app" target="_blank">
-            <img src="/tauri.svg" class="logo tauri" alt="Tauri Logo" />
-        </a>
-        <a href="https://svelte.dev" target="_blank">
-            <img src="/svelte.svg" class="logo svelte" alt="Svelte Logo" />
+        <span
+            class="relative text-center text-neutral-200
+				   before:absolute before:left-0 before:top-1/2 before:h-[1px] before:w-2/5 before:bg-neutral-200 before:content-['']
+				   after:absolute after:right-0 after:top-1/2 after:h-[1px] after:w-2/5 after:bg-neutral-200 after:content-['']"
+        >
+            ou
+        </span>
+        <a class="relative w-full rounded-lg bg-bg-color p-3 text-center bg-primary-50 text-primary-600 border border-primary-600" href="/#/auth/login">
+            Se connecter
         </a>
     </div>
-    <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
-    <div class="row">
-        <Greet />
-    </div>
-    <a href="#/test">test</a>
 </main>
-
-<style>
-    .logo.vite:hover {
-        filter: drop-shadow(0 0 2em #747bff);
-    }
-
-    .logo.svelte:hover {
-        filter: drop-shadow(0 0 2em #ff3e00);
-    }
-</style>
