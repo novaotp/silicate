@@ -17,7 +17,7 @@ app.use(express.static(path.resolve('./public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin: process.env.FRONTEND_URL
+    origin: [process.env.FRONTEND_URL!, "http://localhost:1420"]
 }));
 
 app.use("/auth", authRoutes);
