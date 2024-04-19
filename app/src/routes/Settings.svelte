@@ -1,6 +1,6 @@
 <script lang="ts">
     import AppLayout from "$/layouts/AppLayout.svelte";
-    import { env } from '$/utils/env';
+    import { env } from '$/lib/utils/env';
     import { Button } from '$lib/ui';
     import { push } from 'svelte-spa-router';
     import Cookies from "js-cookie";

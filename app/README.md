@@ -1,7 +1,31 @@
-# Tauri + Svelte + Typescript
+# App
 
-This template should help get you started developing with Tauri, Svelte and TypeScript in Vite.
+This sub-project contains the code for the native app of Chalarí.
 
-## Recommended IDE Setup
+## Development
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+### Recommended extensions in VSCode
+
+Install these extensions for the best experience.
+
+```bash
+code --install-extension svelte.svelte-vscode
+code --install-extension tauri-apps.tauri-vscode
+code --install-extension rust-lang.rust-analyzer
+```
+
+### Getting Started
+
+1. Install the dependencies.
+
+    ```bash
+    npm install
+    ```
+
+2. Create the `.env` file from the `.env.example` file.
+
+3. Run the application.
+
+    ```bash
+    npm run tauri dev
+    ```

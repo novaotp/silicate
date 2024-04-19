@@ -1,4 +1,4 @@
-import { env } from "$/utils/env";
+import { env } from "$/lib/utils/env";
 import type User from "@tabler/icons-svelte/IconUser.svelte";
 import { get, writable } from "svelte/store";
 import Cookies from "js-cookie";

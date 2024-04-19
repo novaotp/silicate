@@ -1,7 +1,7 @@
 <script lang="ts">
     import { AlternativeLink, Input, Submit } from '$lib/features/auth/components';
     import { addToast } from '$lib/stores/toast';
-    import { env } from '$/utils/env';
+    import { env } from '$/lib/utils/env';
     import type { LoginResponse } from '$libs/types/AuthResponse';
     import AuthLayout from '$/layouts/AuthLayout.svelte';
     import Cookies from 'js-cookie';

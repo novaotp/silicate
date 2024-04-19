@@ -1,7 +1,7 @@
 <script lang="ts">
     import AuthLayout from '../layouts/AuthLayout.svelte';
     import { AlternativeLink, Input, Submit, Switcher } from '$lib/features/auth/components';
-    import { env } from '../utils/env';
+    import { env } from '../lib/utils/env';
     import { addToast } from '$lib/stores/toast';
     import type { ApiResponse } from '$libs/types/ApiResponse';
     import { push } from 'svelte-spa-router';
