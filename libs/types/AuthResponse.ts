@@ -5,5 +5,6 @@ export type LoginResponse = {
     success: true,
     message: string,
     jwt: string,
-    maxAge: number
+    /** In milliseconds. */
+    expires: number
 };

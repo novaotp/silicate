@@ -37,14 +37,14 @@ router.post("/login", async (req, res) => {
             } as LoginResponse);
         }
 
-        const { token, maxAge } = await sign({ userId: user.id });
+        const { token, expires } = await sign({ userId: user.id });
 
         return res.status(200).send({
             success: true,
             message: "Users read successfully",
             jwt: token,
-            maxAge
-        } as LoginResponse);
+            expires
+        } satisfies LoginResponse);
     } catch (err) {
         console.error(`Something went wrong whilst login a user : ${err.message}`);
         return res.status(500).send({

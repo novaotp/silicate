@@ -43,7 +43,7 @@ export const sign = async (payload: unknown) => {
 
     return {
         token,
-        maxAge: expirationTime - issuedAt
+        expires: expirationTime * 1000
     }
 };
 
