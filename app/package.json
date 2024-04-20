@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,6 +17,7 @@
     "clsx": "^2.1.0",
     "js-cookie": "^3.0.5",
     "svelte-spa-router": "^4.0.1",
+    "svelty-picker": "^5.2.6",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {

@@ -1,16 +1,17 @@
 {
   "productName": "app",
   "version": "0.0.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "ch.chalarí",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "app": {"windows": [
+  "app": {
+    "windows": [
       {
-        "title": "app",
+        "title": "Chalarí",
         "width": 800,
         "height": 600
       }
