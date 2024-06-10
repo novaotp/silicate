@@ -1,0 +1,15 @@
+{
+    "arrowParens": "always",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "printWidth": 120,
+    "semi": true,
+    "singleAttributePerLine": false,
+    "singleQuote": true,
+    "svelteAllowShorthand": true,
+    "svelteBracketNewLine": true,
+    "svelteIndentScriptAndStyle": true,
+    "tabWidth": 4,
+    "trailingComma": "none",
+    "useTabs": false
+}
