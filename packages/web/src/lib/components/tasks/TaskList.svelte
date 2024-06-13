@@ -1,8 +1,9 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { IconArchive, IconCheck } from '@tabler/icons-svelte';
-    import { createEventDispatcher, getContext } from 'svelte';
-    import { calculateCompletion, changeSearchParams, type PageContext } from './utils';
+    import IconCheck from '@tabler/icons-svelte/IconCheck.svelte';
+    import IconArchive from '@tabler/icons-svelte/IconArchive.svelte';
+    import { getContext } from 'svelte';
+    import { calculateCompletion, type PageContext } from './utils';
     import type { Task } from '$libs/models/Task';
 
     const { tasks, viewedTaskId } = getContext<PageContext>('page');

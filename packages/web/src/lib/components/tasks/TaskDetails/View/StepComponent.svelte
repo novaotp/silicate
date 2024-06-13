@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { IconDotsVertical, IconCircleXFilled } from '@tabler/icons-svelte';
+    import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
+    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
     import { createEventDispatcher } from 'svelte';
     import type { StepWithId } from '../../utils';
     import { v4 } from 'uuid';

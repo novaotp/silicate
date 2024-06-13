@@ -1,6 +1,12 @@
 <script lang="ts">
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import { IconArchive, IconArchiveOff, IconNotes, IconNotesOff, IconTag, IconTagOff, IconTrash } from '@tabler/icons-svelte';
+    import IconArchive from '@tabler/icons-svelte/IconArchive.svelte';
+    import IconArchiveOff from '@tabler/icons-svelte/IconArchiveOff.svelte';
+    import IconNotes from '@tabler/icons-svelte/IconNotes.svelte';
+    import IconNotesOff from '@tabler/icons-svelte/IconNotesOff.svelte';
+    import IconTag from '@tabler/icons-svelte/IconTag.svelte';
+    import IconTagOff from '@tabler/icons-svelte/IconTagOff.svelte';
+    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
     import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
     import { changeSearchParams, fetchCategories, type PageContext } from '../utils';

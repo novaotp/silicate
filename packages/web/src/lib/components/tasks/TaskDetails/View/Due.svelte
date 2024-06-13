@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { IconCalendarClock } from '@tabler/icons-svelte';
-    import { fly } from 'svelte/transition';
+    import IconCalendarClock from '@tabler/icons-svelte/IconCalendarClock.svelte';
     import SveltyPicker from 'svelty-picker';
     import { createEventDispatcher } from 'svelte';
     import { Button, FullScreen, Card } from "$lib/ui";

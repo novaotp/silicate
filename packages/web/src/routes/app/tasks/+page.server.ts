@@ -5,7 +5,7 @@ import type { Task } from "$libs/models/Task";
 import { BACKEND_URL } from "$env/static/private";
 
 const fetchCategories = async (jwt: string, archived: boolean): Promise<string[] | undefined> => {
-    const response = await fetch(`${BACKEND_URL}/tasks/categories?archived=${archived}`, {
+    const response = await fetch(`${BACKEND_URL}/api/v1/tasks/categories?archived=${archived}`, {
         method: "GET",
         headers: {
             "accept": "application/json",
@@ -18,7 +18,7 @@ const fetchCategories = async (jwt: string, archived: boolean): Promise<string[]
 }
 
 const fetchTasks = async (jwt: string, category: string, search: string, archived: boolean): Promise<Task[] | undefined> => {
-    const response = await fetch(`${BACKEND_URL}/tasks?category=${category}&search=${search}&archived=${archived}`, {
+    const response = await fetch(`${BACKEND_URL}/api/v1/tasks?category=${category}&search=${search}&archived=${archived}`, {
         method: "GET",
         headers: {
             "accept": "application/json",

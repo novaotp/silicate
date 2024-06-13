@@ -5,7 +5,7 @@
     import { changeSearchParams, type MemoPageContext } from "./utils";
     import { page } from "$app/stores";
     import { Button } from "$lib/ui";
-    import { IconPlus } from "@tabler/icons-svelte";
+    import IconPlus from "@tabler/icons-svelte/IconPlus.svelte";
 
     $: category = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';

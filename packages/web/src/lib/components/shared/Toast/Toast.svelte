@@ -1,10 +1,8 @@
 <script lang="ts">
-    import {
-        IconCheck as SuccessIcon,
-        IconExclamationCircle as ErrorIcon,
-        IconInfoCircle as InfoIcon,
-        IconX as CloseIcon
-    } from '@tabler/icons-svelte';
+    import SuccessIcon from '@tabler/icons-svelte/IconCheck.svelte';
+    import ErrorIcon from '@tabler/icons-svelte/IconExclamationCircle.svelte';
+    import InfoIcon from '@tabler/icons-svelte/IconInfoCircle.svelte';
+    import CloseIcon from '@tabler/icons-svelte/IconX.svelte';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
 

@@ -1,7 +1,8 @@
 <script lang="ts">
     import { page } from '$app/stores';
     import { FullScreen } from '$lib/ui';
-    import { IconChevronLeft, IconDotsVertical } from '@tabler/icons-svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
+    import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
     import { changeSearchParams } from './utils';
     import { MemoRequests } from '$lib/requests/memos';
     import { getContext } from 'svelte';

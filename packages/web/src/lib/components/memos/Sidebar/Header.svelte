@@ -1,6 +1,7 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
-    import { IconPlus, IconSearch } from '@tabler/icons-svelte';
+    import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
+    import IconSearch from '@tabler/icons-svelte/IconSearch.svelte';
     import HeaderMinWidth1024 from './Header.mw1024.svelte';
 
     export let search: string;

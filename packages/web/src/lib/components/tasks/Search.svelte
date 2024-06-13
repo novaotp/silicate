@@ -1,7 +1,8 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
-    import { IconCircleXFilled, IconSearch } from "@tabler/icons-svelte";
+    import IconCircleXFilled from "@tabler/icons-svelte/IconCircleXFilled.svelte";
+    import IconSearch from "@tabler/icons-svelte/IconSearch.svelte";
 
     const search = async () => {
         const searchParams = new URLSearchParams($page.url.searchParams);

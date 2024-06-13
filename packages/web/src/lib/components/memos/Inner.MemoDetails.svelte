@@ -6,9 +6,13 @@
     import { changeSearchParams, type MemoPageContext } from './utils';
     import Editor from './Editor/Editor.svelte';
     import { Button, Card, FullScreen } from '$lib/ui';
-    import { IconCircleXFilled, IconTag, IconTrash } from '@tabler/icons-svelte';
+    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
+    import IconTag from '@tabler/icons-svelte/IconTag.svelte';
+    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
     import { fly } from 'svelte/transition';
     import { page } from '$app/stores';
+    import type { SubmitFunction } from '../../../routes/app/memos/$types';
+    import { enhance } from '$app/forms';
 
     export let showSettings: boolean;
     export let memo: Memo;
@@ -63,19 +67,29 @@
         }
     };
 
-    const destroy = async () => {
-        const { success, message } = await requests.deleteMemo(replica.id);
-
-        if (!success) {
-            addToast({ type: 'error', message });
-            return;
-        } else {
-            addToast({ type: 'success', message: 'Tâche supprimée avec succès.' });
+    /* const editEnhance: SubmitFunction = () => {
+        return async ({ result }) => {
+            if (result.type === "failure") {
+                return addToast({ type: 'error', message: result.data!.message });
+            } else if (result.type === "success") {
+                addToast({ type: 'success', message: result.data!.message });
+                changeSearchParams('id', null);
+                $memos = $memos.filter((m) => m.id !== replica.id);
+            }
         }
+    } */
 
-        changeSearchParams('id', null);
-        $memos = $memos.filter((m) => m.id !== replica.id);
-    };
+    const destroyEnhance: SubmitFunction = () => {
+        return async ({ result }) => {
+            if (result.type === "failure") {
+                return addToast({ type: 'error', message: result.data!.message });
+            } else if (result.type === "success") {
+                addToast({ type: 'success', message: result.data!.message });
+                changeSearchParams('id', null);
+                $memos = $memos.filter((m) => m.id !== replica.id);
+            }
+        }
+    }
 </script>
 
 <input
@@ -128,10 +142,12 @@
                     <span>Ajouter une catégorie</span>
                 </button>
             {/if}
-            <Button.Danger variant="secondary" on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
-                <IconTrash />
-                <span>Supprimer</span>
-            </Button.Danger>
+            <form method="post" action="?/destroy" use:enhance={destroyEnhance}>
+                <Button.Danger variant="secondary" class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+                    <IconTrash />
+                    <span>Supprimer</span>
+                </Button.Danger>
+            </form>
         </div>
     </FullScreen.Backdrop>
 {/if}

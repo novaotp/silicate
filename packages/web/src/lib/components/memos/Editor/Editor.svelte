@@ -1,27 +1,23 @@
 <script lang="ts">
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-    import { Editor, isActive } from '@tiptap/core';
-    import {
-        IconAlignCenter,
-        IconAlignJustified,
-        IconAlignLeft,
-        IconAlignRight,
-        IconArrowBackUp,
-        IconArrowForwardUp,
-        IconBold,
-        IconDotsCircleHorizontal,
-        IconHeading,
-        IconIndentDecrease,
-        IconIndentIncrease,
-        IconItalic,
-        IconLetterCase,
-        IconLink,
-        IconList,
-        IconListNumbers,
-        IconSeparator,
-        IconStrikethrough,
-        IconUnlink
-    } from '@tabler/icons-svelte';
+    import { Editor } from '@tiptap/core';
+    import IconAlignCenter from "@tabler/icons-svelte/IconAlignCenter.svelte";
+    import IconAlignJustified from "@tabler/icons-svelte/IconAlignJustified.svelte";
+    import IconAlignLeft from "@tabler/icons-svelte/IconAlignLeft.svelte";
+    import IconAlignRight from "@tabler/icons-svelte/IconAlignRight.svelte";
+    import IconArrowBackUp from "@tabler/icons-svelte/IconArrowBackUp.svelte";
+    import IconArrowForwardUp from "@tabler/icons-svelte/IconArrowForwardUp.svelte";
+    import IconBold from "@tabler/icons-svelte/IconBold.svelte";
+    import IconDotsCircleHorizontal from "@tabler/icons-svelte/IconDotsCircleHorizontal.svelte";
+    import IconHeading from "@tabler/icons-svelte/IconHeading.svelte";
+    import IconIndentDecrease from "@tabler/icons-svelte/IconIndentDecrease.svelte";
+    import IconIndentIncrease from "@tabler/icons-svelte/IconIndentIncrease.svelte";
+    import IconItalic from "@tabler/icons-svelte/IconItalic.svelte";
+    import IconLetterCase from "@tabler/icons-svelte/IconLetterCase.svelte";
+    import IconList from "@tabler/icons-svelte/IconList.svelte";
+    import IconListNumbers from "@tabler/icons-svelte/IconListNumbers.svelte";
+    import IconSeparator from "@tabler/icons-svelte/IconSeparator.svelte";
+    import IconStrikethrough from "@tabler/icons-svelte/IconStrikethrough.svelte";
     import Document from '@tiptap/extension-document';
     import BulletList from '@tiptap/extension-bullet-list';
     import ListItem from '@tiptap/extension-list-item';
@@ -92,7 +88,7 @@
 <div
     bind:this={element}
     class="relative w-full h-[calc(100%-140px)] outline-none overflow-auto"
-    on:input={() => {
+    on:change={() => {
         dispatch('edit', editor.getHTML());
     }}
 />

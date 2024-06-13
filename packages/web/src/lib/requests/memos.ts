@@ -18,7 +18,7 @@ export class MemoRequests {
      * @returns On success, returns the id, otherwise, returns `undefined`.
      */
     public async createMemo(): Promise<ApiResponseWithData<number>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos`, {
             method: 'POST',
             body: JSON.stringify({
                 title: 'Mon nouveau mémo',
@@ -40,7 +40,7 @@ export class MemoRequests {
      * @returns On success, returns the id, otherwise, returns `undefined`.
      */
     public async updateMemo(id: string | number, options: UpdateMemoOptionsProps): Promise<ApiResponse> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ ...options }),
             headers: {
@@ -55,7 +55,7 @@ export class MemoRequests {
 
     /** Deletes a memo in the database. */
     public async deleteMemo(id: number): Promise<ApiResponse> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
             method: 'DELETE',
             headers: {
                 authorization: this.jwt
@@ -65,7 +65,7 @@ export class MemoRequests {
     }
 
     public async getMemo(id: string | number): Promise<ApiResponseWithData<Memo>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
@@ -77,7 +77,7 @@ export class MemoRequests {
     }
 
     public async getMemos(category: string, search: string): Promise<ApiResponseWithData<Memo[]>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos?category=${category}&search=${search}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos?category=${category}&search=${search}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
@@ -89,7 +89,7 @@ export class MemoRequests {
     }
 
     public async getCategories(): Promise<string[] | undefined> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/memos/categories`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/categories`, {
             method: "GET",
             headers: {
                 "accept": "application/json",

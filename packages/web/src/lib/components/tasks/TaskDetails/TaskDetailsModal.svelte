@@ -2,12 +2,13 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { Task } from '$libs/models/Task';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
-    import { IconChevronLeft, IconDotsVertical } from '@tabler/icons-svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
+    import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
     import { getContext } from 'svelte';
     import { fly } from 'svelte/transition';
     import TaskDetails from './TaskDetails.svelte';
     import { page } from '$app/stores';
-    import { changeSearchParams, type PageContext } from '../utils';
+    import { type PageContext } from '../utils';
     import { goto } from '$app/navigation';
 
     let showSettings: boolean = false;

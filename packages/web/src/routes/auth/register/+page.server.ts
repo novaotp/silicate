@@ -14,15 +14,15 @@ export const actions = {
 		const confirmPassword = data.get("confirmPassword")?.toString();
 
 		if (!firstName || !lastName || !email || !password || !confirmPassword) {
-			return fail(422, { firstName, lastName, email, missing: true });
+			return fail(422, { firstName, lastName, email, message: "Complétez tous les champs." });
 		}
 
 		if (password !== confirmPassword) {
-			return fail(422, { firstName, lastName, email, notMatching: true });
+			return fail(422, { firstName, lastName, email, message: "Les mots de passe ne correspondent pas." });
 		}
 
 		try {
-			const response = await fetch(`${BACKEND_URL}/auth/register`, {
+			const response = await fetch(`${BACKEND_URL}/api/v1/auth/register`, {
 				method: "POST",
 				body: JSON.stringify({
 					firstName,
@@ -42,7 +42,7 @@ export const actions = {
 			}
 		} catch (err) {
 			console.error(`Something went wrong whilst registering a new user : ${(err as Error).message}`)
-			return fail(422, { firstName, lastName, email, dbError: true });
+			return fail(422, { firstName, lastName, email, message: "Une erreur est survenue." });
 		}
 
 		throw redirect(303, "/auth/login");

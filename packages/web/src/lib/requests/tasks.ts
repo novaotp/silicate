@@ -2,7 +2,6 @@ import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import type { Step, Task } from "$libs/models/Task";
 import type { StepWithId } from "$lib/components/tasks/utils";
-import { StepWithId } from '../components/tasks/utils';
 
 export class TaskRequests {
     private jwt: string;
@@ -20,7 +19,7 @@ export class TaskRequests {
  * @returns On success, returns the data, otherwise, returns a message error.
  */
     public async createTask(): Promise<ApiResponseWithData<number>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks`, {
             method: 'POST',
             body: JSON.stringify({
                 title: 'Ma nouvelle tâche',
@@ -47,7 +46,7 @@ export class TaskRequests {
      * @returns The data if it succeeded, `undefined` otherwise.
      */
     public async getTask(id: number): Promise<ApiResponseWithData<Task>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
@@ -59,7 +58,7 @@ export class TaskRequests {
     };
 
     private async _updateTask(id: number, data: UpdateTaskData): Promise<ApiResponse> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify(data),
             headers: {
@@ -77,7 +76,7 @@ export class TaskRequests {
     }
 
     public async deleteTask(id: number): Promise<ApiResponse> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'DELETE',
             headers: {
                 authorization: this.jwt
@@ -88,7 +87,7 @@ export class TaskRequests {
     }
 
     public async archiveTask(id: number, archived: boolean): Promise<ApiResponse> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({
                 archived: archived
@@ -109,7 +108,7 @@ export class TaskRequests {
             if (firstStep && (firstStep instanceof StepWithId))
         }
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({
                 steps: steps.length > 0 ? steps.map(s => toStep(s)) : null
@@ -125,7 +124,7 @@ export class TaskRequests {
 
 
     public async tasks(category: string, search: string, archived: boolean): Promise<ApiResponseWithData<Task[]>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks?category=${category}&search=${search}&archived=${archived}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks?category=${category}&search=${search}&archived=${archived}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",
@@ -137,7 +136,7 @@ export class TaskRequests {
     }
 
     public async categories(archived: boolean = false): Promise<ApiResponseWithData<string[]>> {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/categories?archived=${archived}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/categories?archived=${archived}`, {
             method: "GET",
             headers: {
                 "accept": "application/json",

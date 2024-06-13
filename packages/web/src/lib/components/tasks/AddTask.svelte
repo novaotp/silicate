@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IconPlus } from '@tabler/icons-svelte';
+    import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
     import { addTask } from './TasksPage';
     import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';

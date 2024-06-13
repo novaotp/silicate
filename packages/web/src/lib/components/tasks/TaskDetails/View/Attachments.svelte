@@ -2,7 +2,8 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import { addToast } from '$lib/stores/toast';
     import type { ApiResponse, ApiResponseWithData } from '$libs/types/ApiResponse';
-    import { IconPaperclip, IconPlus } from '@tabler/icons-svelte';
+    import IconPaperclip from '@tabler/icons-svelte/IconPaperclip.svelte';
+    import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
     import { getContext } from 'svelte';
     import AttachmentComponent from './AttachmentComponent.svelte';
     import type { Attachment } from '$libs/models/Task';

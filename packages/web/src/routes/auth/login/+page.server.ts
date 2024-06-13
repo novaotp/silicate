@@ -41,11 +41,11 @@ export const actions = {
 		const password = data.get("password")?.toString();
 
 		if (!email || !password) {
-			return fail(422, { email, missing: true });
+			return fail(422, { email, message: "Complétez tous les champs." });
 		}
 
 		try {
-			const response = await fetch(`${BACKEND_URL}/auth/login`, {
+			const response = await fetch(`${BACKEND_URL}/api/v1/auth/login`, {
 				method: "POST",
 				body: JSON.stringify({
 					email,
@@ -61,7 +61,7 @@ export const actions = {
 				return fail(422, { email, message: "Données erronées." });
 			}
 
-			cookies.set("id", result.jwt, { httpOnly: false, secure: false, path: "/", maxAge: result.maxAge });
+			cookies.set("id", result.jwt, { httpOnly: false, secure: false, path: "/", expires: new Date(result.expires) });
 		} catch (err) {
 			console.error(`Something went wrong whilst login a user : ${(err as Error).message}`)
 			return fail(422, { email, message: "Une erreur est survenue." });

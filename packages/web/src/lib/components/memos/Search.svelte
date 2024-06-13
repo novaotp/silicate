@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { IconCircleXFilled, IconSearch } from '@tabler/icons-svelte';
+    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
+    import IconSearch from '@tabler/icons-svelte/IconSearch.svelte';
     import { changeSearchParams } from './utils';
 
     const search = async () => {

@@ -1,10 +1,13 @@
 <script lang="ts">
-    import type { ActionData } from './$types';
+    import type { ActionData, SubmitFunction } from './$types';
     import AlternativeLink from '$lib/components/auth/AlternativeLink.svelte';
     import Input from '$lib/components/auth/Input.svelte';
     import Switcher from '$lib/components/auth/Switcher.svelte';
     import Submit from '$lib/components/auth/Submit.svelte';
     import { PUBLIC_APP_NAME } from '$env/static/public';
+    import { applyAction, enhance } from '$app/forms';
+    import { addToast } from '$lib/stores/toast';
+    import { goto } from '$app/navigation';
 
     export let form: ActionData;
 
@@ -13,6 +16,19 @@
     let email: string = form?.email ?? '';
     let password: string = '';
     let confirmPassword: string = '';
+
+    const registerEnhance: SubmitFunction = () => {
+        return async ({ result }) => {
+            await applyAction(result);
+            if (result.type === "failure") {
+                addToast({ type: 'error', message: result.data!.message });
+                password = '';
+                confirmPassword = '';
+            } else if (result.type === "redirect") {
+                goto(result.location);
+            }
+        };
+    }
 </script>
 
 <svelte:head>
@@ -24,7 +40,7 @@
     />
 </svelte:head>
 
-<form method="POST" class="relative mb-5 flex w-[70%] flex-col overflow-x-hidden xl:hidden">
+<form method="POST" class="relative mb-5 flex w-[70%] flex-col overflow-x-hidden xl:hidden" use:enhance={registerEnhance}>
     <Switcher>
         <svelte:fragment slot="names">
             <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
@@ -43,7 +59,7 @@
         </svelte:fragment>
     </Switcher>
 </form>
-<form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center overflow-x-hidden hidden xl:flex">
+<form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center overflow-x-hidden hidden xl:flex" use:enhance={registerEnhance}>
     <div class="relative flex flex-col gap-5">
         <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
         <Input label="Nom de famille" placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} />

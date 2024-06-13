@@ -1,18 +1,13 @@
 <script lang="ts">
-    import {
-        IconMenu as MenuIcon,
-        IconX as CloseIcon,
-        IconLayersSubtract as MemoIcon,
-        IconStars as GradeIcon,
-        IconHome,
-        IconLogout,
-        IconChecklist as TaskIcon,
-
-        IconSettings
-
-    } from '@tabler/icons-svelte';
+    import MenuIcon from '@tabler/icons-svelte/IconMenu.svelte';
+    import CloseIcon from '@tabler/icons-svelte/IconX.svelte';
+    import MemoIcon from '@tabler/icons-svelte/IconLayersSubtract.svelte';
+    import GradeIcon from '@tabler/icons-svelte/IconStars.svelte';
+    import IconHome from '@tabler/icons-svelte/IconHome.svelte';
+    import IconLogout from '@tabler/icons-svelte/IconLogout.svelte';
+    import TaskIcon from '@tabler/icons-svelte/IconChecklist.svelte';
+    import IconSettings from '@tabler/icons-svelte/IconSettings.svelte';
     import Item from './Item.svelte';
-    import { fade, fly } from 'svelte/transition';
     import DesktopItem from './DesktopItem.svelte';
     import { FullScreen, Card } from "$lib/ui";
 

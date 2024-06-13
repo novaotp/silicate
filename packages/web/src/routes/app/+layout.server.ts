@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     const jwt = cookies.get("id")!;
 
     try {
-        const response = await fetch(`${BACKEND_URL}/me`, {
+        const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
             method: "GET",
             headers: {
                 "authorization": jwt
