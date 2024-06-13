@@ -1,5 +1,10 @@
 <script lang="ts">
     import { PUBLIC_APP_NAME as APP_NAME } from "$env/static/public";
+    import { invoke } from "$lib/utils/custom_invoke";
+
+    $: (async () => {
+        await invoke("greet", { myData: "LOL", test: 19 });
+    })();
 </script>
 
 <svelte:head>

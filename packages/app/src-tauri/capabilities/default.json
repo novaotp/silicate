@@ -20,6 +20,7 @@
     "store:allow-save",
     "store:allow-load",
     "store:allow-delete",
-    "store:allow-entries"
+    "store:allow-entries",
+    "http:default"
   ]
 }

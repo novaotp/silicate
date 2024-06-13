@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AlternativeLink, Input, Submit } from '$components/auth/components';
+    import { AlternativeLink, Input, Submit } from '$components/auth';
     import { addToast } from '$lib/stores/toast';
     import type { LoginResponse } from '$shared/types/AuthResponse';
     import { onMount } from 'svelte';
@@ -96,4 +96,4 @@
     </div>
     <Submit label="Connexion" />
 </form>
-<AlternativeLink text="T'as pas encore de compte ?" href="/#/auth/register" label="Crées-en un" />
+<AlternativeLink text="T'as pas encore de compte ?" href="/register" label="Crées-en un" />

@@ -1,11 +1,9 @@
 <script lang="ts">
-    import { env } from '$/lib/utils/env';
-    import { TaskContextProvider, TaskDetailsModal, Menu, Categories, Search, TaskList, Loading } from '$lib/features/tasks';
-    import { querystring } from 'svelte-spa-router';
+    import { page } from '$app/stores';
+    import { TaskContextProvider, TaskDetailsModal, Menu, Categories, Search, TaskList, Loading } from '$components/tasks';
     import { getTasks, getCategories } from '$lib/requests/tasks';
-    import AppLayout from '$/layouts/AppLayout.svelte';
 
-    $: urlSearchParams = new URLSearchParams($querystring);
+    $: urlSearchParams = new URLSearchParams($page.url.searchParams);
     $: category = urlSearchParams.get('category') ?? '';
     $: search = urlSearchParams.get('search') ?? '';
     $: currentTab = urlSearchParams.get('tab') ?? '';

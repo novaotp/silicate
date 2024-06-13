@@ -1,18 +1,17 @@
 <script lang="ts">
-    import AppLayout from "$/layouts/AppLayout.svelte";
-    import { env } from '$/lib/utils/env';
+    import { goto } from '$app/navigation';
+    import { PUBLIC_APP_NAME } from '$env/static/public';
     import { Button } from '$lib/ui';
-    import { push } from 'svelte-spa-router';
-    import Cookies from "js-cookie";
+    import { kv } from '$lib/utils/kv';
 
-    function disconnect() {
-        Cookies.remove("id");
-        push('/auth/login');
+    async function disconnect() {
+        await kv.delete("id");
+        goto('/login');
     }
 </script>
 
 <svelte:head>
-    <title>Paramètres - {env.VITE_APP_NAME}</title>
+    <title>Paramètres - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
         content="Prends le contrôle de ton expérience et configure tes paramètres pour une utilisation optimale.
@@ -20,8 +19,6 @@
     />
 </svelte:head>
 
-<AppLayout>
-    <main class="relative w-full h-full flex flex-col justify-center items-center">
-        <Button.Danger variant="primary" on:click={disconnect}>Déconnexion</Button.Danger>
-    </main>
-</AppLayout>
+<main class="relative w-full h-full flex flex-col justify-center items-center">
+    <Button.Danger variant="primary" on:click={disconnect}>Déconnexion</Button.Danger>
+</main>
