@@ -2,7 +2,7 @@ import type { Memo } from "$libs/models/Memo";
 import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import type { Actions, PageServerLoad } from "./$types";
 import { BACKEND_URL } from "$env/static/private";
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 
 const fetchCategories = async (jwt: string): Promise<string[] | undefined> => {
     const response = await fetch(`${BACKEND_URL}/api/v1/memos/categories`, {
@@ -42,8 +42,12 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 };
 
 export const actions: Actions = {
-    create: async ({ cookies }) => {
+    create: async ({ cookies, url }) => {
         try {
+            const jwt = cookies.get("id")!;
+            const search = url.searchParams.get('search') ?? "";
+            const category = url.searchParams.get('category') ?? "";
+
             const response = await fetch(`${BACKEND_URL}/api/v1/memos`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -53,7 +57,7 @@ export const actions: Actions = {
                 }),
                 headers: {
                     accept: 'application/json',
-                    authorization: cookies.get("id")!,
+                    authorization: jwt,
                     'content-type': 'application/json'
                 }
             });
@@ -64,7 +68,13 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-			redirect(303, `/app/memos?id=${result.data}`);
+            const memos = await fetchMemos(jwt, decodeURIComponent(search), decodeURIComponent(category));
+
+            if (!memos) {
+                return { id: result.data };
+            } else {
+                return { id: result.data, memos: memos };
+            }
         } catch (err) {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
@@ -72,8 +82,12 @@ export const actions: Actions = {
     },
     edit: async ({ cookies, request, url }) => {
         try {
-            const id = url.searchParams.get("id")!;
+            const jwt = cookies.get("id")!;
+            const search = url.searchParams.get('search') ?? "";
+            const category = url.searchParams.get('category') ?? "";
+
             const formData = await request.formData();
+            const id = formData.get("id")!.toString();
             const data = {
                 title: formData.get("title")?.toString(),
                 content: formData.get("content")?.toString(),
@@ -89,7 +103,7 @@ export const actions: Actions = {
                 body: JSON.stringify(data),
                 headers: {
                     accept: 'application/json',
-                    authorization: cookies.get("id")!,
+                    authorization: jwt,
                     'content-type': 'application/json'
                 }
             });
@@ -100,15 +114,21 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { message: "Mémo modifié avec succès." }
+            const memos = await fetchMemos(jwt, decodeURIComponent(search), decodeURIComponent(category));
+            const categories = await fetchCategories(jwt);
+
+            if (memos && categories) {
+                return { memos, categories };
+            }
 		} catch (err) {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
 		}
     },
-    destroy: async ({ cookies, url }) => {
+    destroy: async ({ cookies, request }) => {
         try {
-            const id = url.searchParams.get("id")!;
+            const formData = await request.formData();
+            const id = formData.get("id")!.toString();
             const response = await fetch(`${BACKEND_URL}/api/v1/memos/${id}`, {
                 method: 'DELETE',
                 headers: {

@@ -7,6 +7,7 @@
     import IconLogout from '@tabler/icons-svelte/IconLogout.svelte';
     import TaskIcon from '@tabler/icons-svelte/IconChecklist.svelte';
     import IconSettings from '@tabler/icons-svelte/IconSettings.svelte';
+    import IconMenu2 from '@tabler/icons-svelte/IconMenu2.svelte';
     import Item from './Item.svelte';
     import DesktopItem from './DesktopItem.svelte';
     import { FullScreen, Card } from "$lib/ui";
@@ -41,21 +42,27 @@
     {/if}
 </div>
 
-<nav class="hidden md:flex flex-col justify-between items-center h-full w-[100px] p-5 bg-stone-300">
-    <ul class="relative w-full flex flex-col gap-3">
-        <DesktopItem href="/app" label="Home" icon={IconHome} />
-        <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} />
-        <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} />
-        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} />
-        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} />
+<nav class="hidden md:flex flex-col justify-between items-center h-full {showMenu ? "w-[200px]" : "w-20"} duration-300 overflow-x-hidden ease-in-out p-5 bg-neutral-100">
+    <ul class="relative w-full flex flex-col justify-start gap-3">
+        <li class="relative flex w-full h-[60px] items-center justify-center">
+            <button on:click={() => (showMenu = !showMenu)} class="relative flex h-full w-full items-center justify-start gap-8 p-2 text-center rounded-md hover:bg-stone-400 text-sm">
+                <IconMenu2 class="min-w-6 min-h-6" />
+                <span>Menu</span>
+            </button>
+        </li>
+        <DesktopItem href="/app" label="Home" icon={IconHome} on:click={() => (showMenu = !showMenu)} />
+        <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} on:click={() => (showMenu = !showMenu)} />
+        <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} on:click={() => (showMenu = !showMenu)} />
+        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} on:click={() => (showMenu = !showMenu)} />
+        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} on:click={() => (showMenu = !showMenu)} />
     </ul>
     <ul class="relative w-full flex flex-col gap-3">
-        <li class="relative flex w-full aspect-square items-center justify-center">
+        <li class="relative flex w-full h-[60px] items-center justify-center">
             <a
                 href="/auth/logout"
-                class="relative flex flex-col h-full w-full items-center justify-evenly gap-1 p-2 text-center rounded-md bg-red-500 duration-150 ease-linear hover:bg-red-600 text-xs"
+                class="relative flex flex-col h-full w-full items-center justify-evenly gap-1 p-2 text-center rounded-md bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm"
             >
-                <IconLogout class="text-white" />
+                <IconLogout />
             </a>
         </li>
     </ul>

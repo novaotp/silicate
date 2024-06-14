@@ -16,19 +16,24 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full p-5 pt-0 flex flex-col justify-start gap-5 overflow-auto">
+<main class="relative w-full h-full flex flex-col justify-start gap-5 overflow-auto p-5 pt-0 md:pt-5">
     {#await data.memos}
         <p>Chargement de tes mémos...</p>
     {:then memos}
         {#if memos && data.categories}
             {@const categories = data.categories}
             <MemoContextProvider {memos} {categories}>
-                <header class="relative w-full flex justify-start items-center">
-                    <h1 class="text-xl text-primary-950">Mémos</h1>
+                <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
+                    <h1 class="relative self-start h-full flex items-center text-xl text-primary-950">Mémos</h1>
+                    <div class="relative h-full flex gap-5 items-center">
+                        <Search />
+                        <AddMemo />
+                    </div>
                 </header>
-                <Search />
                 <Categories />
-                <AddMemo />
+                <div class="block md:hidden">
+                    <AddMemo />
+                </div>
                 <MemoList />
                 <MemoDetails />
             </MemoContextProvider>

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { MemoRequests } from '$lib/requests/memos';
     import { addToast } from '$lib/stores/toast';
     import type { Memo } from '$libs/models/Memo';
     import { getContext } from 'svelte';
@@ -12,78 +11,51 @@
     import { fly } from 'svelte/transition';
     import { page } from '$app/stores';
     import type { SubmitFunction } from '../../../routes/app/memos/$types';
-    import { enhance } from '$app/forms';
+    import { deserialize, enhance } from '$app/forms';
 
     export let showSettings: boolean;
     export let memo: Memo;
     let replica = { ...memo };
 
     const { memos, categories } = getContext<MemoPageContext>('page');
-    const jwt = getContext<string>('jwt');
-    const requests = new MemoRequests(jwt);
 
     let timer: NodeJS.Timeout;
     let showCategoryChanger: boolean = false;
 
     $: filteredCategories = $categories.filter((c) => c.includes(replica.category ?? ""));
-    $: categorySearchParam = $page.url.searchParams.get('category') ?? '';
-    $: searchSearchParam = $page.url.searchParams.get('search') ?? '';
 
-    const edit = async (key: 'title' | 'content' | 'category', newValue: string | null) => {
-        /* @ts-ignore */
-        replica[key] = newValue;
+    const edit = async () => {
+        const formData = new FormData();
+        formData.set("id", replica.id.toString());
+        formData.set("title", replica.title);
+        formData.set("content", replica.content);
+        if (replica.category) {
+            formData.set("category", replica.category)
+        }
 
-        const result = await requests.updateMemo(memo.id, {
-            title: replica.title,
-            content: replica.content,
-            category: replica.category
+        const response = await fetch(`${$page.url.pathname}?/edit`, {
+            method: "POST",
+            body: formData
         });
 
-        if (!result.success) {
-            addToast({ type: 'error', message: 'Impossible de mettre à jour le mémo.' });
-            return;
+        const result = deserialize<{ memos: Memo[], categories: string[] }, { message: string }>(await response.text());
+
+        if (result.type === "failure") {
+            return addToast({ type: 'error', message: result.data!.message });
+        } else if (result.type === "success") {
+            $memos = result.data!.memos;
+            $categories = result.data!.categories;
         }
 
         memo = replica;
-
-        const fetchResult = await requests.getMemos(categorySearchParam, searchSearchParam);
-
-        if (!fetchResult.success) {
-            addToast({ type: 'error', message: 'Impossible de mettre à jour les mémos.' });
-            return;
-        }
-
-        $memos = fetchResult.data;
-
-        if (key === "category") {
-            const tempCategories = await requests.getCategories();
-
-            if (!tempCategories) {
-                addToast({ type: 'error', message: 'Impossible de mettre à jour les catégories.' });
-                return;
-            }
-
-            $categories = tempCategories;
-        }
     };
 
-    /* const editEnhance: SubmitFunction = () => {
-        return async ({ result }) => {
-            if (result.type === "failure") {
-                return addToast({ type: 'error', message: result.data!.message });
-            } else if (result.type === "success") {
-                addToast({ type: 'success', message: result.data!.message });
-                changeSearchParams('id', null);
-                $memos = $memos.filter((m) => m.id !== replica.id);
-            }
-        }
-    } */
-
     const destroyEnhance: SubmitFunction = () => {
-        return async ({ result }) => {
+        return ({ result }) => {
             if (result.type === "failure") {
                 return addToast({ type: 'error', message: result.data!.message });
             } else if (result.type === "success") {
+                // @ts-ignore
                 addToast({ type: 'success', message: result.data!.message });
                 changeSearchParams('id', null);
                 $memos = $memos.filter((m) => m.id !== replica.id);
@@ -94,20 +66,22 @@
 
 <input
     value={replica.title}
-    on:input={async (event) => {
+    on:input={(event) => {
         clearTimeout(timer);
+        replica.title = event.currentTarget.value;
         timer = setTimeout(async () => {
-            await edit('title', event.currentTarget.value);
+            await edit();
         }, 750);
     }}
     class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium h-10"
 />
 <Editor
     content={replica.content}
-    on:edit={async (event) => {
+    on:edit={(event) => {
         clearTimeout(timer);
+        replica.content = event.detail;
         timer = setTimeout(async () => {
-            await edit('content', event.detail);
+            await edit();
         }, 750);
     }}
 />
@@ -133,7 +107,7 @@
                         showCategoryChanger = true;
                         clearTimeout(timer);
                         timer = setTimeout(async () => {
-                            await edit('category', 'Ma catégorie');
+                            await edit();
                         }, 750);
                     }}
                     class="relative w-full px-5 h-14 flex justify-start items-center gap-10"
@@ -178,7 +152,7 @@
                             if (replica.category !== "") {
                                 clearTimeout(timer);
                                 timer = setTimeout(async () => {
-                                    await edit('category', replica.category);
+                                    await edit();
                                 }, 750);
                             }
                         }}
@@ -208,7 +182,7 @@
                         showCategoryChanger = false;
                         clearTimeout(timer);
                         timer = setTimeout(async () => {
-                            await edit('category', replica.category);
+                            await edit();
                         }, 750);
                     }}
                 >

@@ -18,7 +18,7 @@
         >
             <h2 class="text-neutral-950 text-start">{title}</h2>
             {#if content !== ""}
-                <span class="text-xs text-neutral-500 text-justify line-clamp-5">
+                <span class="text-xs text-neutral-500 text-justify line-clamp-5" spellcheck="false">
                     {@html content.replaceAll("\n", "<br />")}
                 </span>
             {/if}

@@ -21,7 +21,7 @@
 
 <div class="relative h-full w-full flex flex-col md:flex-row">
     <Navigation />
-    <div class="relative w-full h-[calc(100%-60px)] md:h-full flex flex-col">
+    <div class="relative w-full h-[calc(100%-60px)] md:shadow-[-2px_0_4px_4px_rgba(0,0,0,0.1)] md:h-full flex flex-col">
         <slot />
     </div>
 </div>
