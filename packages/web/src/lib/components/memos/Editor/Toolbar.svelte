@@ -14,7 +14,7 @@
     export let show: "headings" | "fontStyles" | "lists" | "other" | null;
 </script>
 
-<div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-10 md:bottom-auto mx-auto gap-[10px] bg-neutral-100 rounded-lg p-[10px] text-sm flex">
+<div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-5 md:bottom-auto mx-auto gap-[10px] bg-neutral-100 rounded-lg p-[10px] text-sm flex">
         <button
             on:click={() => dispatch("toggle", "headings")}
             class="relative h-full aspect-square flex justify-center items-center rounded z-50 {show === "headings" ? 'bg-neutral-200' : ''}"

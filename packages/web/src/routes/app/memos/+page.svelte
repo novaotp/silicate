@@ -31,7 +31,7 @@
                     </div>
                 </header>
                 <Categories />
-                <div class="block md:hidden">
+                <div class="absolute md:hidden">
                     <AddMemo />
                 </div>
                 <MemoList />
