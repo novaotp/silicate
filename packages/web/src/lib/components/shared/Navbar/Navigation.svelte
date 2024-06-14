@@ -50,11 +50,11 @@
                 <span>Menu</span>
             </button>
         </li>
-        <DesktopItem href="/app" label="Home" icon={IconHome} on:click={() => (showMenu = !showMenu)} />
-        <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} on:click={() => (showMenu = !showMenu)} />
-        <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} on:click={() => (showMenu = !showMenu)} />
-        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} on:click={() => (showMenu = !showMenu)} />
-        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} on:click={() => (showMenu = !showMenu)} />
+        <DesktopItem href="/app" label="Home" icon={IconHome} on:click={() => (showMenu = false)} />
+        <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} on:click={() => (showMenu = false)} />
+        <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} on:click={() => (showMenu = false)} />
+        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} on:click={() => (showMenu = false)} />
+        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} on:click={() => (showMenu = false)} />
     </ul>
     <ul class="relative w-full flex flex-col gap-3">
         <li class="relative flex w-full h-[60px] items-center justify-center">
