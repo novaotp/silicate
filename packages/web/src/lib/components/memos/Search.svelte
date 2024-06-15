@@ -17,7 +17,7 @@
     $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
 </script>
 
-<div role="search" class="relative w-full h-[50px] max-w-[350px] rounded flex justify-between items-center bg-neutral-100 text-neutral-700">
+<div role="search" class="relative w-full h-[50px] md:max-w-[350px] rounded flex justify-between items-center bg-neutral-100 text-neutral-700">
     <input
         bind:value={currentSearch}
         type="search"

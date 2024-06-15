@@ -2,8 +2,8 @@
     import { onMount, onDestroy, tick } from 'svelte';
     export let stretchFirst = false,
         gridGap = '10px',
-        colWidth = 'minmax(40%, 1fr)',
-        items = []; // pass in data if it's dynamically updated
+        colWidth = 'minmax(40%, 1fr)'
+    export let items: unknown[] = []; // pass in data if it's dynamically updated
     let grids: Grid[] = [];
     let masonryElement: HTMLDivElement;
 

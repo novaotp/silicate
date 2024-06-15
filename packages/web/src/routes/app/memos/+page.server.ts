@@ -53,7 +53,8 @@ export const actions: Actions = {
                 body: JSON.stringify({
                     title: 'Mon nouveau mémo',
                     content: "",
-                    category: null
+                    category: null,
+                    pinned: false
                 }),
                 headers: {
                     accept: 'application/json',
@@ -91,7 +92,8 @@ export const actions: Actions = {
             const data = {
                 title: formData.get("title")?.toString(),
                 content: formData.get("content")?.toString(),
-                category: formData.get("category")?.toString()
+                category: formData.get("category")?.toString(),
+                pinned: formData.get("pinned")?.toString()
             }
 
             if (!data.title || data.title === "") {
