@@ -1,6 +1,6 @@
-import type { ApiResponseWithData } from "$libs/types/ApiResponse";
+import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import type { Task } from "$libs/models/Task";
 import { BACKEND_URL } from "$env/static/private";
 
@@ -42,5 +42,122 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
         }
     } catch (err) {
         return fail(422, { message: (err as Error).message });
+    }
+};
+
+export const actions: Actions = {
+    create: async ({ cookies, url }) => {
+        try {
+            const search = url.searchParams.get('search') ?? "";
+            const category = url.searchParams.get('category') ?? "";
+            const archived = url.searchParams.get('archived') === "true";
+            const jwt = cookies.get("id")!;
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    title: 'Ma nouvelle tâche',
+                    description: null,
+                    category: null,
+                    due: new Date(),
+                    steps: null,
+                    attachments: null,
+                    archived: false
+                }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+    
+            const result: ApiResponseWithData<number> = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
+
+            const returnObject = { id: result.data, message: "Tâche créée avec succès." }
+
+            if (tasks) {
+                returnObject["tasks"] = tasks;
+            }
+
+            return returnObject;
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    },
+    edit: async ({ cookies, request, url }) => {
+        try {
+            const jwt = cookies.get("id")!;
+            const search = url.searchParams.get('search') ?? "";
+            const category = url.searchParams.get('category') ?? "";
+            const archived = url.searchParams.get('archived') === "true";
+
+            const formData = await request.formData();
+            const id = formData.get("id")!.toString();
+            const data = {
+                title: formData.get("title")?.toString(),
+                content: formData.get("content")?.toString(),
+                category: formData.get("category")?.toString(),
+                pinned: formData.get("pinned")?.toString()
+            }
+
+            if (!data.title || data.title === "") {
+                return fail(422, { message: "Titre obligatoire." })
+            }
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/memos/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+    
+            const result: ApiResponse = await response.json();
+
+			if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
+            const categories = await fetchCategories(jwt, archived);
+
+            if (tasks && categories) {
+                return { tasks, categories };
+            }
+		} catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+		}
+    },
+    destroy: async ({ cookies, request }) => {
+        try {
+            const formData = await request.formData();
+            const id = formData.get("id")!.toString();
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    authorization: cookies.get("id")!
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+			if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            return { message: "Tâche supprimée avec succès." }
+		} catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+		}
     }
 };

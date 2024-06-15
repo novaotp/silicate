@@ -1,7 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import type { Step, Task } from "$libs/models/Task";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
-import { v4 } from "uuid";
 import { get, type Writable } from 'svelte/store';
 import { goto } from "$app/navigation";
 import { page } from "$app/stores";
@@ -27,14 +26,14 @@ export interface StepWithId {
 export const toStepWithId = (step: Step): StepWithId => {
     if (step.subSteps) {
         return {
-            id: v4(),
+            id: crypto.randomUUID(),
             label: step.label,
             completed: step.completed,
-            subSteps: step.subSteps.map(sub => { return { id: v4(), label: sub.label, completed: sub.completed } })
+            subSteps: step.subSteps.map(sub => { return { id: crypto.randomUUID(), label: sub.label, completed: sub.completed } })
         }
     } else {
         return {
-            id: v4(),
+            id: crypto.randomUUID(),
             label: step.label,
             completed: step.completed
         }
@@ -77,7 +76,7 @@ export const calculateCompletion = (values: Step[] | StepWithId[]): number => {
 };
 
 export const fetchTasks = async (jwt: string, category: string, search: string, archived: boolean): Promise<Task[] | undefined> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks?category=${category}&search=${search}&archived=${archived}`, {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks?category=${category}&search=${search}&archived=${archived}`, {
         method: "GET",
         headers: {
             "accept": "application/json",
@@ -90,7 +89,7 @@ export const fetchTasks = async (jwt: string, category: string, search: string, 
 }
 
 export const fetchCategories = async (jwt: string, archived: boolean): Promise<string[] | undefined> => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/categories?archived=${archived}`, {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/categories?archived=${archived}`, {
         method: "GET",
         headers: {
             "accept": "application/json",

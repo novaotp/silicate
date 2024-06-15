@@ -2,7 +2,6 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import { getContext } from 'svelte';
     import { byteConverter, toTitleCase } from './utils';
-    import * as AllIcons from '@tabler/icons-svelte';
     import AttachmentPreview from './AttachmentPreview.svelte';
     import { addToast } from '$lib/stores/toast';
 
@@ -17,7 +16,7 @@
     let showPreview: boolean = false;
 
     $: fileBlobPromise = (async (name: string) => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment?name=${name}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment?name=${name}`, {
             method: 'GET',
             headers: {
                 authorization: jwt,
@@ -32,16 +31,11 @@
 
     const jwt = getContext<string>('jwt');
 
-    $: icon = ((extension: string) => {
+   const loadIcon = async (extension: string) => {
         const iconKey = `IconFileType${toTitleCase(extension)}`;
 
-        if (Object.keys(AllIcons).includes(iconKey)) {
-            /* @ts-ignore */
-            return AllIcons[iconKey];
-        } else {
-            return AllIcons['IconFileUnknown'];
-        }
-    })(extension);
+        return await import(/* @vite-ignore */ `@tabler/icons-svelte/${iconKey}.svelte`);
+    };
 
     /**
      * @see https://stackoverflow.com/a/59414837
@@ -63,9 +57,11 @@
 </script>
 
 <button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg bg-neutral-100">
-    <div class="relative h-full flex justify-center items-center">
-        <svelte:component this={icon} class="size-6 text-neutral-600" />
-    </div>
+    {#await loadIcon(extension) then icon}
+        <div class="relative h-full flex justify-center items-center">
+            <svelte:component this={icon} class="size-6 text-neutral-600" />
+        </div>
+    {/await}
     <div class="relative flex flex-col items-start max-w-[calc(100%-24px-20px)]">
         <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40 text-neutral-950">{name}</span>
         {#await fileBlobPromise}

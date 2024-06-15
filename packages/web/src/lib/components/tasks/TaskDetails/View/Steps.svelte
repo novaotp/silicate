@@ -7,7 +7,6 @@
     import { page } from '$app/stores';
     import type { Step } from '$libs/models/Task';
     import IconChecklist from '@tabler/icons-svelte/IconChecklist.svelte';
-    import { v4 } from 'uuid';
     import { calculateCompletion, fetchTasks, toStep, toStepWithId, type PageContext } from '../../utils';
     import { Button } from '$lib/ui';
 
@@ -49,7 +48,7 @@
 
     const updateSteps = async () => {
         try {
-            const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+            const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({
                     steps: steps.length > 0 ? steps.map(s => toStep(s)) : null
@@ -81,7 +80,7 @@
     };
 
     const addStep = () => {
-        steps = [...steps, { id: v4(), label: "", completed: false }];
+        steps = [...steps, { id: crypto.randomUUID(), label: "", completed: false }];
         update();
     }
 

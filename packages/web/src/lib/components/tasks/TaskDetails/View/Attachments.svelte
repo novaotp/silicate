@@ -39,7 +39,7 @@
 
         addToast({ type: "info", message: "Téléchargement des ressources" });
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment`, {
             method: 'POST',
             body: data,
             headers: {
@@ -60,7 +60,7 @@
     };
 
     const deleteAttachment = async (event: CustomEvent<string>) => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}/attachment?name=${event.detail}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment?name=${event.detail}`, {
             method: 'DELETE',
             headers: {
                 accept: 'application/json',

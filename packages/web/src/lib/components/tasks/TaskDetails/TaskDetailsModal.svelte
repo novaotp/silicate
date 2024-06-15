@@ -24,7 +24,7 @@
      * @returns The data if it succeeded, `undefined` otherwise.
      */
     export const fetchTask = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${$viewedTaskId}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${$viewedTaskId}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',

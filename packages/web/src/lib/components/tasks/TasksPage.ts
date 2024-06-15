@@ -8,7 +8,7 @@ import type { ApiResponseWithData } from "$libs/types/ApiResponse";
  * @returns On success, returns the data, otherwise, returns a message error.
  */
 export const addTask = async (jwt: string) => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks`, {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks`, {
         method: 'POST',
         body: JSON.stringify({
             title: 'Ma nouvelle tâche',
@@ -37,7 +37,7 @@ export const addTask = async (jwt: string) => {
  * @returns The data if it succeeded, `undefined` otherwise.
  */
 export const fetchTask = async (id: number, jwt: string) => {
-    const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
         method: 'GET',
         headers: {
             accept: 'application/json',

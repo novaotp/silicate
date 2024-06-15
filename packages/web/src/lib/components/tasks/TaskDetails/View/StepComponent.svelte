@@ -3,7 +3,6 @@
     import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
     import { createEventDispatcher } from 'svelte';
     import type { StepWithId } from '../../utils';
-    import { v4 } from 'uuid';
     import { Button } from '$lib/ui';
 
     export let step: StepWithId;
@@ -40,7 +39,7 @@
     };
 
     const newSubStep = () => {
-        step.subSteps = [...(step.subSteps ?? []), { id: v4(), label: '', completed: false }];
+        step.subSteps = [...(step.subSteps ?? []), { id: crypto.randomUUID(), label: '', completed: false }];
         dispatch('update');
     };
 

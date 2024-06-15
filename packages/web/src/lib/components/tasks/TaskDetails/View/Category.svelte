@@ -31,7 +31,7 @@
             category = null;
         }
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({ category }),
             headers: {
