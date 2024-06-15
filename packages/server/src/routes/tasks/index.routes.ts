@@ -4,6 +4,7 @@ import { RawCategory, RawTask, Task } from '../../../../libs/models/Task';
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/fileUploads';
 import { router as attachmentRoutes } from "./attachment.routes";
+import { router as reminderRoutes } from "./reminder.route";
 import { getAttachments } from './utils';
 import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/dynamicQueryBuilder';
 import { stringifyOrNull } from "../../utils/stringifyOrNull";
@@ -277,3 +278,4 @@ router.get("/categories", async (req, res) => {
 });
 
 router.use("/", attachmentRoutes);
+router.use("/", reminderRoutes);
