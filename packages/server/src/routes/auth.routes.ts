@@ -61,8 +61,6 @@ router.post("/validate", async (req, res) => {
 
         const userId = (await verify(jwt)).payload.userId;
 
-        console.log(userId)
-
         if (!userId) {
             return res.status(401).send({
                 success: false,

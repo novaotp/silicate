@@ -8,10 +8,12 @@ import { router as meRoutes } from "./routes/me.routes.ts";
 import { router as memoRoutes } from "./routes/memo.routes.ts";
 import { router as authRoutes } from "./routes/auth.routes.ts";
 import { authenticated } from './middlewares/authenticated';
+import { serverErrorMiddleware } from './middlewares/express-module-augmentations.ts';
 
 const app = express();
 
 app.use(express.static(path.resolve('./public')));
+app.use(serverErrorMiddleware)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
@@ -32,4 +34,8 @@ if (!process.env.SERVER_PORT) {
 
 app.listen(process.env.SERVER_PORT, () => {
     console.log(`[Server] Running on port ${process.env.SERVER_PORT}`);
+});
+
+process.on('uncaughtException', function (exception) {
+    console.log("Exception : ", exception);
 });

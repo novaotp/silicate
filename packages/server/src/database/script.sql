@@ -17,6 +17,7 @@ CREATE TABLE public.memo (
     category VARCHAR(30),
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
+    pinned BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES public.user (id)

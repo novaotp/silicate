@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../database";
-import { RawUser, User } from "../../../libs/models/User";
+import { User } from "../../../libs/models/User";
 import { hash } from "bcrypt";
 import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
 
@@ -10,8 +10,13 @@ router.get('/', async (req, res) => {
     try {
         const client = await db.connect();
 
-        const { rows } = await client.query<RawUser>(`
-            SELECT *
+        const { rows } = await client.query<User>(`
+            SELECT
+                id as "id",
+                first_name as "firstName",
+                last_name as "lastName",
+                email as "email",
+                created_at as "joinedOn"
             FROM public.user
             WHERE id = $1
             LIMIT 1;
@@ -30,21 +35,12 @@ router.get('/', async (req, res) => {
 
         return res.status(200).send({
             success: true,
-            message: "Users read successfully",
-            data: {
-                id: user.id,
-                firstName: user.first_name,
-                lastName: user.last_name,
-                email: user.email,
-                joinedOn: user.created_at
-            } as User
+            message: "User read successfully",
+            data: user
         });
     } catch (err) {
         console.error(`Something went wrong whilst fetching the users : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
     }
 });
 

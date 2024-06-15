@@ -7,7 +7,9 @@ type QueryReturn<T> = {
 };
 
 /**
- * Queries the database while handling the open/close connection.
+ * Convenient helper to query the database while handling the open/close connection.
+ * @param statement The SQL statement to execute.
+ * @param values The values to pass in the statement (optional).
  */
 export async function query<T>(statement: string, values: unknown[] = []): Promise<QueryReturn<T>> {
     let client: pg.PoolClient | null = null;
@@ -23,7 +25,7 @@ export async function query<T>(statement: string, values: unknown[] = []): Promi
 
         data = {
             rows: rows as T[],
-            first: rows.at(0)!
+            first: rows.length > 0 ? rows.at(0) : null
         };
     } catch (err) {
         console.error("An error occurred : ", err);
