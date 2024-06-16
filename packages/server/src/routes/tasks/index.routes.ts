@@ -1,13 +1,14 @@
 import { Request, Router } from "express";
 import { db } from "../../database";
-import { RawCategory, RawTask, Task } from '../../../../libs/models/Task';
+import { Attachment, RawCategory, RawTask, Reminder, Task } from '../../../../libs/models/Task';
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
-import { upload } from '../../middlewares/fileUploads';
-import { router as attachmentRoutes } from "./attachment.routes";
-import { router as reminderRoutes } from "./reminder.route";
+import { upload } from '../../middlewares/file-uploads';
 import { getAttachments } from './utils';
 import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/dynamicQueryBuilder';
 import { stringifyOrNull } from "../../utils/stringifyOrNull";
+import { query } from "../../database/utils";
+import { ApiResponseWithData } from "../../../../libs/types/ApiResponse";
+import mime from "mime";
 
 export const router = Router();
 
@@ -277,5 +278,213 @@ router.get("/categories", async (req, res) => {
     }
 });
 
-router.use("/", attachmentRoutes);
-router.use("/", reminderRoutes);
+/**
+ * ATTACHMENTS
+ */
+
+router.get('/:id/attachment', async (req, res) => {
+    try {
+        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "authorization": req.headers.authorization!
+            }
+        });
+        const result: ApiResponseWithData<Task> = await response.json();
+    
+        if (!result.success) {
+            return res.status(response.status).send(result);
+        }
+
+        const task = result.data;
+        const name = req.query.name as string;
+
+        if (!task.attachments) {
+            return res.status(404).send({ success: false, message: "No attachment found" })
+        }
+
+        const attachments: Attachment[] = JSON.parse(task.attachments);
+        const attachment = attachments.find(a => a.name === name);
+
+        if (!attachment) {
+            return res.status(404).send({ success: false, message: "No attachment found" })
+        }
+
+        res.setHeader("Content-Type", mime.lookup(attachment.relativePathOnServer));
+
+        return res.status(200).sendFile(attachment.relativePathOnServer, { root: "." });
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching an attachment : ${err.message}`);
+        return res.status(500).send({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+router.post("/:id/attachment", upload.array("attachments"), async (req, res) => {
+    try {
+        const newAttachments = getAttachments(req);
+
+        if (!newAttachments) {
+            return res.status(418).send({ success: false, message: "Adding attachments without sending them..." })
+        }
+
+        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "authorization": req.headers.authorization!
+            }
+        });
+        const result: ApiResponseWithData<Task> = await response.json();
+    
+        if (!result.success) {
+            return res.status(response.status).send(result);
+        }
+
+        const task = result.data;
+        const client = await db.connect();
+
+        const attachments = task.attachments ? JSON.parse(task.attachments) as Attachment[] : [];
+        const mergedAttachments = [...attachments, ...newAttachments];
+
+        await client.query(`
+            UPDATE public.task
+            SET
+                attachments = $1,
+                updated_at = $2
+            WHERE
+                id = $3
+                AND
+                user_id = $4;
+        `, [JSON.stringify(mergedAttachments), new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+
+        client.release();
+
+        return res.status(200).send({
+            success: true,
+            message: "Added attachments successfully",
+            data: newAttachments
+        })
+    } catch (err) {
+        console.error(`Something went wrong whilst adding an attachment : ${err.message}`);
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
+    }
+});
+
+router.delete("/:id/attachment", async (req, res) => {
+    try {
+        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "authorization": req.headers.authorization!
+            }
+        });
+        const result: ApiResponseWithData<Task> = await response.json();
+    
+        if (!result.success) {
+            return res.status(response.status).send(result);
+        }
+
+        const task = result.data;
+
+        if (!task.attachments) {
+            return res.status(418).send({ success: false, message: "How do you delete attachments when there are none ?" })
+        }
+
+        const name = req.query.name;
+        const client = await db.connect();
+
+        const attachments = JSON.parse(task.attachments) as Attachment[];
+        const filteredAttachments = attachments.filter(a => a.name !== name);
+
+        await client.query(`
+            UPDATE public.task
+            SET
+                attachments = $1,
+                updated_at = $2
+            WHERE
+                id = $3
+                AND
+                user_id = $4;
+        `, [filteredAttachments.length > 0 ? JSON.stringify(filteredAttachments) : null, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+
+        client.release();
+
+        return res.status(200).send({ success: true, message: "Removed attachment successfully" })
+    } catch (err) {
+        console.error(`Something went wrong whilst adding an attachment : ${err.message}`);
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
+    }
+});
+
+/**
+ * REMINDERS
+ */
+
+router.get('/:id/reminders', async (req, res) => {
+    try {
+        const { rows: reminders } = await query<Reminder>(`
+            SELECT task_reminder.id, task_reminder.task_id as "taskId", task_reminder.time
+            FROM public.task_reminder
+            INNER JOIN public.task ON task.id = task_id
+            WHERE task_reminder.task_id = $1 AND task.user_id = $2;
+        `, [req.params.id, req.userId]);
+
+        return res.success("Task reminders read successfully", reminders);
+    } catch (err) {
+        console.error(`Something went wrong whilst fetching a task reminder : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.post('/:id/reminders', async (req, res) => {
+    try {
+        const { time } = req.body;
+
+        const { first: reminder } = await query<Reminder>(`
+            INSERT INTO public.task_reminder (task_id, time)
+            VALUES ($1, $2)
+            RETURNING id, task_id as "taskId", time;
+        `, [req.params.id, time]);
+
+        return res.success("Task reminder added successfully", reminder);
+    } catch (err) {
+        console.error(`Something went wrong whilst adding a task reminder : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.put('/:taskId/reminders/:reminderId', async (req, res) => {
+    try {
+        const { time } = req.body;
+
+        await query<Reminder>(`
+            UPDATE public.task_reminder
+            SET time = $1
+            WHERE id = $2 AND task_id = $3;
+        `, [new Date(time), req.params.reminderId, req.params.taskId]);
+
+        return res.success("Task reminder updated successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a task reminder : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.delete('/:taskId/reminders/:reminderId', async (req, res) => {
+    try {
+        await query<Reminder>(`
+            DELETE FROM public.task_reminder
+            WHERE id = $1 AND task_id = $2;
+        `, [req.params.reminderId, req.params.taskId]);
+
+        return res.success("Task reminder updated successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a task reminder : ${err.message}`);
+        return res.serverError();
+    }
+});

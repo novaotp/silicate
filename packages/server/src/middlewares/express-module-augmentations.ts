@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verify } from '../utils/jwt';
 
 export const serverErrorMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    req.userId = (await verify(req.headers.authorization!)).payload.userId;
+    req.userId = req.headers.authorization ? (await verify(req.headers.authorization!)).payload.userId : null;
     
     res.success = (message: string, data?: unknown) => {
         if (data) {
