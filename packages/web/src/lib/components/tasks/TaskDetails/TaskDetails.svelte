@@ -190,7 +190,7 @@
     };
 </script>
 
-<div class="relative w-full h-full max-h-[660px] flex flex-col justify-start items-start overflow-auto">
+<div class="relative w-full h-full md:max-h-[660px] flex flex-col justify-start items-start overflow-auto">
     <div class="relative px-5 pt-20 md:pt-0 pb-5 w-full flex flex-col items-start gap-5 text-primary-950">
         <input
             value={replica.title}
