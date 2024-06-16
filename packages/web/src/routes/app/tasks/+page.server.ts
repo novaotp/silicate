@@ -1,7 +1,7 @@
 import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import type { Task } from "$libs/models/Task";
+import type { Reminder, Task } from "$libs/models/Task";
 import { BACKEND_URL } from "$env/static/private";
 
 const fetchCategories = async (jwt: string, archived: boolean): Promise<string[] | undefined> => {
@@ -159,5 +159,98 @@ export const actions: Actions = {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
 		}
+    },
+    createReminder: async ({ cookies, request }) => {
+        try {
+            const jwt = cookies.get("id")!;
+
+            const formData = await request.formData();
+            const taskId = formData.get("taskId")!.toString();
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks/${taskId}/reminders`, {
+                method: 'POST',
+                body: JSON.stringify({ time: new Date() }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+    
+            const result: ApiResponseWithData<Reminder> = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            return { reminder: result.data };
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    },
+    editReminder: async ({ cookies, request }) => {
+        try {
+            const jwt = cookies.get("id")!;
+
+            const formData = await request.formData();
+            const taskId = formData.get("taskId")!.toString();
+            const reminderId = formData.get("reminderId")!.toString();
+            const time = formData.get("time")!.toString();
+
+            if (!time) {
+                return fail(422, { message: "Impossible d'avoir un rappel pour une date nulle." })
+            }
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks/${taskId}/reminders/${reminderId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ time }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            return { message: "Rappel modifié avec succès." };
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    },
+    destroyReminder: async ({ cookies, request }) => {
+        try {
+            const jwt = cookies.get("id")!;
+
+            const formData = await request.formData();
+            const taskId = formData.get("taskId")!.toString();
+            const reminderId = formData.get("reminderId")!.toString();
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks/${taskId}/reminders/${reminderId}`, {
+                method: 'DELETE',
+                body: JSON.stringify({ time: new Date() }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+    
+            const result: ApiResponseWithData<Reminder> = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            return { message: "Rappel supprimé avec succès." };
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
     }
 };
