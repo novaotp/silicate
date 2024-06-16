@@ -10,12 +10,14 @@
     import { page } from '$app/stores';
     import { changeSearchParams, type PageContext } from '../utils';
     import { goto } from '$app/navigation';
+    import { Card, FullScreen } from '$lib/ui';
+    import DesktopDetails from './DesktopDetails.svelte';
 
     let showSettings: boolean = false;
     const jwt = getContext<string>('jwt');
     const { categories } = getContext<PageContext>('page');
-    $: viewedTaskId = $page.url.searchParams.get("id");
 
+    $: viewedTaskId = $page.url.searchParams.get('id');
     $: categorySearchParam = $page.url.searchParams.has('category') ? decodeURI($page.url.searchParams.get('category')!) : null;
 
     /**
@@ -51,51 +53,75 @@
             return undefined;
         }
 
-        return { task: result.data, reminders: result2.data }
+        return { task: result.data, reminders: result2.data };
     };
 
     const closeModal = () => {
-        changeSearchParams('id', null)
-    }
+        changeSearchParams('id', null);
+    };
 </script>
 
 {#if viewedTaskId}
-    <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-        {#await fetchItems()}
-            <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-                <button class="rounded-full" on:click={closeModal}>
-                    <IconChevronLeft />
-                </button>
-            </header>
-            <div class="relative w-full h-full flex justify-center items-center px-5">
-                <p>Chargement de la tâche...</p>
-            </div>
-        {:then item}
-            {#if item}
-                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
-                    <button
-                        class="rounded-full"
-                        on:click={() => {
-                            closeModal();
-
-                            if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
-                                const searchParams = new URLSearchParams($page.url.searchParams);
-                                searchParams.delete('category');
-                                setTimeout(() => goto(`/app/tasks?${searchParams}`, { invalidateAll: true }), 400);
-                            }
-                        }}
-                    >
+    <div class="block md:hidden">
+        <FullScreen.Modal>
+            {#await fetchItems()}
+                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+                    <button class="rounded-full" on:click={closeModal}>
                         <IconChevronLeft />
                     </button>
-                    <button class="py-2" on:click={() => (showSettings = !showSettings)}>
-                        <IconDotsVertical />
-                    </button>
                 </header>
-                <TaskDetails task={item.task} reminders={item.reminders} bind:showSettings on:close />
-            {:else}
-                <p>Une erreur est survenue.</p>
-            {/if}
-        {/await}
+                <div class="relative w-full h-full flex justify-center items-center px-5">
+                    <p>Chargement de la tâche...</p>
+                </div>
+            {:then item}
+                {#if item}
+                    <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
+                        <button
+                            class="rounded-full"
+                            on:click={() => {
+                                closeModal();
+
+                                if (categorySearchParam !== null && !$categories.includes(categorySearchParam)) {
+                                    const searchParams = new URLSearchParams($page.url.searchParams);
+                                    searchParams.delete('category');
+                                    setTimeout(() => goto(`/app/tasks?${searchParams}`, { invalidateAll: true }), 400);
+                                }
+                            }}
+                        >
+                            <IconChevronLeft />
+                        </button>
+                        <button class="py-2" on:click={() => (showSettings = !showSettings)}>
+                            <IconDotsVertical />
+                        </button>
+                    </header>
+                    <TaskDetails task={item.task} reminders={item.reminders} bind:showSettings on:close />
+                {:else}
+                    <p>Une erreur est survenue.</p>
+                {/if}
+            {/await}
+        </FullScreen.Modal>
+    </div>
+    <div class="hidden md:block">
+        <FullScreen.Backdrop on:click={() => changeSearchParams('id', null)} class="flex justify-center items-center">
+            <Card class="relative w-[760px] max-h-[760px]">
+                {#await fetchItems()}
+                    <header class="relative flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+                        <button class="rounded-full" on:click={closeModal}>
+                            <IconChevronLeft />
+                        </button>
+                    </header>
+                    <div class="relative w-full h-full flex justify-center items-center px-5">
+                        <p>Chargement de la tâche...</p>
+                    </div>
+                {:then item}
+                    {#if item}
+                        <DesktopDetails {item} />
+                    {:else}
+                        <p>Une erreur est survenue.</p>
+                    {/if}
+                {/await}
+            </Card>
+        </FullScreen.Backdrop>
     </div>
 {/if}
 

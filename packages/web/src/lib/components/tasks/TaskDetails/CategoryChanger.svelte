@@ -1,25 +1,28 @@
 <script lang="ts">
+    import { addToast } from '$lib/stores/toast';
+    import { Button, Card, FullScreen } from '$lib/ui';
+    import type { Memo } from '$libs/models/Memo';
     import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
     import IconTag from '@tabler/icons-svelte/IconTag.svelte';
     import { getContext } from 'svelte';
-    import { fetchCategories, fetchTasks, type PageContext } from '../../utils';
-    import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import { addToast } from '$lib/stores/toast';
     import { page } from '$app/stores';
+    import { deserialize } from '$app/forms';
+    import { fetchCategories, fetchTasks, type PageContext } from '../utils';
+    import type { Task } from '$libs/models/Task';
+    import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import { Button, Card, FullScreen } from '$lib/ui';
 
-    export let id: number;
-    export let value: string;
-    export let show: boolean;
+    export let task: Task;
+    let replica = { ...task };
 
-    let tempValue: string = value;
-    let timer: NodeJS.Timeout;
+    let tempValue = replica.category;
 
-    const { tasks, categories } = getContext<PageContext>('page');
     const jwt = getContext<string>('jwt');
+    const { tasks, categories } = getContext<PageContext>('page');
+    let timer: NodeJS.Timeout;
+    let showCategoryChanger: boolean = false;
 
-    $: filteredCategories = $categories.filter((c) => c.includes(tempValue));
+    $: filteredCategories = $categories.filter((c) => c.includes(replica.category ?? ''));
     $: categorySearchParam = $page.url.searchParams.get('category') ?? '';
     $: search = $page.url.searchParams.get('search') ?? '';
     $: archivedSearchParam = $page.url.searchParams.get('tab') === 'archives';
@@ -27,11 +30,11 @@
     const editCategory = async () => {
         let category: string | null = tempValue;
 
-        if (category.trimEnd() === '') {
+        if (category!.trimEnd() === '') {
             category = null;
         }
 
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${replica.id}`, {
             method: 'PATCH',
             body: JSON.stringify({ category }),
             headers: {
@@ -86,16 +89,22 @@
     };
 </script>
 
-<div class="relative w-full flex justify-between">
-    <div class="relative flex items-center gap-4 text-neutral-500">
+{#if !replica.category}
+    <button
+        class="rounded-full"
+        on:click={() => {
+            replica.category = 'Ma catégorie';
+            showCategoryChanger = true;
+            clearTimeout(timer);
+            timer = setTimeout(async () => {
+                await editCategory();
+            }, 750);
+        }}
+    >
         <IconTag />
-        <span>Catégorie</span>
-    </div>
-    <Button.Warning on:click={() => (show = true)} variant="primary" size="small">
-        {value}
-    </Button.Warning>
-</div>
-{#if show}
+    </button>
+{/if}
+{#if showCategoryChanger}
     <FullScreen.Backdrop
         class="flex justify-center items-center px-5"
         on:click={() => {
@@ -103,12 +112,12 @@
                 addToast({ type: 'error', message: 'Entrez une catégorie ou supprimer la.' });
                 return;
             }
-            show = false;
+            showCategoryChanger = false;
         }}
     >
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <Card class="md:w-[400px] w-full flex flex-col justify-center items-center text-sm gap-5">
+        <Card class="w-[400px] flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
                 <label for="category" class="text-neutral-500">Catégorie</label>
                 <div class="relative w-full h-[50px] flex justify-between rounded-smd text-neutral-700 bg-neutral-100">
@@ -118,9 +127,9 @@
                         maxlength="17"
                         on:input={onCategoryChange}
                         on:click|stopPropagation
-                        class="relative w-full h-[50px] px-5 rounded-l bg-transparent"
+                        class="relative w-full h-[50px] px-5 rounded-l-smd bg-transparent"
                     />
-                    <button on:click={() => (tempValue = '')} class="relative h-full aspect-square flex justify-center items-center rounded-r">
+                    <button on:click={() => (tempValue = '')} class="relative h-full aspect-square flex justify-center items-center rounded-r-smd">
                         <IconCircleXFilled />
                     </button>
                 </div>
@@ -140,7 +149,7 @@
                     variant="primary"
                     on:click={async () => {
                         tempValue = '';
-                        show = false;
+                        showCategoryChanger = false;
                         setTimeout(async () => await editCategory(), 400);
                     }}
                 >

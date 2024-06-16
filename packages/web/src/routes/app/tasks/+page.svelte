@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TaskList, TaskDetailsModal, AddTask, Categories, Search } from '$lib/components/tasks';
+    import { TaskList, TaskDetailsModal, AddTask, Search } from '$lib/components/tasks';
     import TaskContextProvider from '$lib/components/tasks/TaskContextProvider.svelte';
     import { changeSearchParams } from '$lib/components/tasks/utils';
     import { Skeleton, Separator } from '$lib/ui';
@@ -27,7 +27,7 @@
     />
 </svelte:head>
 
-<div class="relative w-full h-full p-5 pt-0 flex flex-col justify-start">
+<div class="relative w-full h-full flex flex-col justify-start">
     {#if data.data?.message || !data.tasks || !data.categories}
         <p>Une erreur est survenue lors du chargement.</p>
         <p>Erreur : {data.data?.message}</p>
@@ -76,16 +76,26 @@
         {:then tasks}
             {#if tasks}
                 <TaskContextProvider {tasks} categories={data.categories}>
-                    <main class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto">
-                        <header class="relative w-full flex justify-start items-center">
-                            <h1 class="text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
+                    <main class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto p-5 pt-0 md:pt-5">
+                        <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
+                            <h1 class="self-start text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
+                            <div class="relative h-full w-full md:w-auto flex gap-5 items-center">
+                                <div class="hidden md:block h-full">
+                                    <select class="relative h-full px-5 rounded">
+                                        <option selected={currentTab === ""} on:click={() => changeTab('')}>Actives</option>
+                                        <option selected={currentTab === "archives"} on:click={() => changeTab('archives')}>Archivées</option>
+                                    </select>
+                                </div>
+                                <Search />
+                                <div class="hidden md:block h-full">
+                                    <AddTask />
+                                </div>
+                            </div>
                         </header>
-                        <Search />
-                        <Categories />
                         <TaskList />
                     </main>
                     <menu
-                        class="fixed bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]"
+                        class="fixed md:hidden bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]"
                     >
                         <button
                             class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}"

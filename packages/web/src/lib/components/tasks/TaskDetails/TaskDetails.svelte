@@ -114,7 +114,7 @@
     let showCategoryChanger: boolean = false;
 
     const addCategory = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({ category: replica.category }),
             headers: {
@@ -151,7 +151,7 @@
     };
 
     const removeCategory = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/tasks/${id}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({ category: null }),
             headers: {
@@ -190,8 +190,8 @@
     };
 </script>
 
-<div class="relative w-full h-full flex flex-col justify-start items-start">
-    <div class="relative px-5 pt-20 pb-5 w-full flex flex-col items-start gap-5 text-primary-950">
+<div class="relative w-full h-full max-h-[660px] flex flex-col justify-start items-start overflow-auto">
+    <div class="relative px-5 pt-20 md:pt-0 pb-5 w-full flex flex-col items-start gap-5 text-primary-950">
         <input
             value={replica.title}
             on:input={async (event) => {

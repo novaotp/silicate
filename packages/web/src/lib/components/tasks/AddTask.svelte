@@ -1,44 +1,35 @@
 <script lang="ts">
     import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
-    import { addTask } from './TasksPage';
     import { getContext } from 'svelte';
     import { addToast } from '$lib/stores/toast';
-    import { changeSearchParams, fetchTasks, type PageContext } from './utils';
-    import { page } from '$app/stores';
+    import { changeSearchParams, type PageContext } from './utils';
+    import { Button } from '$lib/ui';
+    import { enhance } from '$app/forms';
+    import type { SubmitFunction } from '../../../routes/app/tasks/$types';
 
-    const jwt = getContext<string>('jwt');
     const { tasks } = getContext<PageContext>('page');
 
-    $: archived = $page.url.searchParams.get('tab') === 'archives';
-    $: category = $page.url.searchParams.get('category') ?? '';
-    $: search = $page.url.searchParams.get('search') ?? '';
+    const createTaskEnhance: SubmitFunction = async () => {
+        return ({ result }) => {
+            if (result.type === "failure") {
+                return addToast({ type: "error", message: result.data!.message })
+            } else if (result.type === "success") {
+                addToast({ type: 'success', message: 'Mémo ajouté avec succès.' });
 
-    const add = async () => {
-        const result = await addTask(jwt);
+                if ("tasks" in result.data! && result.data.tasks) {
+                    $tasks = result.data.tasks;
+                }
 
-        if (result.message) {
-            addToast({ type: 'error', message: result.message });
-            return;
-        } else {
-            addToast({ type: 'success', message: 'Tâche ajoutée avec succès.' });
+                // @ts-ignore
+                return changeSearchParams('id', result.data!.id);
+            }
         }
-
-        const updatedTasks = await fetchTasks(jwt, category, search, archived);
-
-        if (!updatedTasks) {
-            addToast({ type: 'error', message: 'Impossible de mettre à jour les tâches.' });
-            return;
-        }
-
-        $tasks = updatedTasks;
-
-        changeSearchParams('id', result.data!);
     };
 </script>
 
-<button
-    class="relative bottom-[30px] h-[60px] aspect-square rounded-full bg-primary-600 text-neutral-50 flex justify-center items-center shadow-lg"
-    on:click={add}
->
-    <IconPlus />
-</button>
+<form method="post" action="?/create" use:enhance={createTaskEnhance} class="relative bottom-[30px] md:bottom-auto h-[60px] w-[60px] md:h-full md:aspect-auto rounded-full md:rounded md:w-auto flex justify-center items-center z-30">
+    <Button.Normal class="relative rounded-full md:rounded w-full h-full flex justify-center items-center gap-5">
+        <IconPlus class="min-w-5 min-h-5" />
+        <span class="hidden md:block whitespace-nowrap">Ajouter une tâche</span>
+    </Button.Normal>
+</form>

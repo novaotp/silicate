@@ -5,6 +5,7 @@
     import { getContext } from 'svelte';
     import { calculateCompletion, changeSearchParams, type PageContext } from './utils';
     import type { Task } from '$libs/models/Task';
+    import Categories from './Categories.svelte';
 
     const { tasks } = getContext<PageContext>('page');
 
@@ -33,7 +34,8 @@
     }
 </script>
 
-<div role="list" class="flex flex-col gap-5 mb-10">
+<div role="list" class="relative w-[min(100%,800px)] h-full mx-auto flex flex-col gap-5 mb-10">
+    <Categories />
     {#if $tasks.length === 0}
         {#if $page.url.searchParams.get('search') !== null}
             <p>Aucune tâche ne correspond à ta recherche.</p>
@@ -48,7 +50,9 @@
     {:else}
         {#each groupedByYear2 as [year, tasks]}
             <div role="list" class="flex flex-col">
-                <h2 class="text-xl text-neutral-950">{year}</h2>
+                {#if Object.keys(groupedByYear).length > 1 || year !== new Date().getFullYear().toString()}
+                    <h2 class="text-xl text-neutral-950">{year}</h2>
+                {/if}
                 <div role="list" class="flex flex-col divide-y-[1px] divide-neutral-300">
                     {#each tasks as { id, title, due, steps } (id)}
                         <button

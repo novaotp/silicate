@@ -79,13 +79,7 @@ export const actions: Actions = {
 
             const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
 
-            const returnObject = { id: result.data, message: "Tâche créée avec succès." }
-
-            if (tasks) {
-                returnObject["tasks"] = tasks;
-            }
-
-            return returnObject;
+            return { id: result.data, message: "Tâche créée avec succès.", tasks };
         } catch (err) {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
@@ -159,6 +153,42 @@ export const actions: Actions = {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
 		}
+    },
+    archiveTask: async ({ cookies, request, url }) => {
+        try {
+            const jwt = cookies.get("id")!;
+            const search = url.searchParams.get('search') ?? "";
+            const category = url.searchParams.get('category') ?? "";
+            const archived = url.searchParams.get('archived') === "true";
+
+            const formData = await request.formData();
+            const taskId = formData.get("taskId")!.toString();
+            const taskArchived = formData.get("archived")!.toString() === "true";
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/tasks/${taskId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    archived: taskArchived
+                }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: jwt,
+                    'content-type': 'application/json'
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
+
+            return { message: "Tâche archivée avec succès.", tasks };
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
     },
     createReminder: async ({ cookies, request }) => {
         try {
