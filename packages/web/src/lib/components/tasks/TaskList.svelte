@@ -3,10 +3,10 @@
     import IconCheck from '@tabler/icons-svelte/IconCheck.svelte';
     import IconArchive from '@tabler/icons-svelte/IconArchive.svelte';
     import { getContext } from 'svelte';
-    import { calculateCompletion, type PageContext } from './utils';
+    import { calculateCompletion, changeSearchParams, type PageContext } from './utils';
     import type { Task } from '$libs/models/Task';
 
-    const { tasks, viewedTaskId } = getContext<PageContext>('page');
+    const { tasks } = getContext<PageContext>('page');
 
     $: archived = $page.url.searchParams.get('tab') === 'archives';
 
@@ -29,7 +29,7 @@
     }
 
     const showTask = (id: number) => {
-        $viewedTaskId = id;
+        changeSearchParams('id', id);
     }
 </script>
 

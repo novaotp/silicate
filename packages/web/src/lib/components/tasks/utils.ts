@@ -7,8 +7,7 @@ import { page } from "$app/stores";
 
 export interface PageContext {
     tasks: Writable<Task[]>,
-    categories: Writable<string[]>,
-    viewedTaskId: Writable<number | null>
+    categories: Writable<string[]>
 };
 
 /** Made to deal with steps deletion, which would require a unique identifier. */

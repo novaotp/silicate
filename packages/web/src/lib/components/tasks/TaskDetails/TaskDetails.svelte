@@ -11,13 +11,14 @@
     import { addToast } from '$lib/stores/toast';
     import { changeSearchParams, fetchCategories, type PageContext } from '../utils';
     import { page } from '$app/stores';
-    import type { Task } from '$libs/models/Task';
+    import type { Reminder, Task } from '$libs/models/Task';
     import { Attachments, Category, Description, Due, Steps } from './View';
     import { fetchTasks } from '../utils';
     import * as Utils from './TaskDetails';
     import { fly } from 'svelte/transition';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import { Button, FullScreen } from '$lib/ui';
+    import Reminders from './View/Reminders.svelte';
 
     export let showSettings: boolean;
 
@@ -26,6 +27,7 @@
     const jwt = getContext<string>('jwt');
 
     export let task: Task;
+    export let reminders: Reminder[];
 
     let replica: Task = { ...task };
     $: ({ id, steps, attachments, archived } = replica);
@@ -210,6 +212,7 @@
         {/if}
         <Attachments {id} bind:value={attachments} {signal} />
         <Steps {id} bind:value={steps} />
+        <Reminders {reminders} taskId={replica.id} />
     </div>
 </div>
 {#if showSettings}

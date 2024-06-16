@@ -62,12 +62,12 @@
             <svelte:component this={icon} class="size-6 text-neutral-600" />
         </div>
     {/await}
-    <div class="relative flex flex-col items-start max-w-[calc(100%-24px-20px)]">
+    <div class="relative flex flex-col items-start w-full">
         <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40 text-neutral-950">{name}</span>
         {#await fileBlobPromise}
             <p class="text-sm text-neutral-600">Chargement...</p>
         {:then blob}
-            <div class="flex text-neutral-500 text-sm">
+            <div class="w-full flex text-neutral-500 text-sm">
                 <span>{byteConverter(blob.size, 2)}</span>
                 <span>&nbsp;-&nbsp;</span>
                 <button on:click|stopPropagation={() => download(blob)}>Télécharger</button>

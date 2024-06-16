@@ -1,5 +1,9 @@
 declare global {
     namespace Express {
+        interface Request {
+            /** The id of the user, retrieved from the JWT `Authorization` header. */
+            userId: number
+        }
         interface Response {
             /**
              * Convenient helper for sending a 200 success response with custom data (optional).

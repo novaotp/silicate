@@ -53,3 +53,10 @@ export interface Step extends SubStep {
 export interface RawCategory {
     category: string
 }
+
+export interface Reminder {
+    id: number,
+    taskId: number,
+    /** A parsable date. */
+    time: string
+}

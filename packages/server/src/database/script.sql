@@ -37,3 +37,12 @@ CREATE TABLE public.task (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES public.user (id)
 );
+
+CREATE TABLE public.task_reminder (
+    id SERIAL NOT NULL PRIMARY KEY,
+    task_id INT NOT NULL,
+    time TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_task_reminder_task FOREIGN KEY (task_id) REFERENCES public.task (id)
+);

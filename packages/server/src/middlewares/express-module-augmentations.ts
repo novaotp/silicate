@@ -1,7 +1,10 @@
 // serverErrorMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
+import { verify } from '../utils/jwt';
 
-export const serverErrorMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const serverErrorMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    req.userId = req.headers.authorization ? (await verify(req.headers.authorization!)).payload.userId : null;
+    
     res.success = (message: string, data?: unknown) => {
         if (data) {
             res.status(200).send({ success: true, message, data });

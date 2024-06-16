@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import type { Task } from '$libs/models/Task';
+    import type { Reminder, Task } from '$libs/models/Task';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
     import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
     import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
@@ -8,12 +8,13 @@
     import { fly } from 'svelte/transition';
     import TaskDetails from './TaskDetails.svelte';
     import { page } from '$app/stores';
-    import { type PageContext } from '../utils';
+    import { changeSearchParams, type PageContext } from '../utils';
     import { goto } from '$app/navigation';
 
     let showSettings: boolean = false;
     const jwt = getContext<string>('jwt');
-    const { categories, viewedTaskId } = getContext<PageContext>('page');
+    const { categories } = getContext<PageContext>('page');
+    $: viewedTaskId = $page.url.searchParams.get("id");
 
     $: categorySearchParam = $page.url.searchParams.has('category') ? decodeURI($page.url.searchParams.get('category')!) : null;
 
@@ -23,8 +24,8 @@
      * @param jwt The `Authorization` header
      * @returns The data if it succeeded, `undefined` otherwise.
      */
-    export const fetchTask = async () => {
-        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${$viewedTaskId}`, {
+    export const fetchItems = async () => {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${viewedTaskId}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
@@ -33,18 +34,34 @@
         });
         const result: ApiResponseWithData<Task> = await response.json();
 
-        return result.success ? result.data : undefined;
+        if (!result.success) {
+            return undefined;
+        }
+
+        const response2 = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${viewedTaskId}/reminders`, {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                authorization: jwt
+            }
+        });
+        const result2: ApiResponseWithData<Reminder[]> = await response2.json();
+
+        if (!result2.success) {
+            return undefined;
+        }
+
+        return { task: result.data, reminders: result2.data }
     };
 
     const closeModal = () => {
-        $viewedTaskId = null;
+        changeSearchParams('id', null)
     }
 </script>
 
-{#key viewedTaskId}
-{#if $viewedTaskId}
+{#if viewedTaskId}
     <div role="dialog" class="fixed w-full h-full top-0 left-0 bg-white z-[100] overflow-auto" transition:fly={{ x: -100 }}>
-        {#await fetchTask()}
+        {#await fetchItems()}
             <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
                 <button class="rounded-full" on:click={closeModal}>
                     <IconChevronLeft />
@@ -53,8 +70,8 @@
             <div class="relative w-full h-full flex justify-center items-center px-5">
                 <p>Chargement de la tâche...</p>
             </div>
-        {:then task}
-            {#if task}
+        {:then item}
+            {#if item}
                 <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
                     <button
                         class="rounded-full"
@@ -74,14 +91,13 @@
                         <IconDotsVertical />
                     </button>
                 </header>
-                <TaskDetails {task} bind:showSettings on:close />
+                <TaskDetails task={item.task} reminders={item.reminders} bind:showSettings on:close />
             {:else}
                 <p>Une erreur est survenue.</p>
             {/if}
         {/await}
     </div>
 {/if}
-{/key}
 
 <style lang="scss">
     $blur: 10px;
