@@ -1,6 +1,6 @@
 <script lang="ts">
     import IconCalendarClock from '@tabler/icons-svelte/IconCalendarClock.svelte';
-    import SveltyPicker from 'svelty-picker';
+    import DatePicker from '$lib/components/shared/date-picker';
     import { createEventDispatcher } from 'svelte';
     import { Button, FullScreen, Card } from "$lib/ui";
 
@@ -26,7 +26,7 @@
 {#if show}
     <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (show = false)}>
         <Card options={{ y: 50 }} class="bg-transparent p-0">
-            <SveltyPicker
+            <DatePicker
                 pickerOnly
                 format="dd.mm.yyyy hh:ii"
                 mode="datetime"
