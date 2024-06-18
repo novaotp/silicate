@@ -1,37 +1,49 @@
-import { type Cookies } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 import type { User } from "$libs/models/User";
 import { BACKEND_URL } from "$env/static/private";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
-
-const handleInvalid = (cookies: Cookies, message: string) => {
-    cookies.delete("id", { path: "/" });
-    return { message }
-}
+import type { TaskNotification } from "$libs/models/Task";
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
     const jwt = cookies.get("id")!;
 
     try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
-            method: "GET",
-            headers: {
-                "authorization": jwt
-            }
-        });
-        const result: ApiResponseWithData<User> = await response.json();
+        const userResult = await getUser(jwt);
 
-        if (result.success) {
-            return {
-                /** The JWT token for authentication when sending requests. */
-                jwt: jwt,
-                user: result.data
-            }
-        } else {
-            return handleInvalid(cookies, result.message);
+        if (!userResult.success) {
+            cookies.delete("id", { path: "/" });
+            return { message: userResult.message };
         }
-    } catch {
-        console.log("Something went wrong.")
-        return handleInvalid(cookies, "Something went wrong.")
+
+        return {
+            // @ts-expect-error Lazy to check if it worked or not.
+            taskNotifications: (await getTaskNotifications(jwt)).data,
+            jwt: jwt,
+            user: userResult.data
+        }
+    } catch (err) {
+        console.error(err)
+        cookies.delete("id", { path: "/" });
+        return { message: "Une erreur est survenue." };
     }
 };
+
+const getUser = async (jwt: string): Promise<ApiResponseWithData<User>> => {
+    const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
+        method: "GET",
+        headers: {
+            "authorization": jwt
+        }
+    });
+    return await response.json();
+}
+
+const getTaskNotifications = async (jwt: string): Promise<ApiResponseWithData<TaskNotification[]>> => {
+    const response = await fetch(`${BACKEND_URL}/api/v1/tasks/notifications`, {
+        method: "GET",
+        headers: {
+            "authorization": jwt
+        }
+    });
+    return await response.json();
+}

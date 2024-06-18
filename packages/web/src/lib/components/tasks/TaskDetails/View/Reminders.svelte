@@ -55,10 +55,12 @@
     // Wrapper because I can't pass each reminder in another way than directly in HTML.
     const destroyReminderEnhanceWrapper = (reminder: Reminder): SubmitFunction => {
         return ({ formData }) => {
+            reminders = reminders.filter((r) => r.id !== reminder.id);
             formData.set('taskId', taskId.toString());
             formData.set('reminderId', reminder.id.toString());
             return ({ result }) => {
                 if (result.type === 'failure' && result.data && typeof result.data.message === 'string') {
+                    reminders = [...reminders, reminder]
                     return addToast({ type: 'error', message: result.data.message });
                 } else if (result.type === 'success' && result.data) {
                     reminders = reminders.filter((r) => r.id !== reminder.id);

@@ -19,6 +19,7 @@
                 if ("memos" in result.data!) {
                     $memos = result.data.memos;
                 }
+                console.log(result.data)
                 // @ts-ignore
                 return changeSearchParams('id', result.data!.id);
             }

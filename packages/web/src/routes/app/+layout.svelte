@@ -5,23 +5,32 @@
     import { writable } from 'svelte/store';
     import { addToast } from '$lib/stores/toast';
     import { goto } from '$app/navigation';
+    import { initSocket, socket } from '$lib/socket';
+    import type { TaskNotification } from '$libs/models/Task';
 
     export let data: LayoutServerData;
 
-    onMount(() => {
+    setContext('user', writable(data.user));
+    setContext('jwt', data.jwt);
+    const taskNotifications = setContext('taskNotifications', writable(data.taskNotifications));
+
+    onMount(async () => {
         if (data.message) {
             addToast({ type: "info", message: data.message });
             goto("/auth/login");
         }
-    })
 
-    setContext('user', writable(data.user));
-    setContext('jwt', data.jwt);
+        await initSocket(data.jwt!);
+
+        socket?.on("new_notifications", (notifications: TaskNotification[]) => {
+            $taskNotifications = [...$taskNotifications, ...notifications].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+        });
+    })
 </script>
 
 <div class="relative h-full w-full flex flex-col md:flex-row">
     <Navigation />
-    <div class="relative w-full h-[calc(100%-60px)] md:shadow-[-2px_0_4px_4px_rgba(0,0,0,0.1)] md:h-full flex flex-col">
+    <div class="relative flex-grow h-[calc(100%-60px)] md:shadow-[-2px_0_4px_4px_rgba(0,0,0,0.1)] md:h-full flex flex-col">
         <slot />
     </div>
 </div>

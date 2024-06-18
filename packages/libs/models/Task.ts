@@ -60,3 +60,13 @@ export interface Reminder {
     /** A parsable date. */
     time: string
 }
+
+export interface TaskNotification {
+    id: number,
+    userId: number,
+    taskReminderId: number,
+    message: string,
+    isRead: boolean,
+    /** A parsable date. */
+    createdAt: string
+}

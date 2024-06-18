@@ -4,6 +4,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
     optimizeDeps: {
-        exclude: ["@tabler/icons-svelte"]
+        exclude: ["@tabler/icons-svelte", "@floating-ui/dom"]
     }
 });

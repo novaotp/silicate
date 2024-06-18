@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import { db } from "../../database";
-import { Attachment, RawCategory, RawTask, Reminder, Task } from '../../../../libs/models/Task';
+import { Attachment, RawCategory, RawTask, Reminder, Task, TaskNotification } from '../../../../libs/models/Task';
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/file-uploads';
 import { getAttachments } from './utils';
@@ -11,6 +11,48 @@ import { ApiResponseWithData } from "../../../../libs/types/ApiResponse";
 import mime from "mime";
 
 export const router = Router();
+
+router.get("/notifications", async (req, res) => {
+    try {
+        const { rows: notifications } = await query<TaskNotification>(`
+            SELECT
+                task_notification.id,
+                task.user_id as "userId",
+                task_notification.task_reminder_id as "taskReminderId",
+                task_notification.message,
+                task_notification.is_read as "isRead",
+                task_notification.created_at as "createdAt"
+            FROM public.task_notification
+            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
+            INNER JOIN public.task ON task.id = task_reminder.task_id
+            WHERE task.user_id = $1
+            ORDER BY task_notification.created_at DESC;
+        `, [req.userId]);
+
+        return res.success("Notifications retrieved successfully", notifications);
+    } catch (err) {
+        console.error(err);
+        return res.serverError();
+    }
+});
+
+// Sets all given notifications as read
+router.put("/notifications", async (req, res) => {
+    try {
+        const notificationIds = req.body.notificationIds;
+
+        await query(`
+            UPDATE public.task_notification
+            SET is_read = true
+            WHERE id = ANY($1);
+        `, [notificationIds]);
+
+        return res.success("Notifications set as read successfully");
+    } catch (err) {
+        console.error(err);
+        return res.serverError();
+    }
+});
 
 router.get('/:id(\\d+$)', async (req, res) => {
     try {
@@ -488,3 +530,87 @@ router.delete('/:taskId/reminders/:reminderId', async (req, res) => {
         return res.serverError();
     }
 });
+
+/**
+ * NOTIFICATIONS
+ */
+
+/* router.get("/:taskId/notifications/:notificationId", async (req, res) => {
+    try {
+        const { first: notification } = await query<TaskNotification>(`
+            SELECT
+                task_notification.id,
+                task.user_id as "userId",
+                task_notification.task_reminder_id as "taskReminderId",
+                task_notification.message,
+                task_notification.is_read as "isRead",
+                task_notification.created_at as "createdAt"
+            FROM public.task_notification
+            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
+            INNER JOIN public.task ON task.id = task_reminder.task_id
+            WHERE task_notification.id = $1 AND task.user_id = $2 AND task_reminder.task_id = $3
+            LIMIT 1;
+        `, [req.params.notificationId, req.userId, req.params.taskId]);
+
+        if (!notification) {
+            return res.notFoundError("Notification not found");
+        }
+
+        return res.success("Notification retrieved successfully", notification);
+    } catch (err) {
+        console.error(err);
+        return res.serverError();
+    }
+});
+
+router.get("/:taskId/notifications", async (req, res) => {
+    try {
+        const { rows: notifications } = await query<TaskNotification>(`
+            SELECT
+                task_notification.id,
+                task.user_id as "userId",
+                task_notification.task_reminder_id as "taskReminderId",
+                task_notification.message,
+                task_notification.is_read as "isRead",
+                task_notification.created_at as "createdAt"
+            FROM public.task_notification
+            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
+            INNER JOIN public.task ON task.id = task_reminder.task_id
+            WHERE task.user_id = $1 AND task.id = $2;
+        `, [req.userId, ]);
+
+        return res.success("Notifications retrieved successfully", notifications);
+    } catch (err) {
+        console.error(err);
+        return res.serverError();
+    }
+});
+
+router.post("/:taskId/notifications", async (req, res) => {
+    try {
+        const { taskReminderId, message } = req.body;
+
+        const { first: notification } = await query<TaskNotification>(`
+            WITH new_notification AS (
+                INSERT INTO public.task_notification (task_reminder_id, message)
+                VALUES ($1, $2)
+                RETURNING *
+            )
+            SELECT
+                new_notification.id,
+                task.user_id as "userId",
+                new_notification.task_reminder_id as "taskReminderId",
+                new_notification.message,
+                new_notification.is_read as "isRead",
+                new_notification.created_at as "createdAt"
+            FROM new_notification
+            INNER JOIN public.task_reminder ON task_reminder.id = new_notification.task_reminder_id
+            INNER JOIN public.task ON task.id = task_reminder.task_id;
+        `, [taskReminderId, message]);
+
+        return res.success("Notification added successfully", notification);
+    } catch (err) {
+        console.error(err);
+        return res.serverError();
+    }
+}); */

@@ -1,1 +1,1 @@
-<div class="w-full h-[1px] bg-neutral-100 {$$restProps['class'] || ''}"></div>
+<div class="relative w-full min-h-[1px] bg-neutral-100 {$$restProps['class'] || ''}"></div>

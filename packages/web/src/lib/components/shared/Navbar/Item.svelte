@@ -17,7 +17,7 @@ Renders a link for the floating menu.
 -->
 
 <li
-    class="relative flex h-[50px] w-full items-center justify-center
+    class="relative flex w-full items-center justify-center h-[50px]
             border-x border-t border-gray-400 first-of-type:rounded-t-md
             last-of-type:rounded-b-md last-of-type:border-b"
 >

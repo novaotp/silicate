@@ -38,3 +38,14 @@ export const verify = async (token: string): Promise<CustomJWTPayload> => {
     
     return verified.payload as CustomJWTPayload;
 };
+
+/** Authenticates a JWT. */
+export const authenticate = async (jwt: string): Promise<number | null> => {
+    try {
+        const userId = (await verify(jwt)).payload.userId;
+
+        return userId;
+    } catch {
+        return null;
+    }
+}

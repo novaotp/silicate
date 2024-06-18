@@ -44,5 +44,14 @@ CREATE TABLE public.task_reminder (
     time TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT fk_task_reminder_task FOREIGN KEY (task_id) REFERENCES public.task (id)
+    CONSTRAINT fk_task_reminder_task FOREIGN KEY (task_id) REFERENCES public.task (id) ON DELETE CASCADE
+);
+
+CREATE TABLE public.task_notification (
+    id SERIAL NOT NULL PRIMARY KEY,
+    task_reminder_id INT NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_task_notification_task_reminder FOREIGN KEY (task_reminder_id) REFERENCES public.task_reminder (id) ON DELETE CASCADE
 );
