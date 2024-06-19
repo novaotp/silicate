@@ -4,13 +4,20 @@ import { query } from './database/utils';
 type ReminderWithUserId = Reminder & { userId: number; taskTitle: string };
 
 // Get reminders that should receive notifications now
-// aka when the minutes are the same.
+// aka when the diff is less than 60s.
 export const getTaskReminders = async (): Promise<ReminderWithUserId[]> => {
     const { rows: reminders } = await query<ReminderWithUserId>(`
-        SELECT task_reminder.id, task.user_id as "userId", task.title as "taskTitle", task_reminder.task_id as "taskId", task_reminder.time
+        SELECT 
+            task_reminder.id, 
+            task.user_id AS "userId", 
+            task.title AS "taskTitle", 
+            task_reminder.task_id AS "taskId", 
+            task_reminder.time
         FROM public.task_reminder
         INNER JOIN public.task ON task.id = task_reminder.task_id
-        WHERE DATE_TRUNC('minute', time) = DATE_TRUNC('minute', NOW());
+        LEFT JOIN public.task_notification ON task_notification.task_reminder_id = task_reminder.id
+        WHERE task_notification.task_reminder_id IS NULL AND
+              ABS(EXTRACT(EPOCH FROM (NOW() - task_reminder.time))) < 60;
     `);
 
     return reminders;
