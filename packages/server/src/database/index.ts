@@ -1,7 +1,5 @@
 import pg from 'pg';
  
-console.log(`[Postgres] Running on port ${process.env.DB_PORT}`);
-
 export const db = new pg.Pool({
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
