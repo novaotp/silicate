@@ -8,6 +8,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'$libs': '../libs',
+            '$utils': './src/lib/utils',
 		}
 	}
 };

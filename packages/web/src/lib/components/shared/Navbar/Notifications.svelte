@@ -14,6 +14,7 @@
 
     export let notificationButtonNode: HTMLButtonElement;
     export let show: boolean;
+    export let showMenu: boolean;
 
     const jwt = getContext<string>("jwt");
     const taskNotifications = getContext<Writable<TaskNotification[]>>('taskNotifications');
@@ -51,7 +52,7 @@
 
 {#if show}
     <article
-        class="fixed top-20 md:top-auto md:bottom-[10px] md:left-[90px] w-[calc(100%-40px)] mx-auto md:max-w-[400px] max-h-[600px] flex flex-col z-[200] rounded-lg bg-white shadow-[0_0_8px_8px_rgba(0,0,0,0.1)]"
+        class="fixed top-20 md:top-auto md:bottom-[10px] {showMenu ? "md:left-[210px]" : "md:left-[90px]"} w-[calc(100%-40px)] mx-auto md:max-w-[400px] max-h-[600px] flex flex-col z-[200] rounded-lg bg-white shadow-[0_0_8px_8px_rgba(0,0,0,0.1)]"
         use:clickOutside={{ avoid: [notificationButtonNode] }}
         on:emit={() => (show = false)}
         transition:fly={{ y: 50 }}

@@ -6,8 +6,14 @@
     import type { PageData } from './$types';
     import { page } from '$app/stores';
     import { PUBLIC_APP_NAME } from '$env/static/public';
+    import { Select } from '$lib/ui';
 
     export let data: PageData;
+
+    let tabs = [
+        { value: '', label: 'Actives' },
+        { value: 'archives', label: 'Archivées' }
+    ];
 
     $: currentTab = $page.url.searchParams.get('tab') ?? '';
     $: archived = $page.url.searchParams.get('tab') === 'archives';
@@ -80,12 +86,13 @@
                         <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
                             <h1 class="self-start text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
                             <div class="relative h-full w-full md:w-auto flex gap-5 items-center">
-                                <div class="hidden md:block h-full">
-                                    <select class="relative h-full px-5 rounded">
-                                        <option selected={currentTab === ""} on:click={() => changeTab('')}>Actives</option>
-                                        <option selected={currentTab === "archives"} on:click={() => changeTab('archives')}>Archivées</option>
-                                    </select>
-                                </div>
+                                <Select
+                                    items={tabs}
+                                    on:change={(event) => changeTab(event.detail)}
+                                    class="hidden md:flex"
+                                >
+                                    {tabs.find(tab => tab.value === currentTab)?.label}
+                                </Select>
                                 <Search />
                                 <div class="hidden md:block h-full">
                                     <AddTask />

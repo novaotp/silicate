@@ -40,7 +40,7 @@
     />
 </svelte:head>
 
-<form method="POST" class="relative mb-5 flex w-[70%] flex-col overflow-x-hidden xl:hidden" use:enhance={registerEnhance}>
+<form method="POST" class="relative mb-5 flex w-full flex-col overflow-x-hidden xl:hidden" use:enhance={registerEnhance}>
     <Switcher>
         <svelte:fragment slot="names">
             <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />

@@ -39,10 +39,10 @@
 
 <form
     method="POST"
-    class="relative mb-5 flex w-[70%] max-w-[500px] flex-col justify-center items-center overflow-x-hidden gap-10 px-[2px]"
+    class="relative mb-5 flex w-full max-w-[500px] flex-col justify-center items-center overflow-x-hidden gap-10"
     use:enhance={loginEnhance}
 >
-    <div class="flex flex-col gap-5">
+    <div class="relative w-full flex flex-col gap-5 px-0.5">
         <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
         <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
     </div>

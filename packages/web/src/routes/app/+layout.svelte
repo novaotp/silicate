@@ -16,16 +16,19 @@
 
     onMount(async () => {
         if (data.message) {
-            addToast({ type: "info", message: data.message });
-            goto("/auth/login");
+            addToast({ type: 'info', message: data.message });
+            goto('/auth/login');
         }
 
         await initSocket(data.jwt!);
 
-        socket?.on("new_notifications", (notifications: TaskNotification[]) => {
-            $taskNotifications = [...$taskNotifications, ...notifications].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+        socket?.on('new_notifications', (notifications: TaskNotification[]) => {
+            $taskNotifications = [...$taskNotifications, ...notifications]
+            $taskNotifications = $taskNotifications.sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
         });
-    })
+    });
 </script>
 
 <div class="relative h-full w-full flex flex-col md:flex-row">

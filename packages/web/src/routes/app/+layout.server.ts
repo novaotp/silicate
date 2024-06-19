@@ -17,7 +17,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 
         return {
             // @ts-expect-error Lazy to check if it worked or not.
-            taskNotifications: (await getTaskNotifications(jwt)).data,
+            taskNotifications: (await getTaskNotifications(jwt)).data as TaskNotification[],
             jwt: jwt,
             user: userResult.data
         }

@@ -140,7 +140,7 @@
             {/if}
         </button>
         <form method="post" action="?/destroy" use:enhance={destroyEnhance}>
-            <Button.Danger variant="tertiary" class="px-0 h-14 border-0 rounded-none flex justify-start items-center gap-5">
+            <Button.Danger variant="tertiary" class="px-0 py-0 h-full border-0 rounded-none flex justify-start items-center gap-5">
                 <IconTrash />
             </Button.Danger>
         </form>

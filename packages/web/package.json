@@ -1,6 +1,6 @@
 {
 	"name": "silicate",
-	"version": "0.11.0",
+	"version": "0.11.1",
 	"private": true,
 	"author": "Sajidur Rahman",
 	"type": "module",
@@ -57,7 +57,11 @@
 		"@tiptap/extension-underline": "^2.4.0",
 		"@tiptap/pm": "^2.4.0",
 		"@tiptap/starter-kit": "^2.4.0",
+		"bits-ui": "^0.21.10",
+		"clsx": "^2.1.1",
+		"lucide-svelte": "^0.395.0",
 		"marked": "^12.0.2",
-		"socket.io-client": "^4.7.5"
+		"socket.io-client": "^4.7.5",
+		"tailwind-merge": "^2.3.0"
 	}
 }
