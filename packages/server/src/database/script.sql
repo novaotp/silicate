@@ -7,6 +7,8 @@ CREATE TABLE public.user (
     last_name VARCHAR(60) NOT NULL,
     email VARCHAR(80) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    bio TEXT NOT NULL DEFAULT '',
+    avatar_path VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

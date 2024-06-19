@@ -15,6 +15,14 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
+    /** A base64-encoded image. */
+    avatar: string | null,
+    bio: string,
     /** A parsable date. */
     joinedOn: string,
+}
+
+export type UserWithAvatarPath = Omit<User, "avatar"> & {
+    /** The relative path to the avatar in the server. */
+    avatarPath: string | null
 }

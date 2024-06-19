@@ -28,7 +28,7 @@ export async function query<T>(statement: string, values: unknown[] = []): Promi
             first: rows.length > 0 ? rows.at(0) : null
         };
     } catch (err) {
-        console.error("An error occurred : ", err);
+        console.error("An error occurred whilst querying the database : ", err);
     } finally {
         if (client) {
             client.release();

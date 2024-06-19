@@ -1,13 +1,25 @@
 import multer, { diskStorage } from 'multer';
 
-// Set up storage for uploaded files
+/** @deprecated Use {@link taskStorage} instead. */
 const storage = diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads/');
+        cb(null, 'public/uploads/tasks');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
+const taskStorage = storage;
+/** @deprecated Use {@link taskUploads} instead. */
+export const upload = multer({ storage: taskStorage });
+export const taskUpload = upload;
 
-export const upload = multer({ storage });
+const avatarStorage = diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/avatars');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+export const avatarUpload = multer({ storage: avatarStorage });
