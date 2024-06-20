@@ -43,15 +43,9 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.put('/', avatarUpload.single("avatar"), async (req, res) => {
+router.put('/', async (req, res) => {
     try {
         const { firstName, lastName, email, password, bio } = req.body;
-        const avatar = req.file;
-
-        let avatarPath: string | null = null;
-        if (avatar) {
-            avatarPath = avatar.path;
-        }
 
         await query(`
             UPDATE public.user
@@ -59,11 +53,10 @@ router.put('/', avatarUpload.single("avatar"), async (req, res) => {
                 last_name = $2,
                 email = $3,
                 password = $4,
-                avatar_path = $5,
-                bio = $6,
-                updated_at = $7,
-            WHERE id = $8;
-        `, [firstName, lastName, email, await hash(password, 15), avatarPath, bio, new Date(), req.userId]);
+                bio = $5,
+                updated_at = $6,
+            WHERE id = $7;
+        `, [firstName, lastName, email, await hash(password, 15), bio, new Date(), req.userId]);
 
         return res.success("User updated successfully");
     } catch (err) {
@@ -82,6 +75,40 @@ router.delete('/', async (req, res) => {
         return res.success("User deleted successfully");
     } catch (err) {
         console.error(`Something went wrong whilst deleting a user : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.put('/avatar', avatarUpload.single("avatar"), async (req, res) => {
+    try {
+        const avatar = req.file;
+
+        await query(`
+            UPDATE public.user
+            SET avatar_path = $1
+            WHERE id = $2;
+        `, [avatar!.path, req.userId]);
+
+        const avatarData = await avatarPathToBase64(avatar!.path);
+
+        return res.success("User avatar updated successfully", avatarData);
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a user's avatar : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.delete('/avatar', async (req, res) => {
+    try {
+        await query(`
+            UPDATE public.user
+            SET avatar_path = NULL
+            WHERE id = $1;
+        `, [req.userId]);
+
+        return res.success("User avatar deleted successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst deleting a user's avatar : ${err.message}`);
         return res.serverError();
     }
 });

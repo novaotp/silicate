@@ -37,7 +37,7 @@
             data.append('attachments', file, `${filename}.${extension}`)
         }
 
-        addToast({ type: "info", message: "Téléchargement des ressources" });
+        addToast({ type: "info", message: "Téléchargement des fichiers" });
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment`, {
             method: 'POST',
@@ -56,7 +56,7 @@
 
         attachments = [...attachments, ...result.data];
         value = JSON.stringify(attachments);
-        addToast({ type: "success", message: "Ressources téléchargées" })
+        addToast({ type: "success", message: "Fichiers téléchargées" })
     };
 
     const deleteAttachment = async (event: CustomEvent<string>) => {
@@ -76,7 +76,7 @@
 
         attachments = attachments.filter(a => a.name !== event.detail);
         value = JSON.stringify(attachments);
-        addToast({ type: "success", message: "Ressource supprimée avec succès" })
+        addToast({ type: "success", message: "Fichier supprimé avec succès" })
     };
 </script>
 

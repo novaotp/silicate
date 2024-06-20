@@ -1,7 +1,36 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
     import { PUBLIC_APP_NAME } from '$env/static/public';
-    import { Button } from '$lib/ui';
+    import { Account, Billing, type Tab } from '$components/settings';
+    import { FullScreen, Tabs } from '$lib/ui';
+    import { changeSearchParams } from '$utils/change-search-params';
+    import { page } from '$app/stores';
+    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
+    import IconUser from "@tabler/icons-svelte/IconUser.svelte";
+    import IconReceipt2 from "@tabler/icons-svelte/IconReceipt2.svelte";
+
+    // The view will considerably differ
+    // between desktop and mobile users.
+    let clientWidth: number;
+    let tabs: Tab[] = [
+        {
+            icon: IconUser,
+            label: "Mon Profil",
+            slug: "my-profile",
+            component: Account
+        },
+        {
+            icon: IconReceipt2,
+            label: "Paiements",
+            slug: "billing",
+            component: Billing
+        }
+    ];
+
+    $: currentTab = $page.url.searchParams.get("tab");
+
+    const getComponentBySlug = (slug: string) => {
+        return tabs.find(tab => tab.slug === slug)!.component;
+    }
 </script>
 
 <svelte:head>
@@ -13,6 +42,34 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full flex flex-col justify-center items-center">
-    <Button.Danger variant="primary" on:click={() => goto('/auth/logout')}>Déconnexion</Button.Danger>
+<main class="relative w-full h-full flex flex-col justify-start items-start px-5 md:py-5 gap-5 md:gap-20" bind:clientWidth>
+    <h1>Mon compte</h1>
+    {#if clientWidth > 600}
+        <Tabs {tabs} on:change={(event) => changeSearchParams("tab", event.detail)} />
+    {:else}
+        <div class="rleative w-full flex flex-col divide-y-[1px] divide-neutral-100">
+            {#each tabs as { icon, label, slug }}
+                <button
+                    on:click={() => changeSearchParams("tab", slug)}
+                    class="relative w-full h-[50px] flex justify-start items-center gap-5"
+                >
+                    <svelte:component this={icon} />
+                    <span>{label}</span>
+                </button>
+            {/each}
+        </div>
+        {#if currentTab}
+            {@const component = getComponentBySlug(currentTab)}
+            <FullScreen.Modal>
+                <header class="relative flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+                    <button class="rounded-full" on:click={() => changeSearchParams("tab", null)}>
+                        <IconChevronLeft />
+                    </button>
+                </header>
+                <div class="relative w-full flex-grow flex justify-start items-start px-5 pb-5">
+                    <svelte:component this={component} />
+                </div>
+            </FullScreen.Modal>
+        {/if}
+    {/if}
 </main>

@@ -16,6 +16,9 @@
     import type { TaskNotification } from '$libs/models/Task';
     import type { Writable } from 'svelte/store';
     import Notifications from './Notifications.svelte';
+    import Avatar from '../Avatar.svelte';
+    import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
 
     let showMenu: boolean = false;
     let showNotifications: boolean = false;
@@ -31,20 +34,25 @@
         <button on:click={() => (showMenu = true)} class="relative h-full flex justify-center items-center">
             <MenuIcon />
         </button>
-        <button
-            class="relative flex flex-col h-full min-w-10 items-center justify-evenly gap-1 p-2 text-center rounded-md
-                    bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm"
-            on:click={() => (showNotifications = true)}
-            bind:this={notificationButtonNode}
-        >
-            <IconBell />
-            {#if unreadTaskNotificationsCount > 0}
-                <span class="absolute top-0 right-0 size-5 flex justify-center items-center rounded-full bg-accent-danger-500 text-xs text-white">
-                    {unreadTaskNotificationsCount}
-                </span>
-            {/if}
-        </button>
-        <Notifications bind:show={showNotifications} bind:notificationButtonNode showMenu={false} />
+        <div class="relative h-full flex justify-center items-center gap-5">
+            <button
+                class="relative flex flex-col h-full min-w-10 items-center justify-evenly gap-1 p-2 text-center rounded-md
+                        bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm"
+                on:click={() => (showNotifications = true)}
+                bind:this={notificationButtonNode}
+            >
+                <IconBell />
+                {#if unreadTaskNotificationsCount > 0}
+                    <span class="absolute top-0 right-0 size-5 flex justify-center items-center rounded-full bg-accent-danger-500 text-xs text-white">
+                        {unreadTaskNotificationsCount}
+                    </span>
+                {/if}
+            </button>
+            <Notifications bind:show={showNotifications} bind:notificationButtonNode showMenu={false} />
+            <button on:click={() => goto("/app/settings")}>
+                <Avatar class="h-10 aspect-square" />
+            </button>
+        </div>
     </nav>
     {#if showMenu}
         <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (showMenu = false)}>
@@ -60,7 +68,6 @@
                     <Item on:close={() => (showMenu = false)} href="/app/memos" label="Mémos" icon={MemoIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/tasks" label="Tâches" icon={TaskIcon} />
                     <Item on:close={() => (showMenu = false)} href="/app/mark-books" label="Carnets de notes" icon={GradeIcon} />
-                    <Item on:close={() => (showMenu = false)} href="/app/settings" label="Paramètres" icon={IconSettings} />
                 </menu>
             </Card>
         </FullScreen.Backdrop>
@@ -106,6 +113,28 @@
             </button>
             <Notifications bind:show={showNotifications} {notificationButtonNode} {showMenu} />
         </li>
-        <DesktopItem href="/app/settings" label="Paramètres" icon={IconSettings} on:click={() => (showMenu = false)} />
+        <li class="relative flex w-full max-h-10 items-center justify-center">
+            <a
+                href="/app/settings"
+                on:click={() => (showMenu = false)}
+                class="link group relative flex h-full w-full items-center justify-start text-center text-sm overflow-hidden"
+                class:current={$page.url.pathname === "/app/settings"}
+            >
+                <span class="relative min-w-20 max-w-20 h-full min-h-10 flex justify-center items-center">
+                    <Avatar class="h-full aspect-square" initialsClass="text-sm" />
+                </span>
+                <span class="group-hover:text-primary-600">Paramètres</span>
+            </a>
+        </li>
     </ul>
 </nav>
+
+<style lang="postcss">
+    .current {
+        @apply text-primary-600;
+    }
+
+    .current::before {
+        @apply content-[""] absolute top-0 left-[1px] w-[2px] h-full bg-primary-600;
+    }
+</style>
