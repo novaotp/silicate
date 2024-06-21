@@ -2,7 +2,6 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { BACKEND_URL } from '$env/static/private';
 import type { ApiResponse } from '$libs/types/ApiResponse';
-import type { LoginResponse } from '$libs/types/AuthResponse';
 
 export const load: PageServerLoad = async ({ cookies, locals }) => {
     // The user wasn't previously connected
@@ -33,7 +32,7 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
 };
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ locals, request, cookies }) => {
 		const data = await request.formData();
 
 		const email = data.get("email")?.toString();
@@ -54,13 +53,16 @@ export const actions = {
 					"content-type": "application/json"
 				}
 			});
-			const result: LoginResponse = await response.json();
+			const result: ApiResponseWithData<{ jwt: string, expires: number }> = await response.json();
 
 			if (!result.success) {
 				return fail(422, { email, message: "Données erronées." });
 			}
 
-			cookies.set("id", result.jwt, { httpOnly: false, secure: false, path: "/", expires: new Date(result.expires) });
+            const { jwt, expires } = result.data;
+
+			cookies.set("id", jwt, { httpOnly: false, secure: false, path: "/", expires: new Date(expires) });
+            locals.jwt = jwt;
 		} catch (err) {
 			console.error(`Something went wrong whilst login a user : ${(err as Error).message}`)
 			return fail(422, { email, message: "Une erreur est survenue." });
