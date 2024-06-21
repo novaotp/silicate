@@ -55,7 +55,7 @@ router.put('/', async (req, res) => {
                 last_name = $2,
                 email = $3,
                 bio = $4,
-                updated_at = $5,
+                updated_at = $5
             WHERE id = $6;
         `, [firstName, lastName, email, bio, new Date(), req.userId]);
 
