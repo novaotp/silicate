@@ -11,8 +11,8 @@
 
     const colorClasses = {
         "primary": "text-neutral-50 bg-accent-danger-500",
-        "secondary": "text-accent-danger-500 bg-accent-danger-50 border border-accent-danger-500",
-        "tertiary": "text-neutral-500"
+        "secondary": "text-accent-danger-500 bg-accent-danger-50",
+        "tertiary": "text-accent-danger-500"
     }
 </script>
 

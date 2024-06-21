@@ -52,5 +52,41 @@ export const actions: Actions = {
             console.error(err);
 			return fail(422, { message: "Une erreur est survenue." });
         }
-    }
+    },
+    editPassword: async ({ locals, request }) => {
+        try {
+            const formData = await request.formData();
+            const oldPassword = formData.get("oldPassword")?.toString();
+            const newPassword = formData.get("newPassword")?.toString();
+            const confirmNewPassword = formData.get("confirmNewPassword")?.toString();
+
+            if (!oldPassword || !newPassword || !confirmNewPassword) {
+                return fail(422, { message: "Complétez tous les champs." });
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                return fail(422, { message: "Les nouveaux de mots de passe ne correspondent pas." });
+            }
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/me/password`, {
+                method: 'PUT',
+                body: JSON.stringify({ oldPassword, newPassword }),
+                headers: {
+                    accept: 'application/json',
+                    authorization: locals.jwt!,
+                    "content-type": 'application/json'
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: "L'ancien mot de passe ne correspond pas à celui qui a été donné." });
+            }
+
+            return { message: "Ton mot de passe a été modifié avec succès." }
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    },
 };

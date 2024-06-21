@@ -2,12 +2,13 @@ import { redirect } from '@sveltejs/kit';
 
 export const handle = async ({ resolve, event }) => {
     event.locals.jwt = event.cookies.get("id");
+    const pathname = event.url.pathname;
 
-    if (event.url.pathname === "/" && event.locals.jwt) {
+    if (pathname === "/" && event.locals.jwt) {
         throw redirect(303, "/app");
     }
 
-    if (event.url.pathname.startsWith("/app") && !event.locals.jwt) {
+    if (pathname.startsWith("/app") && !event.locals.jwt) {
         throw redirect(303, "/auth/login");
     }
 

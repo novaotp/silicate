@@ -48,4 +48,4 @@
     </div>
     <Submit label="Connexion" />
 </form>
-<AlternativeLink text="T'as pas encore de compte ?" href="/auth/register" label="Crées-en un" />
+<AlternativeLink text="T'as pas encore de compte ?" href="/register" label="Crées-en un" />

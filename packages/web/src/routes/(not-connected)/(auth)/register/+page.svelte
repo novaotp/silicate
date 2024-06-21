@@ -5,7 +5,7 @@
     import Switcher from '$lib/components/auth/Switcher.svelte';
     import Submit from '$lib/components/auth/Submit.svelte';
     import { PUBLIC_APP_NAME } from '$env/static/public';
-    import { applyAction, enhance } from '$app/forms';
+    import { enhance } from '$app/forms';
     import { addToast } from '$lib/stores/toast';
     import { goto } from '$app/navigation';
 
@@ -19,12 +19,12 @@
 
     const registerEnhance: SubmitFunction = () => {
         return async ({ result }) => {
-            await applyAction(result);
             if (result.type === "failure") {
                 addToast({ type: 'error', message: result.data!.message });
                 password = '';
                 confirmPassword = '';
             } else if (result.type === "redirect") {
+                addToast({ type: 'success', message: "Compte créé avec succès." });
                 goto(result.location);
             }
         };
@@ -59,13 +59,13 @@
         </svelte:fragment>
     </Switcher>
 </form>
-<form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center overflow-x-hidden hidden xl:flex" use:enhance={registerEnhance}>
-    <div class="relative flex flex-col gap-5">
+<form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center gap-5 px-0.5 overflow-x-hidden hidden xl:flex" use:enhance={registerEnhance}>
+    <div class="relative w-full flex gap-5">
         <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
         <Input label="Nom de famille" placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} />
     </div>
     <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
-    <div class="flex gap-5">
+    <div class="relative w-full flex gap-5">
         <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
         <Input
             label="Confirmer le mot de passe"
@@ -79,4 +79,4 @@
         <Submit label="Créer mon compte" />
     </div>
 </form>
-<AlternativeLink text="T'as déjà un compte ?" href="/auth/login" label="Connecte-toi" />
+<AlternativeLink text="T'as déjà un compte ?" href="/login" label="Connecte-toi" />

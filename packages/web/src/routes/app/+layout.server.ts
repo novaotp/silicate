@@ -4,26 +4,26 @@ import { BACKEND_URL } from "$env/static/private";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import type { TaskNotification } from "$libs/models/Task";
 
-export const load: LayoutServerLoad = async ({ cookies }) => {
-    const jwt = cookies.get("id")!;
-
+export const load: LayoutServerLoad = async ({ cookies, locals }) => {
     try {
-        const userResult = await getUser(jwt);
+        const userResult = await getUser(locals.jwt!);
 
         if (!userResult.success) {
             cookies.delete("id", { path: "/" });
+            locals.jwt = undefined;
             return { message: userResult.message };
         }
 
         return {
             // @ts-expect-error Lazy to check if it worked or not.
-            taskNotifications: (await getTaskNotifications(jwt)).data as TaskNotification[],
-            jwt: jwt,
+            taskNotifications: (await getTaskNotifications(locals.jwt!)).data as TaskNotification[],
+            jwt: locals.jwt!,
             user: userResult.data
         }
     } catch (err) {
         console.error(err)
         cookies.delete("id", { path: "/" });
+        locals.jwt = undefined;
         return { message: "Une erreur est survenue." };
     }
 };

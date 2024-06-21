@@ -45,6 +45,6 @@ export const actions = {
 			return fail(422, { firstName, lastName, email, message: "Une erreur est survenue." });
 		}
 
-		throw redirect(303, "/auth/login");
+		throw redirect(303, "/login");
 	},
 } satisfies Actions;

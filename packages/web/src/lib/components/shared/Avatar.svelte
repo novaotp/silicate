@@ -6,7 +6,7 @@
     export let initialsClass: string = "";
 
     const user = getContext<Writable<User>>('user');
-    const bgColor = getRandomColor();
+    const bgColor = stringToColor($user.email);
 
     let initials: string;
     $: initials = getInitials($user);
@@ -21,14 +21,25 @@
             .toUpperCase();
     };
 
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
+    // A deterministic approach to the background color
+    function stringToColor(str: string) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            // Shifts the hash value to the left by 5 bits
+            // Equivalent to multiplying by 32 (2^5) 
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
 
         let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+        for (let i = 0; i < 3; i++) {
+            // hash >> (i * 8) : Shifts the hash value to the right by i bits
+            // & OxFF : bitwise operation to get last 8 bits -> 0 to 255 value
+            // This ensures that each rgb part stays between 0 and 255
+            // Then convert to hex
+            const value = (hash >> (i * 8)) & 0xFF;
+            color += ('00' + value.toString(16)).slice(-2);
         }
-        
+
         return color;
     }
 </script>

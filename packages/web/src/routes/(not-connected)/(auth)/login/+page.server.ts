@@ -4,17 +4,15 @@ import { BACKEND_URL } from '$env/static/private';
 import type { ApiResponse } from '$libs/types/ApiResponse';
 import type { LoginResponse } from '$libs/types/AuthResponse';
 
-export const load: PageServerLoad = async ({ cookies }) => {
-	const jwt = cookies.get("id");
-
-	if (!jwt) {
-		return;
-	}
+export const load: PageServerLoad = async ({ cookies, locals }) => {
+    // The user wasn't previously connected
+    // No need to try to redirect him
+	if (!locals.jwt) return;
 
 	try {
 		const response = await fetch(`${BACKEND_URL}/auth/validate`, {
 			method: "POST",
-			body: JSON.stringify({ jwt }),
+			body: JSON.stringify({ jwt: locals.jwt }),
 			headers: {
 				"content-type": "application/json"
 			}
@@ -23,6 +21,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 		if (!success) {
 			cookies.delete("id", { path: "/" });
+            locals.jwt = undefined;
 			return;
 		}
 	} catch (err) {

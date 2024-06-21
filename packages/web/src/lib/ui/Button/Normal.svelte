@@ -9,8 +9,8 @@
 
     const colorClasses = {
         "primary": "text-neutral-50 bg-primary-600",
-        "secondary": "text-primary-600 bg-primary-50 border border-primary-600",
-        "tertiary": ""
+        "secondary": "text-primary-600 bg-primary-100",
+        "tertiary": "text-primary-600"
     }
 </script>
 

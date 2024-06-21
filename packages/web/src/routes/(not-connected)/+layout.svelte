@@ -15,7 +15,7 @@
             </Button.Normal>
         </div>
     </nav>
-    <div class="relative flex-grow max-w-[1080px] h-[calc(100%-80px)] p-5 md:p-0 md:h-full flex flex-col">
+    <div class="relative flex-grow max-w-[1080px] h-[calc(100%-80px)] p-5 md:p-0 md:h-full flex flex-col justify-center items-center">
         <slot />
     </div>
 </div>
