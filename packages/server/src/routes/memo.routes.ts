@@ -61,13 +61,13 @@ router.post('/', async (req, res) => {
     try {
         const { category, title, content, pinned } = req.body;
 
-        const { first: id } = await query<{ id: number }>(`
+        const { first } = await query<{ id: number }>(`
             INSERT INTO public.memo (user_id, category, title, content, pinned)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING id;
         `, [await userIdFromAuthHeader(req), category, title, content, pinned]);
 
-        return res.success("Memo created successfully", id);
+        return res.success("Memo created successfully", first!.id);
     } catch (err) {
         console.error(`Something went wrong whilst creating a memo : ${err.message}`);
         return res.serverError();
