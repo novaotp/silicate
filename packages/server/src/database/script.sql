@@ -22,7 +22,7 @@ CREATE TABLE public.memo (
     pinned BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES public.user (id)
+    CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE public.task (
@@ -37,7 +37,7 @@ CREATE TABLE public.task (
     archived BOOLEAN NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES public.user (id)
+    CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE public.task_reminder (
