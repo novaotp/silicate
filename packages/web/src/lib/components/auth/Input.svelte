@@ -16,7 +16,7 @@ A custom controlled input field with a label on top.
 -->
 
 <div class="relative flex w-full flex-col gap-[10px]">
-    <label for={name} class="text-neutral-500">
+    <label for={name} class="text-neutral-950">
         {label}
     </label>
     <input

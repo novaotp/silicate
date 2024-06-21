@@ -1,6 +1,7 @@
 <script lang="ts">
     export let variant: "primary" | "secondary" | "tertiary" = "primary";
     export let size: "small" | "medium" = "medium";
+    export let type: "button" | "submit" = "button";
 
     const sizeClasses = {
         "small": "px-3 py-1 text-sm",
@@ -14,6 +15,6 @@
     }
 </script>
 
-<button class="relative rounded {sizeClasses[size]} {colorClasses[variant]} {$$restProps['class'] || ''}" on:click>
+<button {type} class="relative rounded {sizeClasses[size]} {colorClasses[variant]} {$$restProps['class'] || ''}" on:click>
     <slot />
 </button>

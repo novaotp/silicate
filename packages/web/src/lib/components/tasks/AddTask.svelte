@@ -28,7 +28,7 @@
 </script>
 
 <form method="post" action="?/create" use:enhance={createTaskEnhance} class="relative bottom-[30px] md:bottom-auto h-[60px] w-[60px] md:h-full md:aspect-auto rounded-full md:rounded md:w-auto flex justify-center items-center z-30">
-    <Button.Normal class="relative rounded-full md:rounded w-full h-full flex justify-center items-center gap-5">
+    <Button.Normal type="submit" class="relative rounded-full md:rounded w-full h-full flex justify-center items-center gap-5">
         <IconPlus class="min-w-5 min-h-5" />
         <span class="hidden md:block whitespace-nowrap">Ajouter une tâche</span>
     </Button.Normal>

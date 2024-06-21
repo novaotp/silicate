@@ -62,8 +62,6 @@
                 if (result.type === 'failure' && result.data && typeof result.data.message === 'string') {
                     reminders = [...reminders, reminder]
                     return addToast({ type: 'error', message: result.data.message });
-                } else if (result.type === 'success' && result.data) {
-                    reminders = reminders.filter((r) => r.id !== reminder.id);
                 }
             };
         };
@@ -79,26 +77,28 @@
             <h3>Rappels</h3>
         </div>
         <form method="POST" action="?/createReminder" use:enhance={createReminderEnhance}>
-            <Button.Normal variant="primary" size="small">Ajouter</Button.Normal>
+            <Button.Normal variant="primary" size="small" type="submit">Ajouter</Button.Normal>
         </form>
     </div>
     <ul class="relative w-full flex flex-col gap-[10px]">
-        {#each reminders as reminder}
-            <li class="relative h-[50px] w-full flex gap-5">
-                <button on:click={() => (selectedReminderId = reminder.id)} class="relative w-full h-full bg-neutral-100 rounded">
-                    {new Date(reminder.time).toLocaleString('fr-CH')}
-                </button>
-                <form method="POST" action="?/destroyReminder" use:enhance={destroyReminderEnhanceWrapper(reminder)}>
-                    <Button.Danger variant="primary" size="small" class="h-full">
-                        <IconTrash />
-                    </Button.Danger>
-                </form>
-            </li>
-        {/each}
+        {#key reminders}
+            {#each reminders as reminder}
+                <li class="relative h-[50px] w-full flex gap-5">
+                    <button on:click={() => (selectedReminderId = reminder.id)} class="relative w-full h-full bg-neutral-100 rounded">
+                        {new Date(reminder.time).toLocaleString('fr-CH')}
+                    </button>
+                    <form method="POST" action="?/destroyReminder" use:enhance={destroyReminderEnhanceWrapper(reminder)}>
+                        <Button.Danger variant="primary" size="small" class="h-full">
+                            <IconTrash />
+                        </Button.Danger>
+                    </form>
+                </li>
+            {/each}
+        {/key}
     </ul>
     {#if selectedReminderId}
         <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (selectedReminderId = null)}>
-            <Card options={{ y: 50 }} class="bg-transparent p-0">
+            <Card class="bg-transparent p-0">
                 <DatePicker
                     pickerOnly
                     format="dd.mm.yyyy hh:ii"

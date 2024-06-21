@@ -1,6 +1,6 @@
 import type { ComponentType } from 'svelte';
 
-export { default as Account } from './Account.svelte';
+export { default as Account } from './account/Account.svelte';
 export { default as Billing } from './Billing.svelte';
 
 export type Tab = {

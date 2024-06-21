@@ -23,6 +23,7 @@
         formData.set('id', replica.id.toString());
         formData.set('title', replica.title);
         formData.set('content', replica.content);
+        formData.set('pinned', String(replica.pinned));
         if (replica.category) {
             formData.set('category', replica.category);
         }

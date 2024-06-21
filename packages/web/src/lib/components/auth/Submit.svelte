@@ -4,6 +4,6 @@
     export let label: string;
 </script>
 
-<Button.Normal>
+<Button.Normal type="submit">
     {label}
 </Button.Normal>

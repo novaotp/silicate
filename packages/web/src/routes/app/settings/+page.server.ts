@@ -89,4 +89,54 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
         }
     },
+    editAccount: async ({ locals, request }) => {
+        try {
+            const formData = await request.formData();
+            const data = formData.toJSON();
+
+            if (!data.firstName || !data.lastName || !data.email) {
+                return fail(422, { message: "Complétez les champs Prénom, Nom et Email." })
+            }
+
+            const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    accept: 'application/json',
+                    authorization: locals.jwt!,
+                    "content-type": 'application/json'
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+
+            return { message: "Ton compte a été modifié avec succès." }
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    },
+    destroyAccount: async ({ locals }) => {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
+                method: 'DELETE',
+                headers: {
+                    accept: 'application/json',
+                    authorization: locals.jwt!,
+                    "content-type": 'application/json'
+                }
+            });
+            const result: ApiResponse = await response.json();
+
+            if (!result.success) {
+                return fail(422, { message: result.message });
+            }
+        } catch (err) {
+            console.error(err);
+			return fail(422, { message: "Une erreur est survenue." });
+        }
+    }
 };
