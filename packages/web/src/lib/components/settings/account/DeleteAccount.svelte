@@ -7,6 +7,7 @@
     import type { SubmitFunction } from '@sveltejs/kit';
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
+    import IconHeartBroken from "@tabler/icons-svelte/IconHeartBroken.svelte"
 
     const user = getContext<Writable<User>>('user');
 
@@ -28,8 +29,11 @@
     <Button.Danger size="medium" on:click={() => (showDeleteAccount = true)}>Supprimer</Button.Danger>
     {#if showDeleteAccount}
         <FullScreen.Backdrop on:click={() => (showDeleteAccount = false)} class="flex justify-center items-center">
-            <Card class="relative w-[480px] flex flex-col gap-5 justify-center items-center p-10">
-                <h2 class="text-xl font-semibold">Supprimer mon compte</h2>
+            <Card class="relative w-full mx-5 md:max-w-[480px] flex flex-col gap-5 justify-center items-center p-10">
+                <h2 class="flex items-center gap-5">
+                    <IconHeartBroken class="size-10" />
+                    <span class="text-xl font-semibold text-center">Supprimer mon compte</span>
+                </h2>
                 <p class="text-center">Je comprends que cette action est irréversible et que je ne pourrais pas revenir sur ma décision.</p>
                 <form
                     method="post"

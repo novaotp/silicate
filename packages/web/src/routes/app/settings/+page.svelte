@@ -44,7 +44,7 @@
 
 <main class="relative w-full h-full flex flex-col justify-start items-start px-5 md:py-5 gap-5 md:gap-20" bind:clientWidth>
     <h1>Mon compte</h1>
-    {#if clientWidth > 600}
+    {#if clientWidth > 768}
         <Tabs {tabs} on:change={(event) => changeSearchParams("tab", event.detail)} />
     {:else}
         <div class="rleative w-full flex flex-col divide-y-[1px] divide-neutral-100">

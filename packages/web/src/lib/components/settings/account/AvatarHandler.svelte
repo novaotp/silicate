@@ -78,8 +78,8 @@
     {#if avatarFile}
         {#await toBase64(avatarFile) then image}
             <FullScreen.Backdrop on:click={() => (avatarFile = null)} class="flex justify-center items-center">
-                <Card class="relative w-[560px] flex flex-col gap-10 p-10">
-                    <div class="relative w-[480px] h-[300px] mx-auto">
+                <Card class="relative w-full mx-5 sm:max-w-[560px] flex flex-col gap-10 p-5 sm:p-10">
+                    <div class="relative w-full sm:max-w-[480px] h-[300px] mx-auto">
                         <Cropper
                             {image}
                             crop={{ x: 0, y: 0 }}
@@ -92,7 +92,7 @@
                         />
                     </div>
                     <Slider bind:value={zoom} min={1} max={3} step={0.1} class="w-[300px] mx-auto" />
-                    <div class="relative w-full flex justify-between">
+                    <div class="relative w-full flex flex-col sm:flex-row justify-between">
                         <Button.Normal
                             variant="tertiary"
                             on:click={() => {

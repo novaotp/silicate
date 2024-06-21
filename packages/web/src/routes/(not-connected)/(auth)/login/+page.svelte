@@ -7,11 +7,14 @@
     import { applyAction, enhance } from '$app/forms';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import { goto } from '$app/navigation';
+    import { page } from '$app/stores';
 
     export let form: ActionData;
 
     let email: string = form?.email ?? '';
     let password: string = '';
+
+    $: errorMessage = $page.url.searchParams.get("message");
 
     const loginEnhance: SubmitFunction = () => {
         return async ({ result }) => {
@@ -37,6 +40,11 @@
     />
 </svelte:head>
 
+{#if errorMessage}
+    <div role="banner" class="relative rounded-lg mb-5 w-full max-w-[500px] bg-accent-danger-500 text-neutral-50 justify-center items-center px-5 py-2">
+        {errorMessage}
+    </div>
+{/if}
 <form
     method="POST"
     class="relative mb-5 flex w-full max-w-[500px] flex-col justify-center items-center overflow-x-hidden gap-10"

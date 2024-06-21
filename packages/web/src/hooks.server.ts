@@ -19,7 +19,8 @@ export const handle = async ({ resolve, event }) => {
     }
 
     if (pathname.startsWith("/app") && !event.locals.jwt) {
-        throw redirect(303, "/auth/login");
+        const message = "Connectez-vous pour accéder à votre compte.";
+        throw redirect(303, `/login?message=${encodeURIComponent(message)}`);
     }
 
     return resolve(event);

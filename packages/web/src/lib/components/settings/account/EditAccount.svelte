@@ -70,7 +70,7 @@
             name="bio"
             value={replicaUser.bio}
             on:input={(event) => (replicaUser.bio = event.currentTarget.value)}
-            class="relative w-full bg-neutral-100 rounded-lg px-5 h-[150px] text-sm resize-none"
+            class="relative w-full bg-neutral-100 rounded-lg p-5 h-[150px] text-sm resize-none"
         ></textarea>
     </div>
     {#if showSaveChanges}

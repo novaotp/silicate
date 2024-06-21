@@ -3,6 +3,7 @@
     import { addToast } from '$lib/stores/toast';
     import { Button, FullScreen, Card } from '$lib/ui';
     import type { SubmitFunction } from '../../../../routes/app/settings/$types';
+    import IconLock from "@tabler/icons-svelte/IconLock.svelte";
 
     let showPasswordChanger: boolean = false;
 
@@ -23,8 +24,11 @@
     <Button.Normal class="h-full" on:click={() => (showPasswordChanger = true)}>Modifier mon mot de passe</Button.Normal>
     {#if showPasswordChanger}
         <FullScreen.Backdrop on:click={() => (showPasswordChanger = false)} class="flex justify-center items-center">
-            <Card class="relative w-[480px] flex flex-col gap-5 justify-center items-center p-10">
-                <h2 class="text-xl font-semibold">Modifier mon mot de passe.</h2>
+            <Card class="relative w-full mx-5 sm:max-w-[480px] flex flex-col gap-5 justify-center items-center p-10">
+                <h2 class="flex items-center gap-5">
+                    <IconLock class="size-10" />
+                    <span class="text-xl font-semibold text-center">Modifier mon mot de passe.</span>
+                </h2>
                 <p class="text-center">Entre ton mot de passe actuel et le nouveau.</p>
                 <form method="post" action="?/editPassword" class="relative w-full flex flex-col gap-5" use:enhance={editPasswordEnhance}>
                     <div class="relative w-full flex flex-col gap-[10px]">
@@ -56,7 +60,7 @@
                     </div>
                     <div class="relative w-full flex justify-end items-center gap-5">
                         <Button.Normal variant="secondary">Annuler</Button.Normal>
-                        <Button.Normal>Confirmer</Button.Normal>
+                        <Button.Normal type="submit">Confirmer</Button.Normal>
                     </div>
                 </form>
             </Card>
