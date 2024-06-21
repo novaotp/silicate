@@ -105,7 +105,7 @@ router.put('/avatar', avatarUpload.single("avatar"), async (req, res) => {
             UPDATE public.user
             SET avatar_path = $1
             WHERE id = $2;
-        `, [avatar!.path, req.userId]);
+        `, [outputPath, req.userId]);
 
         const avatarData = await avatarPathToBase64(outputPath);
 
