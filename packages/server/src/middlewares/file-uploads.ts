@@ -6,6 +6,7 @@ const storage = diskStorage({
         cb(null, 'public/uploads/tasks');
     },
     filename: (req, file, cb) => {
+        file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
@@ -19,6 +20,7 @@ const avatarStorage = diskStorage({
         cb(null, 'public/uploads/avatars');
     },
     filename: (req, file, cb) => {
+        file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
         cb(null, Date.now() + '-' + file.originalname);
     }
 });

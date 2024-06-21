@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { User, UserWithAvatarPath } from "../../../../libs/models/User";
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { avatarUpload } from "../../middlewares/file-uploads";
 import { query } from "../../database/utils";
 import { avatarPathToBase64 } from "./utils";
+import path from "path";
+import sharp from "sharp";
 
 export const router = Router();
 
@@ -45,18 +47,17 @@ router.get('/', async (req, res) => {
 
 router.put('/', async (req, res) => {
     try {
-        const { firstName, lastName, email, password, bio } = req.body;
+        const { firstName, lastName, email, bio } = req.body;
 
         await query(`
             UPDATE public.user
             SET first_name = $1,
                 last_name = $2,
                 email = $3,
-                password = $4,
-                bio = $5,
-                updated_at = $6,
-            WHERE id = $7;
-        `, [firstName, lastName, email, await hash(password, 15), bio, new Date(), req.userId]);
+                bio = $4,
+                updated_at = $5,
+            WHERE id = $6;
+        `, [firstName, lastName, email, bio, new Date(), req.userId]);
 
         return res.success("User updated successfully");
     } catch (err) {
@@ -81,7 +82,24 @@ router.delete('/', async (req, res) => {
 
 router.put('/avatar', avatarUpload.single("avatar"), async (req, res) => {
     try {
+        const cropArea: { x: number, y: number, width: number, height: number } = JSON.parse(req.body.cropArea);
         const avatar = req.file;
+
+        if (!avatar) {
+            return res.status(418).send({ message: 'No file uploaded.' });
+        }
+
+        const outputFilename = `cropped_${avatar.filename.split(".").at(0)}.${avatar.filename.split(".").at(1)}`;
+        const outputPath = path.join('public\\uploads\\avatars', outputFilename);
+
+        const cropX = Number(cropArea.x.toFixed(10));
+        const cropY = Number(cropArea.y.toFixed(10));
+        const cropWidth = Number(cropArea.width.toFixed(10));
+        const cropHeight = Number(cropArea.height.toFixed(10));
+
+        await sharp(avatar.path)
+            .extract({ left: cropX, top: cropY, width: cropWidth, height: cropHeight })
+            .toFile(outputPath);
 
         await query(`
             UPDATE public.user
@@ -89,7 +107,7 @@ router.put('/avatar', avatarUpload.single("avatar"), async (req, res) => {
             WHERE id = $2;
         `, [avatar!.path, req.userId]);
 
-        const avatarData = await avatarPathToBase64(avatar!.path);
+        const avatarData = await avatarPathToBase64(outputPath);
 
         return res.success("User avatar updated successfully", avatarData);
     } catch (err) {
@@ -109,6 +127,34 @@ router.delete('/avatar', async (req, res) => {
         return res.success("User avatar deleted successfully");
     } catch (err) {
         console.error(`Something went wrong whilst deleting a user's avatar : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.put('/password', async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        const { first } = await query<{ password: string }>(`
+            SELECT password
+            FROM public.user
+            WHERE id = $1;
+        `, [req.userId]);
+
+        const isValidPassword = await compare(oldPassword, first!.password);
+        if (!isValidPassword) {
+            return res.status(401).send({ success: false, message: "The old passwords don't match." })
+        }
+
+        await query(`
+            UPDATE public.user
+            SET password = $1
+            WHERE id = $2;
+        `, [await hash(newPassword, 15), req.userId]);
+
+        return res.success("User's password updated successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a user's password : ${err.message}`);
         return res.serverError();
     }
 });
