@@ -1,11 +1,10 @@
 <script lang="ts">
     import MenuIcon from '@tabler/icons-svelte/IconMenu.svelte';
     import CloseIcon from '@tabler/icons-svelte/IconX.svelte';
-    import MemoIcon from '@tabler/icons-svelte/IconLayersSubtract.svelte';
+    import MemoIcon from '@tabler/icons-svelte/IconNote.svelte';
     import GradeIcon from '@tabler/icons-svelte/IconStars.svelte';
     import IconHome from '@tabler/icons-svelte/IconHome.svelte';
     import TaskIcon from '@tabler/icons-svelte/IconChecklist.svelte';
-    import IconSettings from '@tabler/icons-svelte/IconSettings.svelte';
     import IconMenu2 from '@tabler/icons-svelte/IconMenu2.svelte';
     import IconX from '@tabler/icons-svelte/IconX.svelte';
     import IconBell from '@tabler/icons-svelte/IconBell.svelte';
@@ -56,7 +55,7 @@
     </nav>
     {#if showMenu}
         <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (showMenu = false)}>
-            <Card class="mx-auto w-[calc(100%-40px)] flex flex-col gap-4" options={{ y: 50 }}>
+            <Card class="mx-auto w-[calc(100%-40px)] flex flex-col gap-4">
                 <header class="relative flex w-full items-center justify-between">
                     <h2 class="text-xl">Menu</h2>
                     <button on:click={() => (showMenu = false)} class="relative h-full flex justify-center items-center">

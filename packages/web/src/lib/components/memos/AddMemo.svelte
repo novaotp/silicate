@@ -13,14 +13,13 @@
         return ({ result }) => {
             if (result.type === "failure") {
                 return addToast({ type: "error", message: result.data!.message })
-            } else if (result.type === "success") {
+            } else if (result.type === "success" && "id" in result.data!) {
                 addToast({ type: 'success', message: 'Mémo ajouté avec succès.' });
 
                 if ("memos" in result.data!) {
                     $memos = result.data.memos;
                 }
-                console.log(result.data)
-                // @ts-ignore
+
                 return changeSearchParams('id', result.data!.id);
             }
         }

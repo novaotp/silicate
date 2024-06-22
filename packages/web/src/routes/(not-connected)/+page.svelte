@@ -1,5 +1,7 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { PUBLIC_APP_NAME } from "$env/static/public";
+    import { Button } from "$lib/ui";
 </script>
 
 <svelte:head>
@@ -21,17 +23,17 @@
             dis adieu au stress. C'est comme avoir un assistant perso pour ton école, mais en mieux !
         </p>
         <div class="relative flex flex-col gap-3 mt-8">
-            <a class="relative w-full rounded-lg p-3 text-center bg-primary-600 text-primary-50" href="/auth/register"> Inscris-toi </a>
+            <Button.Normal on:click={() => goto("/register")}>
+                Inscris-toi
+            </Button.Normal>
             <span
-                class="relative text-center text-neutral-200
-                    before:absolute before:left-0 before:top-1/2 before:h-[1px] before:w-2/5 before:bg-neutral-200 before:content-['']
-                    after:absolute after:right-0 after:top-1/2 after:h-[1px] after:w-2/5 after:bg-neutral-200 after:content-['']"
+                class="separator relative text-center text-neutral-200"
             >
                 ou
             </span>
-            <a class="relative w-full rounded-lg bg-bg-color p-3 text-center bg-primary-50 text-primary-600 border border-primary-600" href="/auth/login">
+            <Button.Normal variant="secondary" on:click={() => goto("/login")}>
                 Se connecter
-            </a>
+            </Button.Normal>
         </div>
     </section>
     <section class="hidden md:flex relative flex-1 flex-col justify-center gap-5">
@@ -44,5 +46,25 @@
         background-image: url("/bg.jpg");
         filter: blur(4px);
         z-index: -1;
+    }
+
+    .separator::before {
+        @apply bg-neutral-200;
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 1px;
+        width: 40%;
+    }
+
+    .separator::after {
+        @apply bg-neutral-200;
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 1px;
+        width: 40%;
     }
 </style>

@@ -7,10 +7,10 @@
     <nav class="relative w-full h-20 flex justify-between px-5 md:p-0 items-center">
         <a href="/">Chalarí</a>
         <div class="flex gap-5">
-            <Button.Normal variant="secondary" size="small" on:click={() => goto("/auth/logout")}>
+            <Button.Normal variant="secondary" size="small" on:click={() => goto("/login")}>
                 Connexion
             </Button.Normal>
-            <Button.Normal variant="primary" size="small" on:click={() => goto("/auth/register")}>
+            <Button.Normal variant="primary" size="small" on:click={() => goto("/register")}>
                 S'inscrire
             </Button.Normal>
         </div>

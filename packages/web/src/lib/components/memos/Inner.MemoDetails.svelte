@@ -29,7 +29,7 @@
         formData.set("id", replica.id.toString());
         formData.set("title", replica.title);
         formData.set("content", replica.content);
-        formData.set("pinned", String(!replica.pinned));
+        formData.set("pinned", String(replica.pinned));
         if (replica.category) {
             formData.set("category", replica.category)
         }
@@ -52,13 +52,13 @@
         memo = { ...replica, pinned: !replica.pinned }
     };
 
-    const destroyEnhance: SubmitFunction = () => {
+    const destroyEnhance: SubmitFunction = ({ formData }) => {
+        formData.set("id", replica.id.toString());
         return ({ result }) => {
             if (result.type === "failure") {
                 return addToast({ type: 'error', message: result.data!.message });
             } else if (result.type === "success") {
-                // @ts-ignore
-                addToast({ type: 'success', message: result.data!.message });
+                addToast({ type: 'success', message: "Supprimé avec succès." });
                 changeSearchParams('id', null);
                 $memos = $memos.filter((m) => m.id !== replica.id);
             }
@@ -119,7 +119,7 @@
                 </button>
             {/if}
             <form method="post" action="?/destroy" use:enhance={destroyEnhance}>
-                <Button.Danger variant="secondary" class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+                <Button.Danger type="submit" variant="secondary" class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
                     <IconTrash />
                     <span>Supprimer</span>
                 </Button.Danger>
