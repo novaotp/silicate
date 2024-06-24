@@ -14,6 +14,7 @@ import { Server } from 'socket.io';
 import { authenticate } from './utils/jwt.ts';
 import { createTaskNotification, getTaskReminders, groupNotificationsByUserId } from './send_notifications.ts';
 import { TaskNotification } from '../../libs/models/Task.ts';
+import { router as markRoutes } from './routes/mark.ts';
 
 const app = express();
 const server = createServer(app);
@@ -36,6 +37,7 @@ app.use(authenticated);
 app.use("/api/v1/me", meRoutes);
 app.use("/api/v1/memos", memoRoutes);
 app.use("/api/v1/tasks", taskRoutes);
+app.use("/api/v1/mark-books", markRoutes);
 
 io.on('connection', async (socket) => {
     const jwt = socket.handshake.query.jwt as string;

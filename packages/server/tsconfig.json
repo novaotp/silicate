@@ -17,7 +17,7 @@
         "noUnusedLocals": true,
         "skipLibCheck": true
     },
-    "include": ["../libs/**/*", "src/**/*.spec.ts"],
+    "include": ["../libs/**/*", "src/**/*.ts"],
     "exclude": ["./node_modules/**"],
     "ts-node": {
         "experimentalSpecifierResolution": "node",
