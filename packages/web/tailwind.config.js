@@ -2,6 +2,7 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'selector',
     content: ['./src/**/*.{svelte,html,js,ts}'],
     theme: {
         screens: {

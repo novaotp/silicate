@@ -7,6 +7,7 @@
     import { clickOutside } from '$utils/click-outside';
 
     export let items: { value: string; label: string }[];
+    export let invert: boolean = false;
 
     let triggerNode: HTMLButtonElement;
     let showList: boolean = false;
@@ -33,7 +34,7 @@
             out:scale={{ start: 0.95, opacity: 0, duration: 50 }}
             use:clickOutside={{ avoid: [triggerNode] }}
             on:emit={() => (showList = !showList)}
-            class="absolute top-[calc(100%+10px)] left-0 w-full rounded-lg flex flex-col bg-white shadow-[0_0_2px_2px_rgba(0,0,0,0.1)] z-10
+            class="absolute {invert ? "bottom-[calc(100%+10px)]" : "top-[calc(100%+10px)]"} left-0 w-full rounded-lg flex flex-col bg-white shadow-[0_0_2px_2px_rgba(0,0,0,0.1)] z-10
                    divide-y-[1px] divide-neutral-100"
         >
             {#each items as { value, label }}

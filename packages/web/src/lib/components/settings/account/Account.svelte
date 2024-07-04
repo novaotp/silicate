@@ -4,6 +4,7 @@
     import DeleteAccount from './DeleteAccount.svelte';
     import AvatarHandler from './AvatarHandler.svelte';
     import EditAccount from './EditAccount.svelte';
+    import ThemeHandler from './ThemeHandler.svelte';
 </script>
 
 <section class="relative w-full h-full flex flex-col gap-5">
@@ -11,6 +12,7 @@
     <AvatarHandler />
     <EditAccount />
     <h3>Avancé</h3>
+    <ThemeHandler />
     <div class="relative w-full flex justify-between items-center gap-[10px]">
         <label for="disconnect" class="text-neutral-500 text-sm">Me déconnecter sur cet appareil.</label>
         <Button.Danger size="medium" on:click={() => goto('/logout')}>Déconnexion</Button.Danger>

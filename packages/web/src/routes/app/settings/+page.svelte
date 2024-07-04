@@ -14,13 +14,15 @@
     let tabs: Tab[] = [
         {
             icon: IconUser,
-            label: "Mon Profil",
+            label: "Général",
+            description: "Voir et modifier mon profil",
             slug: "my-profile",
             component: Account
         },
         {
             icon: IconReceipt2,
             label: "Paiements",
+            description: "Voir mon plan actuel",
             slug: "billing",
             component: Billing
         }
@@ -47,14 +49,19 @@
     {#if clientWidth > 768}
         <Tabs {tabs} on:change={(event) => changeSearchParams("tab", event.detail)} />
     {:else}
-        <div class="rleative w-full flex flex-col divide-y-[1px] divide-neutral-100">
-            {#each tabs as { icon, label, slug }}
+        <div class="relative w-full h-full flex flex-col gap-5">
+            {#each tabs as { icon, label, description, slug }}
                 <button
                     on:click={() => changeSearchParams("tab", slug)}
-                    class="relative w-full h-[50px] flex justify-start items-center gap-5"
+                    class="relative w-full p-5 flex justify-start items-start gap-5 rounded-lg border border-neutral-100"
                 >
-                    <svelte:component this={icon} />
-                    <span>{label}</span>
+                    <div class="relative h-full aspect-square grid place-items-center rounded bg-neutral-50">
+                        <svelte:component this={icon} />
+                    </div>
+                    <div class="relative w-full h-full flex flex-col justify-start items-start gap-[10px]">
+                        <h2>{label}</h2>
+                        <p class="text-sm text-neutral-500">{description}</p>
+                    </div>
                 </button>
             {/each}
         </div>
