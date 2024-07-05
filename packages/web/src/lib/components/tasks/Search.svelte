@@ -5,6 +5,9 @@
     import IconCircleXFilled from "@tabler/icons-svelte/IconCircleXFilled.svelte";
     import IconSearch from "@tabler/icons-svelte/IconSearch.svelte";
 
+    $: undecodedCurrentSearch = $page.url.searchParams.get('search');
+    $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
+
     const search = async () => {
         const searchParams = new URLSearchParams($page.url.searchParams);
 
@@ -17,8 +20,10 @@
         await goto(`/app/tasks?${searchParams}`, { invalidateAll: true });
     }
 
-    $: undecodedCurrentSearch = $page.url.searchParams.get('search');
-    $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
+    const reset = () => {
+        currentSearch = "";
+        search();
+    }
 </script>
 
 <div role="search" class="relative w-full md:max-w-[350px] h-[50px] rounded-lg flex justify-between items-center bg-neutral-100 dark:bg-neutral-800 text-neutral-700">
@@ -29,7 +34,7 @@
         class="w-full"
     />
     {#if currentSearch !== ""}
-        <button on:click={() => (currentSearch = "")} class="relative min-h-[50px] min-w-[50px] flex justify-center items-center">
+        <button on:click={reset} class="relative min-h-[50px] min-w-[50px] flex justify-center items-center">
             <IconCircleXFilled class="text-neutral-600 dark:text-neutral-300" />
         </button>
     {/if}

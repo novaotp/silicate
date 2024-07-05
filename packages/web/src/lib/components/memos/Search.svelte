@@ -1,11 +1,11 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import { changeSearchParams } from '$utils/change-search-params';
     import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
     import IconSearch from '@tabler/icons-svelte/IconSearch.svelte';
-    import { changeSearchParams } from './utils';
 
     const search = async () => {
-        changeSearchParams('search', currentSearch, { refetchData: true });
+        changeSearchParams('search', currentSearch, { invalidateAll: true });
     };
 
     const reset = async () => {

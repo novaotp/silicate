@@ -19,7 +19,7 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
 
-    let showMenu: boolean = false;
+    export let showMenu: boolean = false;
     let showNotifications: boolean = false;
     let notificationButtonNode: HTMLButtonElement;
 

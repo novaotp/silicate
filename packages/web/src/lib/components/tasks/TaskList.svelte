@@ -10,6 +10,7 @@
     const { tasks } = getContext<PageContext>('page');
 
     $: archived = $page.url.searchParams.get('tab') === 'archives';
+    $: search = $page.url.searchParams.get('search') ;
 
     let groupedByYear: Record<number, Task[]> = {};
     let groupedByYear2: [string, Task[]][] = [];
@@ -35,19 +36,32 @@
 </script>
 
 <div role="list" class="relative w-[min(100%,800px)] h-full mx-auto flex flex-col gap-5 mb-10">
-    <Categories />
     {#if $tasks.length === 0}
-        {#if $page.url.searchParams.get('search') !== null}
-            <p class="dark:text-neutral-50">Aucune tâche ne correspond à ta recherche.</p>
+        {#if search}
+            <div class="relative w-full h-full flex flex-col md:flex-row-reverse justify-center items-center">
+                <img src="/illustrations/no-results.png" alt="Illustration : Pas de tâches trouvées" class="w-3/5 xsm:w-1/2 sm:2/5 self-center" />
+                <div class="relative mx-auto flex flex-col justify-center items-start xsm:items-center gap-5">
+                    <h2 class="text-2xl xsm:text-center max-w-[400px] dark:text-neutral-50">Désolé, nous n'avons trouvé aucune tâche pour {search}</h2>
+                    <p class="text-neutral-500 dark:text-neutral-400 max-w-[350px] xsm:text-center">
+                        Essaie de chercher avec un autre terme.
+                    </p>
+                </div>
+            </div>
         {:else if archived}
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex flex-col justify-center items-center gap-5">
-                <IconArchive class="size-20" />
-                <p class="text-center">Vos tâches archivées s'afficheront ici.</p>
+            <div class="relative w-full h-full flex flex-col md:flex-row-reverse justify-center items-center">
+                <img src="/illustrations/no-results.png" alt="Illustration : Pas de tâches trouvées" class="w-3/5 xsm:w-1/2 sm:2/5 self-center" />
+                <div class="relative mx-auto flex flex-col justify-center items-start xsm:items-center gap-5">
+                    <h2 class="text-2xl xsm:text-center max-w-[400px] dark:text-neutral-50">On dirait que tu n'as pas encore archivé de tâches !</h2>
+                    <p class="text-neutral-500 dark:text-neutral-400 max-w-[350px] xsm:text-center">
+                        Elles s'afficheront ici dès que tu en auras.
+                    </p>
+                </div>
             </div>
         {:else}
             <p class="dark:text-neutral-50">Vous n'avez pas de tâches à réaliser en ce moment !</p>
         {/if}
     {:else}
+        <Categories />
         {#each groupedByYear2 as [year, tasks]}
             <div role="list" class="flex flex-col">
                 {#if Object.keys(groupedByYear).length > 1 || year !== new Date().getFullYear().toString()}

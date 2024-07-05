@@ -5,6 +5,7 @@
     import { PUBLIC_APP_NAME } from '$env/static/public';
 
     export let data: PageData;
+    $: tasksPromise = Promise.all([data.tasks, data.otherTasks]);
 </script>
 
 <svelte:head>
@@ -22,7 +23,7 @@
         <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement.</p>
         <p class="dark:text-neutral-50">Erreur : {data.data?.message}</p>
     {:else}
-        {#await data.tasks}
+        {#await tasksPromise}
             <div class="relative w-full flex flex-col items-start gap-5 px-5">
                 <Skeleton class="w-20 h-8" />
                 <Skeleton class="w-full h-10" />
@@ -63,9 +64,9 @@
                     {/each}
                 </div>
             </div>
-        {:then tasks}
-            {#if tasks}
-                <TaskContextProvider {tasks} categories={data.categories} />
+        {:then [tasks, otherTasks]}
+            {#if tasks && otherTasks}
+                <TaskContextProvider {tasks} {otherTasks} categories={data.categories} />
             {:else}
                 <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement des tâches.</p>
             {/if}

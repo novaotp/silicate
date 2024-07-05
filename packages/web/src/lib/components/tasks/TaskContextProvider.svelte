@@ -10,10 +10,12 @@
     import NoTask from "./NoTask.svelte";
 
     export let tasks: Task[];
+    export let otherTasks: Task[];
     export let categories: string[];
 
-    const { tasks: _tasks } = setContext<PageContext>('page', {
+    const { tasks: _tasks, otherTasks: _otherTasks } = setContext<PageContext>('page', {
         tasks: writable(tasks),
+        otherTasks: writable(otherTasks),
         categories: writable(categories)
     });
 
@@ -24,13 +26,14 @@
 
     $: currentTab = $page.url.searchParams.get('tab') ?? '';
     $: archived = $page.url.searchParams.get('tab') === 'archives';
+    $: search = $page.url.searchParams.get('search') ?? '';
 
     const changeTab = (tab: string) => {
         changeSearchParams('tab', tab, { invalidateAll: true, removeOtherParams: true });
     };
 </script>
 
-{#if $_tasks.length > 0}
+{#if $_tasks.length > 0 || search !== "" || $_otherTasks.length > 0}
     <main class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto p-5 pt-0 md:pt-5">
         <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
             <h1 class="self-start text-xl text-primary-950 dark:text-neutral-50">Tâches {archived ? 'Archivées' : ''}</h1>

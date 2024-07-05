@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { ActionData, SubmitFunction } from './$types';
     import AlternativeLink from '$lib/components/auth/AlternativeLink.svelte';
-    import Submit from '$lib/components/auth/Submit.svelte';
     import { addToast } from '$lib/stores/toast';
     import { applyAction, enhance } from '$app/forms';
     import { PUBLIC_APP_NAME } from '$env/static/public';
