@@ -1,13 +1,13 @@
 <script lang="ts">
     import type { ActionData, SubmitFunction } from './$types';
     import AlternativeLink from '$lib/components/auth/AlternativeLink.svelte';
-    import Input from '$lib/components/auth/Input.svelte';
     import Submit from '$lib/components/auth/Submit.svelte';
     import { addToast } from '$lib/stores/toast';
     import { applyAction, enhance } from '$app/forms';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { Button, Input, Label } from '$lib/ui';
 
     export let form: ActionData;
 
@@ -51,9 +51,15 @@
     use:enhance={loginEnhance}
 >
     <div class="relative w-full flex flex-col gap-5 px-0.5">
-        <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
-        <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
+        <div class="flex flex-col gap-[10px]">
+            <Label for="email">Email</Label>
+            <Input placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} autocomplete="off" required={true} />
+        </div>
+        <div class="flex flex-col gap-[10px]">
+            <Label for="email">Mot de passe</Label>
+            <Input placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} autocomplete="off" required={true} />
+        </div>
     </div>
-    <Submit label="Connexion" />
+    <Button.Normal type="submit">Connexion</Button.Normal>
 </form>
 <AlternativeLink text="T'as pas encore de compte ?" href="/register" label="Crées-en un" />

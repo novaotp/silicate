@@ -68,7 +68,7 @@
     }
 </script>
 
-<header class="relative flex justify-between items-center w-full h-[60px] z-[100] bg-white">
+<header class="relative flex justify-between items-center w-full h-[60px] z-[100] bg-white dark:bg-neutral-900 dark:text-neutral-50">
     <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
         <IconX />
     </button>
@@ -82,7 +82,7 @@
         </button>
         <CategoryChanger {memo} />
         <form method="post" action="?/destroy" use:enhance={destroyEnhance}>
-            <Button.Danger variant="tertiary" class="px-0 h-14 border-0 rounded-none flex justify-start items-center gap-5">
+            <Button.Danger variant="tertiary" type="submit" class="px-0 h-14 border-0 rounded-none flex justify-start items-center gap-5">
                 <IconTrash />
             </Button.Danger>
         </form>

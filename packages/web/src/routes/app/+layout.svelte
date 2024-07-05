@@ -31,9 +31,9 @@
     });
 </script>
 
-<div class="relative h-full w-full flex flex-col md:flex-row">
+<div class="relative h-full w-full flex flex-col md:flex-row dark:bg-neutral-950">
     <Navigation />
-    <div class="relative flex-grow h-[calc(100%-60px)] md:shadow-[-2px_0_4px_4px_rgba(0,0,0,0.1)] md:h-full flex flex-col">
+    <div class="relative flex-grow h-[calc(100%-60px)] md:shadow-[-2px_0_4px_4px_rgba(0,0,0,0.1)] dark:shadow-none md:h-full flex flex-col">
         <slot />
     </div>
 </div>

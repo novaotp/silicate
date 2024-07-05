@@ -24,14 +24,16 @@
 
 <div role="list" class="relative min-h-10 w-full flex flex-nowrap items-center gap-2 overflow-scroll">
     <button
-        class="relative px-4 py-2 rounded text-sm {currentCategory === '' ? 'bg-primary-600 text-neutral-50' : 'bg-neutral-200 text-neutral-600'}"
+        class="relative px-4 py-2 rounded text-sm {currentCategory === '' ? 'bg-primary-600 dark:bg-primary-500 text-neutral-50' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'}"
         on:click={() => changeCategory('')}
     >
         Tout
     </button>
     {#each $categories as category}
         <button
-            class="relative px-4 py-2 rounded text-sm {currentCategory === category ? 'bg-primary-600 text-neutral-50' : 'bg-neutral-200 text-neutral-600'}"
+            class="relative px-4 py-2 rounded text-sm {currentCategory === category
+                ? 'bg-primary-600 dark:bg-primary-500 text-neutral-50'
+                : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'}"
             on:click={() => changeCategory(category)}
         >
             {category}

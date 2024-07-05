@@ -1,7 +1,7 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import { addToast } from '$lib/stores/toast';
-    import { Button, FullScreen, Card } from '$lib/ui';
+    import { Button, FullScreen, Card, Label, Input } from '$lib/ui';
     import type { SubmitFunction } from '../../../../routes/app/settings/$types';
     import IconLock from "@tabler/icons-svelte/IconLock.svelte";
 
@@ -20,20 +20,22 @@
 </script>
 
 <div class="relative w-full flex flex-col gap-[10px]">
-    <label for="password" class="text-neutral-500 text-sm">Mot de passe</label>
-    <Button.Normal class="h-full" on:click={() => (showPasswordChanger = true)}>Modifier mon mot de passe</Button.Normal>
+    <Label for="password">Mot de passe</Label>
+    <Button.Normal class="h-full rounded-lg" on:click={() => (showPasswordChanger = true)}>
+        Modifier mon mot de passe
+    </Button.Normal>
     {#if showPasswordChanger}
         <FullScreen.Backdrop on:click={() => (showPasswordChanger = false)} class="flex justify-center items-center">
             <Card class="relative w-full mx-5 sm:max-w-[480px] flex flex-col gap-5 justify-center items-center p-10">
                 <h2 class="flex items-center gap-5">
-                    <IconLock class="size-10" />
-                    <span class="text-xl font-semibold text-center">Modifier mon mot de passe.</span>
+                    <IconLock class="size-10 dark:text-neutral-50" />
+                    <span class="text-xl font-semibold text-center dark:text-neutral-50">Modifier mon mot de passe.</span>
                 </h2>
-                <p class="text-center">Entre ton mot de passe actuel et le nouveau.</p>
+                <p class="text-center dark:text-neutral-50">Entre ton mot de passe actuel et le nouveau.</p>
                 <form method="post" action="?/editPassword" class="relative w-full flex flex-col gap-5" use:enhance={editPasswordEnhance}>
                     <div class="relative w-full flex flex-col gap-[10px]">
-                        <label for="oldPassword" class="text-neutral-950 text-sm">Mot de passe actuel</label>
-                        <input
+                        <Label for="oldPassword">Mot de passe actuel</Label>
+                        <Input
                             name="oldPassword"
                             type="password"
                             class="relative w-full bg-neutral-100 rounded-lg px-5 h-[50px] text-sm"
@@ -41,8 +43,8 @@
                         />
                     </div>
                     <div class="relative w-full flex flex-col gap-[10px]">
-                        <label for="newPassword" class="text-neutral-950 text-sm">Nouveau mot de passe</label>
-                        <input
+                        <Label for="newPassword">Nouveau mot de passe</Label>
+                        <Input
                             name="newPassword"
                             type="password"
                             class="relative w-full bg-neutral-100 rounded-lg px-5 h-[50px] text-sm"
@@ -50,8 +52,8 @@
                         />
                     </div>
                     <div class="relative w-full flex flex-col gap-[10px]">
-                        <label for="confirmNewPassword" class="text-neutral-950 text-sm">Confirmer le nouveau mot de passe</label>
-                        <input
+                        <Label for="confirmNewPassword">Confirmer le nouveau mot de passe</Label>
+                        <Input
                             name="confirmNewPassword"
                             type="password"
                             class="relative w-full bg-neutral-100 rounded-lg px-5 h-[50px] text-sm"
@@ -59,8 +61,8 @@
                         />
                     </div>
                     <div class="relative w-full flex justify-end items-center gap-5">
-                        <Button.Normal variant="secondary">Annuler</Button.Normal>
-                        <Button.Normal type="submit">Confirmer</Button.Normal>
+                        <Button.Normal variant="secondary" class="rounded-lg">Annuler</Button.Normal>
+                        <Button.Normal type="submit" class="rounded-lg">Confirmer</Button.Normal>
                     </div>
                 </form>
             </Card>

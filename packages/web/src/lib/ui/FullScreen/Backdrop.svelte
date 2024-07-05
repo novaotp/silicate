@@ -17,7 +17,7 @@ A fullscreen backdrop effect that sits above the current UI.
     class="fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.1)] {$$restProps['class'] || ''}"
     style="z-index: {z}"
     transition:fade
-    on:click
+    on:click|stopPropagation
 >
     <slot />
 </div>

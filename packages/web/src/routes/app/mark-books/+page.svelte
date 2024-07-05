@@ -11,5 +11,5 @@
     />
 </svelte:head>
 
-<h1>Carnets de notes</h1>
-<p>Cette fonctionnalité est en construction.</p>
+<h1 class="dark:text-neutral-50">Carnets de notes</h1>
+<p class="dark:text-neutral-50">Cette fonctionnalité est en construction.</p>

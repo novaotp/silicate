@@ -48,8 +48,7 @@
             $categories = result.data!.categories;
         }
 
-        replica.pinned = !replica.pinned;
-        memo = { ...replica, pinned: !replica.pinned }
+        memo = { ...replica }
     };
 
     const destroyEnhance: SubmitFunction = ({ formData }) => {
@@ -75,7 +74,7 @@
             await edit();
         }, 750);
     }}
-    class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium h-10"
+    class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium h-10 dark:text-neutral-50"
 />
 <Editor
     content={replica.content}
@@ -89,7 +88,7 @@
 />
 {#if showSettings}
     <FullScreen.Backdrop on:click={() => (showSettings = false)} class="flex justify-center items-end z-[999]">
-        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white dark:bg-neutral-700 dark:text-neutral-50" transition:fly={{ y: 50 }}>
             {#if replica.category !== null}
                 <button
                     on:click={async () => {
@@ -118,8 +117,8 @@
                     <span>Ajouter une catégorie</span>
                 </button>
             {/if}
-            <form method="post" action="?/destroy" use:enhance={destroyEnhance}>
-                <Button.Danger type="submit" variant="secondary" class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+            <form method="post" action="?/destroy" use:enhance={destroyEnhance} class="relative w-full">
+                <Button.Danger type="submit" variant="primary" class="w-full px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
                     <IconTrash />
                     <span>Supprimer</span>
                 </Button.Danger>
@@ -143,7 +142,7 @@
         <Card class="w-full flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
                 <label for="category" class="text-neutral-500">Catégorie</label>
-                <div class="relative w-full h-[50px] flex justify-between rounded text-neutral-700 bg-neutral-100">
+                <div class="relative w-full h-[50px] flex justify-between rounded text-neutral-700 bg-neutral-100 dark:text-neutral-50 dark:bg-neutral-700">
                     <input
                         name="category"
                         value={replica.category}
@@ -162,11 +161,11 @@
                         class="relative w-full h-[50px] px-5 rounded-l bg-transparent"
                     />
                     <button on:click={() => (replica.category = '')} class="relative h-full aspect-square flex justify-center items-center rounded-r">
-                        <IconCircleXFilled />
+                        <IconCircleXFilled class="dark:text-neutral-50" />
                     </button>
                 </div>
                 {#if replica.category === ''}
-                    <span class="text-accent-danger-500 text-xs">Entrez une valeur ou supprimez la.</span>
+                    <span class="text-accent-danger-500 dark:text-accent-danger-400 text-xs">Entrez une valeur ou supprimez la.</span>
                 {/if}
             </div>
             <div class="relative w-full flex flex-wrap justify-start gap-5">

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { addToast } from '$lib/stores/toast';
-    import { Button, Card, FullScreen } from '$lib/ui';
+    import { Button, Card, FullScreen, Label } from '$lib/ui';
     import type { Memo } from '$libs/models/Memo';
     import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
     import IconTag from '@tabler/icons-svelte/IconTag.svelte';
@@ -11,6 +11,7 @@
     import type { Task } from '$libs/models/Task';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
+    import Input from '$lib/ui/Input.svelte';
 
     export let task: Task;
     let replica = { ...task };
@@ -115,19 +116,17 @@
             showCategoryChanger = false;
         }}
     >
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <Card class="w-[400px] flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
-                <label for="category" class="text-neutral-500">Catégorie</label>
-                <div class="relative w-full h-[50px] flex justify-between rounded-smd text-neutral-700 bg-neutral-100">
-                    <input
+                <Label for="category">Catégorie</Label>
+                <div class="relative w-full h-[50px] flex justify-between rounded-smd">
+                    <Input
                         name="category"
                         value={tempValue}
-                        maxlength="17"
+                        maxlength={17}
                         on:input={onCategoryChange}
-                        on:click|stopPropagation
-                        class="relative w-full h-[50px] px-5 rounded-l-smd bg-transparent"
+                        on:click
+                        class="relative w-full h-[50px] px-5 rounded-l-smd"
                     />
                     <button on:click={() => (tempValue = '')} class="relative h-full aspect-square flex justify-center items-center rounded-r-smd">
                         <IconCircleXFilled />

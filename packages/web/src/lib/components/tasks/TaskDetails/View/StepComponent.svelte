@@ -57,14 +57,16 @@
     <button class="flex gap-2 w-full py-2 justify-between items-center">
         <div class="flex gap-2">
             <input type="checkbox" bind:checked={step.completed} on:click|stopPropagation on:change|stopPropagation={onCompletedStep} class="accent-accent-success-500" />
-            <input bind:value={step.label} on:input={onLabelChange} class="text-sm w-full {step.completed ? 'line-through text-neutral-500' : ''}" />
+            <input bind:value={step.label} on:input={onLabelChange} class="text-sm bg-transparent dark:text-neutral-50 w-full {step.completed ? 'line-through text-neutral-500 dark:text-neutral-300' : ''}" />
             {#if step.subSteps && step.subSteps.length > 0}
                 {@const completedSubs = step.subSteps?.reduce((acc, curr) => acc + (curr.completed ? 1 : 0), 0)}
-                <span class="text-sm {step.completed ? 'line-through text-neutral-500' : ''}">{completedSubs}/{step.subSteps.length}</span>
+                <span class="text-sm {step.completed ? 'line-through text-neutral-500 dark:text-neutral-300' : ''}">{completedSubs}/{step.subSteps.length}</span>
             {/if}
         </div>
         <button class="relative" on:click|stopPropagation>
-            <button on:click={() => (showStepMenu = true)}><IconDotsVertical class="size-4" /></button>
+            <button on:click={() => (showStepMenu = true)}>
+                <IconDotsVertical class="size-4 dark:text-neutral-50" />
+            </button>
             {#if showStepMenu}
                 <menu class="absolute top-[calc(100%+5px)] right-0 flex flex-col justify-center rounded-lg shadow-lg bg-white z-[1000]">
                     <Button.Normal variant="primary" on:click={newSubStep} size="small" class="rounded-b-none">
@@ -82,7 +84,7 @@
             {#each step.subSteps as sub}
                 <li class="flex gap-2">
                     <input type="checkbox" bind:checked={sub.completed} on:change={onCompletedAllSub} class="accent-accent-success-500" />
-                    <input bind:value={sub.label} on:input={onLabelChange} class="w-full {sub.completed ? 'line-through text-neutral-500' : ''}" />
+                    <input bind:value={sub.label} on:input={onLabelChange} class="w-full bg-transparent dark:text-neutral-50 {sub.completed ? 'line-through text-neutral-500 dark:text-neutral-300' : ''}" />
                     <button on:click={() => deleteSubStep(sub.id)}><IconCircleXFilled /></button>
                 </li>
             {/each}

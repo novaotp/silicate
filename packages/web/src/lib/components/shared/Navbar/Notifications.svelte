@@ -16,6 +16,7 @@
     export let show: boolean;
     export let showMenu: boolean;
 
+    let clientWidth: number;
     const jwt = getContext<string>("jwt");
     const taskNotifications = getContext<Writable<TaskNotification[]>>('taskNotifications');
 
@@ -50,35 +51,38 @@
     }
 </script>
 
+<svelte:window bind:innerWidth={clientWidth}></svelte:window>
+
 {#if show}
     <article
-        class="fixed top-20 md:top-auto md:bottom-[10px] left-5 {showMenu ? "md:left-[210px]" : "md:left-[90px]"} w-[calc(100%-40px)] md:max-w-[400px] max-h-[600px] flex flex-col z-[200] rounded-lg bg-white shadow-[0_0_8px_8px_rgba(0,0,0,0.1)]"
+        class="fixed top-20 md:top-auto md:bottom-[10px] left-5 {showMenu ? "md:left-[210px]" : "md:left-[90px]"} w-[calc(100%-40px)] md:max-w-[400px] max-h-[600px] flex flex-col z-[200] rounded-lg bg-white dark:bg-neutral-900 shadow-[0_0_8px_8px_rgba(0,0,0,0.1)]"
         use:clickOutside={{ avoid: [notificationButtonNode] }}
         on:emit={() => (show = false)}
-        transition:fly={{ y: 50 }}
+        transition:fly={{ y: clientWidth < 768 ? -50 : 50 }}
     >
         <div class="relative w-full p-5 flex justify-between items-baseline">
-            <h2>Notifications</h2>
+            <h2 class="dark:text-neutral-50">Notifications</h2>
             <button
-                class="text-primary-700"
+                class="text-primary-700 dark:text-primary-400"
                 on:click={() => addToast({ type: "info", message: "Fonctionnalité pas encore implémentée" })}
             >
                 VOIR TOUT
             </button>
         </div>
         <Separator />
-        <ul class="relative w-full flex flex-col overflow-auto divide-y divide-neutral-100">
+        <ul class="relative w-full flex flex-col overflow-auto divide-y divide-neutral-100 dark:divide-neutral-500">
             {#each $taskNotifications as { id, message, isRead, createdAt }}
                 <li class="relative w-full p-5" class:unread={!isRead} class:read={isRead}>
-                    <h3 class="text-sm">{message}</h3>
-                    <time class="text-xs text-neutral-500">{timeDiff(createdAt)}</time>
+                    <h3 class="text-sm dark:text-neutral-100">{message}</h3>
+                    <time class="text-xs text-neutral-500 dark:text-neutral-300">{timeDiff(createdAt)}</time>
                 </li>
             {:else}
-            <li class="relative w-full p-5 flex flex-col justify-center items-center gap-[10px] text-neutral-500">
-                <IconBellOff class="size-10" />
-                <span class="text-sm text-center">
-                    Il n'y pas grand-chose ici pour l'instant... Reviens lorsque tu reçois ta première notification !
-                </span></li>
+                <li class="relative w-full p-5 flex flex-col justify-center items-center gap-[10px] text-neutral-500 dark:text-neutral-300">
+                    <IconBellOff class="size-10" />
+                    <span class="text-sm text-center">
+                        Il n'y pas grand-chose ici pour l'instant... Reviens lorsque tu reçois ta première notification !
+                    </span>
+                </li>
             {/each}
         </ul>
         <Separator />
@@ -87,8 +91,8 @@
                 class="flex gap-[10px]"
                 on:click={markAllNotificationsAsRead}
             >
-                <IconChecks class="text-primary-700 size-5" />
-                <span class="text-sm">Marquer tout comme lu</span>
+                <IconChecks class="text-primary-700 size-5 dark:text-primary-400" />
+                <span class="text-sm dark:text-neutral-50">Marquer tout comme lu</span>
             </button>
         </div>
     </article>
@@ -96,7 +100,7 @@
 
 <style lang="postcss">
     .read {
-        @apply bg-neutral-50;
+        @apply bg-neutral-50 dark:bg-neutral-900;
     }
 
     .unread * {

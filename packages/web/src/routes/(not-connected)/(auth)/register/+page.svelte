@@ -1,13 +1,12 @@
 <script lang="ts">
     import type { ActionData, SubmitFunction } from './$types';
     import AlternativeLink from '$lib/components/auth/AlternativeLink.svelte';
-    import Input from '$lib/components/auth/Input.svelte';
     import Switcher from '$lib/components/auth/Switcher.svelte';
-    import Submit from '$lib/components/auth/Submit.svelte';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import { enhance } from '$app/forms';
     import { addToast } from '$lib/stores/toast';
     import { goto } from '$app/navigation';
+    import { Button, Input, Label } from '$lib/ui';
 
     export let form: ActionData;
 
@@ -43,40 +42,74 @@
 <form method="POST" class="relative mb-5 flex w-full flex-col overflow-x-hidden xl:hidden" use:enhance={registerEnhance}>
     <Switcher>
         <svelte:fragment slot="names">
-            <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
-            <Input label="Nom de famille" placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} />
+        <div class="flex flex-col gap-[10px]">
+            <Label for="firstName">Prénom</Label>
+            <Input placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} autocomplete="off" required={true} />
+        </div>
+            <div class="flex flex-col gap-[10px]">
+                <Label for="lastName">Nom de famille</Label>
+                <Input placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} autocomplete="off" required={true} />
+            </div>
         </svelte:fragment>
         <svelte:fragment slot="credentials">
-            <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
-            <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
-            <Input
-                label="Confirmer le mot de passe"
-                placeholder="Entre ton mot de passe ici..."
-                type="password"
-                name="confirmPassword"
-                bind:value={confirmPassword}
-            />
+        <div class="flex flex-col gap-[10px]">
+            <Label for="email">Email</Label>
+            <Input placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} autocomplete="off" required={true} />
+        </div>
+            <div class="flex flex-col gap-[10px]">
+                <Label for="password">Mot de passe</Label>
+                <Input placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} autocomplete="off" required={true} />
+            </div>
+            <div class="flex flex-col gap-[10px]">
+                <Label for="confirmPassword">Confirmer le mot de passe</Label>
+                <Input
+                    placeholder="Entre ton mot de passe ici..."
+                    type="password"
+                    name="confirmPassword"
+                    bind:value={confirmPassword}
+                    autocomplete="off"
+                    required={true}
+                />
+            </div>
         </svelte:fragment>
     </Switcher>
 </form>
 <form method="POST" class="relative mb-5 w-[70%] flex-col justify-center items-center gap-5 px-0.5 overflow-x-hidden hidden xl:flex" use:enhance={registerEnhance}>
     <div class="relative w-full flex gap-5">
-        <Input label="Prénom" placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} />
-        <Input label="Nom de famille" placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} />
+        <div class="w-full flex flex-col gap-[10px]">
+            <Label for="firstName">Prénom</Label>
+            <Input placeholder="Entre ton prénom ici..." type="text" name="firstName" bind:value={firstName} autocomplete="off" required={true} />
+        </div>
+            <div class="w-full flex flex-col gap-[10px]">
+                <Label for="lastName">Nom de famille</Label>
+                <Input placeholder="Entre ton nom de famille ici..." type="text" name="lastName" bind:value={lastName} autocomplete="off" required={true} />
+            </div>
     </div>
-    <Input label="Email" placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} />
+    <div class="relative w-full flex flex-col gap-[10px]">
+        <Label for="email">Email</Label>
+        <Input placeholder="Entre ton email ici..." type="email" name="email" bind:value={email} autocomplete="off" required={true} />
+    </div>
     <div class="relative w-full flex gap-5">
-        <Input label="Mot de passe" placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} />
-        <Input
-            label="Confirmer le mot de passe"
-            placeholder="Entre ton mot de passe ici..."
-            type="password"
-            name="confirmPassword"
-            bind:value={confirmPassword}
-        />
+        <div class="w-full flex flex-col gap-[10px]">
+            <Label for="password">Mot de passe</Label>
+            <Input placeholder="Entre ton mot de passe ici..." type="password" name="password" bind:value={password} autocomplete="off" required={true} />
+        </div>
+        <div class="w-full flex flex-col gap-[10px]">
+            <Label for="confirmPassword">Confirmer le mot de passe</Label>
+            <Input
+                placeholder="Entre ton mot de passe ici..."
+                type="password"
+                name="confirmPassword"
+                bind:value={confirmPassword}
+                autocomplete="off"
+                required={true}
+            />
+        </div>
     </div>
     <div class="mt-5">
-        <Submit label="Créer mon compte" />
+        <Button.Normal type="submit">
+            Créer mon compte
+        </Button.Normal>
     </div>
 </form>
 <AlternativeLink text="T'as déjà un compte ?" href="/login" label="Connecte-toi" />

@@ -22,11 +22,11 @@
 <div role="listbox" class={cn('relative flex flex-col h-full text-sm', $$restProps['class'] || '')}>
     <button
         bind:this={triggerNode}
-        class="relative h-full rounded-lg px-5 flex justify-center items-center gap-5 bg-neutral-100"
+        class="relative h-full rounded-lg px-5 flex justify-center items-center gap-5 bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-50"
         on:click={() => (showList = !showList)}
     >
         <slot />
-        <IconSelector />
+        <IconSelector class="size-5" />
     </button>
     {#if showList}
         <ul
@@ -34,14 +34,14 @@
             out:scale={{ start: 0.95, opacity: 0, duration: 50 }}
             use:clickOutside={{ avoid: [triggerNode] }}
             on:emit={() => (showList = !showList)}
-            class="absolute {invert ? "bottom-[calc(100%+10px)]" : "top-[calc(100%+10px)]"} left-0 w-full rounded-lg flex flex-col bg-white shadow-[0_0_2px_2px_rgba(0,0,0,0.1)] z-10
-                   divide-y-[1px] divide-neutral-100"
+            class="absolute {invert ? "bottom-[calc(100%+10px)]" : "top-[calc(100%+10px)]"} left-0 w-full rounded-lg overflow-hidden flex flex-col bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-50 shadow-[0_0_2px_2px_rgba(0,0,0,0.1)] z-10
+                   divide-y-[1px] divide-neutral-100 dark:divide-neutral-500"
         >
             {#each items as { value, label }}
                 <li class="relative w-full h-[50px]">
                     <button
                         on:click={() => onChange(value)}
-                        class="relative w-full h-full flex justify-center items-center hover:bg-neutral-100 duration-100"
+                        class="relative w-full h-full flex justify-center items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 duration-100"
                     >
                         {label}
                     </button>

@@ -30,7 +30,7 @@
 {#if viewedMemoId}
     <div class="block md:hidden">
         <FullScreen.Modal>
-            <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+            <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white dark:bg-neutral-950 dark:text-neutral-50">
                 <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
                     <IconChevronLeft />
                 </button>
@@ -39,17 +39,17 @@
                 </button>
             </header>
             {#await getMemo(viewedMemoId)}
-                <p>Chargement du mémo...</p>
+                <p class="text-neutral-50">Chargement du mémo...</p>
             {:then result}
                 <div class="relative w-full h-full flex flex-col justify-start items-start p-5 pt-[60px] gap-5">
                     {#if !result.success}
-                        <p>Impossible de charger le mémo.</p>
+                        <p class="text-neutral-50">Impossible de charger le mémo.</p>
                     {:else}
                         <Inner memo={result.data} bind:showSettings />
                     {/if}
                 </div>
             {:catch}
-                <p>Une erreur est survenue.</p>
+                <p class="text-neutral-50">Une erreur est survenue.</p>
             {/await}
         </FullScreen.Modal>
     </div>

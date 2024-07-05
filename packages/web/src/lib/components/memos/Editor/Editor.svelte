@@ -88,11 +88,12 @@
     <Toolbar {editor} {show} on:update={update} on:toggle={toggleToolbar} />
 {/if}
 
-<style>
+<style lang="postcss">
     :global(.my-editor) {
         position: relative;
         width: 100%;
         height: 100%;
+        @apply dark:text-neutral-50;
     }
 
     :global(.my-editor:focus-visible) {

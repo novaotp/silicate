@@ -12,7 +12,7 @@
 </script>
 
 <div class="relative w-full flex justify-between items-center h-[50px] gap-[10px]">
-    <span class="text-neutral-500 text-sm">Changer de thème.</span>
+    <span class="text-neutral-500 text-sm dark:text-neutral-50">Changer de thème.</span>
     <Select items={themeOptions} on:change={onThemeChange} invert>
         {themeOptions.find(t => t.value === $theme)?.label}
     </Select>

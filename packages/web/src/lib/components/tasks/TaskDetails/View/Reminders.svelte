@@ -70,7 +70,7 @@
     $: reminders = reminders.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
 </script>
 
-<div class="relative w-full flex flex-col gap-3 text-neutral-500">
+<div class="relative w-full flex flex-col gap-3 text-neutral-500 dark:text-neutral-300">
     <div class="relative w-full flex justify-between">
         <div class="flex gap-4">
             <IconAlarm />
@@ -84,7 +84,7 @@
         {#key reminders}
             {#each reminders as reminder}
                 <li class="relative h-[50px] w-full flex gap-5">
-                    <button on:click={() => (selectedReminderId = reminder.id)} class="relative w-full h-full bg-neutral-100 rounded">
+                    <button on:click={() => (selectedReminderId = reminder.id)} class="relative w-full h-full bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 rounded">
                         {new Date(reminder.time).toLocaleString('fr-CH')}
                     </button>
                     <form method="POST" action="?/destroyReminder" use:enhance={destroyReminderEnhanceWrapper(reminder)}>

@@ -65,17 +65,17 @@
     <div class="block md:hidden">
         <FullScreen.Modal>
             {#await fetchItems()}
-                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
+                <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100]">
                     <button class="rounded-full" on:click={closeModal}>
                         <IconChevronLeft />
                     </button>
                 </header>
                 <div class="relative w-full h-full flex justify-center items-center px-5">
-                    <p>Chargement de la tâche...</p>
+                    <p class="dark:text-neutral-50">Chargement de la tâche...</p>
                 </div>
             {:then item}
                 {#if item}
-                    <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass">
+                    <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[110] glass dark:text-neutral-50">
                         <button
                             class="rounded-full"
                             on:click={() => {
@@ -96,7 +96,7 @@
                     </header>
                     <TaskDetails task={item.task} reminders={item.reminders} bind:showSettings on:close />
                 {:else}
-                    <p>Une erreur est survenue.</p>
+                    <p class="dark:text-neutral-50">Une erreur est survenue.</p>
                 {/if}
             {/await}
         </FullScreen.Modal>
@@ -111,13 +111,13 @@
                         </button>
                     </header>
                     <div class="relative w-full h-full flex justify-center items-center px-5">
-                        <p>Chargement de la tâche...</p>
+                        <p class="dark:text-neutral-50">Chargement de la tâche...</p>
                     </div>
                 {:then item}
                     {#if item}
                         <DesktopDetails {item} />
                     {:else}
-                        <p>Une erreur est survenue.</p>
+                        <p class="dark:text-neutral-50">Une erreur est survenue.</p>
                     {/if}
                 {/await}
             </Card>
@@ -132,5 +132,11 @@
         background: rgba(255, 255, 255, 0.5);
         backdrop-filter: blur($blur);
         -webkit-backdrop-filter: blur($blur);
+    }
+
+    :global(html.dark .glass) {
+        background: unset;
+        backdrop-filter: unset;
+        -webkit-backdrop-filter: unset;
     }
 </style>

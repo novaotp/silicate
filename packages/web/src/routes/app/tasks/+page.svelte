@@ -19,11 +19,11 @@
 
 <div class="relative w-full h-full flex flex-col justify-start">
     {#if data.data?.message || !data.tasks || !data.categories}
-        <p>Une erreur est survenue lors du chargement.</p>
-        <p>Erreur : {data.data?.message}</p>
+        <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement.</p>
+        <p class="dark:text-neutral-50">Erreur : {data.data?.message}</p>
     {:else}
         {#await data.tasks}
-            <div class="relative w-full flex flex-col items-start gap-5">
+            <div class="relative w-full flex flex-col items-start gap-5 px-5">
                 <Skeleton class="w-20 h-8" />
                 <Skeleton class="w-full h-10" />
                 <div class="relative w-full flex gap-2">
@@ -67,10 +67,10 @@
             {#if tasks}
                 <TaskContextProvider {tasks} categories={data.categories} />
             {:else}
-                <p>Une erreur est survenue lors du chargement des tâches.</p>
+                <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement des tâches.</p>
             {/if}
         {:catch}
-            <p>Une erreur est survenue lors du chargement des tâches.</p>
+            <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement des tâches.</p>
         {/await}
     {/if}
 </div>

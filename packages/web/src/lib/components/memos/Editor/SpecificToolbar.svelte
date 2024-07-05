@@ -21,31 +21,31 @@
 </script>
 
 {#if show}
-    <div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-[90px] md:bottom-auto mx-auto gap-[10px] bg-neutral-100 rounded-lg p-[10px] text-sm flex">
+    <div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-[90px] md:bottom-auto mx-auto gap-[10px] bg-neutral-100 dark:bg-neutral-700 rounded-lg p-[10px] text-sm flex">
         {#if show === "headings"}
             <button
-                class="relative h-full aspect-square flex justify-center items-center rounded"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50"
                 on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                 class:active={editor.isActive('heading', { level: 1 })}
             >
                 H1
             </button>
             <button
-                class="relative h-full aspect-square flex justify-center items-center rounded"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50"
                 on:click={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                 class:active={editor.isActive('heading', { level: 2 })}
             >
                 H2
             </button>
             <button
-                class="relative h-full aspect-square flex justify-center items-center rounded"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50"
                 on:click={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                 class:active={editor.isActive('heading', { level: 3 })}
             >
                 H3
             </button>
             <button
-                class="relative h-full aspect-square flex justify-center items-center rounded"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50"
                 on:click={() => editor.chain().focus().setParagraph().run()}
                 class:active={editor.isActive('paragraph')}
             >
@@ -55,7 +55,7 @@
             <button
                 on:click={() => editor.chain().focus().toggleBold().run()}
                 class:active={editor.isActive('bold')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconBold class="size-5" />
             </button>
@@ -65,14 +65,14 @@
                     dispatch("update");
                 }}
                 class:active={editor.isActive('italic')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconItalic class="size-5" />
             </button>
             <button
                 on:click={() => editor.chain().focus().toggleStrike().run()}
                 class:active={editor.isActive('strike')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconStrikethrough class="size-5" />
             </button>
@@ -105,21 +105,21 @@
             <button
                 on:click={() => editor.chain().focus().toggleBulletList().run()}
                 class:active={editor.isActive('bulletList')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconList class="size-5" />
             </button>
             <button
                 on:click={() => editor.chain().focus().toggleOrderedList().run()}
                 class:active={editor.isActive('orderedList')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconListNumbers class="size-5" />
             </button>
             <button
                 on:click={() => editor.chain().focus().liftListItem('listItem').run()}
                 disabled={!editor.isActive('listItem')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50 {editor.isActive('listItem')
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50 {editor.isActive('listItem')
                     ? ''
                     : 'text-neutral-500'}"
             >
@@ -128,7 +128,7 @@
             <button
                 on:click={() => editor.chain().focus().sinkListItem('listItem').run()}
                 disabled={!editor.isActive('listItem')}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50 {editor.isActive('listItem')
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50 {editor.isActive('listItem')
                     ? ''
                     : 'text-neutral-500'}"
             >
@@ -137,7 +137,7 @@
         {:else if show === "other"}
             <button
                 on:click={() => editor.commands.setHorizontalRule()}
-                class="relative h-full aspect-square flex justify-center items-center rounded z-50"
+                class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50 z-50"
             >
                 <IconSeparator class="size-5" />
             </button>

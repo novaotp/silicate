@@ -25,6 +25,8 @@ export const switchTheme = (newTheme: Theme) => {
         throw new Error(`Cannot switch to non-existent theme value : ${newTheme}`);
     }
 
+    if (get(theme) === newTheme) return;
+
     theme.set(newTheme);
 
     if (get(theme) === 'dark' || (get(theme) === "system" && prefersDarkMode())) {

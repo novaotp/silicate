@@ -17,7 +17,7 @@
 
 {#if $_memos.length > 0}
     <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
-        <h1 class="relative self-start h-full flex items-center text-xl text-primary-950">Mémos</h1>
+        <h1 class="relative self-start h-full flex items-center text-xl text-primary-950 dark:text-neutral-50">Mémos</h1>
         <div class="relative h-full w-full md:w-auto flex gap-5 items-center">
             <Search />
             <AddMemo />

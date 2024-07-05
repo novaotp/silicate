@@ -17,14 +17,14 @@
 
 <main class="relative w-full h-full flex flex-col justify-start gap-5 overflow-auto p-5 pt-0 md:pt-5">
     {#await data.memos}
-        <p>Chargement de tes mémos...</p>
+        <p class="dark:text-neutral-50">Chargement de tes mémos...</p>
     {:then memos}
         {#if memos && data.categories}
             <MemoContextProvider {memos} categories={data.categories} />
         {:else}
-            <p>Impossible de charger les mémos.</p>
+            <p class="dark:text-neutral-50">Impossible de charger les mémos.</p>
         {/if}
     {:catch}
-        <p>Une erreur est survenue lors du chargement. Réessayez plus tard.</p>
+        <p class="dark:text-neutral-50">Une erreur est survenue lors du chargement. Réessayez plus tard.</p>
     {/await}
 </main>
