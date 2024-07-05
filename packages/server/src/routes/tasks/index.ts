@@ -292,19 +292,18 @@ router.delete('/:id', async (req, res) => {
 
 router.get("/categories", async (req, res) => {
     try {
-        const { archived } = req.query;
-        const client = await db.connect();
+        const { search, archived } = req.query;
 
-        const { rows } = await client.query<RawCategory>(`
+        const { rows } = await query<RawCategory>(`
             SELECT DISTINCT category
             FROM public.task
             WHERE
-                archived is ${archived}
+                title LIKE '%' || $1 || '%'
                 AND
-                user_id = $1;
-        `, [await userIdFromAuthHeader(req)]);
-
-        client.release();
+                archived = $2
+                AND
+                user_id = $3;
+        `, [search, archived === "true", req.userId]);
 
         return res.status(200).send({
             success: true,
