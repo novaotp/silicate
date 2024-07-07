@@ -1,19 +1,51 @@
 import { Router } from "express";
-import { Mark } from "../../../libs/models/Mark";
-import { query } from "../database/utils";
+import { query } from "../../database/utils";
+import { Book, Exam, Group, Subject } from "../../../../libs/models/Mark";
 
 export const router = Router();
 
 router.get("/:id(\\d+$)", async (req, res) => {
     try {
-        const { first: markBook } = await query<Mark.Book>(`
+        const { first: markBook } = await query<Book>(`
+            WITH subject_avg_cte AS (
+                SELECT
+                    subject.id AS subject_id,
+                    subject.group_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.subject
+                LEFT JOIN mark.exam ON exam.subject_id = subject.id
+                GROUP BY subject.id, subject.group_id
+            ),
+            group_avg_cte AS (
+                SELECT
+                    "group".id AS group_id,
+                    "group".book_id,
+                    ROUND(AVG(subject_avg_cte.average_score) FILTER (WHERE subject_avg_cte.average_score IS NOT NULL), 1) AS average_score,
+                    "group".weight
+                FROM mark."group"
+                LEFT JOIN subject_avg_cte ON subject_avg_cte.group_id = "group".id
+                GROUP BY "group".id, "group".book_id
+            ),
+            book_avg_cte AS (
+                SELECT
+                    book.id AS book_id,
+                    ROUND(SUM(group_avg_cte.average_score * group_avg_cte.weight) / SUM(group_avg_cte.weight) FILTER (WHERE group_avg_cte.weight IS NOT NULL), 1) AS average_score
+                FROM mark.book
+                LEFT JOIN group_avg_cte ON group_avg_cte.book_id = book.id
+                GROUP BY book.id
+            )
+
             SELECT
-                id,
-                user_id as "userId",
-                title,
-                description
+                book.id,
+                book.user_id,
+                book.title,
+                book.description,
+                book.grading_system,
+                book_avg_cte.average_score::float AS "averageScore"
             FROM mark.book
-            WHERE id = $1 AND user_id = $2
+            LEFT JOIN book_avg_cte ON book_avg_cte.book_id = book.id
+            WHERE book.id = $1
+                AND book.user_id = $2
             LIMIT 1;
         `, [req.params.id, req.userId]);
 
@@ -37,14 +69,45 @@ router.get("/", async (req, res) => {
             search = "%";
         } 
 
-        const { rows } = await query<Mark.Book>(`
+        const { rows } = await query<Book>(`
+            WITH subject_avg_cte AS (
+                SELECT
+                    subject.id AS subject_id,
+                    subject.group_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.subject
+                LEFT JOIN mark.exam ON exam.subject_id = subject.id
+                GROUP BY subject.id, subject.group_id
+            ),
+            group_avg_cte AS (
+                SELECT
+                    "group".id AS group_id,
+                    "group".book_id,
+                    ROUND(AVG(subject_avg_cte.average_score) FILTER (WHERE subject_avg_cte.average_score IS NOT NULL), 1) AS average_score,
+                    "group".weight
+                FROM mark."group"
+                LEFT JOIN subject_avg_cte ON subject_avg_cte.group_id = "group".id
+                GROUP BY "group".id, "group".book_id
+            ),
+            book_avg_cte AS (
+                SELECT
+                    book.id AS book_id,
+                    ROUND(SUM(group_avg_cte.average_score * group_avg_cte.weight) / SUM(group_avg_cte.weight) FILTER (WHERE group_avg_cte.weight IS NOT NULL), 1) AS average_score
+                FROM mark.book
+                LEFT JOIN group_avg_cte ON group_avg_cte.book_id = book.id
+                GROUP BY book.id
+            )
+
             SELECT
-                id,
-                user_id as "userId",
-                title,
-                description
+                book.id,
+                book.user_id as "userId",
+                book.title,
+                book.description,
+                book.grading_system as "gradingSystem",
+                book_avg_cte.average_score::float AS "averageScore"
             FROM mark.book
-            WHERE user_id = $1 AND title LIKE $2;
+            LEFT JOIN book_avg_cte ON book_avg_cte.book_id = book.id
+            WHERE book.user_id = $1 AND title LIKE $2;
         `, [req.userId, search]);
 
         return res.success("Mark books read successfully", rows);
@@ -56,13 +119,19 @@ router.get("/", async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { title, description } = req.body;
+        const { title, description, gradingSystem } = req.body;
+
+        if (!["letters", "numbers"].includes(gradingSystem)) {
+            return res.unprocessableEntityError(
+                `The provided grading system is invalid. Expected ${["letters", "numbers"].join(" or ")}, received ${gradingSystem}.`
+            );
+        }
 
         const { first } = await query<{ id: number }>(`
-            INSERT INTO mark.book (user_id, title, description)
-            VALUES ($1, $2, $3)
+            INSERT INTO mark.book (user_id, title, description, grading_system)
+            VALUES ($1, $2, $3, $4)
             RETURNING id;
-        `, [req.userId, title, description]);
+        `, [req.userId, title, description, gradingSystem]);
 
         return res.success("Mark book created successfully", first!.id);
     } catch (err) {
@@ -73,15 +142,22 @@ router.post('/', async (req, res) => {
 
 router.put('/:id(\\d+$)', async (req, res) => {
     try {
-        const { title, description } = req.body;
+        const { title, description, gradingSystem } = req.body;
+
+        if (!["letters", "numbers"].includes(gradingSystem)) {
+            return res.unprocessableEntityError(
+                `The provided grading system is invalid. Expected ${["letters", "numbers"].join(" or ")}, received ${gradingSystem}.`
+            );
+        }
 
         await query(`
             UPDATE mark.book
             SET title = $1,
                 description = $2,
-                updated_at = $3
-            WHERE id = $4 AND user_id = $5;
-        `, [title, description, new Date(), req.params.id, req.userId]);
+                grading_system = $3,
+                updated_at = $4
+            WHERE id = $5 AND user_id = $6;
+        `, [title, description, gradingSystem, new Date(), req.params.id, req.userId]);
 
         return res.success("Mark book updated successfully");
     } catch (err) {
@@ -112,16 +188,39 @@ router.get("/:bookId(\\d+)/groups/:groupId(\\d+$)", async (req, res) => {
     try {
         // group surrounded by quotes because it's a reserved keyword
         // weight casted to float because decimals return as string
-        const { first: markGroup } = await query<Mark.Group>(`
+        const { first: markGroup } = await query<Group>(`
+            WITH subject_avg_cte AS (
+                SELECT
+                    subject.id AS subject_id,
+                    subject.group_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.subject
+                LEFT JOIN mark.exam ON exam.subject_id = subject.id
+                GROUP BY subject.id, subject.group_id
+            ),
+            group_avg_cte AS (
+                SELECT
+                    "group".id AS group_id,
+                    ROUND(AVG(subject_avg_cte.average_score) FILTER (WHERE subject_avg_cte.average_score IS NOT NULL), 1) AS average_score
+                FROM mark."group"
+                LEFT JOIN subject_avg_cte ON subject_avg_cte.group_id = "group".id
+                GROUP BY "group".id
+            )
+
             SELECT
                 "group".id,
-                "group".book_id as "bookId",
+                "group".book_id AS "bookId",
                 "group".title,
                 "group".description,
-                "group".weight::float
+                "group".weight::float,
+                group_avg_cte.average_score::float AS "averageScore",
+                book.grading_system as "gradingSystem"
             FROM mark."group"
+            LEFT JOIN group_avg_cte ON group_avg_cte.group_id = "group".id
             JOIN mark.book ON book.id = "group".book_id
-            WHERE "group".id = $1 AND "group".book_id = $2 AND book.user_id = $3
+            WHERE "group".id = $1
+                AND "group".book_id = $2
+                AND book.user_id = $3
             LIMIT 1;
         `, [req.params.groupId, req.params.bookId, req.userId]);
 
@@ -139,16 +238,38 @@ router.get("/:bookId(\\d+)/groups/:groupId(\\d+$)", async (req, res) => {
 router.get("/:bookId(\\d+)/groups", async (req, res) => {
     try {
         // group surrounded by quotes because it's a reserved keyword
-        const { rows } = await query<Mark.Group>(`
+        const { rows } = await query<Group>(`
+            WITH subject_avg_cte AS (
+                SELECT
+                    subject.id AS subject_id,
+                    subject.group_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.subject
+                LEFT JOIN mark.exam ON exam.subject_id = subject.id
+                GROUP BY subject.id, subject.group_id
+            ),
+            group_avg_cte AS (
+                SELECT
+                    "group".id AS group_id,
+                    ROUND(AVG(subject_avg_cte.average_score) FILTER (WHERE subject_avg_cte.average_score IS NOT NULL), 1) AS average_score
+                FROM mark."group"
+                LEFT JOIN subject_avg_cte ON subject_avg_cte.group_id = "group".id
+                GROUP BY "group".id
+            )
+
             SELECT
                 "group".id,
-                "group".book_id as "bookId",
+                "group".book_id AS "bookId",
                 "group".title,
                 "group".description,
-                "group".weight::float
+                "group".weight::float,
+                group_avg_cte.average_score::float AS "averageScore",
+                book.grading_system as "gradingSystem"
             FROM mark."group"
+            LEFT JOIN group_avg_cte ON group_avg_cte.group_id = "group".id
             JOIN mark.book ON book.id = "group".book_id
-            WHERE "group".book_id = $1 AND book.user_id = $2;
+            WHERE "group".book_id = $1
+                AND book.user_id = $2;
         `, [req.params.bookId, req.userId]);
 
         return res.success("Mark groups read successfully", rows);
@@ -223,22 +344,41 @@ router.delete("/:bookId(\\d+)/groups/:groupId(\\d+$)", async (req, res) => {
  * Subjects
  */
 
+
 router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+$)", async (req, res) => {
     try {
         // group surrounded by quotes because it's a reserved keyword
-        const { first: subject } = await query<Mark.Subject>(`
+        const { first: subject } = await query<Subject>(`
+            WITH exams_cte AS (
+                SELECT
+                    exam.subject_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.exam
+                GROUP BY exam.subject_id
+            )
+
             SELECT
                 subject.id,
-                subject.group_id as "groupId",
+                subject.group_id AS "groupId",
                 subject.title,
-                subject.description
+                subject.description,
+                book.grading_system as "gradingSystem",
+                exams_cte.average_score::float as "averageScore"
             FROM mark.subject
             JOIN mark."group" ON "group".id = subject.group_id
             JOIN mark.book ON book.id = "group".book_id
+            LEFT JOIN exams_cte ON exams_cte.subject_id = subject.id
             WHERE subject.id = $1
                 AND subject.group_id = $2
                 AND "group".book_id = $3
                 AND book.user_id = $4
+            GROUP BY
+                subject.id,
+                subject.group_id,
+                subject.title,
+                subject.description,
+                book.grading_system,
+                exams_cte.average_score
             LIMIT 1;
         `, [req.params.subjectId, req.params.groupId, req.params.bookId, req.userId]);
 
@@ -256,21 +396,39 @@ router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+$)", as
 router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects", async (req, res) => {
     try {
         // group surrounded by quotes because it's a reserved keyword
-        const { rows } = await query<Mark.Subject>(`
+        const { rows: subjects } = await query<Subject>(`
+            WITH exams_cte AS (
+                SELECT
+                    exam.subject_id,
+                    ROUND(SUM(exam.score * exam.weight) / SUM(exam.weight), 1) AS average_score
+                FROM mark.exam
+                GROUP BY exam.subject_id
+            )
+
             SELECT
                 subject.id,
-                subject.group_id as "groupId",
+                subject.group_id AS "groupId",
                 subject.title,
-                subject.description
+                subject.description,
+                book.grading_system as "gradingSystem",
+                exams_cte.average_score::float as "averageScore"
             FROM mark.subject
             JOIN mark."group" ON "group".id = subject.group_id
             JOIN mark.book ON book.id = "group".book_id
+            LEFT JOIN exams_cte ON exams_cte.subject_id = subject.id
             WHERE subject.group_id = $1
                 AND "group".book_id = $2
-                AND book.user_id = $3;
+                AND book.user_id = $3
+            GROUP BY
+                subject.id,
+                subject.group_id,
+                subject.title,
+                subject.description,
+                book.grading_system,
+                exams_cte.average_score;
         `, [req.params.groupId, req.params.bookId, req.userId]);
 
-        return res.success("Subjects read successfully", rows);
+        return res.success("Subjects read successfully", subjects);
     } catch (err) {
         console.error(`Something went wrong whilst fetching subjects : ${err.message}`);
         return res.serverError();
@@ -350,7 +508,7 @@ router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+)/exams
     try {
         // group surrounded by quotes because it's a reserved keyword
         // weight casted to float because decimals return as string
-        const { first: exam } = await query<Mark.Exam>(`
+        const { first: exam } = await query<Exam>(`
             SELECT
                 exam.id,
                 exam.subject_id as "subjectId",
@@ -385,7 +543,7 @@ router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+)/exams
 router.get("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+)/exams", async (req, res) => {
     try {
         // group surrounded by quotes because it's a reserved keyword
-        const { rows } = await query<Mark.Exam>(`
+        const { rows } = await query<Exam>(`
             SELECT
                 exam.id,
                 exam.subject_id as "subjectId",

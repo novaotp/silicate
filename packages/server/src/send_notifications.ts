@@ -60,5 +60,5 @@ export const groupNotificationsByUserId = (notifications: TaskNotification[]): R
 
         acc[userIdAsString].push(notification);
         return acc;
-    }, {});
+    }, {} as Record<string, TaskNotification[]>);
 };

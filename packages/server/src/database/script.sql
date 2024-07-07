@@ -11,7 +11,7 @@ CREATE TABLE public.user (
     email VARCHAR(80) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     bio TEXT NOT NULL DEFAULT '',
-    avatar_path VARCHAR(255) DEFAULT NULL,
+    avatar_path VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -66,6 +66,8 @@ CREATE TABLE mark.book (
     user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL DEFAULT '',
+    -- letters (e.g. A, B, C) or numbers (6, 5.5, 5)
+    grading_system VARCHAR(255) NOT NULL DEFAULT 'numbers',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_book_public_user FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
@@ -76,7 +78,9 @@ CREATE TABLE mark.group (
     book_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL DEFAULT '',
-    weight DECIMAL NOT NULL,
+    -- If "null", don't take the group into account
+    -- when calculating the book's average score.
+    weight NUMERIC,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_group_book FOREIGN KEY (book_id) REFERENCES mark.book (id) ON DELETE CASCADE
@@ -97,10 +101,15 @@ CREATE TABLE mark.exam (
     subject_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     comment TEXT NOT NULL DEFAULT '',
-    score DECIMAL NOT NULL,
-    weight DECIMAL NOT NULL,
+    score NUMERIC NOT NULL,
+    weight NUMERIC NOT NULL,
     date TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_exam_subject FOREIGN KEY (subject_id) REFERENCES mark.subject (id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_exam_subject_id ON mark.exam(subject_id);
+CREATE INDEX IF NOT EXISTS idx_subject_group_id ON mark.subject(group_id);
+CREATE INDEX IF NOT EXISTS idx_group_book_id ON mark."group"(book_id);
+CREATE INDEX IF NOT EXISTS idx_book_user_id ON mark.book(user_id);
