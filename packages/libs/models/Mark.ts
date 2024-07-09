@@ -1,7 +1,7 @@
 export type GradingSystem = "letters" | "numbers";
 export type Score = number;
 
-export interface Book {
+export type Book = {
     id: number,
     userId: number,
     title: string,
@@ -12,7 +12,7 @@ export interface Book {
     averageScore: Score | null
 }
 
-export interface Group {
+export type Group = {
     id: number,
     bookId: number,
     title: string,
@@ -28,7 +28,7 @@ export interface Group {
     averageScore: Score | null
 }
 
-export interface Subject {
+export type Subject = {
     id: number,
     groupId: number,
     title: string,
@@ -38,7 +38,7 @@ export interface Subject {
     averageScore: Score | null
 }
 
-export interface Exam {
+export type Exam = {
     id: number,
     subjectId: number,
     /** @description Used for score presentation. */

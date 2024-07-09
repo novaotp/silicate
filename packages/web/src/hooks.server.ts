@@ -1,10 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 
-FormData.prototype.toJSON = function () {
-    const json: Record<string, unknown> = {};
+FormData.prototype.toJSON = function(): Record<string, string> {
+    const json: Record<string, string> = {};
 
     this.forEach((value, key) => {
-        json[key] = value;
+        json[key] = value.toString();
     });
 
     return json;

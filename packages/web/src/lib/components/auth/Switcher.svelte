@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Submit from './Submit.svelte';
+    import { Button } from "$lib/ui";
 
     let isToggled: boolean = false;
 </script>
@@ -30,7 +30,9 @@
         >
             Revenir
         </button>
-        <Submit label="Créer mon compte" />
+        <Button.Normal type="submit">
+            Créer mon compte
+        </Button.Normal>
     </div>
 </div>
 
