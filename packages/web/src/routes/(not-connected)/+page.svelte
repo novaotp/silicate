@@ -13,7 +13,6 @@
     />
 </svelte:head>
 
-<div class="bg-image fixed left-0 top-0 h-full w-full"></div>
 <main class="relative flex h-full w-full flex-col md:flex-row mx-auto justify-center">
     <section class="relative flex-1 flex flex-col justify-center gap-5">
         <h1 class="text-5xl font-extrabold text-primary-600">{PUBLIC_APP_NAME}</h1>
@@ -42,12 +41,6 @@
 </main>
 
 <style lang="postcss">
-    .bg-image {
-        background-image: url("/bg.jpg");
-        filter: blur(4px);
-        z-index: -1;
-    }
-
     .separator::before {
         @apply bg-neutral-200;
         content: "";
@@ -62,7 +55,7 @@
         @apply bg-neutral-200;
         content: "";
         position: absolute;
-        left: 0;
+        right: 0;
         top: 50%;
         height: 1px;
         width: 40%;

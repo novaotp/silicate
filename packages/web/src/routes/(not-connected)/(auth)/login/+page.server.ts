@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { BACKEND_URL } from '$env/static/private';
-import type { ApiResponse } from '$libs/types/ApiResponse';
+import type { ApiResponse, ApiResponseWithData } from '$libs/types/ApiResponse';
 
 export const load: PageServerLoad = async ({ cookies, locals }) => {
     // The user wasn't previously connected
@@ -61,7 +61,7 @@ export const actions = {
 
             const { jwt, expires } = result.data;
 
-			cookies.set("id", jwt, { httpOnly: false, secure: false, path: "/", expires: new Date(expires) });
+			cookies.set("id", jwt, { httpOnly: true, secure: true, path: "/", expires: new Date(expires) });
             locals.jwt = jwt;
 		} catch (err) {
 			console.error(`Something went wrong whilst login a user : ${(err as Error).message}`)
