@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { query } from "../database/utils";
-import { RawUser } from "../../../libs/models/User";
+import { RawUser, User } from "../../../libs/models/User";
 import { compare, hash } from 'bcrypt';
 import { sign, verify } from '../utils/jwt';
 
@@ -10,8 +10,16 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const { first: user } = await query<RawUser>(`
-            SELECT *
+        const { first: user } = await query<User & { password: string }>(`
+            SELECT
+                id,
+                first_name as "firstName",
+                last_name as "lastName",
+                email,
+                password,
+                avatar_path as "avatarPath",
+                bio,
+                created_at as "joinedOn"
             FROM public.user
             WHERE email = $1
             LIMIT 1;
@@ -28,7 +36,22 @@ router.post("/login", async (req, res) => {
 
         const { token, expires } = await sign({ userId: user.id });
 
-        return res.success("Users read successfully", { jwt: token, expires });
+        return res.success(
+            "User logged in successfully",
+            {
+                jwt: token,
+                expires,
+                user: {
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    avatar: user.avatar,
+                    bio: user.bio,
+                    joinedOn: user.joinedOn
+                } satisfies User
+            }
+        );
     } catch (err) {
         console.error(`Something went wrong whilst login a user : ${err.message}`);
         return res.serverError();
@@ -78,16 +101,23 @@ router.post('/register', async (req, res) => {
         `, [email]);
 
         if (existingUser) {
-            return res.status(409).send({ message: "A user with the given email already exists." })
+            return res.status(409).send({ success: false, message: "A user with the given email already exists." })
         }
 
-        const { first: userId } = await query<{ id: number }>(`
+        const { first: user } = await query<User>(`
             INSERT INTO public.user (first_name, last_name, email, password)
             VALUES ($1, $2, $3, $4)
-            RETURNING id;
+            RETURNING
+                id,
+                first_name as "firstName",
+                last_name as "lastName",
+                email,
+                avatar_path as "avatarPath",
+                bio,
+                created_at as "joinedOn";
         `, [firstName, lastName, email, await hash(password, 15)]);
 
-        return res.success("User created successfully", userId);
+        return res.success("User created successfully", user);
     } catch (err) {
         console.error(`Something went wrong whilst creating a user : ${err.message}`);
         return res.serverError();
