@@ -15,7 +15,7 @@
 </script>
 
 <div class="relative w-full flex justify-between">
-    <div class="relative flex items-center gap-4 text-neutral-500">
+    <div class="relative flex items-center gap-4 text-neutral-500 dark:text-neutral-300">
         <IconCalendarClock />
         <span>Échéance</span>
     </div>
@@ -25,7 +25,7 @@
 </div>
 {#if show}
     <FullScreen.Backdrop class="flex justify-center items-center" on:click={() => (show = false)}>
-        <Card options={{ y: 50 }} class="bg-transparent p-0">
+        <Card class="bg-transparent p-0">
             <DatePicker
                 pickerOnly
                 format="dd.mm.yyyy hh:ii"

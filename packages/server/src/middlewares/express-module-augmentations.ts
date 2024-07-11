@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verify } from '../utils/jwt';
 
 export const expressModuleAugmentations = async (req: Request, res: Response, next: NextFunction) => {
+    req.jwt = req.headers.authorization ?? null;
     req.userId = req.headers.authorization ? (await verify(req.headers.authorization!)).payload.userId : null;
     
     res.success = (message: string, data?: unknown) => {
@@ -13,6 +14,9 @@ export const expressModuleAugmentations = async (req: Request, res: Response, ne
     };
     res.notFoundError = (message: string) => {
         res.status(404).send({ success: false, message });
+    };
+    res.unprocessableEntityError = (message: string) => {
+        res.status(422).send({ success: false, message });
     };
     res.serverError = () => {
         res.status(500).send({ success: false, message: 'Internal Server Error' });

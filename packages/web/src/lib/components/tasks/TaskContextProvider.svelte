@@ -10,10 +10,12 @@
     import NoTask from "./NoTask.svelte";
 
     export let tasks: Task[];
+    export let otherTasks: Task[];
     export let categories: string[];
 
-    const { tasks: _tasks } = setContext<PageContext>('page', {
+    const { tasks: _tasks, otherTasks: _otherTasks } = setContext<PageContext>('page', {
         tasks: writable(tasks),
+        otherTasks: writable(otherTasks),
         categories: writable(categories)
     });
 
@@ -24,16 +26,17 @@
 
     $: currentTab = $page.url.searchParams.get('tab') ?? '';
     $: archived = $page.url.searchParams.get('tab') === 'archives';
+    $: search = $page.url.searchParams.get('search') ?? '';
 
     const changeTab = (tab: string) => {
         changeSearchParams('tab', tab, { invalidateAll: true, removeOtherParams: true });
     };
 </script>
 
-{#if $_tasks.length > 0}
+{#if $_tasks.length > 0 || search !== "" || $_otherTasks.length > 0}
     <main class="relative w-full h-[calc(100%-40px)] flex flex-col justify-start gap-5 overflow-auto p-5 pt-0 md:pt-5">
         <header class="relative w-full flex flex-col md:flex-row gap-5 justify-start md:justify-between items-center">
-            <h1 class="self-start text-xl text-primary-950">Tâches {archived ? 'Archivées' : ''}</h1>
+            <h1 class="self-start text-xl text-primary-950 dark:text-neutral-50">Tâches {archived ? 'Archivées' : ''}</h1>
             <div class="relative h-full w-full md:w-auto flex gap-5 items-center">
                 <Select
                     items={tabs}
@@ -51,17 +54,17 @@
         <TaskList />
     </main>
     <menu
-        class="fixed md:hidden bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)]"
+        class="fixed md:hidden bottom-0 left-0 w-full h-[60px] py-[10px] flex justify-evenly items-center bg-white dark:bg-neutral-900 z-[70] shadow-[0_-4px_4px_rgba(0,0,0,0.1)] dark:shadow-none"
     >
         <button
-            class="border-b-2 {currentTab === '' ? 'border-primary-600' : 'border-transparent text-neutral-600'}"
+            class="border-b-2 {currentTab === '' ? 'dark:text-neutral-50 border-primary-600 dark:border-primary-400' : 'border-transparent text-neutral-600 dark:text-neutral-300'}"
             on:click={() => changeTab('')}
         >
             Tâches
         </button>
         <AddTask />
         <button
-            class="border-b-2 {currentTab === 'archives' ? 'border-primary-600' : 'border-transparent text-neutral-600'}"
+            class="border-b-2 {currentTab === 'archives' ? 'dark:text-neutral-50 border-primary-600 dark:border-primary-400' : 'border-transparent text-neutral-600 dark:text-neutral-300'}"
             on:click={() => changeTab('archives')}
         >
             Archives

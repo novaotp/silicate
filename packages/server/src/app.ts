@@ -4,7 +4,7 @@ import cors from "cors";
 import path from "path";
 
 import { router as taskRoutes } from "./routes/tasks";
-import { router as meRoutes } from "./routes/me/me.ts";
+import { router as meRoutes } from "./routes/me/index.ts";
 import { router as memoRoutes } from "./routes/memo.routes.ts";
 import { router as authRoutes } from "./routes/auth.routes.ts";
 import { authenticated } from './middlewares/authenticated';
@@ -14,6 +14,7 @@ import { Server } from 'socket.io';
 import { authenticate } from './utils/jwt.ts';
 import { createTaskNotification, getTaskReminders, groupNotificationsByUserId } from './send_notifications.ts';
 import { TaskNotification } from '../../libs/models/Task.ts';
+import { router as markRoutes } from './routes/marks/index.ts';
 
 const app = express();
 const server = createServer(app);
@@ -36,6 +37,7 @@ app.use(authenticated);
 app.use("/api/v1/me", meRoutes);
 app.use("/api/v1/memos", memoRoutes);
 app.use("/api/v1/tasks", taskRoutes);
+app.use("/api/v1/mark-books", markRoutes);
 
 io.on('connection', async (socket) => {
     const jwt = socket.handshake.query.jwt as string;

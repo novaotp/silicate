@@ -1,8 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
+    import { Input } from "$lib/ui";
     import IconCircleXFilled from "@tabler/icons-svelte/IconCircleXFilled.svelte";
     import IconSearch from "@tabler/icons-svelte/IconSearch.svelte";
+
+    $: undecodedCurrentSearch = $page.url.searchParams.get('search');
+    $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
 
     const search = async () => {
         const searchParams = new URLSearchParams($page.url.searchParams);
@@ -16,24 +20,26 @@
         await goto(`/app/tasks?${searchParams}`, { invalidateAll: true });
     }
 
-    $: undecodedCurrentSearch = $page.url.searchParams.get('search');
-    $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';
+    const reset = () => {
+        currentSearch = "";
+        search();
+    }
 </script>
 
-<div role="search" class="relative w-full md:max-w-[350px] h-[50px] rounded flex justify-between items-center bg-neutral-100 text-neutral-700">
-    <input
+<div role="search" class="relative w-full md:max-w-[350px] h-[50px] rounded-lg flex justify-between items-center bg-neutral-100 dark:bg-neutral-800 text-neutral-700">
+    <Input
         bind:value={currentSearch}
         type="search"
         placeholder="Recherche une tâche..."
-        class="relative w-[calc(100%-80px)] h-full bg-transparent px-5 rounded-l text-sm"
+        class="w-full"
     />
     {#if currentSearch !== ""}
-        <button on:click={() => (currentSearch = "")} class="relative size-[50px] flex justify-center items-center">
-            <IconCircleXFilled />
+        <button on:click={reset} class="relative min-h-[50px] min-w-[50px] flex justify-center items-center">
+            <IconCircleXFilled class="text-neutral-600 dark:text-neutral-300" />
         </button>
     {/if}
-    <button on:click={search} class="relative size-[50px] rounded-r flex justify-center items-center search-icon">
-        <IconSearch class="size-5 text-neutral-600" />
+    <button on:click={search} class="relative min-h-[50px] min-w-[50px] rounded-r-lg flex justify-center items-center search-icon">
+        <IconSearch class="size-5 text-neutral-600 dark:text-neutral-300" />
     </button>
 </div>
 

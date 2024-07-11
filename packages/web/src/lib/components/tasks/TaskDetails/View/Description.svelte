@@ -43,14 +43,14 @@
     };
 </script>
 
-<div class="relative w-full flex flex-col gap-3 text-neutral-500">
+<div class="relative w-full flex flex-col gap-3 text-neutral-500 dark:text-neutral-300">
     <div class="relative w-full flex justify-between">
         <div class="flex gap-4">
             <IconNotes />
             <h3>Description</h3>
         </div>
         {#if totalRows > maxRows}
-            <button on:click={() => (expanded = !expanded)} class="text-sm text-neutral-600">
+            <button on:click={() => (expanded = !expanded)} class="text-sm text-neutral-600 dark:text-neutral-300">
                 { expanded ? "Réduire" : "Étendre" }
             </button>
         {/if}
@@ -70,6 +70,6 @@
             clearTimeout(timer);
             timer = setTimeout(() => dispatch('edit'), 750);
         }}
-        class="relative w-full flex flex-col p-5 rounded-lg text-neutral-700 bg-neutral-100 text-sm resize-none"
+        class="relative w-full flex flex-col p-5 rounded-lg text-neutral-700 bg-neutral-100 dark:text-neutral-100 dark:bg-neutral-800 text-sm resize-none"
     ></textarea>
 </div>

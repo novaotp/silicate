@@ -13,7 +13,7 @@
             if (result.type === "failure") {
                 return addToast({ type: "error", message: result.data!.message })
             } else if (result.type === "success" && "id" in result.data!) {
-                addToast({ type: 'success', message: 'Mémo ajouté avec succès.' });
+                addToast({ type: 'success', message: 'Tâche ajoutée avec succès.' });
 
                 if ("tasks" in result.data! && result.data.tasks) {
                     $tasks = result.data.tasks;
@@ -25,8 +25,8 @@
     };
 </script>
 
-<div class="relative w-full max-w-[800px] sm:mx-auto h-full flex flex-col min-[900px]:flex-row-reverse justify-center items-start sm:items-center gap-5">
-    <img src="/illustrations/no-tasks.svg" alt="Illustration : Ajouter un mémo" class="w-3/5 xsm:w-1/2 sm:2/5 self-center" />
+<div class="relative w-full max-w-[800px] sm:mx-auto h-full flex flex-col min-[900px]:flex-row-reverse justify-center items-start sm:items-center px-5 gap-5">
+    <img src="/illustrations/no-tasks.svg" alt="Illustration : Ajouter une tâche" class="w-3/5 xsm:w-1/2 sm:2/5 self-center" />
     <div class="relative mx-auto flex flex-col justify-center items-start xsm:items-center gap-5">
         <h2 class="text-2xl">Créer une tâche</h2>
         <p class="text-neutral-500 max-w-[380px] xsm:text-center">

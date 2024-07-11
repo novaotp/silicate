@@ -80,7 +80,7 @@
     };
 </script>
 
-<div class="relative w-full flex flex-col gap-3 text-neutral-500">
+<div class="relative w-full flex flex-col gap-3 text-neutral-500 dark:text-neutral-300">
     <div class="flex gap-4">
         <IconPaperclip />
         <span>Fichier(s) joint(s) ({attachments?.length ?? 0})</span>
@@ -90,8 +90,8 @@
             <AttachmentComponent {id} path={attachment.relativePathOnServer} name={attachment.name} {signal} on:delete={deleteAttachment} />
         {/each}
         <input bind:this={newAttachmentNode} on:change={handleNewAttachments} multiple type="file" class="hidden" />
-        <button on:click={() => newAttachmentNode.click()} class="bg-neutral-100 rounded-lg p-4">
-            <IconPlus class="text-neutral-700" />
+        <button on:click={() => newAttachmentNode.click()} class="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4">
+            <IconPlus class="text-neutral-700 dark:text-neutral-50" />
         </button>
     </div>
 </div>

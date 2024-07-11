@@ -5,32 +5,31 @@
     import { changeSearchParams } from '$utils/change-search-params';
     import { page } from '$app/stores';
     import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
-    import IconUser from "@tabler/icons-svelte/IconUser.svelte";
-    import IconReceipt2 from "@tabler/icons-svelte/IconReceipt2.svelte";
+    import IconUser from '@tabler/icons-svelte/IconUser.svelte';
+    import IconReceipt2 from '@tabler/icons-svelte/IconReceipt2.svelte';
 
-    // The view will considerably differ
-    // between desktop and mobile users.
-    let clientWidth: number;
     let tabs: Tab[] = [
         {
             icon: IconUser,
-            label: "Mon Profil",
-            slug: "my-profile",
+            label: 'Général',
+            description: 'Voir et modifier mon profil',
+            slug: 'my-profile',
             component: Account
         },
         {
             icon: IconReceipt2,
-            label: "Paiements",
-            slug: "billing",
+            label: 'Paiements',
+            description: 'Voir mon plan actuel',
+            slug: 'billing',
             component: Billing
         }
     ];
 
-    $: currentTab = $page.url.searchParams.get("tab");
+    $: currentTab = $page.url.searchParams.get('tab');
 
     const getComponentBySlug = (slug: string) => {
-        return tabs.find(tab => tab.slug === slug)!.component;
-    }
+        return tabs.find((tab) => tab.slug === slug)!.component;
+    };
 </script>
 
 <svelte:head>
@@ -42,28 +41,34 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full flex flex-col justify-start items-start px-5 md:py-5 gap-5 md:gap-20" bind:clientWidth>
-    <h1>Mon compte</h1>
-    {#if clientWidth > 768}
-        <Tabs {tabs} on:change={(event) => changeSearchParams("tab", event.detail)} />
-    {:else}
-        <div class="rleative w-full flex flex-col divide-y-[1px] divide-neutral-100">
-            {#each tabs as { icon, label, slug }}
+<main class="relative w-full h-full flex flex-col justify-start items-start px-5 md:py-5 gap-5 md:gap-20">
+    <h1 class="dark:text-neutral-50">Mon compte</h1>
+    <div class="hidden md:block w-full h-full">
+        <Tabs {tabs} on:change={(event) => changeSearchParams('tab', event.detail)} />
+    </div>
+    <div class="block w-full md:hidden">
+        <div class="relative w-full h-full flex flex-col gap-5">
+            {#each tabs as { icon, label, description, slug }}
                 <button
-                    on:click={() => changeSearchParams("tab", slug)}
-                    class="relative w-full h-[50px] flex justify-start items-center gap-5"
+                    on:click={() => changeSearchParams('tab', slug)}
+                    class="relative w-full p-5 flex justify-start items-start gap-5 rounded-lg border border-neutral-100 dark:border-none dark:bg-neutral-900"
                 >
-                    <svelte:component this={icon} />
-                    <span>{label}</span>
+                    <div class="relative h-full aspect-square grid place-items-center rounded bg-neutral-50 dark:bg-neutral-800">
+                        <svelte:component this={icon} class="dark:text-neutral-50" />
+                    </div>
+                    <div class="relative w-full h-full flex flex-col justify-start items-start gap-[10px]">
+                        <h2 class="dark:text-neutral-50">{label}</h2>
+                        <p class="text-sm text-neutral-500 dark:text-neutral-300">{description}</p>
+                    </div>
                 </button>
             {/each}
         </div>
         {#if currentTab}
             {@const component = getComponentBySlug(currentTab)}
             <FullScreen.Modal>
-                <header class="relative flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white">
-                    <button class="rounded-full" on:click={() => changeSearchParams("tab", null)}>
-                        <IconChevronLeft />
+                <header class="relative flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white dark:bg-neutral-950">
+                    <button class="rounded-full" on:click={() => changeSearchParams('tab', null)}>
+                        <IconChevronLeft class="dark:text-neutral-50" />
                     </button>
                 </header>
                 <div class="relative w-full flex-grow flex justify-start items-start px-5 pb-5">
@@ -71,5 +76,5 @@
                 </div>
             </FullScreen.Modal>
         {/if}
-    {/if}
+    </div>
 </main>

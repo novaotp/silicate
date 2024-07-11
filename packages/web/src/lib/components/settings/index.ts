@@ -6,6 +6,7 @@ export { default as Billing } from './Billing.svelte';
 export type Tab = {
     icon: ComponentType;
     label: string;
+    description: string;
     slug: string;
     component: ComponentType;
 };

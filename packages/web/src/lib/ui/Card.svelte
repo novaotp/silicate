@@ -8,7 +8,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class={cn("relative bg-white rounded-lg shadow-2xl p-5", $$restProps['class'] || '')}
+    class={cn("relative bg-white dark:bg-neutral-900 rounded-lg shadow-2xl p-5", $$restProps['class'] || '')}
     on:click|stopPropagation
     transition:scale={options}
 >

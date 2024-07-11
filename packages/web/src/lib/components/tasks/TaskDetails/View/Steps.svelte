@@ -91,7 +91,7 @@
 </script>
 
 <div class="relative w-full flex flex-col justify-start gap-3 text-neutral-950">
-    <div class="text-neutral-500 flex justify-between">
+    <div class="text-neutral-500 dark:text-neutral-300 flex justify-between">
         <div class="flex gap-4">
             <IconChecklist />
             <h3>Étapes</h3>
@@ -101,12 +101,12 @@
         </Button.Normal>
     </div>
     {#if steps.length > 0}
-        <div class="relative w-full flex flex-col p-5 rounded-lg bg-neutral-100 gap-2">
-            <div class="flex justify-between text-sm text-neutral-950">
+        <div class="relative w-full flex flex-col p-5 rounded-lg bg-neutral-100 dark:bg-neutral-800 gap-2">
+            <div class="flex justify-between text-sm text-neutral-950 dark:text-neutral-50">
                 <h3>Progression</h3>
                 <span>{progression}%</span>
             </div>
-            <div class="relative w-full h-1 rounded-full bg-neutral-950">
+            <div class="relative w-full h-1 rounded-full overflow-hidden bg-neutral-950 dark:bg-neutral-50">
                 <div class="relative h-full bg-accent-success-500 duration-200 ease-in-out" style="width: {progression}%;"></div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import mime from "mime";
 
 export const avatarPathToBase64 = async (avatarPath: string) => {

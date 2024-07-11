@@ -4,17 +4,20 @@
     import { byteConverter, toTitleCase } from './utils';
     import AttachmentPreview from './AttachmentPreview.svelte';
     import { addToast } from '$lib/stores/toast';
+    import { getFileIcon } from './icons.AttachmentComponent';
 
     export let id: number;
     export const path: string = "";
     export let name: string;
     export let signal: AbortSignal;
 
-    $: extension = name.split('.').at(-1)!;
+    const jwt = getContext<string>('jwt');
 
     let loading: boolean = true;
     let showPreview: boolean = false;
 
+    $: extension = name.split('.').at(-1)!;
+    $: icon = getFileIcon(extension);
     $: fileBlobPromise = (async (name: string) => {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment?name=${name}`, {
             method: 'GET',
@@ -28,14 +31,6 @@
         loading = false;
         return blob;
     })(name);
-
-    const jwt = getContext<string>('jwt');
-
-   const loadIcon = async (extension: string) => {
-        const iconKey = `IconFileType${toTitleCase(extension)}`;
-
-        return await import(/* @vite-ignore */ `@tabler/icons-svelte/${iconKey}.svelte`);
-    };
 
     /**
      * @see https://stackoverflow.com/a/59414837
@@ -56,18 +51,16 @@
     };
 </script>
 
-<button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg bg-neutral-100">
-    {#await loadIcon(extension) then icon}
-        <div class="relative h-full flex justify-center items-center">
-            <svelte:component this={icon} class="size-6 text-neutral-600" />
-        </div>
-    {/await}
+<button on:click={openPreview} class="relative flex justify-between items-center gap-5 min-w-40 px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+    <div class="relative h-full flex justify-center items-center">
+        <svelte:component this={icon} class="size-6 text-neutral-600 dark:text-neutral-300" />
+    </div>
     <div class="relative flex flex-col items-start w-full">
-        <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40 text-neutral-950">{name}</span>
+        <span class="text-ellipsis whitespace-nowrap overflow-hidden max-w-40 text-neutral-950 dark:text-neutral-50">{name}</span>
         {#await fileBlobPromise}
-            <p class="text-sm text-neutral-600">Chargement...</p>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300">Chargement...</p>
         {:then blob}
-            <div class="w-full flex text-neutral-500 text-sm">
+            <div class="w-full flex text-neutral-500 dark:text-neutral-300 text-sm">
                 <span>{byteConverter(blob.size, 2)}</span>
                 <span>&nbsp;-&nbsp;</span>
                 <button on:click|stopPropagation={() => download(blob)}>Télécharger</button>

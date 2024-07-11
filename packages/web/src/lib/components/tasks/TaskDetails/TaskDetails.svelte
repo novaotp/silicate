@@ -191,7 +191,7 @@
 </script>
 
 <div class="relative w-full h-full md:max-h-[660px] flex flex-col justify-start items-start overflow-auto">
-    <div class="relative px-5 pt-20 md:pt-0 pb-5 w-full flex flex-col items-start gap-5 text-primary-950">
+    <div class="relative px-5 pt-[60px] md:pt-0 pb-5 w-full flex flex-col items-start gap-5 text-primary-950 dark:text-neutral-50">
         <input
             value={replica.title}
             on:input={async (event) => {
@@ -217,7 +217,7 @@
 </div>
 {#if showSettings}
     <FullScreen.Backdrop on:click={() => (showSettings = false)} class="flex justify-center items-end z-[999]">
-        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white" transition:fly={{ y: 50 }}>
+        <div role="dialog" class="fixed w-full flex flex-col shadow-2xl bg-white dark:bg-neutral-700 dark:text-neutral-50" transition:fly={{ y: 50 }}>
             {#if !replica.category}
                 <button
                     on:click={async () => {
@@ -274,7 +274,7 @@
                     <span>Archiver</span>
                 {/if}
             </Button.Normal>
-            <Button.Danger variant="secondary" on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+            <Button.Danger on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
                 <IconTrash />
                 <span>Supprimer</span>
             </Button.Danger>

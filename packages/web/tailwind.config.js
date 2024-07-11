@@ -1,7 +1,9 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
+import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'selector',
     content: ['./src/**/*.{svelte,html,js,ts}'],
     theme: {
         screens: {
@@ -78,8 +80,19 @@ export default {
                 
             },
             'transparent': '#00000000',
-            'white': '#ffffff'
+            'white': '#ffffff',
+            'black': '#000000'
         }
     },
-    plugins: [],
+    plugins: [
+        plugin(function ({ addUtilities }) {
+            addUtilities({
+                '.flex-center': {
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }
+            })
+        })
+    ],
 }

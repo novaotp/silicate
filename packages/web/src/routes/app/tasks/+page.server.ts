@@ -4,8 +4,8 @@ import type { Actions, PageServerLoad } from "./$types";
 import type { Reminder, Task } from "$libs/models/Task";
 import { BACKEND_URL } from "$env/static/private";
 
-const fetchCategories = async (jwt: string, archived: boolean): Promise<string[] | undefined> => {
-    const response = await fetch(`${BACKEND_URL}/api/v1/tasks/categories?archived=${archived}`, {
+const fetchCategories = async (jwt: string, search: string, archived: boolean): Promise<string[] | undefined> => {
+    const response = await fetch(`${BACKEND_URL}/api/v1/tasks/categories?search=${search}&archived=${archived}`, {
         method: "GET",
         headers: {
             "accept": "application/json",
@@ -30,15 +30,25 @@ const fetchTasks = async (jwt: string, category: string, search: string, archive
     return result.success ? result.data : undefined;
 }
 
-export const load: PageServerLoad = async ({ url, cookies }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
     const search: string = url.searchParams.get("search") ?? "";
     const category: string = url.searchParams.get("category") ?? "";
     const archived: boolean = url.searchParams.get("tab") === "archives";
 
     try {
         return {
-            tasks: fetchTasks(cookies.get("id")!, category, search, archived),
-            categories: await fetchCategories(cookies.get("id")!, archived)
+            /** The tasks for the current view. */
+            tasks: fetchTasks(locals.jwt!, category, search, archived),
+            /**
+             * The tasks for the other view.
+             * 
+             * Needed for some conditional aspects.
+             * 
+             * @description Also, I didn't find a better name...
+             * @todo Find a better name
+             */
+            otherTasks: fetchTasks(locals.jwt!, category, search, !archived),
+            categories: await fetchCategories(locals.jwt!, search, archived)
         }
     } catch (err) {
         return fail(422, { message: (err as Error).message });
@@ -122,7 +132,7 @@ export const actions: Actions = {
             }
 
             const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
-            const categories = await fetchCategories(jwt, archived);
+            const categories = await fetchCategories(jwt, decodeURIComponent(search), archived);
 
             if (tasks && categories) {
                 return { tasks, categories };

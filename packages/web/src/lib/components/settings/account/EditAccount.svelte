@@ -5,7 +5,7 @@
     import PasswordChanger from './PasswordChanger.svelte';
     import type { SubmitFunction } from '../../../../routes/app/settings/$types';
     import { addToast } from '$lib/stores/toast';
-    import { Button } from '$lib/ui';
+    import { Button, Label, Input } from '$lib/ui';
     import { enhance } from '$app/forms';
     import { fly } from 'svelte/transition';
 
@@ -34,8 +34,8 @@
 <form method="post" action="?/editAccount" use:enhance={editAccountEnhance} class="w-full flex flex-col gap-5">
     <div class="relative w-full flex flex-col gap-5 md:flex-row">
         <div class="relative w-full flex flex-col gap-[10px]">
-            <label for="firstName" class="text-neutral-500 text-sm">Prénom</label>
-            <input
+            <Label for="firstName">Prénom</Label>
+            <Input
                 name="firstName"
                 value={replicaUser.firstName}
                 on:input={(event) => (replicaUser.firstName = event.currentTarget.value)}
@@ -43,8 +43,8 @@
             />
         </div>
         <div class="relative w-full flex flex-col gap-[10px]">
-            <label for="lastName" class="text-neutral-500 text-sm">Nom</label>
-            <input
+            <Label for="lastName">Nom</Label>
+            <Input
                 name="lastName"
                 value={replicaUser.lastName}
                 on:input={(event) => (replicaUser.lastName = event.currentTarget.value)}
@@ -54,8 +54,8 @@
     </div>
     <div class="relative w-full flex flex-col gap-5 md:flex-row">
         <div class="relative w-full flex flex-col gap-[10px]">
-            <label for="email" class="text-neutral-500 text-sm">Email</label>
-            <input
+            <Label for="email">Email</Label>
+            <Input
                 name="email"
                 value={replicaUser.email}
                 on:input={(event) => (replicaUser.email = event.currentTarget.value)}
@@ -65,12 +65,12 @@
         <PasswordChanger />
     </div>
     <div class="relative w-full flex flex-col gap-[10px]">
-        <label for="bio" class="text-neutral-500 text-sm">Biographie</label>
+        <Label for="bio">Biographie</Label>
         <textarea
             name="bio"
             value={replicaUser.bio}
             on:input={(event) => (replicaUser.bio = event.currentTarget.value)}
-            class="relative w-full bg-neutral-100 rounded-lg p-5 h-[150px] text-sm resize-none"
+            class="relative w-full bg-neutral-100 dark:text-neutral-50 dark:bg-neutral-800 rounded-lg p-5 h-[150px] text-sm resize-none"
         ></textarea>
     </div>
     {#if showSaveChanges}

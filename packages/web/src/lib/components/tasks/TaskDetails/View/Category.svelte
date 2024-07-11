@@ -7,7 +7,7 @@
     import { addToast } from '$lib/stores/toast';
     import { page } from '$app/stores';
     import type { ApiResponse } from '$libs/types/ApiResponse';
-    import { Button, Card, FullScreen } from '$lib/ui';
+    import { Button, Card, FullScreen, Input, Label } from '$lib/ui';
 
     export let id: number;
     export let value: string;
@@ -87,7 +87,7 @@
 </script>
 
 <div class="relative w-full flex justify-between">
-    <div class="relative flex items-center gap-4 text-neutral-500">
+    <div class="relative flex items-center gap-4 text-neutral-500 dark:text-neutral-300">
         <IconTag />
         <span>Catégorie</span>
     </div>
@@ -106,26 +106,24 @@
             show = false;
         }}
     >
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <Card class="md:w-[400px] w-full flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
-                <label for="category" class="text-neutral-500">Catégorie</label>
-                <div class="relative w-full h-[50px] flex justify-between rounded-smd text-neutral-700 bg-neutral-100">
-                    <input
+                <Label for="category">Catégorie</Label>
+                <div class="relative w-full h-[50px] flex justify-between rounded-lg">
+                    <Input
                         name="category"
                         value={tempValue}
-                        maxlength="17"
+                        maxlength={17}
                         on:input={onCategoryChange}
-                        on:click|stopPropagation
-                        class="relative w-full h-[50px] px-5 rounded-l bg-transparent"
+                        on:click
+                        class="relative w-full h-[50px] px-5 rounded-r-none bg-transparent"
                     />
-                    <button on:click={() => (tempValue = '')} class="relative h-full aspect-square flex justify-center items-center rounded-r">
-                        <IconCircleXFilled />
+                    <button on:click={() => (tempValue = '')} class="relative h-full dark:bg-neutral-800 aspect-square flex justify-center items-center rounded-r-lg">
+                        <IconCircleXFilled class="dark:text-neutral-300" />
                     </button>
                 </div>
                 {#if tempValue === ''}
-                    <span class="text-accent-danger-500 text-xs">Entrez une valeur ou supprimez la.</span>
+                    <span class="text-accent-danger-500 dark:text-accent-danger-400 text-xs">Entrez une valeur ou supprimez la.</span>
                 {/if}
             </div>
             <div class="relative w-full flex flex-wrap justify-start gap-5">

@@ -20,9 +20,9 @@
 </svelte:head>
 
 {#if !data.user}
-    <p>Something went wrong.</p>
+    <p class="dark:text-neutral-50">Something went wrong.</p>
 {:else}
     <main class="px-5 flex flex-col gap-5">
-        <h1 class="text-2xl font-semibold">Content de te revoir, {$user.firstName} !</h1>
+        <h1 class="text-2xl font-semibold dark:text-neutral-50">Content de te revoir, {$user.firstName} !</h1>
     </main>
 {/if}
