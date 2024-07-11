@@ -4,6 +4,7 @@
     export let variant: "primary" | "secondary" | "tertiary" = "primary";
     export let size: "small" | "medium" = "medium";
     export let type: "button" | "submit" = "button";
+    export let disabled: boolean = false;
 
     const sizeClasses = {
         "small": "px-3 py-1 text-sm",
@@ -17,6 +18,11 @@
     }
 </script>
 
-<button {type} class={cn("relative rounded-lg", sizeClasses[size], colorClasses[variant], $$restProps['class'] || '')} on:click>
+<button
+    {type}
+    {disabled}
+    on:click
+    class={cn("relative rounded-lg", sizeClasses[size], colorClasses[variant], $$restProps['class'] || '')}
+>
     <slot />
 </button>

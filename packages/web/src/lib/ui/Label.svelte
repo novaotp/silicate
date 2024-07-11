@@ -9,6 +9,6 @@
     export { forControl as for, className as class }
 </script>
 
-<label for={forControl} class={cn("text-neutral-500 dark:text-neutral-50 text-sm", className)}>
+<label for={forControl} class={cn("text-black dark:text-neutral-50 text-sm", className)}>
     <slot />
 </label>

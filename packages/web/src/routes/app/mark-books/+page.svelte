@@ -8,11 +8,12 @@
 
     export let data: PageServerData;
 
-    /** Global store availability. */    
+    /** Global store availability. */
     setContext("books", writable<Book[]>([]));
     setContext("groups", writable<Group[]>([]));
     setContext("subjects", writable<Subject[]>([]));
     setContext("exams", writable<Exam[]>([]));
+
     setContext("currentBook", writable<Book | undefined>(undefined));
     setContext("currentGroup", writable<Group | undefined>(undefined));
     setContext("currentSubject", writable<Subject | undefined>(undefined));

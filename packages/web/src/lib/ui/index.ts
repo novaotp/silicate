@@ -8,3 +8,4 @@ export { default as Tabs } from "./Tabs.svelte";
 export { default as Input } from "./Input.svelte";
 export { default as TextArea } from "./TextArea.svelte";
 export { default as Label } from "./Label.svelte";
+export { default as Confirm } from "./Confirm.svelte";

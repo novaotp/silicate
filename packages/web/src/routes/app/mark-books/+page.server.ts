@@ -1,10 +1,11 @@
 import { BACKEND_URL } from "$env/static/private";
-import type { Book } from "$libs/models/Mark";
+import type { Book, Group } from "$libs/models/Mark";
 import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+import type { SvelteKitFetch } from "$types/sveltekit-fetch";
 
-const fetchMarkBooks = async (jwt: string): Promise<Book[] | undefined> => {
+const fetchMarkBooks = async (jwt: string, fetch: SvelteKitFetch): Promise<Book[] | undefined> => {
     const response = await fetch(`${BACKEND_URL}/api/v1/mark-books`, {
         method: "GET",
         headers: {
@@ -17,14 +18,14 @@ const fetchMarkBooks = async (jwt: string): Promise<Book[] | undefined> => {
     return result.success ? result.data : undefined;
 }
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, fetch }) => {
     return {
-        books: fetchMarkBooks(locals.jwt!)
+        books: fetchMarkBooks(locals.jwt!, fetch)
     }
 };
 
 export const actions: Actions = {
-    createBook: async ({ locals, request }) => {
+    createBook: async ({ locals, request, fetch }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
@@ -49,7 +50,9 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { id: result.data, message: result.message };
+            const books = await fetchMarkBooks(locals.jwt!, fetch);
+
+            return { id: result.data, books, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de l'ajout d'un carnet de note : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });
@@ -145,13 +148,13 @@ export const actions: Actions = {
                 }
             });
 
-            const result: ApiResponseWithData<number> = await response.json();
+            const result: ApiResponseWithData<Group> = await response.json();
 
             if (!result.success) {
                 return fail(422, { message: result.message });
             }
 
-            return { id: result.data, message: result.message };
+            return { group: result.data, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de l'ajout d'un groupe : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });

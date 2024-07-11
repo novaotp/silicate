@@ -1,18 +1,15 @@
 <script lang="ts">
     import { Button, FullScreen } from "$lib/ui";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { getContext } from "svelte";
     import { fetchGroupsAndSubjects } from "./utils";
     import type { Book } from "$libs/models/Mark";
     import MainView from "./MainView.svelte";
-    import IconChevronLeft from "@tabler/icons-svelte/IconChevronLeft.svelte";
     import type { Writable } from "svelte/store";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
 
     const currentBook = getContext<Writable<Book | undefined>>("currentBook");
     const jwt = getContext<string>("jwt");
-
-    const dispatch = createEventDispatcher<{ close: null }>();
 
     $: viewBookId = $page.url.searchParams.get("bookId");
 </script>
@@ -37,17 +34,7 @@
         {#await fetchGroupsAndSubjects(jwt, $currentBook.id.toString()) then groupsAndSubjects}
             {#if groupsAndSubjects}
                 {@const { groups, subjects } = groupsAndSubjects}
-                <div class="relative w-full flex justify-between text-xl">
-                    <div class="flex gap-5">
-                        <button on:click={() => dispatch("close")}>
-                            <IconChevronLeft />
-                        </button>
-                        <h1>{$currentBook.title}</h1>
-                    </div>
-                    <span>{$currentBook.averageScore}</span>
-                </div>
-                <p class="text-neutral-500">{$currentBook.description}</p>
-                <MainView groupsData={groups} subjectsData={subjects} />
+                <MainView groupsData={groups} subjectsData={subjects} on:close />
             {:else}
                 <p class="dark:text-neutral-50">Impossible de charger les carnets de notes.</p>
             {/if}
