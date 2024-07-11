@@ -284,13 +284,26 @@ router.post("/:bookId(\\d+)/groups", async (req, res) => {
         const { title, description, weight } = req.body;
 
         // group surrounded by quotes because it's a reserved keyword
-        const { first } = await query<{ id: number }>(`
-            INSERT INTO mark."group" (book_id, title, description, weight)
-            VALUES ($1, $2, $3, $4)
-            RETURNING id;
+        const { first } = await query<Group>(`
+            WITH inserted_group AS (
+                INSERT INTO mark."group" (book_id, title, description, weight)
+                VALUES ($1, $2, $3, $4)
+                RETURNING *
+            )
+
+            SELECT
+                inserted_group.id,
+                inserted_group.book_id as "bookId",
+                inserted_group.title,
+                inserted_group.description,
+                inserted_group.weight::float,
+                NULL as "averageScore"
+                book.grading_system as "gradingSystem"
+            FROM inserted_group
+            JOIN mark.book ON book.id = inserted_group.book_id;
         `, [req.params.bookId, title, description, weight]);
 
-        return res.success("Mark group added successfully", first!.id);
+        return res.success("Mark group added successfully", first);
     } catch (err) {
         console.error(`Something went wrong whilst adding a mark group : ${err.message}`);
         return res.serverError();
