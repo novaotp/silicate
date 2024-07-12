@@ -96,8 +96,10 @@ class _LoginState extends State<Login> {
 
                             final UserModel user =
                                 UserModel.fromJson(response["data"]["user"]);
+                            final String jwt = response["data"]["jwt"];
 
                             userState.set(user);
+                            userState.setJwt(jwt);
 
                             if (context.mounted) {
                               context.pushReplacement("/");

@@ -1,5 +1,7 @@
 import 'package:app/src/data/providers/user.dart';
 import 'package:app/src/routes/app/dashboard.dart';
+import 'package:app/src/routes/app/memo.dart';
+import 'package:app/src/routes/app/memos.dart';
 import 'package:app/src/routes/auth/login.dart';
 import 'package:app/src/routes/auth/register.dart';
 import 'package:app/src/routes/on_boarding.dart';
@@ -61,9 +63,14 @@ class MyApp extends StatelessWidget {
           builder: (context, state) => const Login(),
         ),
         GoRoute(
-          path: '/app',
-          builder: (context, state) => const Dashboard(),
-        )
+          path: '/app/memos',
+          builder: (context, state) => const Memos(),
+        ),
+        GoRoute(
+          path: '/app/memos/:memoId',
+          builder: (context, state) =>
+              Memo(memoId: int.parse(state.pathParameters["memoId"]!)),
+        ),
       ],
       /* redirect: (context, state) {
         final userProvider = context.read<UserProvider>();

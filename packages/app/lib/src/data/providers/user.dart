@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   final FileService fileService = FileService();
   UserModel? _user;
+  String? _jwt;
 
   UserModel? get user => _user;
+  String? get jwt => _jwt;
 
   UserProvider() {
     _init();
@@ -35,6 +37,16 @@ class UserProvider extends ChangeNotifier {
   void unset() {
     _user = null;
     _writeUserToFile(user);
+    notifyListeners();
+  }
+
+  void setJwt(String jwt) {
+    _jwt = jwt;
+    notifyListeners();
+  }
+
+  void unsetJwt() {
+    _jwt = null;
     notifyListeners();
   }
 

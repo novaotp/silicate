@@ -2,15 +2,22 @@ import 'dart:convert';
 
 import 'package:app/src/data/providers/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NavigationLayout extends StatefulWidget {
   final String title;
   final Widget child;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
-  const NavigationLayout({required this.title, required this.child, super.key});
+  const NavigationLayout({
+    required this.title,
+    required this.child,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    super.key,
+  });
 
   @override
   State<NavigationLayout> createState() => _NavigationLayoutState();
@@ -26,6 +33,7 @@ class _NavigationLayoutState extends State<NavigationLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: const <Widget>[UserMenu()],
@@ -36,6 +44,8 @@ class _NavigationLayoutState extends State<NavigationLayout> {
           Expanded(child: widget.child),
         ],
       ),
+      floatingActionButton: widget.floatingActionButton,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
     );
   }
 }
@@ -64,7 +74,7 @@ class NavigationLayoutDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home_rounded),
             title: const Text('Dashboard'),
-            onTap: () => context.go("/app"),
+            onTap: () => context.go("/"),
           ),
           ListTile(
             leading: const Icon(Icons.note_rounded),
@@ -133,6 +143,7 @@ class _UserMenuState extends State<UserMenu> {
           final provider = Provider.of<UserProvider>(context, listen: false);
           context.go("/login");
           provider.unset();
+          provider.unsetJwt();
         },
         style: MenuItemButton.styleFrom(backgroundColor: Colors.red),
         child: const Text(

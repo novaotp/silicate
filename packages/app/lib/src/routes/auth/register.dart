@@ -1,11 +1,8 @@
 import 'dart:developer';
 
-import 'package:app/src/data/models/user.dart';
-import 'package:app/src/data/providers/user.dart';
 import 'package:app/src/data/services/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -35,8 +32,6 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    var userProvider = context.watch<UserProvider>();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -127,18 +122,12 @@ class _RegisterState extends State<Register> {
                               password: password,
                             );
 
-                            if (!response["success"]) {
-                              if (context.mounted) {
-                                return showToast(context, response["message"]);
-                              }
+                            if (!response["success"] && context.mounted) {
+                              return showToast(context, response["message"]);
                             }
 
-                            final UserModel user = response["data"];
-
-                            userProvider.set(user);
-
                             if (context.mounted) {
-                              context.pushReplacement("/app");
+                              context.pushReplacement("/login");
                             }
                           } catch (error) {
                             log(error.toString());
