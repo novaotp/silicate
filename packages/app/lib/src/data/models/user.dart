@@ -44,4 +44,8 @@ class UserModel {
   String fullName() {
     return "$firstName $lastName";
   }
+
+  String initials() {
+    return firstName[0] + lastName[0];
+  }
 }

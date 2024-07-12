@@ -35,6 +35,9 @@ class _OnBoardingState extends State<OnBoarding> {
               onPressed: () => context.pushReplacement("/login"),
               child: const Text("Login"),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () => context.pushReplacement("/register"),
               child: const Text("Register"),

@@ -1,0 +1,8 @@
+{
+    "@@author": "Sajidur Rahman",
+    "@@locale": "fr",
+    "helloWorld": "Bonjour le monde",
+    "@helloWorld": {
+        "description": "L'accueil conventionnel pour un nouveau programmeur"
+    }
+}

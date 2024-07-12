@@ -18,8 +18,8 @@ class _LoginState extends State<Login> {
   final AuthService authService = AuthService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String email = "";
-  String password = "";
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void showToast(BuildContext context, String content) {
     final scaffold = ScaffoldMessenger.of(context);
@@ -28,6 +28,13 @@ class _LoginState extends State<Login> {
         content: Text(content),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,7 +63,7 @@ class _LoginState extends State<Login> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (email = value),
+                  controller: emailController,
                 ),
                 TextFormField(
                   decoration:
@@ -68,7 +75,7 @@ class _LoginState extends State<Login> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (password = value),
+                  controller: passwordController,
                 ),
                 Center(
                   child: Padding(
@@ -78,14 +85,13 @@ class _LoginState extends State<Login> {
                         if (_formKey.currentState!.validate()) {
                           try {
                             final response = await authService.login(
-                              email: email,
-                              password: password,
+                              email: emailController.text,
+                              password: passwordController.text,
                             );
 
-                            if (!response["success"]) {
-                              if (context.mounted) {
-                                return showToast(context, response["message"]);
-                              }
+                            if (!response["success"] && context.mounted) {
+                              passwordController.text = "";
+                              return showToast(context, response["message"]);
                             }
 
                             final UserModel user =
