@@ -2,6 +2,7 @@ import 'package:app/src/data/models/memo.dart';
 import 'package:app/src/data/providers/user.dart';
 import 'package:app/src/data/repositories/memo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class _MemoState extends State<Memo> {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     MemoRepository memoRepository = MemoRepository(
-      baseUrl: "http://localhost:8080",
+      baseUrl: dotenv.env["SERVER_URL"]!,
       authToken: userProvider.jwt!,
     );
 

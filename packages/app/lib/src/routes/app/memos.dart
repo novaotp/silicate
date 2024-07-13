@@ -3,6 +3,7 @@ import 'package:app/src/data/providers/user.dart';
 import 'package:app/src/data/repositories/memo.dart';
 import 'package:app/src/layouts/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class _MemosState extends State<Memos> {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     MemoRepository memoRepository = MemoRepository(
-      baseUrl: "http://localhost:8080",
+      baseUrl: dotenv.env["SERVER_URL"]!,
       authToken: userProvider.jwt!,
     );
 
@@ -103,7 +104,7 @@ class _AddMemoState extends State<AddMemo> {
       onPressed: () async {
         final provider = Provider.of<UserProvider>(context, listen: false);
         final MemoRepository memoRepository = MemoRepository(
-          baseUrl: "http://localhost:8080",
+          baseUrl: dotenv.env["SERVER_URL"]!,
           authToken: provider.jwt!,
         );
         final response =
