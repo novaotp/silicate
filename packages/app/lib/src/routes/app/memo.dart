@@ -20,6 +20,7 @@ class Memo extends StatefulWidget {
 
 class _MemoState extends State<Memo> {
   late Future<MemoModel> _memoFuture;
+  bool _showCategoryChanger = false;
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _MemoState extends State<Memo> {
           icon: const Icon(Icons.arrow_back_rounded),
         ),
         actions: <Widget>[
-          FutureBuilder(
+          FutureBuilder<MemoModel>(
             future: _memoFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -64,8 +65,16 @@ class _MemoState extends State<Memo> {
                 MemoModel memo = snapshot.data!;
                 return Row(
                   children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _showCategoryChanger = true;
+                        });
+                      },
+                      icon: const Icon(Icons.category_rounded),
+                    ),
                     PinnedButton(memo: memo),
-                    DeleteButton(memo: memo)
+                    DeleteButton(memo: memo),
                   ],
                 );
               }
@@ -73,23 +82,49 @@ class _MemoState extends State<Memo> {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          FutureBuilder(
-            future: _memoFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData) {
-                return const Center(child: Text('No memo found.'));
-              } else {
-                MemoModel memo = snapshot.data!;
-                return MemoData(memo: memo);
-              }
-            },
+      body: Stack(
+        children: [
+          Column(
+            children: <Widget>[
+              FutureBuilder<MemoModel>(
+                future: _memoFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData) {
+                    return const Center(child: Text('No memo found.'));
+                  } else {
+                    MemoModel memo = snapshot.data!;
+                    return MemoData(memo: memo);
+                  }
+                },
+              ),
+            ],
           ),
+          if (_showCategoryChanger)
+            FutureBuilder<MemoModel>(
+              future: _memoFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  return const Center(child: Text('No memo found.'));
+                } else {
+                  return CategoryChangerCard(
+                    memo: snapshot.data!,
+                    onClose: () {
+                      setState(() {
+                        _showCategoryChanger = false;
+                      });
+                    },
+                  );
+                }
+              },
+            ),
         ],
       ),
     );
@@ -112,8 +147,8 @@ class _MemoDataState extends State<MemoData> {
   late MemoRepository _memoRepository;
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  String? _category;
-  bool _pinned = false;
+  late String? _category;
+  late bool _pinned;
   Timer? _debounce;
 
   @override
@@ -294,5 +329,190 @@ class _DeleteButtonState extends State<DeleteButton> {
       showToast(context, response["message"]);
       context.go("/app/memos");
     }
+  }
+}
+
+class CategoryChangerCard extends StatefulWidget {
+  final MemoModel memo;
+  final VoidCallback onClose;
+
+  const CategoryChangerCard(
+      {required this.memo, required this.onClose, super.key});
+
+  @override
+  State<CategoryChangerCard> createState() => _CategoryChangerCardState();
+}
+
+class _CategoryChangerCardState extends State<CategoryChangerCard> {
+  final _categoryController = TextEditingController();
+  Timer? _debounce;
+  bool _showError = false;
+  late Future<List<String>> _futureCategories;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoryController.text = widget.memo.category ?? '';
+    _futureCategories = _fetchCategories();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _categoryController.dispose();
+    super.dispose();
+  }
+
+  Future<List<String>> _fetchCategories() async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    MemoRepository memoRepository = MemoRepository(
+      baseUrl: dotenv.env["SERVER_URL"]!,
+      authToken: userProvider.jwt!,
+    );
+
+    final response = await memoRepository.getCategories();
+
+    return List<String>.from(response['data']);
+  }
+
+  /// Updates the category with the given value.
+  ///
+  /// Does not check validity inside the function.
+  /// Make sure to pass a valid value. (non-empty string or `null`).
+  void _editCategory(String? value) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
+      MemoRepository memoRepository = MemoRepository(
+        baseUrl: dotenv.env["SERVER_URL"]!,
+        authToken: userProvider.jwt!,
+      );
+
+      await memoRepository.updateMemo(
+        id: widget.memo.id,
+        title: widget.memo.title,
+        content: widget.memo.content,
+        category: value,
+        pinned: widget.memo.pinned,
+      );
+
+      widget.memo.category = value;
+
+      // Close category changer after changing the category.
+      widget.onClose();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Darkened background overlay
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: widget.onClose, // Close on background tap
+          child: Container(
+            color: Colors.black.withOpacity(0.5),
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ),
+        // Category changer card
+        Center(
+          // Material to ensure it captures tap events
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: widget.onClose,
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _categoryController,
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      errorText: _showError ? 'Category cannot be empty' : null,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  FutureBuilder<List<String>>(
+                    future: _futureCategories,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        // Don't show anything if there are no categories yet.
+                        return Container();
+                      } else {
+                        final categories = snapshot.data!;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: categories.map((category) {
+                            return TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _categoryController.text = category;
+                                  _showError = false;
+                                });
+                              },
+                              child: Text(category),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        // null to remove category
+                        onPressed: () => _editCategory(null),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                        child: const Text("Supprimer"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _showError = _categoryController.text.isEmpty;
+                          });
+
+                          // Don't send a empty category string.
+                          if (_categoryController.text.isEmpty) return;
+
+                          _editCategory(_categoryController.text);
+                        },
+                        child: const Text("Modifier"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
