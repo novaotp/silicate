@@ -47,8 +47,31 @@ class _MemoState extends State<Memo> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         leading: IconButton(
-            onPressed: () => context.go("/app/memos"),
-            icon: const Icon(Icons.arrow_back_rounded)),
+          onPressed: () => context.go("/app/memos"),
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        actions: <Widget>[
+          FutureBuilder(
+            future: _memoFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData) {
+                return const Center(child: Text('No memo found.'));
+              } else {
+                MemoModel memo = snapshot.data!;
+                return Row(
+                  children: [
+                    PinnedButton(memo: memo),
+                    DeleteButton(memo: memo)
+                  ],
+                );
+              }
+            },
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -112,6 +135,7 @@ class _MemoDataState extends State<MemoData> {
   void dispose() {
     _debounce?.cancel();
     _titleController.dispose();
+    _contentController.dispose();
     super.dispose();
   }
 
@@ -162,5 +186,113 @@ class _MemoDataState extends State<MemoData> {
       widget.memo.title = _titleController.text;
       widget.memo.content = _contentController.text;
     });
+  }
+}
+
+class PinnedButton extends StatefulWidget {
+  final MemoModel memo;
+
+  const PinnedButton({required this.memo, super.key});
+
+  @override
+  State<PinnedButton> createState() => _PinnedButtonState();
+}
+
+class _PinnedButtonState extends State<PinnedButton> {
+  late MemoRepository _memoRepository;
+  Timer? _debounce;
+  late bool _pinned;
+
+  @override
+  void initState() {
+    super.initState();
+    _pinned = widget.memo.pinned;
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    _memoRepository = MemoRepository(
+      baseUrl: dotenv.env["SERVER_URL"]!,
+      authToken: userProvider.jwt!,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => _editMemo(context),
+      icon: Icon(
+        _pinned ? Icons.push_pin : Icons.push_pin_outlined,
+      ),
+    );
+  }
+
+  void _editMemo(BuildContext context) async {
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
+    setState(() {
+      _pinned = !_pinned;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      final response = await _memoRepository.updateMemo(
+        id: widget.memo.id,
+        title: widget.memo.title,
+        content: widget.memo.content,
+        category: widget.memo.category,
+        pinned: _pinned,
+      );
+
+      if (!response["success"] && context.mounted) {
+        return showToast(context, response["message"]);
+      }
+
+      widget.memo.pinned = _pinned;
+    });
+  }
+}
+
+class DeleteButton extends StatefulWidget {
+  final MemoModel memo;
+
+  const DeleteButton({required this.memo, super.key});
+
+  @override
+  State<DeleteButton> createState() => _DeleteButtonState();
+}
+
+class _DeleteButtonState extends State<DeleteButton> {
+  late MemoRepository _memoRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    _memoRepository = MemoRepository(
+      baseUrl: dotenv.env["SERVER_URL"]!,
+      authToken: userProvider.jwt!,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => _deleteMemo(context),
+      icon: const Icon(Icons.delete_outline_rounded),
+    );
+  }
+
+  void _deleteMemo(BuildContext context) async {
+    final response = await _memoRepository.deleteMemo(widget.memo.id);
+
+    if (!response["success"] && context.mounted) {
+      return showToast(context, response["message"]);
+    }
+
+    if (context.mounted) {
+      showToast(context, response["message"]);
+      context.go("/app/memos");
+    }
   }
 }
