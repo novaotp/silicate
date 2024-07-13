@@ -4,6 +4,7 @@ import 'package:app/src/data/models/user.dart';
 import 'package:app/src/data/providers/user.dart';
 import 'package:app/src/data/services/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final AuthService authService = AuthService();
+  final AuthService authService =
+      AuthService(baseUrl: dotenv.env["SERVER_URL"]!);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController();

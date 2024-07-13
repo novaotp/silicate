@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:app/src/data/services/authentication.dart';
+import 'package:app/src/utils/show_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 class Register extends StatefulWidget {
@@ -12,22 +14,24 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final AuthService authService = AuthService();
+  final AuthService authService =
+      AuthService(baseUrl: dotenv.env["SERVER_URL"]!);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String firstName = "";
-  String lastName = "";
-  String email = "";
-  String password = "";
-  String confirmPassword = "";
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  void showToast(BuildContext context, String content) {
-    final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(content),
-      ),
-    );
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,7 +58,7 @@ class _RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (firstName = value),
+                  controller: firstNameController,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(hintText: "Entre ton nom"),
@@ -65,7 +69,7 @@ class _RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (lastName = value),
+                  controller: lastNameController,
                 ),
                 TextFormField(
                   decoration:
@@ -77,7 +81,7 @@ class _RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (email = value),
+                  controller: emailController,
                 ),
                 TextFormField(
                   decoration:
@@ -89,7 +93,7 @@ class _RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (password = value),
+                  controller: passwordController,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -101,7 +105,7 @@ class _RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onChanged: (value) => (confirmPassword = value),
+                  controller: confirmPasswordController,
                 ),
                 Center(
                   child: Padding(
@@ -109,20 +113,25 @@ class _RegisterState extends State<Register> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (password != confirmPassword) {
+                          if (passwordController.text !=
+                              confirmPasswordController.text) {
+                            passwordController.text = "";
+                            confirmPasswordController.text = "";
                             return showToast(context,
                                 "Les mots de passe ne correspondent pas.");
                           }
 
                           try {
                             final response = await authService.register(
-                              firstName: firstName,
-                              lastName: lastName,
-                              email: email,
-                              password: password,
+                              firstName: firstNameController.text,
+                              lastName: lastNameController.text,
+                              email: emailController.text,
+                              password: passwordController.text,
                             );
 
                             if (!response["success"] && context.mounted) {
+                              passwordController.text = "";
+                              confirmPasswordController.text = "";
                               return showToast(context, response["message"]);
                             }
 

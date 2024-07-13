@@ -103,7 +103,7 @@ class _MemoDataState extends State<MemoData> {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     _memoRepository = MemoRepository(
-      baseUrl: "http://localhost:8080",
+      baseUrl: dotenv.env["SERVER_URL"]!,
       authToken: userProvider.jwt!,
     );
   }

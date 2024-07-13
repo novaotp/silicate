@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = const String.fromEnvironment('SERVER_URL',
-      defaultValue: 'http://192.168.43.100:8080');
+  final String baseUrl;
 
-  AuthService();
+  AuthService({required this.baseUrl});
 
   /// Registers a user in the database.
   ///
