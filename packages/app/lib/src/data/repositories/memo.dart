@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:app/src/data/models/memo.dart';
 import 'package:http/http.dart' as http;
 
 class MemoRepository {
@@ -60,15 +59,25 @@ class MemoRepository {
     return jsonDecode(response.body);
   }
 
-  Future<dynamic> updateMemo(MemoModel memo) async {
+  Future<dynamic> updateMemo(
+      {required int id,
+      required String title,
+      required String content,
+      required String? category,
+      required bool pinned}) async {
     final response = await http.put(
-      Uri.parse('$baseUrl/api/v1/memos/${memo.id}'),
+      Uri.parse('$baseUrl/api/v1/memos/$id'),
       headers: {
         'Authorization': authToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(memo.toJson()),
+      body: jsonEncode(<String, dynamic>{
+        'category': category,
+        'title': title,
+        'content': content,
+        'pinned': pinned
+      }),
     );
 
     return jsonDecode(response.body);

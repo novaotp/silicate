@@ -1,12 +1,12 @@
 class MemoModel {
   final int id;
-  final String? category;
-  final String title;
-  final String content;
-  final bool pinned;
-  final DateTime lastChange;
+  String? category;
+  String title;
+  String content;
+  bool pinned;
+  DateTime lastChange;
 
-  const MemoModel({
+  MemoModel({
     required this.id,
     this.category,
     required this.title,
