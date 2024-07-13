@@ -59,7 +59,12 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { category, title, content, pinned } = req.body;
+        // eslint-disable-next-line prefer-const
+        let { category, title, content, pinned } = req.body;
+
+        if (category === "" || !category) {
+            category = null;
+        }
 
         const { first } = await query<{ id: number }>(`
             INSERT INTO public.memo (user_id, category, title, content, pinned)
@@ -76,7 +81,12 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { category, title, content, pinned } = req.body;
+        // eslint-disable-next-line prefer-const
+        let { category, title, content, pinned } = req.body;
+
+        if (category === "" || !category) {
+            category = null;
+        }
 
         await query(`
             UPDATE public.memo
