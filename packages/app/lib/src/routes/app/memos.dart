@@ -64,9 +64,7 @@ class _MemosState extends State<Memos> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: memos.map((memo) {
                       return ElevatedButton(
-                        onPressed: () {
-                          context.push("/app/memos/${memo.id}");
-                        },
+                        onPressed: () => context.go("/app/memos/${memo.id}"),
                         child: Text(memo.title),
                       );
                     }).toList(),
