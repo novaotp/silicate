@@ -15,7 +15,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return NavigationLayout(
-      title: "Dashboard",
+      title: const Text("Dashboard"),
       child: Column(
         children: <Widget>[
           Consumer<UserProvider>(

@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NavigationLayout extends StatefulWidget {
-  final String title;
+  final Widget title;
   final Widget child;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
@@ -35,9 +35,9 @@ class _NavigationLayoutState extends State<NavigationLayout> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: const <Widget>[UserMenu()],
-      ),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: const <Widget>[UserMenu()],
+          title: widget.title),
       drawer: const NavigationLayoutDrawer(),
       body: Column(
         children: [

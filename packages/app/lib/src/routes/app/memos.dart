@@ -18,6 +18,7 @@ class _MemosState extends State<Memos> {
   late Future<List<MemoModel>> _memosFuture;
   late Future<List<String>> _futureCategories;
   String? _selectedCategory;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -34,7 +35,10 @@ class _MemosState extends State<Memos> {
       authToken: userProvider.jwt!,
     );
 
-    final response = await memoRepository.getMemos(category: _selectedCategory);
+    final response = await memoRepository.getMemos(
+      category: _selectedCategory,
+      search: _searchQuery,
+    );
 
     return (response['data'] as List)
         .map((json) => MemoModel.fromJson(json))
@@ -64,7 +68,27 @@ class _MemosState extends State<Memos> {
   @override
   Widget build(BuildContext context) {
     return NavigationLayout(
-      title: "Dashboard",
+      title: SearchAnchor.bar(
+        suggestionsBuilder: (context, controller) async {
+          final List<MemoModel> awaitedMemos = await _memosFuture;
+          return awaitedMemos.where((memo) {
+            return memo.title
+                .toLowerCase()
+                .contains(controller.text.toLowerCase());
+          }).map(
+            (memo) => TextButton(
+              onPressed: () {
+                controller.closeView(memo.title);
+                setState(() {
+                  _searchQuery = memo.title;
+                  _memosFuture = _fetchMemos();
+                });
+              },
+              child: Text(memo.title),
+            ),
+          );
+        },
+      ),
       floatingActionButton: const AddMemo(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       child: Column(
@@ -93,11 +117,6 @@ class _MemosState extends State<Memos> {
                 return const Center(child: Text('No memos found.'));
               } else {
                 final memos = snapshot.data!;
-                final filteredMemos = _selectedCategory == null
-                    ? memos
-                    : memos
-                        .where((memo) => memo.category == _selectedCategory)
-                        .toList();
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,8 +128,7 @@ class _MemosState extends State<Memos> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      renderMemos(
-                          filteredMemos.where((memo) => memo.pinned).toList()),
+                      renderMemos(memos.where((memo) => memo.pinned).toList()),
                       const SizedBox(height: 20), // Spacer between sections
                       const Text(
                         "Autres",
@@ -119,8 +137,7 @@ class _MemosState extends State<Memos> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      renderMemos(
-                          filteredMemos.where((memo) => !memo.pinned).toList()),
+                      renderMemos(memos.where((memo) => !memo.pinned).toList()),
                     ],
                   ),
                 );
@@ -133,22 +150,41 @@ class _MemosState extends State<Memos> {
   }
 
   Widget buildCategories(List<String> categories) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ElevatedButton(
-            onPressed: () => _updateCategory(null),
-            child: const Text("Tout"),
-          ),
-          if (categories.isNotEmpty)
-            ...categories.map((category) {
-              return ElevatedButton(
-                onPressed: () => _updateCategory(category),
-                child: Text(category),
-              );
-            }),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            ElevatedButton(
+              onPressed: () => _updateCategory(null),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    _selectedCategory == null ? Colors.blue.shade700 : null,
+                foregroundColor:
+                    _selectedCategory == null ? Colors.white : null,
+              ),
+              child: const Text("Tout"),
+            ),
+            if (categories.isNotEmpty)
+              ...categories.map((category) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: ElevatedButton(
+                    onPressed: () => _updateCategory(category),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedCategory == category
+                          ? Colors.blue.shade700
+                          : null,
+                      foregroundColor:
+                          _selectedCategory == category ? Colors.white : null,
+                    ),
+                    child: Text(category),
+                  ),
+                );
+              }),
+          ],
+        ),
       ),
     );
   }
