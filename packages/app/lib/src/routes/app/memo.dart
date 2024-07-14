@@ -146,18 +146,12 @@ class MemoData extends StatefulWidget {
 class _MemoDataState extends State<MemoData> {
   late MemoRepository _memoRepository;
   final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-  late String? _category;
-  late bool _pinned;
   Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _titleController.text = widget.memo.title;
-    _contentController.text = widget.memo.content;
-    _category = widget.memo.category;
-    _pinned = widget.memo.pinned;
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     _memoRepository = MemoRepository(
@@ -170,7 +164,6 @@ class _MemoDataState extends State<MemoData> {
   void dispose() {
     _debounce?.cancel();
     _titleController.dispose();
-    _contentController.dispose();
     super.dispose();
   }
 
@@ -187,15 +180,7 @@ class _MemoDataState extends State<MemoData> {
             onChanged: (value) => _editMemo(context),
           ),
           const SizedBox(height: 20),
-          TextField(
-            controller: _contentController,
-            decoration: const InputDecoration(
-              labelText: 'Content',
-            ),
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            onChanged: (value) => _editMemo(context),
-          ),
+          ContentEditor(memo: widget.memo),
         ],
       ),
     );
@@ -208,19 +193,152 @@ class _MemoDataState extends State<MemoData> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       final response = await _memoRepository.updateMemo(
-          id: widget.memo.id,
-          title: _titleController.text,
-          content: _contentController.text,
-          category: _category,
-          pinned: _pinned);
+        id: widget.memo.id,
+        title: _titleController.text,
+        content: widget.memo.content,
+        category: widget.memo.category,
+        pinned: widget.memo.pinned,
+      );
 
       if (!response["success"] && context.mounted) {
         return showToast(context, response["message"]);
       }
 
       widget.memo.title = _titleController.text;
+    });
+  }
+}
+
+class ContentEditor extends StatefulWidget {
+  final MemoModel memo;
+
+  const ContentEditor({required this.memo, super.key});
+
+  @override
+  State<ContentEditor> createState() => _ContentEditorState();
+}
+
+class _ContentEditorState extends State<ContentEditor> {
+  final TextEditingController _contentController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _contentController.text = widget.memo.content;
+  }
+
+  @override
+  void dispose() {
+    _contentController.dispose();
+    _focusNode.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _editMemo(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    final MemoRepository memoRepository = MemoRepository(
+      baseUrl: dotenv.env["SERVER_URL"]!,
+      authToken: userProvider.jwt!,
+    );
+
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      final response = await memoRepository.updateMemo(
+        id: widget.memo.id,
+        title: widget.memo.title,
+        content: _contentController.text,
+        category: widget.memo.category,
+        pinned: widget.memo.pinned,
+      );
+
+      if (!response["success"] && context.mounted) {
+        return showToast(context, response["message"]);
+      }
+
       widget.memo.content = _contentController.text;
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildToolbar(),
+        _buildEditor(context),
+      ],
+    );
+  }
+
+  Widget _buildToolbar() {
+    return Row(
+      children: [
+        _buildToolbarButton(Icons.format_bold, () => _applyBold()),
+        _buildToolbarButton(Icons.format_italic, () => _applyItalic()),
+        _buildToolbarButton(Icons.format_underline, () => _applyUnderline()),
+        // Add more buttons as needed
+      ],
+    );
+  }
+
+  Widget _buildToolbarButton(IconData icon, VoidCallback onPressed) {
+    return IconButton(
+      icon: Icon(icon),
+      onPressed: onPressed,
+    );
+  }
+
+  Widget _buildEditor(BuildContext context) {
+    return TextField(
+      controller: _contentController,
+      focusNode: _focusNode,
+      decoration: const InputDecoration(
+        labelText: 'Content',
+      ),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      onChanged: (value) => _editMemo(context),
+    );
+  }
+
+  void _applyBold() {
+    final currentText = _contentController.text;
+    final selection = _contentController.selection;
+
+    if (selection.isValid) {
+      final selectedText = selection.textInside(currentText);
+      final newText =
+          '${currentText.substring(0, selection.start)}**$selectedText**${currentText.substring(selection.end)}';
+      _contentController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: selection.end + 4),
+      );
+    }
+  }
+
+  void _applyItalic() {
+    final currentText = _contentController.text;
+    final selection = _contentController.selection;
+
+    if (selection.isValid) {
+      final selectedText = selection.textInside(currentText);
+      final newText =
+          '${currentText.substring(0, selection.start)}*$selectedText*${currentText.substring(selection.end)}';
+      _contentController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: selection.end + 2),
+      );
+    }
+  }
+
+  void _applyUnderline() {
+    // Underline is not directly supported in plain text, implement as needed
   }
 }
 

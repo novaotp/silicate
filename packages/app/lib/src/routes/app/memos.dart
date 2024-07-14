@@ -117,30 +117,34 @@ class _MemosState extends State<Memos> {
                 return const Center(child: Text('No memos found.'));
               } else {
                 final memos = snapshot.data!;
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Mémos épinglés",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Mémos épinglés",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          renderMemos(
+                              memos.where((memo) => memo.pinned).toList()),
+                          const SizedBox(height: 20), // Spacer between sections
+                          const Text(
+                            "Autres",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          renderMemos(
+                              memos.where((memo) => !memo.pinned).toList()),
+                        ],
                       ),
-                      renderMemos(memos.where((memo) => memo.pinned).toList()),
-                      const SizedBox(height: 20), // Spacer between sections
-                      const Text(
-                        "Autres",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      renderMemos(memos.where((memo) => !memo.pinned).toList()),
-                    ],
-                  ),
-                );
+                    ));
               }
             },
           ),
@@ -193,9 +197,42 @@ class _MemosState extends State<Memos> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: memos.map((memo) {
-        return ElevatedButton(
-          onPressed: () => context.go("/app/memos/${memo.id}"),
-          child: Text(memo.title),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => context.go("/app/memos/${memo.id}"),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    padding: const EdgeInsets.all(20),
+                  ),
+                  child: Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          memo.title,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          memo.content,
+                          style: const TextStyle(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
