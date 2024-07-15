@@ -3,7 +3,7 @@
     import { getContext } from "svelte";
     import { fetchGroupsAndSubjects } from "./utils";
     import type { Book } from "$libs/models/Mark";
-    import MainView from "./MainView.svelte";
+    import MainView from "../[bookId]/MainView.svelte";
     import type { Writable } from "svelte/store";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
