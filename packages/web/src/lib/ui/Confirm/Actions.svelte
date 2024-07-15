@@ -1,3 +1,3 @@
-<div class="relative w-full flex flex-col-reverse sm:flex-row justify-start gap-5">
+<div class="relative w-full sm:w-auto flex flex-col-reverse sm:flex-row justify-end gap-5">
     <slot />
 </div>
