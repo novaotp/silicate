@@ -4,10 +4,10 @@
     import { addToast } from "$lib/stores/toast";
     import { Button } from "$lib/ui";
     import type { Memo } from "$libs/models/Memo";
-    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
-    import IconPinned from '@tabler/icons-svelte/IconPinned.svelte';
-    import IconPinnedFilled from '@tabler/icons-svelte/IconPinnedFilled.svelte';
-    import IconX from '@tabler/icons-svelte/IconX.svelte';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
+    import IconPinned from '@tabler/icons-svelte/icons/pinned';
+    import IconPinnedFilled from '@tabler/icons-svelte/icons/pinned-filled';
+    import IconX from '@tabler/icons-svelte/icons/x';
     import CategoryChanger from "./CategoryChanger.svelte";
     import Inner from "./Inner.MemoDetails.svelte";
     import { changeSearchParams, type MemoPageContext } from "./utils";

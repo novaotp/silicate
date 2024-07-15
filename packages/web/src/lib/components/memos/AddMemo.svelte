@@ -3,7 +3,7 @@
     import { getContext } from "svelte";
     import { changeSearchParams, type MemoPageContext } from "./utils";
     import { Button } from "$lib/ui";
-    import IconPlus from "@tabler/icons-svelte/IconPlus.svelte";
+    import IconPlus from "@tabler/icons-svelte/icons/plus";
     import { enhance } from "$app/forms";
     import type { SubmitFunction } from "../../../routes/app/memos/$types";
 

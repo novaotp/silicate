@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Book } from "$libs/models/Mark";
-    import IconPlus from "@tabler/icons-svelte/IconPlus.svelte";
+    import IconPlus from "@tabler/icons-svelte/icons/plus";
     import { Button } from "$lib/ui";
     import BookCreationModal from "./BookCreationModal.svelte";
     import EmptyBooks from "./EmptyBooks.svelte";

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import IconArrowBackUp from "@tabler/icons-svelte/IconArrowBackUp.svelte";
-    import IconArrowForwardUp from "@tabler/icons-svelte/IconArrowForwardUp.svelte";
-    import IconDotsCircleHorizontal from "@tabler/icons-svelte/IconDotsCircleHorizontal.svelte";
-    import IconHeading from "@tabler/icons-svelte/IconHeading.svelte";
-    import IconLetterCase from "@tabler/icons-svelte/IconLetterCase.svelte";
-    import IconList from "@tabler/icons-svelte/IconList.svelte";
+    import IconArrowBackUp from '@tabler/icons-svelte/icons/arrow-back-up';
+    import IconArrowForwardUp from '@tabler/icons-svelte/icons/arrow-forward-up';
+    import IconDotsCircleHorizontal from '@tabler/icons-svelte/icons/dots-circle-horizontal';
+    import IconHeading from '@tabler/icons-svelte/icons/heading';
+    import IconLetterCase from '@tabler/icons-svelte/icons/letter-case';
+    import IconList from '@tabler/icons-svelte/icons/list';
     import type { Editor } from "@tiptap/core";
     import { createEventDispatcher } from "svelte";
 

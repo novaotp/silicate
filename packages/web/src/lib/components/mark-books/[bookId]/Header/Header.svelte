@@ -1,5 +1,5 @@
 <script lang="ts">
-    import IconChevronLeft from "@tabler/icons-svelte/IconChevronLeft.svelte";
+    import IconChevronLeft from "@tabler/icons-svelte/icons/chevron-left";
     import { goto } from "$app/navigation";
     import BookDeletion from "./BookDeletion.svelte";
 </script>

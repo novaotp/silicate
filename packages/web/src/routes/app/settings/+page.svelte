@@ -4,9 +4,9 @@
     import { FullScreen, Tabs } from '$lib/ui';
     import { changeSearchParams } from '$utils/change-search-params';
     import { page } from '$app/stores';
-    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
-    import IconUser from '@tabler/icons-svelte/IconUser.svelte';
-    import IconReceipt2 from '@tabler/icons-svelte/IconReceipt2.svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
+    import IconUser from '@tabler/icons-svelte/icons/user';
+    import IconReceipt2 from '@tabler/icons-svelte/icons/receipt-2';
 
     let tabs: Tab[] = [
         {

@@ -3,7 +3,7 @@
     import { addToast } from "$lib/stores/toast";
     import { Button, Confirm, FullScreen } from "$lib/ui";
     import type { Book } from "$libs/models/Mark";
-    import IconTrash from "@tabler/icons-svelte/IconTrash.svelte";
+    import IconTrash from "@tabler/icons-svelte/icons/trash";
     import { getContext } from "svelte";
     import type { Writable } from "svelte/store";
     import type { SubmitFunction } from "../../../../../routes/app/mark-books/$types";

@@ -3,7 +3,7 @@
     import { addToast } from '$lib/stores/toast';
     import { Button, FullScreen, Card, Label, Input, Confirm } from '$lib/ui';
     import type { SubmitFunction } from '../../../../routes/app/settings/$types';
-    import IconLock from '@tabler/icons-svelte/IconLock.svelte';
+    import IconLock from '@tabler/icons-svelte/icons/lock';
 
     let showPasswordChanger: boolean = false;
 

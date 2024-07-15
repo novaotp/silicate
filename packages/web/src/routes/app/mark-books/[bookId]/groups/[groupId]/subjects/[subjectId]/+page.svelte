@@ -2,7 +2,7 @@
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
     import type { PageServerData } from './$types';
-    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
 
     export let data: PageServerData;
 

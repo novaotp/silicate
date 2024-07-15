@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Button, FullScreen } from "$lib/ui";
-    import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
-    import IconGradienter from '@tabler/icons-svelte/IconGradienter.svelte';
-    import IconBrandCampaignmonitor from '@tabler/icons-svelte/IconBrandCampaignmonitor.svelte';
+    import IconPlus from '@tabler/icons-svelte/icons/plus';
+    import IconGradienter from '@tabler/icons-svelte/icons/gradienter';
+    import IconBrandCampaignmonitor from '@tabler/icons-svelte/icons/brand-campaignmonitor';
 
     export let showGroupCreationModal: boolean;
     export let showSubjectCreationModal: boolean;

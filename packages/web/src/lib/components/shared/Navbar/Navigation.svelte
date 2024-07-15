@@ -1,13 +1,13 @@
 <script lang="ts">
-    import MenuIcon from '@tabler/icons-svelte/IconMenu.svelte';
-    import CloseIcon from '@tabler/icons-svelte/IconX.svelte';
-    import MemoIcon from '@tabler/icons-svelte/IconNote.svelte';
-    import GradeIcon from '@tabler/icons-svelte/IconStars.svelte';
-    import IconHome from '@tabler/icons-svelte/IconHome.svelte';
-    import TaskIcon from '@tabler/icons-svelte/IconChecklist.svelte';
-    import IconMenu2 from '@tabler/icons-svelte/IconMenu2.svelte';
-    import IconX from '@tabler/icons-svelte/IconX.svelte';
-    import IconBell from '@tabler/icons-svelte/IconBell.svelte';
+    import MenuIcon from '@tabler/icons-svelte/icons/menu';
+    import CloseIcon from '@tabler/icons-svelte/icons/x';
+    import MemoIcon from '@tabler/icons-svelte/icons/note';
+    import GradeIcon from '@tabler/icons-svelte/icons/stars';
+    import IconHome from '@tabler/icons-svelte/icons/home';
+    import TaskIcon from '@tabler/icons-svelte/icons/checklist';
+    import IconMenu2 from '@tabler/icons-svelte/icons/menu-2';
+    import IconX from '@tabler/icons-svelte/icons/x';
+    import IconBell from '@tabler/icons-svelte/icons/bell';
     import Item from './Item.svelte';
     import DesktopItem from './DesktopItem.svelte';
     import { FullScreen, Card } from "$lib/ui";

@@ -2,8 +2,6 @@
     import type { Group } from '$libs/models/Mark';
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
-    import { Button } from '$lib/ui';
-    import IconPlus from '@tabler/icons-svelte/IconPlus.svelte';
     import Header from './Header/Header.svelte';
     import BookData from './BookData/BookData.svelte';
     import GroupList from './GroupList.svelte';

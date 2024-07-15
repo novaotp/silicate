@@ -2,8 +2,6 @@
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { Reminder, Task } from '$libs/models/Task';
     import type { ApiResponseWithData } from '$libs/types/ApiResponse';
-    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
-    import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
     import { getContext } from 'svelte';
     import { fly } from 'svelte/transition';
     import TaskDetails from './TaskDetails.svelte';
@@ -12,6 +10,8 @@
     import { goto } from '$app/navigation';
     import { Card, FullScreen } from '$lib/ui';
     import DesktopDetails from './DesktopDetails.svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
+    import IconDotsVertical from '@tabler/icons-svelte/icons/dots-vertical';
 
     let showSettings: boolean = false;
     const jwt = getContext<string>('jwt');

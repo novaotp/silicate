@@ -4,7 +4,7 @@
     import { fetchExams } from './utils';
     import type { Book, Group, Subject } from '$libs/models/Mark';
     import MainView from './MainView.svelte';
-    import IconChevronLeft from '@tabler/icons-svelte/IconChevronLeft.svelte';
+    import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
     import type { Writable } from 'svelte/store';
     import { changeMultipleSearchParams } from '$utils/change-search-params';
     import { page } from '$app/stores';

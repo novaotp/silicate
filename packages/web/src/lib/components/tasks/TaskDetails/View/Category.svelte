@@ -1,6 +1,6 @@
 <script lang="ts">
-    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
-    import IconTag from '@tabler/icons-svelte/IconTag.svelte';
+    import IconCircleXFilled from '@tabler/icons-svelte/icons/circle-x-filled';
+    import IconTag from '@tabler/icons-svelte/icons/tag';
     import { getContext } from 'svelte';
     import { fetchCategories, fetchTasks, type PageContext } from '../../utils';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';

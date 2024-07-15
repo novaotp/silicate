@@ -1,13 +1,13 @@
 <script lang="ts">
     import { Button, Card, FullScreen } from '$lib/ui';
     import type { Reminder } from '$libs/models/Task';
-    import IconAlarm from '@tabler/icons-svelte/IconAlarm.svelte';
-    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
     import type { SubmitFunction } from '../../../../../routes/app/tasks/$types';
     import { addToast } from '$lib/stores/toast';
     import { deserialize, enhance } from '$app/forms';
     import DatePicker from '$lib/components/shared/date-picker';
     import { page } from '$app/stores';
+    import IconAlarm from '@tabler/icons-svelte/icons/alarm';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
 
     export let taskId: number;
     export let reminders: Reminder[];

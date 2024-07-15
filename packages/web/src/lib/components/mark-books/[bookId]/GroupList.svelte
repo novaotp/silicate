@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import type { Book, Group, Subject } from '$libs/models/Mark';
-    import IconChevronRight from '@tabler/icons-svelte/IconChevronRight.svelte';
+    import IconChevronRight from '@tabler/icons-svelte/icons/chevron-right';
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
 
