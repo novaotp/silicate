@@ -1,6 +1,6 @@
 # TypeScript Conventions
 
-This convention serves as a guide for best practices, emphasizing on readability and maintanibility.
+This convention serves as a guide for best practices, emphasizing on readability and maintainability.
 
 Heavily inspired from [Airbnb's Javascript style guide](https://github.com/airbnb/javascript).
 
