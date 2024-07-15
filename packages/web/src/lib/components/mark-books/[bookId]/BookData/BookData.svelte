@@ -9,6 +9,11 @@
     const book = getContext<Writable<Book>>("book");
 </script>
 
+<!--
+@component
+An overview of the mark-book's data. Opens a modal to edit the data.
+-->
+
 <button
     on:click={() => (showBookEditionModal = true)}
     class="rounded-lg p-5 bg-primary-500 text-white flex flex-col gap-5"

@@ -1,14 +1,15 @@
 <script lang="ts">
     import type { Book, Group, Subject } from "$libs/models/Mark";
     import { setContext } from "svelte";
+    import { writable } from "svelte/store";
 
     export let book: Book;
     export let groups: Group[];
     export let subjects: Subject[];
 
-    setContext("book", book);
-    setContext("groups", groups);
-    setContext("subjects", subjects);
+    setContext("book", writable(book));
+    setContext("groups", writable(groups));
+    setContext("subjects", writable(subjects));
 </script>
 
 <!--

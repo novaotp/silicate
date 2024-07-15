@@ -64,23 +64,16 @@ const fetchSubjects = async (jwt: string, bookId: string, groupId: string): Prom
 }
 
 export const actions: Actions = {
-    editBook: async ({ locals, request }) => {
+    editBook: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
-
-            const id = data["id"];
-            delete data["id"];
-
-            if (!id) {
-                throw new Error("Missing ID on book edition !")
-            }
 
             if (!("title" in data)) {
                 return fail(422, { message: "Complétez tous les champs." })
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${params.bookId}`, {
                 method: "PUT",
                 body: JSON.stringify(data),
                 headers: {
@@ -131,20 +124,16 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     },
-    createGroup: async ({ locals, request }) => {
+    createGroup: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
-
-            if (!data.bookId) {
-                throw new Error("Missing book ID on group creation !")
-            }
 
             if (!data.title || !data.weight) {
                 return fail(422, { message: "Complétez tous les champs." })
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${data.bookId}/groups`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${params.bookId}/groups`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
@@ -238,7 +227,7 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     },
-    createSubject: async ({ locals, request }) => {
+    createSubject: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
@@ -247,15 +236,11 @@ export const actions: Actions = {
                 throw new Error("Missing group ID on subject creation !")
             }
 
-            if (!data.bookId) {
-                throw new Error("Missing book ID on subject creation !")
-            }
-
             if (!data.title) {
-                return fail(422, { message: "Complétez tous les champs." })
+                return fail(422, { message: "Le titre est obligatoire." })
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${data.bookId}/groups/${data.groupId}/subjects`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${params.bookId}/groups/${data.groupId}/subjects`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
@@ -265,13 +250,13 @@ export const actions: Actions = {
                 }
             });
 
-            const result: ApiResponseWithData<number> = await response.json();
+            const result: ApiResponseWithData<Subject> = await response.json();
 
             if (!result.success) {
                 return fail(422, { message: result.message });
             }
 
-            return { id: result.data, message: result.message };
+            return { subject: result.data, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de l'ajout d'une branche : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });

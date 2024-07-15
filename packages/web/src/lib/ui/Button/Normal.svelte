@@ -12,7 +12,7 @@
     };
 
     const colorClasses = {
-        "primary": "text-neutral-50 bg-primary-600 dark:bg-primary-500",
+        "primary": "text-neutral-50 bg-primary-600 dark:bg-primary-500 disabled:bg-neutral-700 disabled:text-neutral-200",
         "secondary": "text-primary-600 bg-primary-100 dark:text-primary-500",
         "tertiary": "text-primary-600"
     }
@@ -21,8 +21,9 @@
 <button
     {type}
     {disabled}
+    aria-disabled={disabled}
     on:click
-    class={cn("relative rounded-lg", sizeClasses[size], colorClasses[variant], $$restProps['class'] || '')}
+    class={cn("relative rounded-lg disabled:cursor-not-allowed", sizeClasses[size], colorClasses[variant], $$restProps['class'] || '')}
 >
     <slot />
 </button>

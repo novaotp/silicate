@@ -19,14 +19,16 @@
 
 <!--
 @component
-Displays the groups and tĥe subjects.
+Displays the groups and the subjects.
 -->
 
 {#each groupedSubjects as { subjects, ...group }}
     <div class="relative w-full flex flex-col gap-[10px]">
         <div class="relative w-full flex justify-between">
             <h2>{group.title} ({group.weight}x)</h2>
-            <span>{group.averageScore}</span>
+            {#if group.averageScore}
+                <span>{group.averageScore}</span>
+            {/if}
         </div>
         <p class="relative text-neutral-500 text-sm pl-5 group-description">
             {group.description}
@@ -37,7 +39,10 @@ Displays the groups and tĥe subjects.
                     on:click={() => goto(`/app/mark-books/${$book.id}/groups/${group.id}/subjects/${subject.id}`)}
                     class="flex justify-between"
                 >
-                    <span>{subject.title} ({subject.averageScore})</span>
+                    {subject.title}
+                    {#if subject.averageScore}
+                        ({subject.averageScore})
+                    {/if}
                     <IconChevronRight class="size-5" />
                 </button>
             {/each}

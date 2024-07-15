@@ -3,9 +3,8 @@ import type { Book, Group } from "$libs/models/Mark";
 import type { ApiResponse, ApiResponseWithData } from "$libs/types/ApiResponse";
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import type { SvelteKitFetch } from "$types/sveltekit-fetch";
 
-const fetchMarkBooks = async (jwt: string, fetch: SvelteKitFetch): Promise<Book[] | undefined> => {
+const fetchMarkBooks = async (jwt: string): Promise<Book[] | undefined> => {
     const response = await fetch(`${BACKEND_URL}/api/v1/mark-books`, {
         method: "GET",
         headers: {
@@ -18,14 +17,14 @@ const fetchMarkBooks = async (jwt: string, fetch: SvelteKitFetch): Promise<Book[
     return result.success ? result.data : undefined;
 }
 
-export const load: PageServerLoad = async ({ locals, fetch }) => {
+export const load: PageServerLoad = async ({ locals }) => {
     return {
-        books: fetchMarkBooks(locals.jwt!, fetch)
+        books: fetchMarkBooks(locals.jwt!)
     }
 };
 
 export const actions: Actions = {
-    createBook: async ({ locals, request, fetch }) => {
+    createBook: async ({ locals, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
@@ -50,7 +49,7 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            const books = await fetchMarkBooks(locals.jwt!, fetch);
+            const books = await fetchMarkBooks(locals.jwt!);
 
             return { id: result.data, books, message: result.message };
         } catch (err) {

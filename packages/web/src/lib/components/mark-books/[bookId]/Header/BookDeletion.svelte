@@ -29,15 +29,18 @@
     }
 </script>
 
+<!--
+@component
+Includes a button with icon and the confirmation dialog to delete a mark-book.
+-->
+
 <Button.Danger on:click={() => (showConfirmBookDeletion = true)} variant="tertiary" class="p-0">
     <IconTrash />
 </Button.Danger>
 
 {#if showConfirmBookDeletion}
     <FullScreen.Backdrop class="flex-center">
-        <Confirm.Root
-            class="w-full"
-        >
+        <Confirm.Root class="w-full">
             <Confirm.Title>Supprimer "{$book?.title}"</Confirm.Title>
             <Confirm.Description>
                 Ceci supprimera le carnet et toutes les données liées.
@@ -45,14 +48,14 @@
             </Confirm.Description>
             <Confirm.Actions>
                 <Confirm.No>
-                    <Button.Danger on:click={() => (showConfirmBookDeletion = false)} variant="secondary">
+                    <Button.Danger on:click={() => (showConfirmBookDeletion = false)} variant="secondary" class="w-full h-full">
                         Annuler
                     </Button.Danger>
                 </Confirm.No>
                 <Confirm.Yes>
-                    <form method="post" action="?/destroyBook" use:enhance={deleteEnhance}>
-                        <Button.Danger type="submit">
-                            Annuler
+                    <form method="post" action="?/destroyBook" use:enhance={deleteEnhance} class="w-full h-full">
+                        <Button.Danger type="submit" class="w-full h-full">
+                            Supprimer
                         </Button.Danger>
                     </form>
                 </Confirm.Yes>

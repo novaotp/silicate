@@ -4,19 +4,18 @@
     import { Button, Card, FullScreen, Input, Label, TextArea } from "$lib/ui";
     import { enhance } from "$app/forms";
     import type { Writable } from "svelte/store";
-    import type { Book, GradingSystem } from "$libs/models/Mark";
+    import type { Group, Subject } from "$libs/models/Mark";
     import type { SubmitFunction } from "@sveltejs/kit";
     import { confirmCardClasses } from "$lib/ui/Confirm";
-    import { goto } from "$app/navigation";
 
-    const books = getContext<Writable<Book[]>>('books');
+    const groups = getContext<Writable<Group[]>>('groups');
+    const subjects = getContext<Writable<Subject[]>>('subjects');
 
     const dispatch = createEventDispatcher<{ close: null }>();
 
+    let groupId: number | undefined = $groups.at(0)?.id;
     let title: string = "";
     let description: string = "";
-    // Not supporting letters for now
-    let gradingSystem: GradingSystem = "numbers";
 
     const closeModal = () => {
         title = "";
@@ -28,13 +27,14 @@
         return ({ result }) => {
             if (result.type === "failure") {
                 return addToast({ type: "error", message: result.data!.message })
-            } else if (result.type === "success" && "id" in result.data!) {
-                addToast({ type: 'success', message: 'Carnet ajouté avec succès.' });
+            } else if (result.type === "success") {
+                addToast({ type: 'success', message: 'Branche ajoutée avec succès.' });
 
-                if (result.data.books) {
-                    $books = result.data.books;
+                if (!result.data?.subject) {
+                    throw new Error("Expected to receive the newly created subject after creating it.");
                 }
 
+                $subjects = [...$subjects, result.data.subject]
                 closeModal();
             }
         }
@@ -45,28 +45,40 @@
     <Card class={confirmCardClasses}>
         <form
             method="post"
-            action="?/createBook"
+            action="?/createSubject"
             use:enhance={createEnhance}
             class="flex flex-col gap-5"
         >
             <div class="relative w-full flex flex-col gap-[10px]">
+                <Label for="title">Groupe</Label>
+                <select name="groupId" bind:value={groupId} class="px-5 py-[10px] rounded-lg text-sm">
+                    {#each $groups as group}
+                        <option value={group.id}>{group.title}</option>
+                    {/each}
+                </select>
+                {#if !groupId}
+                    <p class="text-accent-danger-500 text-sm">Groupe obligatoire.</p>
+                {/if}
+            </div>
+            <div class="relative w-full flex flex-col gap-[10px]">
                 <Label for="title">Titre</Label>
-                <Input name="title" bind:value={title} placeholder="Le titre du carnet..." />
+                <Input name="title" bind:value={title} placeholder="Le titre de la branche..." />
+                {#if title === ""}
+                    <p class="text-accent-danger-500 text-sm">Titre obligatoire.</p>
+                {/if}
             </div>
             <div class="relative w-full flex flex-col gap-[10px]">
                 <Label for="description">Description</Label>
-                <TextArea name="description" bind:value={description} placeholder="La description du carnet..." />
+                <TextArea name="description" bind:value={description} placeholder="La description de la branche..." />
             </div>
-            <!-- Not supporting letters for now -->
-            <input type="hidden" name="gradingSystem" value={gradingSystem} />
-            <relative class="w-full flex justify-end items-center gap-5">
+            <div class="w-full flex justify-end items-center gap-5">
                 <Button.Normal variant="secondary" on:click={closeModal}>
                     Annuler
                 </Button.Normal>
-                <Button.Normal type="submit">
+                <Button.Normal type="submit" disabled={title === ""}>
                     Créer
                 </Button.Normal>
-            </relative>
+            </div>
         </form>
     </Card>
 </FullScreen.Backdrop>
