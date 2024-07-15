@@ -453,13 +453,28 @@ router.post("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects", async (req, res) =>
         const { title, description } = req.body;
 
         // group surrounded by quotes because it's a reserved keyword
-        const { first } = await query<{ id: number }>(`
-            INSERT INTO mark.subject (group_id, title, description)
-            VALUES ($1, $2, $3)
-            RETURNING id;
-        `, [req.params.groupId, title, description]);
+        const { first: subject } = await query<Subject>(`
+            WITH inserted_subject AS (
+                INSERT INTO mark.subject (group_id, title, description)
+                VALUES ($1, $2, $3)
+                RETURNING *
+            )
 
-        return res.success("Subject added successfully", first!.id);
+            SELECT
+                inserted_subject.id,
+                inserted_subject.group_id AS "groupId",
+                inserted_subject.title,
+                inserted_subject.description,
+                book.grading_system as "gradingSystem",
+                NULL as "averageScore"
+            FROM inserted_subject
+            JOIN mark."group" ON "group".id = inserted_subject.group_id
+            JOIN mark.book ON book.id = "group".book_id
+            WHERE "group".book_id = $4
+                AND book.user_id = $5;
+        `, [req.params.groupId, title, description, req.params.bookId, req.userId]);
+
+        return res.success("Subject added successfully", subject);
     } catch (err) {
         console.error(`Something went wrong whilst adding a subject : ${err.message}`);
         return res.serverError();
