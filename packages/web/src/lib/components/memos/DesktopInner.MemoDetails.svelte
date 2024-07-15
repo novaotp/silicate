@@ -8,7 +8,6 @@
     import IconPinned from '@tabler/icons-svelte/IconPinned.svelte';
     import IconPinnedFilled from '@tabler/icons-svelte/IconPinnedFilled.svelte';
     import IconX from '@tabler/icons-svelte/IconX.svelte';
-    import result from "postcss/lib/result";
     import CategoryChanger from "./CategoryChanger.svelte";
     import Inner from "./Inner.MemoDetails.svelte";
     import { changeSearchParams, type MemoPageContext } from "./utils";
