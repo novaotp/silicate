@@ -40,7 +40,7 @@ router.get("/:id(\\d+$)", async (req, res) => {
                 book.user_id,
                 book.title,
                 book.description,
-                book.grading_system,
+                book.grading_system as "gradingSystem",
                 book_avg_cte.average_score::float AS "averageScore"
             FROM mark.book
             LEFT JOIN book_avg_cte ON book_avg_cte.book_id = book.id
