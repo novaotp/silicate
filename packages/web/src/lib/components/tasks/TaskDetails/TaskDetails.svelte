@@ -17,7 +17,7 @@
     import * as Utils from './TaskDetails';
     import { fly } from 'svelte/transition';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
-    import { Button, FullScreen } from '$lib/ui';
+    import { Button, Confirm, FullScreen } from '$lib/ui';
     import Reminders from './View/Reminders.svelte';
 
     export let showSettings: boolean;
@@ -36,6 +36,7 @@
     $: search = $page.url.searchParams.get('search') ?? '';
     $: archivedSearchParam = $page.url.searchParams.get('tab') === 'archives';
 
+    let showDeleteConfirmation = false;
     let timer: NodeJS.Timeout;
     const controller = new AbortController();
     const signal = controller.signal;
@@ -274,10 +275,33 @@
                     <span>Archiver</span>
                 {/if}
             </Button.Normal>
-            <Button.Danger on:click={destroy} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
+            <Button.Danger on:click={() => {
+                showSettings = false;
+                showDeleteConfirmation = true;
+            }} class="px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
                 <IconTrash />
                 <span>Supprimer</span>
             </Button.Danger>
         </div>
+    </FullScreen.Backdrop>
+{/if}
+{#if showDeleteConfirmation}
+    <FullScreen.Backdrop on:click={() => (showDeleteConfirmation = false)} class="flex justify-center items-center">
+        <Confirm.Root class="flex flex-col gap-5 justify-center items-center">
+            <Confirm.Title>Supprimer "{replica.title}"</Confirm.Title>
+            <Confirm.Description>
+                Je comprends que cette action est irréversible et que je ne pourrais pas revenir sur ma décision.
+            </Confirm.Description>
+            <Confirm.Actions>
+                <Confirm.No>
+                    <Button.Danger variant="secondary" on:click={() => (showDeleteConfirmation = false)} class="w-full h-full">Annuler</Button.Danger>
+                </Confirm.No>
+                <Confirm.Yes>
+                    <Button.Danger on:click={destroy} class="w-full h-full">
+                        Supprimer
+                    </Button.Danger>
+                </Confirm.Yes>
+            </Confirm.Actions>
+        </Confirm.Root>
     </FullScreen.Backdrop>
 {/if}

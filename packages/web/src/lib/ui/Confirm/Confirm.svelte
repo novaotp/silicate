@@ -29,6 +29,6 @@ Usage :
     ```
 -->
 
-<Card class={cn('flex flex-col gap-5 max-w-lg sm:max-w-[480px] rounded-none sm:rounded-lg', $$restProps['class'])}>
+<Card class={cn('flex flex-col gap-5 max-w-lg sm:max-w-[480px] p-6 rounded-none sm:rounded-lg', $$restProps['class'])}>
     <slot />
 </Card>
