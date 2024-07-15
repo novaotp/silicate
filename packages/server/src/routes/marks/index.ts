@@ -297,7 +297,7 @@ router.post("/:bookId(\\d+)/groups", async (req, res) => {
                 inserted_group.title,
                 inserted_group.description,
                 inserted_group.weight::float,
-                NULL as "averageScore"
+                NULL as "averageScore",
                 book.grading_system as "gradingSystem"
             FROM inserted_group
             JOIN mark.book ON book.id = inserted_group.book_id;
