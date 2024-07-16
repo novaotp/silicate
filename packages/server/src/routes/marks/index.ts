@@ -601,13 +601,31 @@ router.post("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+)/exam
     try {
         const { title, comment, score, weight, date } = req.body;
 
-        const { first } = await query<{ id: number }>(`
-            INSERT INTO mark.exam (subject_id, title, comment, score, weight, date)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id;
-        `, [req.params.subjectId, title, comment, score, weight, date]);
+        const { first } = await query<Exam>(`
+            WITH inserted_exam AS (
+                INSERT INTO mark.exam (subject_id, title, comment, score, weight, date)
+                VALUES ($1, $2, $3, $4, $5, $6)
+                RETURNING *
+            )
 
-        return res.success("Exam added successfully", first!.id);
+            SELECT
+                inserted_exam.id,
+                inserted_exam.subject_id as "subjectId",
+                inserted_exam.title,
+                inserted_exam.comment,
+                inserted_exam.score::float,
+                inserted_exam.weight::float,
+                date
+            FROM inserted_exam
+            JOIN mark.subject ON subject.id = inserted_exam.subject_id
+            JOIN mark."group" ON "group".id = subject.group_id
+            JOIN mark.book ON book.id = "group".book_id
+            WHERE subject.group_id = $7
+                AND "group".book_id = $8
+                AND book.user_id = $9;
+        `, [req.params.subjectId, title, comment, score, weight, date, req.params.groupId, req.params.bookId, req.userId]);
+
+        return res.success("Exam added successfully", first);
     } catch (err) {
         console.error(`Something went wrong whilst adding an exam : ${err.message}`);
         return res.serverError();
