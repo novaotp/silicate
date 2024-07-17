@@ -528,22 +528,23 @@ router.post("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects", async (req, res) =>
 
 router.put("/:bookId(\\d+)/groups/:groupId(\\d+)/subjects/:subjectId(\\d+$)", async (req, res) => {
     try {
-        const { title, description } = req.body;
+        const { groupId, title, description } = req.body;
 
         // group surrounded by quotes because it's a reserved keyword
         await query(`
             UPDATE mark.subject
-            SET title = $1,
-                description = $2,
-                updated_at = $3
+            SET group_id = $1,
+                title = $2,
+                description = $3,
+                updated_at = $4
             FROM mark."group", mark.book
-            WHERE "group".id = group_id
+            WHERE "group".id = subject.group_id
                 AND book.id = "group".book_id
-                AND subject.id = $4
-                AND subject.group_id = $5
-                AND "group".book_id = $6
-                AND book.user_id = $7;
-        `, [title, description, new Date(), req.params.subjectId, req.params.groupId, req.params.bookId, req.userId]);
+                AND subject.id = $5
+                AND subject.group_id = $6
+                AND "group".book_id = $7
+                AND book.user_id = $8;
+        `, [groupId, title, description, new Date(), req.params.subjectId, req.params.groupId, req.params.bookId, req.userId]);
 
         return res.success("Subject updated successfully");
     } catch (err) {
