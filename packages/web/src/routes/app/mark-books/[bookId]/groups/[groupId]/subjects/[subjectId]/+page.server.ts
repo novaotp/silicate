@@ -150,7 +150,9 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { message: result.message };
+            const subject = await fetchSubject(locals.jwt!, params.bookId, params.groupId, params.subjectId);
+
+            return { subject, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de l'édition d'un examen : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });

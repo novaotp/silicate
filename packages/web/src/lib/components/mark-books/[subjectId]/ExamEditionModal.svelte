@@ -6,11 +6,12 @@
     import type { Writable } from 'svelte/store';
     import type { SubmitFunction } from '@sveltejs/kit';
     import { confirmCardClasses } from '$lib/ui/Confirm';
-    import type { Exam } from '$libs/models/Mark';
+    import type { Exam, Subject } from '$libs/models/Mark';
     import { toDateInputValue } from '$utils/to-date-input';
 
     export let examId: number;
 
+    const subject = getContext<Writable<Subject>>('subject');
     const exams = getContext<Writable<Exam[]>>('exams');
 
     let exam: Exam = $exams.find((e) => e.id === examId)!;
@@ -34,6 +35,10 @@
                     type: 'success',
                     message: 'Examen modifié avec succès.'
                 });
+
+                if (result.data?.subject) {
+                    $subject = result.data.subject;
+                }
 
                 $exams = $exams.map((e) => (e.id === exam.id ? exam : e));
                 closeModal();
