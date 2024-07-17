@@ -8,6 +8,7 @@
     import ExamList from "./ExamList.svelte";
     import EmptySubject from "./EmptySubject.svelte";
     import ExamCreationModal from "./ExamCreationModal.svelte";
+    import SubjectData from "./subject-data/SubjectData.svelte";
 
     const exams = getContext<Writable<Exam[]>>("exams");
 
@@ -15,9 +16,13 @@
 </script>
 
 <Header />
+<SubjectData />
 {#if $exams.length > 0}
     <ExamList />
-    <Button.Normal on:click={() => (showExamCreationModal = true)} class="fixed bottom-5 right-5 w-[60px] aspect-square flex-center gap-5">
+    <Button.Normal
+        on:click={() => (showExamCreationModal = true)}
+        class="fixed bottom-5 right-5 w-[60px] aspect-square flex-center gap-5"
+    >
         <IconPlus class="min-w-6 min-h-6" />
         <span class="hidden md:block whitespace-nowrap">Ajouter un examen</span>
     </Button.Normal>

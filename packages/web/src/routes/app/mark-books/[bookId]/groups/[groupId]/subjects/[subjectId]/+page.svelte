@@ -11,7 +11,9 @@
     <title>{data.subject?.title} | {data.book?.title} - {PUBLIC_APP_NAME}</title>
     <meta
         name="description"
-        content="Visualise tes sujets en détail, comprends les points clés de chaque matière, et optimise ta préparation pour réussir tes examens. Renforce tes connaissances dès aujourd'hui !"
+        content="Visualise tes branches en détail, comprends les points clés de
+            chaque matière, et optimise ta préparation pour réussir tes examens.
+            Renforce tes connaissances dès aujourd'hui !"
     />
 </svelte:head>
 
@@ -19,8 +21,8 @@
     {#await data.exams}
         <p>Chargement des examens...</p>
     {:then exams}
-        {#if data.subject && exams}
-            <ContextProvider subject={data.subject} {exams}>
+        {#if data.subject && data.groups && exams}
+            <ContextProvider groups={data.groups} subject={data.subject} {exams}>
                 <MainView />
             </ContextProvider>
         {:else}
