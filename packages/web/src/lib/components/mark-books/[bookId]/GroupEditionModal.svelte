@@ -4,7 +4,7 @@
     import { Button, Card, FullScreen, Input, Label, TextArea } from "$lib/ui";
     import { enhance } from "$app/forms";
     import type { Writable } from "svelte/store";
-    import type { Group } from "$libs/models/Mark";
+    import type { Book, Group } from "$libs/models/Mark";
     import type { SubmitFunction } from "@sveltejs/kit";
     import { confirmCardClasses } from "$lib/ui/Confirm";
     import IconX from "@tabler/icons-svelte/icons/x";
@@ -12,6 +12,7 @@
 
     export let groupId: number;
 
+    const book = getContext<Writable<Book>>('book');
     const groups = getContext<Writable<Group[]>>('groups');
 
     const dispatch = createEventDispatcher<{ close: null }>();
@@ -51,6 +52,10 @@
                 addToast({ type: 'success', message: 'Groupe supprimé avec succès.' });
 
                 $groups = $groups.map(g => g.id === groupId ? { ...g, title, description, weight } : g);
+
+                if (result.data?.book) {
+                    $book = result.data.book
+                }
 
                 closeModal();
 

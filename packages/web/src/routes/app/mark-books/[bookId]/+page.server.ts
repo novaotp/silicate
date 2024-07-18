@@ -213,7 +213,9 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { message: result.message };
+            const book = await fetchMarkBook(locals.jwt!, params.bookId!);
+
+            return { book, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de la suppression d'un groupe : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });
