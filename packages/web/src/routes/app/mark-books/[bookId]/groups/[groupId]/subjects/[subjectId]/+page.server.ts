@@ -9,6 +9,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         exams: fetchExams(locals.jwt!, params.bookId, params.groupId, params.subjectId),
         subject: await fetchSubject(locals.jwt!, params.bookId, params.groupId, params.subjectId),
         groups: await fetchGroups(locals.jwt!, params.bookId),
+        subjects: await fetchAllSubjects(locals.jwt!, params.bookId),
         book: await fetchMarkBook(locals.jwt!, params.bookId)
     }
 };
@@ -180,6 +181,44 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     }
+}
+
+/** Retrieves all subjects related to the mark-book. */
+const fetchAllSubjects = async (jwt: string, id: string): Promise<Subject[] | undefined> => {
+    const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${id}/groups`, {
+        method: "GET",
+        headers: {
+            "accept": "application/json",
+            "authorization": jwt
+        }
+    });
+    const result: ApiResponseWithData<Group[]> = await response.json();
+
+    if (!result.success) return;
+
+    const groups: Group[] = result.data;
+
+    const subjectsPromises = groups.map(async (group) => await fetchSubjects(jwt, id, group.id.toString()));
+    const subjects = await Promise.all(subjectsPromises);
+
+    return subjects.flat();
+}
+
+const fetchSubjects = async (jwt: string, bookId: string, groupId: string): Promise<Subject[]> => {
+    const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${bookId}/groups/${groupId}/subjects`, {
+        method: "GET",
+        headers: {
+            "accept": "application/json",
+            "authorization": jwt
+        }
+    });
+    const result: ApiResponseWithData<Subject[]> = await response.json();
+
+    if (!result.success) {
+        throw new Error(result.message);
+    }
+
+    return result.data;
 }
 
 /** Retrieves the mark-book with the given id. */

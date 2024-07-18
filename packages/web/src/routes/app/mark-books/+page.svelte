@@ -16,7 +16,7 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full flex flex-col gap-5 p-5 pt-0">
+<main class="relative w-full h-full flex flex-col gap-5 p-5 pt-0 md:pt-5">
     {#await data.books}
         <p>Chargement des carnets de notes...</p>
     {:then books}

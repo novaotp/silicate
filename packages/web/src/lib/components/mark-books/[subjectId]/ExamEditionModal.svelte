@@ -8,8 +8,8 @@
     import { confirmCardClasses } from '$lib/ui/Confirm';
     import type { Exam, Subject } from '$libs/models/Mark';
     import { toDateInputValue } from '$utils/to-date-input';
-    import IconX from "@tabler/icons-svelte/icons/x";
-    import IconTrash from "@tabler/icons-svelte/icons/trash";
+    import IconX from '@tabler/icons-svelte/icons/x';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
 
     export let examId: number;
 
@@ -24,8 +24,8 @@
     };
 
     const editEnhance: SubmitFunction = ({ formData }) => {
-        formData.set("id", exam.id.toString());
-        
+        formData.set('id', exam.id.toString());
+
         return ({ result }) => {
             if (result.type === 'failure') {
                 return addToast({ type: 'error', message: result.data!.message });
@@ -44,8 +44,8 @@
     };
 
     const deleteEnhance: SubmitFunction = ({ formData }) => {
-        formData.set("id", exam.id.toString());
-        
+        formData.set('id', exam.id.toString());
+
         return ({ result }) => {
             if (result.type === 'failure') {
                 return addToast({ type: 'error', message: result.data!.message });
@@ -69,7 +69,7 @@
 </script>
 
 <FullScreen.Backdrop class="flex-center" on:click={closeModal}>
-    <Card class={confirmCardClasses}>
+    <Card class="{confirmCardClasses} md:max-w-2xl">
         <div class="relative w-full h-10 flex justify-between">
             <button on:click={closeModal}>
                 <IconX />
@@ -80,82 +80,61 @@
                 </Button.Danger>
             </form>
         </div>
-        <form
-            method="post"
-            action="?/editExam"
-            use:enhance={editEnhance}
-            class="flex flex-col gap-5"
-        >
-            <div class="relative w-full flex flex-col gap-[10px]">
-                <Label for="title">Titre</Label>
-                <Input
-                    name="title"
-                    bind:value={exam.title}
-                    placeholder="Le titre de l'examen..."
-                />
-                {#if exam.title === ''}
-                    <p class="text-accent-danger-500 text-sm">
-                        Titre obligatoire.
-                    </p>
-                {/if}
+        <form method="post" action="?/editExam" use:enhance={editEnhance} class="flex flex-col gap-5">
+            <div class="relative w-full flex flex-col gap-5 md:flex-row">
+                <div class="relative w-full flex flex-col gap-[10px]">
+                    <Label for="title">Titre</Label>
+                    <Input name="title" bind:value={exam.title} placeholder="Le titre de l'examen..." />
+                    {#if exam.title === ''}
+                        <p class="text-accent-danger-500 text-sm">Titre obligatoire.</p>
+                    {/if}
+                </div>
+                <div class="relative w-full flex flex-col gap-[10px]">
+                    <Label for="score">Score</Label>
+                    <Input
+                        type="number"
+                        step={0.1}
+                        name="score"
+                        bind:value={exam.score}
+                        placeholder="Le score de l'examen..."
+                    />
+                    {#if !exam.score}
+                        <p class="text-accent-danger-500 text-sm">Score obligatoire.</p>
+                    {/if}
+                </div>
+            </div>
+            <div class="relative w-full flex flex-col-reverse gap-5 md:flex-row">
+                <div class="relative w-full flex flex-col gap-[10px]">
+                    <Label for="date">Date</Label>
+                    <Input
+                        name="date"
+                        type="date"
+                        value={toDateInputValue(new Date(exam.date))}
+                        on:change={(event) => (exam.date = event.currentTarget.value)}
+                        placeholder="La date de l'examen..."
+                    />
+                </div>
+                <div class="relative w-full flex flex-col gap-[10px]">
+                    <Label for="weight">Pondération</Label>
+                    <Input
+                        type="number"
+                        step={0.1}
+                        name="weight"
+                        bind:value={exam.weight}
+                        placeholder="La pondération du groupe..."
+                    />
+                    {#if !exam.weight}
+                        <p class="text-accent-danger-500 text-sm">Pondération obligatoire.</p>
+                    {/if}
+                </div>
             </div>
             <div class="relative w-full flex flex-col gap-[10px]">
                 <Label for="comment">Commentaire</Label>
-                <TextArea
-                    name="comment"
-                    bind:value={exam.comment}
-                    placeholder="Le commentaire de l'examen..."
-                />
-            </div>
-            <div class="relative w-full flex flex-col gap-[10px]">
-                <Label for="score">Score</Label>
-                <Input
-                    type="number"
-                    step={0.1}
-                    name="score"
-                    bind:value={exam.score}
-                    placeholder="Le score de l'examen..."
-                />
-                {#if !exam.score}
-                    <p class="text-accent-danger-500 text-sm">
-                        Score obligatoire.
-                    </p>
-                {/if}
-            </div>
-            <div class="relative w-full flex flex-col gap-[10px]">
-                <Label for="weight">Pondération</Label>
-                <Input
-                    type="number"
-                    step={0.1}
-                    name="weight"
-                    bind:value={exam.weight}
-                    placeholder="La pondération du groupe..."
-                />
-                {#if !exam.weight}
-                    <p class="text-accent-danger-500 text-sm">
-                        Pondération obligatoire.
-                    </p>
-                {/if}
-            </div>
-            <div class="relative w-full flex flex-col gap-[10px]">
-                <Label for="date">Date</Label>
-                <Input
-                    name="date"
-                    type="date"
-                    value={toDateInputValue(new Date(exam.date))}
-                    on:change={(event) =>
-                        (exam.date = event.currentTarget.value)}
-                    placeholder="La date de l'examen..."
-                />
+                <TextArea name="comment" bind:value={exam.comment} placeholder="Le commentaire de l'examen..." />
             </div>
             <div class="w-full flex justify-end items-center gap-5">
-                <Button.Normal variant="secondary" on:click={closeModal}>
-                    Annuler
-                </Button.Normal>
-                <Button.Normal
-                    type="submit"
-                    disabled={exam.title === '' || !exam.score || !exam.weight}
-                >
+                <Button.Normal variant="secondary" on:click={closeModal}>Annuler</Button.Normal>
+                <Button.Normal type="submit" disabled={exam.title === '' || !exam.score || !exam.weight}>
                     Modifier
                 </Button.Normal>
             </div>

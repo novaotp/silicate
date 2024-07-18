@@ -16,7 +16,7 @@ An overview of the mark-book's data. Opens a modal to edit the data.
 
 <button
     on:click={() => (showBookEditionModal = true)}
-    class="rounded-lg p-5 bg-primary-500 text-white flex flex-col gap-5"
+    class="relative w-full rounded-lg p-5 bg-primary-500 text-white flex flex-col gap-5"
 >
     <div class="flex justify-between">
         <div class="flex gap-5">
