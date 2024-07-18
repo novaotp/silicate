@@ -155,14 +155,10 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     },
-    editGroup: async ({ locals, request }) => {
+    editGroup: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
-
-            if (!data.bookId) {
-                throw new Error("Missing book ID on group edition !")
-            }
 
             if (!data.id) {
                 throw new Error("Missing group ID on group edition !")
@@ -172,7 +168,7 @@ export const actions: Actions = {
                 return fail(422, { message: "Complétez tous les champs." })
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${data.bookId}/groups/${data.id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${params.bookId}/groups/${data.id}`, {
                 method: "PUT",
                 body: JSON.stringify(data),
                 headers: {
@@ -194,20 +190,16 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     },
-    destroyGroup: async ({ locals, request }) => {
+    destroyGroup: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
-
-            if (!data.bookId) {
-                throw new Error("Missing book ID on group deletion !")
-            }
 
             if (!data.id) {
                 throw new Error("Missing group ID on group deletion !")
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${data.bookId}/groups/${data.id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/mark-books/${params.bookId}/groups/${data.id}`, {
                 method: "DELETE",
                 headers: {
                     "accept": "application/json",

@@ -6,10 +6,7 @@
 
     const exams = getContext<Writable<Exam[]>>('exams');
 
-    let examEditionModalId: number | null;
-
-    /** @see https://github.com/sveltejs/language-tools/issues/1026#issuecomment-1002839154 */
-    const notypecheck = (x:any) => x;
+    let examEditionModalId: number | null = null;
 </script>
 
 <!--
@@ -38,7 +35,6 @@ Displays the exams.
     </button>
 {/each}
 
-<!-- Ensure it exists. -->
-{#if $exams.find(e => e.id === examEditionModalId)}
-    <ExamEditionModal examId={notypecheck(examEditionModalId)} on:close={() => (examEditionModalId = null)} />
+{#if examEditionModalId && $exams.find(e => e.id === examEditionModalId)}
+    <ExamEditionModal examId={examEditionModalId} on:close={() => (examEditionModalId = null)} />
 {/if}
