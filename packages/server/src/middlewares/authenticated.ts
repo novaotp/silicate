@@ -23,16 +23,14 @@ const validate = async (jwt: string) => {
  * A middleware that interrupts the request if the `Authorization` header is undefined or if it is invalid.
  */
 export const authenticated = (async (req, res, next) => {
-    const jwt = req.headers.authorization;
-
-    if (!jwt) {
+    if (!req.jwt) {
         return res.status(401).send({
             success: false,
             message: "Unauthorized action : missing authorization header"
         });
     }
 
-    if (!(await validate(jwt))) {
+    if (!(await validate(req.jwt))) {
         return res.status(401).send({
             success: false,
             message: "Unauthorized action : invalid authorization header"

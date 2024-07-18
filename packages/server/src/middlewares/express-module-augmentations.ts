@@ -2,8 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { verify } from '../utils/jwt';
 
 export const expressModuleAugmentations = async (req: Request, res: Response, next: NextFunction) => {
-    req.jwt = req.headers.authorization ?? null;
-    req.userId = req.headers.authorization ? (await verify(req.headers.authorization!)).payload.userId : null;
+    const authHeader = req.headers.authorization;
+
+    req.jwt = authHeader ? token(authHeader) : null;
+    req.userId = authHeader ? (await verify(token(authHeader))).payload.userId : null;
     
     res.success = (message: string, data?: unknown) => {
         if (data) {
@@ -23,3 +25,7 @@ export const expressModuleAugmentations = async (req: Request, res: Response, ne
     };
     next();
 };
+
+const token = (authHeader: string): string => {
+    return authHeader.split(" ").at(1)!;
+}
