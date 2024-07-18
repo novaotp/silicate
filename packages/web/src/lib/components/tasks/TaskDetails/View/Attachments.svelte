@@ -44,7 +44,7 @@
             body: data,
             headers: {
                 accept: 'application/json',
-                authorization: jwt
+                authorization: `Bearer ${jwt}`
             }
         });
         const result: ApiResponseWithData<Attachment[]> = await response.json();
@@ -64,7 +64,7 @@
             method: 'DELETE',
             headers: {
                 accept: 'application/json',
-                authorization: jwt
+                authorization: `Bearer ${jwt}`
             }
         });
         const result: ApiResponse = await response.json();

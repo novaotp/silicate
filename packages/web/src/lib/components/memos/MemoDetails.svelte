@@ -19,7 +19,7 @@
             method: 'GET',
             headers: {
                 accept: 'application/json',
-                authorization: jwt
+                authorization: `Bearer ${jwt}`
             }
         });
 

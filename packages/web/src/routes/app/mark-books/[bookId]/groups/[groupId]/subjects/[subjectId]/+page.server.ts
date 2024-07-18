@@ -189,7 +189,7 @@ const fetchAllSubjects = async (jwt: string, id: string): Promise<Subject[] | un
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Group[]> = await response.json();
@@ -209,7 +209,7 @@ const fetchSubjects = async (jwt: string, bookId: string, groupId: string): Prom
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Subject[]> = await response.json();
@@ -227,7 +227,7 @@ const fetchMarkBook = async (jwt: string, id: string): Promise<Book | undefined>
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Book> = await response.json();
@@ -241,7 +241,7 @@ const fetchGroups = async (jwt: string, id: string): Promise<Group[] | undefined
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Group[]> = await response.json();
@@ -254,7 +254,7 @@ const fetchSubject = async (jwt: string, bookId: string, groupId: string, subjec
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Subject> = await response.json();
@@ -267,7 +267,7 @@ const fetchExams = async (jwt: string, bookId: string, groupId: string, subjectI
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Exam[]> = await response.json();

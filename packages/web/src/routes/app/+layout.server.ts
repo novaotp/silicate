@@ -32,7 +32,7 @@ const getUser = async (jwt: string): Promise<ApiResponseWithData<User>> => {
     const response = await fetch(`${BACKEND_URL}/api/v1/me`, {
         method: "GET",
         headers: {
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     return await response.json();
@@ -42,7 +42,7 @@ const getTaskNotifications = async (jwt: string): Promise<ApiResponseWithData<Ta
     const response = await fetch(`${BACKEND_URL}/api/v1/tasks/notifications`, {
         method: "GET",
         headers: {
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     return await response.json();

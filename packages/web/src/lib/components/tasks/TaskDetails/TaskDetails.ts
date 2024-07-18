@@ -7,7 +7,7 @@ export const edit = async (id: number, jwt: string, data: unknown) => {
         body: JSON.stringify(data),
         headers: {
             accept: 'application/json',
-            authorization: jwt,
+            authorization: `Bearer ${jwt}`,
             'content-type': 'application/json'
         }
     });
@@ -18,7 +18,7 @@ export const destroy = async (id: number, jwt: string) => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}`, {
         method: 'DELETE',
         headers: {
-            authorization: jwt
+            authorization: `Bearer ${jwt}`
         }
     });
     return await response.json() as ApiResponse;
@@ -32,7 +32,7 @@ export const archive = async (id: number, jwt: string, archived: boolean) => {
         }),
         headers: {
             accept: 'application/json',
-            authorization: jwt,
+            authorization: `Bearer ${jwt}`,
             'content-type': 'application/json'
         }
     });

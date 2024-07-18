@@ -22,7 +22,7 @@
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/tasks/${id}/attachment?name=${name}`, {
             method: 'GET',
             headers: {
-                authorization: jwt,
+                authorization: `Bearer ${jwt}`,
                 'content-type': 'application/json'
             },
             signal

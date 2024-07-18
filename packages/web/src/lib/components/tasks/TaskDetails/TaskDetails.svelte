@@ -120,7 +120,7 @@
             body: JSON.stringify({ category: replica.category }),
             headers: {
                 accept: 'application/json',
-                authorization: jwt,
+                authorization: `Bearer ${jwt}`,
                 'content-type': 'application/json'
             }
         });
@@ -157,7 +157,7 @@
             body: JSON.stringify({ category: null }),
             headers: {
                 accept: 'application/json',
-                authorization: jwt,
+                authorization: `Bearer ${jwt}`,
                 'content-type': 'application/json'
             }
         });

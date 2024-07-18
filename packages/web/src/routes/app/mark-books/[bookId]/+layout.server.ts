@@ -15,7 +15,7 @@ const fetchMarkBooks = async (jwt: string): Promise<Book[] | undefined> => {
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Book[]> = await response.json();
