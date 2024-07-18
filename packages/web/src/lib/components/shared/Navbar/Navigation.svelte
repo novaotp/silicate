@@ -1,15 +1,9 @@
 <script lang="ts">
     import MenuIcon from '@tabler/icons-svelte/icons/menu';
     import CloseIcon from '@tabler/icons-svelte/icons/x';
-    import MemoIcon from '@tabler/icons-svelte/icons/note';
-    import GradeIcon from '@tabler/icons-svelte/icons/stars';
-    import IconHome from '@tabler/icons-svelte/icons/home';
-    import TaskIcon from '@tabler/icons-svelte/icons/checklist';
     import IconMenu2 from '@tabler/icons-svelte/icons/menu-2';
     import IconX from '@tabler/icons-svelte/icons/x';
     import IconBell from '@tabler/icons-svelte/icons/bell';
-    import Item from './Item.svelte';
-    import DesktopItem from './DesktopItem.svelte';
     import { FullScreen, Card } from "$lib/ui";
     import { getContext } from 'svelte';
     import type { TaskNotification } from '$libs/models/Task';
@@ -18,6 +12,7 @@
     import Avatar from '../Avatar.svelte';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
+    import { navigationItems } from './navigation-items';
 
     export let showMenu: boolean = false;
     let showNotifications: boolean = false;
@@ -63,20 +58,39 @@
                     </button>
                 </header>
                 <menu>
-                    <Item on:close={() => (showMenu = false)} href="/app" label="Dashboard" icon={IconHome} />
-                    <Item on:close={() => (showMenu = false)} href="/app/memos" label="Mémos" icon={MemoIcon} />
-                    <Item on:close={() => (showMenu = false)} href="/app/tasks" label="Tâches" icon={TaskIcon} />
-                    <Item on:close={() => (showMenu = false)} href="/app/mark-books" label="Carnets de notes" icon={GradeIcon} />
+                    {#each navigationItems as { href, label, icon }}
+                        <li
+                            class="relative flex w-full items-center justify-center h-[50px]
+                                    border-x border-t border-gray-400 first-of-type:rounded-t-md
+                                    last-of-type:rounded-b-md last-of-type:border-b dark:border-neutral-500"
+                        >
+                            <a
+                                {href}
+                                on:click={() => (showMenu = false)}
+                                class="relative flex h-full w-full items-center justify-start px-5 gap-5 dark:text-neutral-100"
+                            >
+                                <svelte:component this={icon} class="stroke-[1.5]" />
+                                <span>{label}</span>
+                            </a>
+                        </li>
+                    {/each}
                 </menu>
             </Card>
         </FullScreen.Backdrop>
     {/if}
 </div>
 
-<nav class="hidden md:flex flex-col justify-between items-center h-full {showMenu ? "w-[200px]" : "w-20"} duration-300 overflow-x-hidden ease-in-out py-5 bg-neutral-100 dark:bg-neutral-900">
+<nav
+    class="hidden md:flex flex-col justify-between items-center h-full {showMenu ? "w-[200px]" : "w-20"}
+    duration-300 overflow-x-hidden ease-in-out py-5 bg-neutral-100 dark:bg-neutral-900"
+>
     <ul class="relative w-full flex flex-col justify-start gap-3">
         <li class="relative flex w-full items-center justify-center">
-            <button on:click={() => (showMenu = !showMenu)} class="relative flex h-full w-full items-center justify-start py-[10px] text-center rounded-md hover:bg-stone-400 dark:text-neutral-50 text-sm">
+            <button
+                on:click={() => (showMenu = !showMenu)}
+                class="relative flex h-full w-full items-center justify-start py-[10px]
+                text-center rounded-md hover:bg-stone-400 dark:text-neutral-50 text-sm"
+            >
                 <span class="relative min-w-20 h-full flex justify-center items-center">
                     {#if !showMenu}
                         <IconMenu2 class="min-w-6 min-h-6" />
@@ -87,18 +101,30 @@
                 <span>Menu</span>
             </button>
         </li>
-        <DesktopItem href="/app" label="Home" icon={IconHome} on:click={() => (showMenu = false)} />
-        <DesktopItem href="/app/memos" label="Mémos" icon={MemoIcon} on:click={() => (showMenu = false)} />
-        <DesktopItem href="/app/tasks" label="Tâches" icon={TaskIcon} on:click={() => (showMenu = false)} />
-        <DesktopItem href="/app/mark-books" label="Notes" icon={GradeIcon} on:click={() => (showMenu = false)} />
+        {#each navigationItems as { href, label, icon }}
+            <li class="relative flex w-full items-center justify-center">
+                <a
+                    {href}
+                    on:click={() => (showMenu = false)}
+                    class="link group relative flex h-full w-full items-center justify-start py-[10px]
+                            text-center text-sm overflow-hidden dark:text-neutral-50"
+                    class:current={$page.url.pathname === href}
+                >
+                    <span class="relative min-w-20 h-full flex justify-center items-center">
+                        <svelte:component this={icon} class="group-hover:text-primary-600 group-hover:dark:text-primary-400 min-w-6 min-h-6" />
+                    </span>
+                    <span class="group-hover:text-primary-600 group-hover:dark:text-primary-400">{label}</span>
+                </a>
+            </li>
+        {/each}
     </ul>
     <ul class="relative w-full flex flex-col gap-3">
         <li class="relative flex flex-col w-full items-center justify-center">
             <button
-                class="relative group flex h-full w-full overflow-hidden min-w-10 items-center justify-start py-[10px] text-center rounded-md
-                        bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm dark:text-neutral-50"
                 on:click={() => (showNotifications = !showNotifications)}
                 bind:this={notificationButtonNode}
+                class="relative group flex h-full w-full overflow-hidden min-w-10 items-center justify-start py-[10px] text-center rounded-md
+                        bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm dark:text-neutral-50"
             >
                 <span class="relative group-hover:text-primary-600 group-hover:dark:text-primary-400 min-w-20 h-full flex justify-center items-center">
                     <IconBell />
@@ -130,10 +156,10 @@
 
 <style lang="postcss">
     .current {
-        @apply text-primary-600;
+        @apply text-primary-600 dark:text-primary-400;
     }
 
     .current::before {
-        @apply content-[""] absolute top-0 left-[1px] w-[2px] h-full bg-primary-600;
+        @apply content-[""] absolute top-0 left-[1px] w-[2px] h-full bg-primary-600 dark:bg-primary-400;;
     }
 </style>
