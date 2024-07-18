@@ -6,9 +6,10 @@
     import type { Writable } from "svelte/store";
     import type { SubmitFunction } from "@sveltejs/kit";
     import { confirmCardClasses } from "$lib/ui/Confirm";
-    import type { Exam } from "$libs/models/Mark";
+    import type { Exam, Subject } from "$libs/models/Mark";
     import { toDateInputValue } from "$utils/to-date-input";
 
+    const subject = getContext<Writable<Subject>>('subject');
     const exams = getContext<Writable<Exam[]>>('exams');
 
     const dispatch = createEventDispatcher<{ close: null }>();
@@ -32,6 +33,11 @@
 
                 if (!result.data?.exam) {
                     throw new Error("Expected to receive the newly created exam after creating it.");
+                }
+
+                // Update the average score
+                if (result.data?.subject) {
+                    $subject = result.data.subject;
                 }
 
                 $exams = [...$exams, result.data.exam]

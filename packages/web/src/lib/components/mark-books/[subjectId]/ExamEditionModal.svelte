@@ -8,6 +8,8 @@
     import { confirmCardClasses } from '$lib/ui/Confirm';
     import type { Exam, Subject } from '$libs/models/Mark';
     import { toDateInputValue } from '$utils/to-date-input';
+    import IconX from "@tabler/icons-svelte/icons/x";
+    import IconTrash from "@tabler/icons-svelte/icons/trash";
 
     export let examId: number;
 
@@ -26,16 +28,11 @@
         
         return ({ result }) => {
             if (result.type === 'failure') {
-                return addToast({
-                    type: 'error',
-                    message: result.data!.message
-                });
+                return addToast({ type: 'error', message: result.data!.message });
             } else if (result.type === 'success') {
-                addToast({
-                    type: 'success',
-                    message: 'Examen modifié avec succès.'
-                });
+                addToast({ type: 'success', message: 'Examen modifié avec succès.' });
 
+                // Update the average score
                 if (result.data?.subject) {
                     $subject = result.data.subject;
                 }
@@ -45,10 +42,44 @@
             }
         };
     };
+
+    const deleteEnhance: SubmitFunction = ({ formData }) => {
+        formData.set("id", exam.id.toString());
+        
+        return ({ result }) => {
+            if (result.type === 'failure') {
+                return addToast({ type: 'error', message: result.data!.message });
+            } else if (result.type === 'success') {
+                addToast({ type: 'success', message: 'Examen supprimé avec succès.' });
+
+                // Update the average score
+                if (result.data?.subject) {
+                    $subject = result.data.subject;
+                }
+
+                closeModal();
+
+                // Wait for the FullScreen.Backdrop animation to finish
+                setTimeout(() => {
+                    $exams = $exams.filter((e) => e.id !== exam.id);
+                }, 400);
+            }
+        };
+    };
 </script>
 
 <FullScreen.Backdrop class="flex-center" on:click={closeModal}>
     <Card class={confirmCardClasses}>
+        <div class="relative w-full h-10 flex justify-between">
+            <button on:click={closeModal}>
+                <IconX />
+            </button>
+            <form method="post" action="?/destroyExam" use:enhance={deleteEnhance}>
+                <Button.Danger type="submit" variant="tertiary" class="px-0">
+                    <IconTrash />
+                </Button.Danger>
+            </form>
+        </div>
         <form
             method="post"
             action="?/editExam"

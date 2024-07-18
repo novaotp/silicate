@@ -98,7 +98,9 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { exam: result.data, message: result.message };
+            const subject = await fetchSubject(locals.jwt!, params.bookId, params.groupId, params.subjectId);
+
+            return { exam: result.data, subject, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de l'ajout d'un examen : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });
@@ -144,29 +146,17 @@ export const actions: Actions = {
             return fail(500, { message: "Internal Server Error" });
         }
     },
-    destroyExam: async ({ locals, request }) => {
+    destroyExam: async ({ locals, params, request }) => {
         try {
             const formData = await request.formData();
             const data = formData.toJSON();
-
-            if (!data.subjectId) {
-                throw new Error("Missing subject ID on exam deletion !")
-            }
-
-            if (!data.groupId) {
-                throw new Error("Missing group ID on exam deletion !")
-            }
-
-            if (!data.bookId) {
-                throw new Error("Missing book ID on exam deletion !")
-            }
 
             if (!data.id) {
                 throw new Error("Missing ID on exam deletion !")
             }
 
             const response = await fetch(
-                `${BACKEND_URL}/api/v1/mark-books/${data.bookId}/groups/${data.groupId}/subjects/${data.subjectId}/exams/${data.id}`,
+                `${BACKEND_URL}/api/v1/mark-books/${params.bookId}/groups/${params.groupId}/subjects/${params.subjectId}/exams/${data.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -182,7 +172,9 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            return { message: result.message };
+            const subject = await fetchSubject(locals.jwt!, params.bookId, params.groupId, params.subjectId);
+
+            return { subject, message: result.message };
         } catch (err) {
             console.error(`Une erreur est survenue lors de la suppression d'un examen : ${(err as Error).message}`);
             return fail(500, { message: "Internal Server Error" });
