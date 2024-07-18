@@ -27,7 +27,7 @@ export class MemoRequests {
             }),
             headers: {
                 accept: 'application/json',
-                authorization: this.jwt,
+                authorization: `Bearer ${this.jwt}`,
                 'content-type': 'application/json'
             }
         });
@@ -45,7 +45,7 @@ export class MemoRequests {
             body: JSON.stringify({ ...options }),
             headers: {
                 accept: 'application/json',
-                authorization: this.jwt,
+                authorization: `Bearer ${this.jwt}`,
                 'content-type': 'application/json'
             }
         });
@@ -58,7 +58,7 @@ export class MemoRequests {
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
             method: 'DELETE',
             headers: {
-                authorization: this.jwt
+                authorization: `Bearer ${this.jwt}`
             }
         });
         return await response.json() as ApiResponse;
@@ -69,7 +69,7 @@ export class MemoRequests {
             method: "GET",
             headers: {
                 "accept": "application/json",
-                "authorization": this.jwt
+                "authorization": `Bearer ${this.jwt}`
             }
         });
 
@@ -81,7 +81,7 @@ export class MemoRequests {
             method: "GET",
             headers: {
                 "accept": "application/json",
-                "authorization": this.jwt
+                "authorization": `Bearer ${this.jwt}`
             }
         });
 
@@ -93,7 +93,7 @@ export class MemoRequests {
             method: "GET",
             headers: {
                 "accept": "application/json",
-                "authorization": this.jwt
+                "authorization": `Bearer ${this.jwt}`
             }
         });
         const result: ApiResponseWithData<string[]> = await response.json();

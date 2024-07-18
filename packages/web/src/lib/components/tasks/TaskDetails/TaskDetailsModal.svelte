@@ -31,7 +31,7 @@
             method: 'GET',
             headers: {
                 accept: 'application/json',
-                authorization: jwt
+                authorization: `Bearer ${jwt}`
             }
         });
         const result: ApiResponseWithData<Task> = await response.json();
@@ -44,7 +44,7 @@
             method: 'GET',
             headers: {
                 accept: 'application/json',
-                authorization: jwt
+                authorization: `Bearer ${jwt}`
             }
         });
         const result2: ApiResponseWithData<Reminder[]> = await response2.json();

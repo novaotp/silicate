@@ -9,7 +9,7 @@ const fetchCategories = async (jwt: string, search: string, archived: boolean): 
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<string[]> = await response.json();
@@ -22,7 +22,7 @@ const fetchTasks = async (jwt: string, category: string, search: string, archive
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Task[]> = await response.json();
@@ -56,12 +56,11 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 };
 
 export const actions: Actions = {
-    create: async ({ cookies, url }) => {
+    create: async ({ locals, url }) => {
         try {
             const search = url.searchParams.get('search') ?? "";
             const category = url.searchParams.get('category') ?? "";
             const archived = url.searchParams.get('archived') === "true";
-            const jwt = cookies.get("id")!;
 
             const response = await fetch(`${BACKEND_URL}/api/v1/tasks`, {
                 method: 'POST',
@@ -76,7 +75,7 @@ export const actions: Actions = {
                 }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -87,7 +86,7 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
+            const tasks = await fetchTasks(locals.jwt!, decodeURIComponent(search), decodeURIComponent(category), archived);
 
             return { id: result.data, message: "Tâche créée avec succès.", tasks };
         } catch (err) {
@@ -95,9 +94,8 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
         }
     },
-    edit: async ({ cookies, request, url }) => {
+    edit: async ({ locals, request, url }) => {
         try {
-            const jwt = cookies.get("id")!;
             const search = url.searchParams.get('search') ?? "";
             const category = url.searchParams.get('category') ?? "";
             const archived = url.searchParams.get('archived') === "true";
@@ -120,7 +118,7 @@ export const actions: Actions = {
                 body: JSON.stringify(data),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -131,8 +129,8 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
-            const categories = await fetchCategories(jwt, decodeURIComponent(search), archived);
+            const tasks = await fetchTasks(locals.jwt!, decodeURIComponent(search), decodeURIComponent(category), archived);
+            const categories = await fetchCategories(locals.jwt!, decodeURIComponent(search), archived);
 
             if (tasks && categories) {
                 return { tasks, categories };
@@ -164,9 +162,8 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
 		}
     },
-    archiveTask: async ({ cookies, request, url }) => {
+    archiveTask: async ({ locals, request, url }) => {
         try {
-            const jwt = cookies.get("id")!;
             const search = url.searchParams.get('search') ?? "";
             const category = url.searchParams.get('category') ?? "";
             const archived = url.searchParams.get('archived') === "true";
@@ -182,7 +179,7 @@ export const actions: Actions = {
                 }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -192,7 +189,7 @@ export const actions: Actions = {
                 return fail(422, { message: result.message });
             }
 
-            const tasks = await fetchTasks(jwt, decodeURIComponent(search), decodeURIComponent(category), archived);
+            const tasks = await fetchTasks(locals.jwt!, decodeURIComponent(search), decodeURIComponent(category), archived);
 
             return { message: "Tâche archivée avec succès.", tasks };
         } catch (err) {
@@ -200,10 +197,8 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
         }
     },
-    createReminder: async ({ cookies, request }) => {
+    createReminder: async ({ locals, request }) => {
         try {
-            const jwt = cookies.get("id")!;
-
             const formData = await request.formData();
             const taskId = formData.get("taskId")!.toString();
 
@@ -212,7 +207,7 @@ export const actions: Actions = {
                 body: JSON.stringify({ time: new Date() }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -229,10 +224,8 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
         }
     },
-    editReminder: async ({ cookies, request }) => {
+    editReminder: async ({ locals, request }) => {
         try {
-            const jwt = cookies.get("id")!;
-
             const formData = await request.formData();
             const taskId = formData.get("taskId")!.toString();
             const reminderId = formData.get("reminderId")!.toString();
@@ -247,7 +240,7 @@ export const actions: Actions = {
                 body: JSON.stringify({ time }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -263,10 +256,8 @@ export const actions: Actions = {
 			return fail(422, { message: "Une erreur est survenue." });
         }
     },
-    destroyReminder: async ({ cookies, request }) => {
+    destroyReminder: async ({ locals, request }) => {
         try {
-            const jwt = cookies.get("id")!;
-
             const formData = await request.formData();
             const taskId = formData.get("taskId")!.toString();
             const reminderId = formData.get("reminderId")!.toString();
@@ -276,7 +267,7 @@ export const actions: Actions = {
                 body: JSON.stringify({ time: new Date() }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${locals.jwt}`,
                     'content-type': 'application/json'
                 }
             });

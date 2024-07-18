@@ -21,7 +21,7 @@ export const addTask = async (jwt: string) => {
         }),
         headers: {
             accept: 'application/json',
-            authorization: jwt,
+            authorization: `Bearer ${jwt}`,
             'content-type': 'application/json'
         }
     });
@@ -41,7 +41,7 @@ export const fetchTask = async (id: number, jwt: string) => {
         method: 'GET',
         headers: {
             accept: 'application/json',
-            authorization: jwt
+            authorization: `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Task> = await response.json();

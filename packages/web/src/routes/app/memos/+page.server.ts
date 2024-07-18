@@ -9,7 +9,7 @@ const fetchCategories = async (jwt: string): Promise<string[] | undefined> => {
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<string[]> = await response.json();
@@ -22,7 +22,7 @@ const fetchMemos = async (jwt: string, search: string, category: string): Promis
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Memo[]> = await response.json();
@@ -58,7 +58,7 @@ export const actions: Actions = {
                 }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${jwt}`,
                     'content-type': 'application/json'
                 }
             });
@@ -105,7 +105,7 @@ export const actions: Actions = {
                 body: JSON.stringify(data),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${jwt}`,
                     'content-type': 'application/json'
                 }
             });

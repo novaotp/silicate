@@ -55,7 +55,7 @@
                 }),
                 headers: {
                     accept: 'application/json',
-                    authorization: jwt,
+                    authorization: `Bearer ${jwt}`,
                     'content-type': 'application/json'
                 }
             });

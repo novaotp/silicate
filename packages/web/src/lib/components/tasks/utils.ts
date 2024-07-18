@@ -85,7 +85,7 @@ export const fetchTasks = async (jwt: string, category: string, search: string, 
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<Task[]> = await response.json();
@@ -98,7 +98,7 @@ export const fetchCategories = async (jwt: string, archived: boolean): Promise<s
         method: "GET",
         headers: {
             "accept": "application/json",
-            "authorization": jwt
+            "authorization": `Bearer ${jwt}`
         }
     });
     const result: ApiResponseWithData<string[]> = await response.json();
