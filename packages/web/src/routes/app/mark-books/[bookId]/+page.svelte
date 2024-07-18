@@ -17,7 +17,7 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full flex flex-col gap-5 p-5 pt-0">
+<main class="relative w-full h-full flex gap-5">
     {#await data.groupsAndSubjects}
         <p>Chargement des données du bulletin...</p>
     {:then groupsAndSubjects}

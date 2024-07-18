@@ -22,14 +22,16 @@
 The main component of the mark-book's page.
 -->
 
-<Header />
-<BookData bind:showBookEditionModal />
-{#if $groups.length > 0}
-    <GroupList />
-    <Add bind:showGroupCreationModal bind:showSubjectCreationModal />
-{:else}
-    <EmptyBook bind:showGroupCreationModal />
-{/if}
+<div class="relative w-full h-full p-5 pt-0 md:pt-5 flex flex-col gap-5">
+    <Header />
+    <BookData bind:showBookEditionModal />
+    {#if $groups.length > 0}
+        <GroupList />
+        <Add bind:showGroupCreationModal bind:showSubjectCreationModal />
+    {:else}
+        <EmptyBook bind:showGroupCreationModal />
+    {/if}
+</div>
 
 {#if showGroupCreationModal}
     <GroupCreationModal on:close={() => (showGroupCreationModal = false)} />

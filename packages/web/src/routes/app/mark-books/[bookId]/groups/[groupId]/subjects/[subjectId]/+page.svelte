@@ -1,6 +1,7 @@
 <script lang="ts">
     import ContextProvider from '$components/mark-books/[subjectId]/ContextProvider.svelte';
     import MainView from '$components/mark-books/[subjectId]/MainView.svelte';
+    import Sidebar from '$components/mark-books/[subjectId]/Sidebar.svelte';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import type { PageServerData } from './$types';
 
@@ -17,13 +18,16 @@
     />
 </svelte:head>
 
-<main class="relative w-full h-full flex flex-col gap-5 p-5 pt-0">
+<main class="relative w-full h-full flex flex-col gap-5">
     {#await data.exams}
         <p>Chargement des examens...</p>
     {:then exams}
-        {#if data.subject && data.groups && exams}
-            <ContextProvider groups={data.groups} subject={data.subject} {exams}>
-                <MainView />
+        {#if data.subject && data.groups && data.subjects && exams}
+            <ContextProvider groups={data.groups} subjects={data.subjects} subject={data.subject} {exams}>
+                <div class="relative w-full h-full flex">
+                    <Sidebar />
+                    <MainView />
+                </div>
             </ContextProvider>
         {:else}
             <p class="dark:text-neutral-50">
