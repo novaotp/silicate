@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cn } from '$utils/cn';
     import { createEventDispatcher } from 'svelte';
-    import IconSelector from '@tabler/icons-svelte/IconSelector.svelte';
+    import IconSelector from '@tabler/icons-svelte/icons/selector';
     import { flyAndScale } from '$utils/transitions/fly-and-scale';
     import { scale } from 'svelte/transition';
     import { clickOutside } from '$utils/click-outside';

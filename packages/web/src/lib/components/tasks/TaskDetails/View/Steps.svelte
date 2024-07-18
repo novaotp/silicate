@@ -6,7 +6,7 @@
     import { addToast } from '$lib/stores/toast';
     import { page } from '$app/stores';
     import type { Step } from '$libs/models/Task';
-    import IconChecklist from '@tabler/icons-svelte/IconChecklist.svelte';
+    import IconChecklist from '@tabler/icons-svelte/icons/checklist';
     import { calculateCompletion, fetchTasks, toStep, toStepWithId, type PageContext } from '../../utils';
     import { Button } from '$lib/ui';
 

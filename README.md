@@ -1,6 +1,6 @@
-# Silicate
+# Chalarí
 
-A solution for managing school life easily and stress-free.
+A (swiss) solution for managing school life easily and stress-free.
 
 Track progress here : https://trello.com/b/BJy0RBLL/chalari
 
@@ -11,28 +11,31 @@ Track progress here : https://trello.com/b/BJy0RBLL/chalari
 Core features include :
 - [X] Memos for taking quick notes (integrated editor)
 - [X] Tasks for deadlines
-- [ ] Notifications to remind students about tasks (in progress)
+    - [X] File attachments
+    - [X] Reminders
+- [ ] Notifications to remind students about tasks
     - [X] In-App notifications
     - [ ] Push notifications
-- [ ] Gradebooks for tracking your grades
-- [ ] Have your personal agenda
+- [X] Gradebooks for tracking your grades
 - [ ] A calendar to view your tasks and schedule
+- [ ] Have your personal agenda
+- [ ] Study Aids
+    - [ ] Time Management
+    - [ ] Flashcards (quizlet-like)
 
 ### Later on
 
 Possible features (after core features are completed) :
-- [ ] Have conversations with friends or teachers
 - [ ] An online community-driven resource library
+- [ ] Chat
+    - [ ] Private conversations
+    - [ ] Group conversations
+    - [ ] Voice-chat
+    - [ ] Streaming
 
 ## Supported Languages
 
-### Planned
-
-- [x] French
-
-### Later on
-
-These languages poses the problem of school-system differences. They are not expected to be done for now.
+- [X] French
 - [ ] English
 - [ ] German
 - [ ] Italian

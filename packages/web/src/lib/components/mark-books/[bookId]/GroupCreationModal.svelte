@@ -6,6 +6,7 @@
     import type { Writable } from "svelte/store";
     import type { Group } from "$libs/models/Mark";
     import type { SubmitFunction } from "@sveltejs/kit";
+    import { confirmCardClasses } from "$lib/ui/Confirm";
 
     const groups = getContext<Writable<Group[]>>('groups');
 
@@ -41,8 +42,8 @@
     }
 </script>
 
-<FullScreen.Backdrop class="flex-center p-5" on:click={closeModal}>
-    <Card class="w-full">
+<FullScreen.Backdrop class="flex-center" on:click={closeModal}>
+    <Card class={confirmCardClasses}>
         <form
             method="post"
             action="?/createGroup"
@@ -52,8 +53,8 @@
             <div class="relative w-full flex flex-col gap-[10px]">
                 <Label for="title">Titre</Label>
                 <Input name="title" bind:value={title} placeholder="Le titre du carnet..." />
-                {#if !title}
-                    <p class="text-accent-danger-500">Titre obligatoire.</p>
+                {#if title === ""}
+                    <p class="text-accent-danger-500 text-sm">Titre obligatoire.</p>
                 {/if}
             </div>
             <div class="relative w-full flex flex-col gap-[10px]">
@@ -62,9 +63,9 @@
             </div>
             <div class="relative w-full flex flex-col gap-[10px]">
                 <Label for="weight">Pondération</Label>
-                <Input name="weight" bind:value={weight} placeholder="La pondération du groupe..." />
+                <Input type="number" step={0.1} name="weight" bind:value={weight} placeholder="La pondération du groupe..." />
                 {#if !weight}
-                    <p class="text-accent-danger-500">Pondération obligatoire.</p>
+                    <p class="text-accent-danger-500 text-sm">Pondération obligatoire.</p>
                 {/if}
             </div>
             <div class="w-full flex justify-end items-center gap-5">

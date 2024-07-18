@@ -1,3 +1,3 @@
-<div class="relative w-full flex-grow">
+<div class="relative">
     <slot />
 </div>

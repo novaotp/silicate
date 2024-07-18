@@ -1,16 +1,16 @@
-import IconBmp from "@tabler/icons-svelte/IconBmp.svelte";
-import IconCsv from "@tabler/icons-svelte/IconCsv.svelte";
-import IconGif from "@tabler/icons-svelte/IconGif.svelte";
-import IconHtml from "@tabler/icons-svelte/IconHtml.svelte";
-import IconJpg from "@tabler/icons-svelte/IconJpg.svelte";
-import IconJson from "@tabler/icons-svelte/IconJson.svelte";
-import IconPdf from "@tabler/icons-svelte/IconPdf.svelte";
-import IconPng from "@tabler/icons-svelte/IconPng.svelte";
-import IconSql from "@tabler/icons-svelte/IconSql.svelte";
-import IconSvg from "@tabler/icons-svelte/IconSvg.svelte";
-import IconToml from "@tabler/icons-svelte/IconToml.svelte";
-import IconZip from "@tabler/icons-svelte/IconZip.svelte";
-import IconTxt from "@tabler/icons-svelte/IconTxt.svelte"
+import IconBmp from '@tabler/icons-svelte/icons/bmp';
+import IconCsv from '@tabler/icons-svelte/icons/csv';
+import IconGif from '@tabler/icons-svelte/icons/gif';
+import IconHtml from '@tabler/icons-svelte/icons/html';
+import IconJpg from '@tabler/icons-svelte/icons/jpg';
+import IconJson from '@tabler/icons-svelte/icons/json';
+import IconPdf from '@tabler/icons-svelte/icons/pdf';
+import IconPng from '@tabler/icons-svelte/icons/png';
+import IconSql from '@tabler/icons-svelte/icons/sql';
+import IconSvg from '@tabler/icons-svelte/icons/svg';
+import IconToml from '@tabler/icons-svelte/icons/toml';
+import IconZip from '@tabler/icons-svelte/icons/zip';
+import IconTxt from '@tabler/icons-svelte/icons/txt';
 
 /**
  * Maps a file extension to an icon.

@@ -23,3 +23,6 @@ export const Confirm = {
     Yes: Yes,
     No: No
 }
+
+/** If you want to have a confirm card style without using the confirm component. */
+export const confirmCardClasses = "flex flex-col gap-5 w-full max-w-lg p-6 rounded-none sm:rounded-lg";

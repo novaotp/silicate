@@ -7,7 +7,7 @@
     import type { SubmitFunction } from '@sveltejs/kit';
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
-    import IconHeartBroken from '@tabler/icons-svelte/IconHeartBroken.svelte';
+    import IconHeartBroken from '@tabler/icons-svelte/icons/heart-broken';
 
     const user = getContext<Writable<User>>('user');
 

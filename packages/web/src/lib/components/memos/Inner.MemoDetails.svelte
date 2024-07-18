@@ -4,10 +4,10 @@
     import { getContext } from 'svelte';
     import { changeSearchParams, type MemoPageContext } from './utils';
     import Editor from './Editor/Editor.svelte';
-    import { Button, Card, Confirm, FullScreen, Label } from '$lib/ui';
-    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
-    import IconTag from '@tabler/icons-svelte/IconTag.svelte';
-    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
+    import { Button, Card, Confirm, FullScreen } from '$lib/ui';
+    import IconCircleXFilled from '@tabler/icons-svelte/icons/circle-x-filled';
+    import IconTag from '@tabler/icons-svelte/icons/tag';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
     import { fly } from 'svelte/transition';
     import { page } from '$app/stores';
     import type { SubmitFunction } from '../../../routes/app/memos/$types';
