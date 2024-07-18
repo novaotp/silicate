@@ -1,6 +1,6 @@
 <script lang="ts">
-    import IconDotsVertical from '@tabler/icons-svelte/IconDotsVertical.svelte';
-    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
+    import IconDotsVertical from '@tabler/icons-svelte/icons/dots-vertical';
+    import IconCircleXFilled from '@tabler/icons-svelte/icons/circle-x-filled';
     import { createEventDispatcher } from 'svelte';
     import type { StepWithId } from '../../utils';
     import { Button } from '$lib/ui';

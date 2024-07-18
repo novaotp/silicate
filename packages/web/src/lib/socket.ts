@@ -1,5 +1,5 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { Socket, io } from "socket.io-client";
+import { type Socket, io } from "socket.io-client";
  
 /** The socket client. */
 export let socket: Socket | null = null;

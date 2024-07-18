@@ -4,10 +4,10 @@
     import { getContext } from 'svelte';
     import { changeSearchParams, type MemoPageContext } from './utils';
     import Editor from './Editor/Editor.svelte';
-    import { Button, Card, FullScreen } from '$lib/ui';
-    import IconCircleXFilled from '@tabler/icons-svelte/IconCircleXFilled.svelte';
-    import IconTag from '@tabler/icons-svelte/IconTag.svelte';
-    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
+    import { Button, Card, Confirm, FullScreen } from '$lib/ui';
+    import IconCircleXFilled from '@tabler/icons-svelte/icons/circle-x-filled';
+    import IconTag from '@tabler/icons-svelte/icons/tag';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
     import { fly } from 'svelte/transition';
     import { page } from '$app/stores';
     import type { SubmitFunction } from '../../../routes/app/memos/$types';
@@ -21,48 +21,49 @@
 
     let timer: NodeJS.Timeout;
     let showCategoryChanger: boolean = false;
+    let showDeleteConfirmation: boolean = false;
 
-    $: filteredCategories = $categories.filter((c) => c.includes(replica.category ?? ""));
+    $: filteredCategories = $categories.filter((c) => c.includes(replica.category ?? ''));
 
     const edit = async () => {
         const formData = new FormData();
-        formData.set("id", replica.id.toString());
-        formData.set("title", replica.title);
-        formData.set("content", replica.content);
-        formData.set("pinned", String(replica.pinned));
+        formData.set('id', replica.id.toString());
+        formData.set('title', replica.title);
+        formData.set('content', replica.content);
+        formData.set('pinned', String(replica.pinned));
         if (replica.category) {
-            formData.set("category", replica.category)
+            formData.set('category', replica.category);
         }
 
         const response = await fetch(`${$page.url.pathname}?/edit`, {
-            method: "POST",
+            method: 'POST',
             body: formData
         });
 
-        const result = deserialize<{ memos: Memo[], categories: string[] }, { message: string }>(await response.text());
+        const result = deserialize<{ memos: Memo[]; categories: string[] }, { message: string }>(await response.text());
 
-        if (result.type === "failure") {
+        if (result.type === 'failure') {
             return addToast({ type: 'error', message: result.data!.message });
-        } else if (result.type === "success") {
+        } else if (result.type === 'success') {
             $memos = result.data!.memos;
             $categories = result.data!.categories;
         }
 
-        memo = { ...replica }
+        memo = { ...replica };
     };
 
     const destroyEnhance: SubmitFunction = ({ formData }) => {
-        formData.set("id", replica.id.toString());
+        formData.set('id', replica.id.toString());
         return ({ result }) => {
-            if (result.type === "failure") {
+            if (result.type === 'failure') {
                 return addToast({ type: 'error', message: result.data!.message });
-            } else if (result.type === "success") {
-                addToast({ type: 'success', message: "Supprimé avec succès." });
+            } else if (result.type === 'success') {
+                addToast({ type: 'success', message: 'Supprimé avec succès.' });
                 changeSearchParams('id', null);
                 $memos = $memos.filter((m) => m.id !== replica.id);
             }
-        }
-    }
+        };
+    };
 </script>
 
 <input
@@ -117,13 +118,43 @@
                     <span>Ajouter une catégorie</span>
                 </button>
             {/if}
-            <form method="post" action="?/destroy" use:enhance={destroyEnhance} class="relative w-full">
-                <Button.Danger type="submit" variant="primary" class="w-full px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10">
-                    <IconTrash />
-                    <span>Supprimer</span>
-                </Button.Danger>
-            </form>
+            <Button.Danger
+                on:click={() => {
+                    showSettings = false;
+                    showDeleteConfirmation = true;
+                }}
+                class="w-full px-5 h-14 border-0 rounded-none flex justify-start items-center gap-10"
+            >
+                <IconTrash />
+                <span>Supprimer</span>
+            </Button.Danger>
         </div>
+    </FullScreen.Backdrop>
+{/if}
+{#if showDeleteConfirmation}
+    <FullScreen.Backdrop on:click={() => (showDeleteConfirmation = false)} class="flex justify-center items-center">
+        <Confirm.Root class="relative w-full sm:max-w-[480px] flex flex-col gap-5 justify-center items-center">
+            <Confirm.Title>Supprimer "{replica.title}"</Confirm.Title>
+            <Confirm.Description>
+                Je comprends que cette action est irréversible et que je ne pourrais pas revenir sur ma décision.
+            </Confirm.Description>
+            <Confirm.Actions>
+                <Confirm.No>
+                    <Button.Danger variant="secondary" on:click={() => (showDeleteConfirmation = false)} class="w-full h-full">Annuler</Button.Danger>
+                </Confirm.No>
+                <Confirm.Yes>
+                    <form method="post" action="?/destroy" use:enhance={destroyEnhance} class="relative w-full">
+                        <Button.Danger
+                            type="submit"
+                            variant="primary"
+                            class="w-full h-full"
+                        >
+                            Supprimer
+                        </Button.Danger>
+                    </form>
+                </Confirm.Yes>
+            </Confirm.Actions>
+        </Confirm.Root>
     </FullScreen.Backdrop>
 {/if}
 {#if showCategoryChanger}
@@ -137,12 +168,12 @@
             showCategoryChanger = false;
         }}
     >
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <Card class="w-full flex flex-col justify-center items-center text-sm gap-5">
             <div class="flex flex-col w-full relative justify-start items-start gap-2">
                 <label for="category" class="text-neutral-500">Catégorie</label>
-                <div class="relative w-full h-[50px] flex justify-between rounded text-neutral-700 bg-neutral-100 dark:text-neutral-50 dark:bg-neutral-700">
+                <div
+                    class="relative w-full h-[50px] flex justify-between rounded text-neutral-700 bg-neutral-100 dark:text-neutral-50 dark:bg-neutral-700"
+                >
                     <input
                         name="category"
                         value={replica.category}
@@ -150,7 +181,7 @@
                         on:input={(event) => {
                             replica.category = event.currentTarget.value;
 
-                            if (replica.category !== "") {
+                            if (replica.category !== '') {
                                 clearTimeout(timer);
                                 timer = setTimeout(async () => {
                                     await edit();

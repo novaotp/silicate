@@ -2,8 +2,8 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { Input } from "$lib/ui";
-    import IconCircleXFilled from "@tabler/icons-svelte/IconCircleXFilled.svelte";
-    import IconSearch from "@tabler/icons-svelte/IconSearch.svelte";
+    import IconCircleXFilled from '@tabler/icons-svelte/icons/circle-x-filled';
+    import IconSearch from '@tabler/icons-svelte/icons/search';
 
     $: undecodedCurrentSearch = $page.url.searchParams.get('search');
     $: currentSearch = undecodedCurrentSearch !== null ? decodeURI(undecodedCurrentSearch) : '';

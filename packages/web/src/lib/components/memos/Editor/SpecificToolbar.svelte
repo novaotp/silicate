@@ -1,16 +1,16 @@
 <script lang="ts">
-    import IconAlignCenter from "@tabler/icons-svelte/IconAlignCenter.svelte";
-    import IconAlignJustified from "@tabler/icons-svelte/IconAlignJustified.svelte";
-    import IconAlignLeft from "@tabler/icons-svelte/IconAlignLeft.svelte";
-    import IconAlignRight from "@tabler/icons-svelte/IconAlignRight.svelte";
-    import IconBold from "@tabler/icons-svelte/IconBold.svelte";
-    import IconIndentDecrease from "@tabler/icons-svelte/IconIndentDecrease.svelte";
-    import IconIndentIncrease from "@tabler/icons-svelte/IconIndentIncrease.svelte";
-    import IconItalic from "@tabler/icons-svelte/IconItalic.svelte";
-    import IconList from "@tabler/icons-svelte/IconList.svelte";
-    import IconListNumbers from "@tabler/icons-svelte/IconListNumbers.svelte";
-    import IconSeparator from "@tabler/icons-svelte/IconSeparator.svelte";
-    import IconStrikethrough from "@tabler/icons-svelte/IconStrikethrough.svelte";
+    import IconAlignCenter from '@tabler/icons-svelte/icons/align-center';
+    import IconAlignJustified from '@tabler/icons-svelte/icons/align-justified';
+    import IconAlignLeft from '@tabler/icons-svelte/icons/align-left';
+    import IconAlignRight from '@tabler/icons-svelte/icons/align-right';
+    import IconBold from '@tabler/icons-svelte/icons/bold';
+    import IconIndentDecrease from '@tabler/icons-svelte/icons/indent-decrease';
+    import IconIndentIncrease from '@tabler/icons-svelte/icons/indent-increase';
+    import IconItalic from '@tabler/icons-svelte/icons/italic';
+    import IconList from '@tabler/icons-svelte/icons/list';
+    import IconListNumbers from '@tabler/icons-svelte/icons/list-numbers';
+    import IconSeparator from '@tabler/icons-svelte/icons/separator';
+    import IconStrikethrough from '@tabler/icons-svelte/icons/strikethrough';
     import type { Editor } from "@tiptap/core";
     import { createEventDispatcher } from "svelte";
 

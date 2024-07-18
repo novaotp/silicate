@@ -5,18 +5,18 @@
     import { goto } from '$app/navigation';
     import TaskDetails from './TaskDetails.svelte';
     import type { Reminder, Task } from '$libs/models/Task';
-    import IconX from '@tabler/icons-svelte/IconX.svelte';
-    import IconArchive from '@tabler/icons-svelte/IconArchive.svelte';
-    import IconArchiveOff from '@tabler/icons-svelte/IconArchiveOff.svelte';
-    import IconNotes from '@tabler/icons-svelte/IconNotes.svelte';
-    import IconNotesOff from '@tabler/icons-svelte/IconNotesOff.svelte';
-    import IconTrash from '@tabler/icons-svelte/IconTrash.svelte';
     import type { SubmitFunction } from '../../../../routes/app/tasks/$types';
     import { addToast } from '$lib/stores/toast';
     import { Button } from '$lib/ui';
     import { deserialize, enhance } from '$app/forms';
     import CategoryChanger from './CategoryChanger.svelte';
     import * as Utils from './TaskDetails';
+    import IconX from '@tabler/icons-svelte/icons/x';
+    import IconArchive from '@tabler/icons-svelte/icons/archive';
+    import IconArchiveOff from '@tabler/icons-svelte/icons/archive-off';
+    import IconNotes from '@tabler/icons-svelte/icons/notes';
+    import IconNotesOff from '@tabler/icons-svelte/icons/notes-off';
+    import IconTrash from '@tabler/icons-svelte/icons/trash';
 
     export let item: { task: Task; reminders: Reminder[] };
     let replica: Task = { ...item.task };

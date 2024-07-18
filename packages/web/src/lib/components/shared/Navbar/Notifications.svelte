@@ -5,12 +5,12 @@
     import { getContext } from 'svelte';
     import type { Writable } from 'svelte/store';
     import { addToast } from '$lib/stores/toast';
-    import IconChecks from "@tabler/icons-svelte/IconChecks.svelte";
-    import IconBellOff from "@tabler/icons-svelte/IconBellOff.svelte";
     import { fly } from 'svelte/transition';
     import { timeDiff } from './Notifications';
     import { PUBLIC_BACKEND_URL } from '$env/static/public';
     import type { ApiResponse } from '$libs/types/ApiResponse';
+    import IconChecks from '@tabler/icons-svelte/icons/checks';
+    import IconBellOff from '@tabler/icons-svelte/icons/bell-off';
 
     export let notificationButtonNode: HTMLButtonElement;
     export let show: boolean;

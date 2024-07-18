@@ -2,12 +2,12 @@
     import { addToast } from "$lib/stores/toast";
     import { createEventDispatcher, getContext } from "svelte";
     import { Button, Card, FullScreen, Input, Label, TextArea } from "$lib/ui";
-    import IconPlus from "@tabler/icons-svelte/IconPlus.svelte";
     import { enhance } from "$app/forms";
-    import { changeSearchParams } from "$utils/change-search-params";
     import type { Writable } from "svelte/store";
     import type { Book, GradingSystem } from "$libs/models/Mark";
-    import type { ActionResult, SubmitFunction } from "@sveltejs/kit";
+    import type { SubmitFunction } from "@sveltejs/kit";
+    import { confirmCardClasses } from "$lib/ui/Confirm";
+    import { goto } from "$app/navigation";
 
     const books = getContext<Writable<Book[]>>('books');
 
@@ -36,15 +36,13 @@
                 }
 
                 closeModal();
-
-                return changeSearchParams('bookId', result.data!.id);
             }
         }
     }
 </script>
 
-<FullScreen.Backdrop class="flex-center p-5" on:click={closeModal}>
-    <Card class="w-full">
+<FullScreen.Backdrop class="flex-center" on:click={closeModal}>
+    <Card class={confirmCardClasses}>
         <form
             method="post"
             action="?/createBook"

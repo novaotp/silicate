@@ -1,5 +1,5 @@
 <script lang="ts">
-    import IconNotes from '@tabler/icons-svelte/IconNotes.svelte';
+    import IconNotes from '@tabler/icons-svelte/icons/notes';
     import { createEventDispatcher } from 'svelte';
 
     export let value: string;
