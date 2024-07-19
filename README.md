@@ -21,7 +21,10 @@ Core features include :
 - [ ] Have your personal agenda
 - [ ] Study Aids
     - [ ] Time Management
-    - [ ] Flashcards (quizlet-like)
+        - [X] Pomodoro Timer
+    - [X] Audio
+    - [ ] Productivity
+        - [ ] Flashcards (quizlet-like)
 
 ### Later on
 
