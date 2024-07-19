@@ -59,7 +59,7 @@
             </div>
         </FullScreen.Modal>
     {:else}
-        {#each tools.filter(t => currentCategory === null || t.category === currentCategory) as { label, slug, description, icon }}
+        {#each tools.filter(t => currentCategory === null || t.category === currentCategory) as { label, slug, description, category, icon }}
             <button
                 on:click={() => changeSearchParams("tool", slug)}
                 class="relative w-full flex items-center gap-5 p-5 rounded-lg border border-neutral-100"
@@ -68,7 +68,10 @@
                     <svelte:component this={icon} />
                 </div>
                 <div class="relative flex flex-col items-start gap-[10px] text-start">
-                    <h2>{label}</h2>
+                    <div class="flex flex-col">
+                        <h3 class="text-xs text-neutral-500">{categories[category]}</h3>
+                        <h2>{label}</h2>
+                    </div>
                     <p class="text-sm text-neutral-500">{description}</p>
                 </div>
             </button>
