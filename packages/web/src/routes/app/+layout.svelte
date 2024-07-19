@@ -3,8 +3,6 @@
     import { onMount, setContext } from 'svelte';
     import type { LayoutServerData } from './$types';
     import { writable } from 'svelte/store';
-    import { addToast } from '$lib/stores/toast';
-    import { goto } from '$app/navigation';
     import { initSocket, socket } from '$lib/socket';
     import type { TaskNotification } from '$libs/models/Task';
 
@@ -14,14 +12,9 @@
     setContext('jwt', data.jwt);
     const taskNotifications = setContext('taskNotifications', writable(data.taskNotifications));
 
-    let showMenu: boolean;
+    let showMenu: boolean = false;
 
     onMount(async () => {
-        if (data.message) {
-            addToast({ type: 'info', message: data.message });
-            goto('/auth/login');
-        }
-
         await initSocket(data.jwt!);
 
         socket?.on('new_notifications', (notifications: TaskNotification[]) => {

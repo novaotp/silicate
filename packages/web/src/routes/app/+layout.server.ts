@@ -3,29 +3,25 @@ import type { User } from "$libs/models/User";
 import { BACKEND_URL } from "$env/static/private";
 import type { ApiResponseWithData } from "$libs/types/ApiResponse";
 import type { TaskNotification } from "$libs/models/Task";
+import { redirect } from "@sveltejs/kit";
 
-export const load: LayoutServerLoad = async ({ cookies, locals }) => {
+export const load: LayoutServerLoad = async ({ locals }) => {
     try {
         const userResult = await getUser(locals.jwt!);
 
-        if (!userResult.success) {
-            cookies.delete("id", { path: "/" });
-            locals.jwt = undefined;
-            return { message: userResult.message };
-        }
-
-        return {
-            // @ts-expect-error Lazy to check if it worked or not.
-            taskNotifications: (await getTaskNotifications(locals.jwt!)).data as TaskNotification[],
-            jwt: locals.jwt!,
-            user: userResult.data
+        if (userResult.success) {
+            return {
+                // @ts-expect-error Lazy to check if it worked or not.
+                taskNotifications: (await getTaskNotifications(locals.jwt!)).data as TaskNotification[],
+                jwt: locals.jwt!,
+                user: userResult.data
+            }
         }
     } catch (err) {
-        console.error(err)
-        cookies.delete("id", { path: "/" });
-        locals.jwt = undefined;
-        return { message: "Une erreur est survenue." };
+        console.error(err);
     }
+
+    throw redirect(303, "/logout");
 };
 
 const getUser = async (jwt: string): Promise<ApiResponseWithData<User>> => {

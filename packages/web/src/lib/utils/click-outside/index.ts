@@ -10,7 +10,7 @@ interface ClickOutsideParams {
  * @param node The node on which the action was attached, automatically supplied.
  * @param params Additional properties.
  */
-export const clickOutside: Action<HTMLElement, ClickOutsideParams, { 'on:emit': (event: CustomEvent<HTMLElement>) => void }> = (
+export const clickOutside: Action<HTMLElement, ClickOutsideParams | undefined, { 'on:emit': (event: CustomEvent<HTMLElement>) => void }> = (
     node,
     params = { avoid: [] }
 ) => {
@@ -39,7 +39,7 @@ export const clickOutside: Action<HTMLElement, ClickOutsideParams, { 'on:emit': 
         destroy() {
             document.removeEventListener('click', handleClick, true);
         },
-        update(newParams: ClickOutsideParams) {
+        update(newParams: ClickOutsideParams | undefined) {
             params = newParams;
         }
     };
