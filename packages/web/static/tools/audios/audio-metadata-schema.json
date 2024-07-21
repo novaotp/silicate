@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "The schema to verify this document against."
+        },
+        "title": {
+            "type": "string",
+            "description": "The name that will be displayed on the screen."
+        },
+        "slug": {
+            "type": "string",
+            "description": "The value that will be used in the url to identify the audio. Must be unique."
+        },
+        "credits": {
+            "type": "object",
+            "description": "The credits for the audio file.",
+            "properties": {
+                "artist": {
+                    "type": "object",
+                    "description": "The artist's data.",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "The name of the artist."
+                        },
+                        "socialLink": {
+                            "type": "string",
+                            "description": "A link to the artist's page."
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["name", "socialLink"]
+                },
+                "platform": {
+                    "type": "object",
+                    "description": "The platform's data.",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "The name of the platform."
+                        },
+                        "socialLink": {
+                            "type": "string",
+                            "description": "A link to the platform's page."
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["name", "socialLink"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["artist", "platform"]
+        }
+    },
+    "additionalProperties": false,
+    "required": ["title", "slug", "credits"]
+}

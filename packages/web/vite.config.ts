@@ -29,7 +29,11 @@ export default defineConfig({
             '@tiptap/extension-horizontal-rule',
             '@tiptap/extension-history',
             '@tiptap/extension-ordered-list',
-            '@tiptap/extension-text-align'
+            '@tiptap/extension-text-align',
+            'dequal',
+            'nanoid/non-secure',
+            '@internationalized/date',
+            'focus-trap'
         ]
     }
 });

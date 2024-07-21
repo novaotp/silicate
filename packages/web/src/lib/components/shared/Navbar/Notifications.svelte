@@ -12,7 +12,7 @@
     import IconChecks from '@tabler/icons-svelte/icons/checks';
     import IconBellOff from '@tabler/icons-svelte/icons/bell-off';
 
-    export let notificationButtonNode: HTMLButtonElement;
+    export let avoidButtonNode: HTMLButtonElement;
     export let show: boolean;
     export let showMenu: boolean;
 
@@ -56,7 +56,7 @@
 {#if show}
     <article
         class="fixed top-20 md:top-auto md:bottom-[10px] left-5 {showMenu ? "md:left-[210px]" : "md:left-[90px]"} w-[calc(100%-40px)] md:max-w-[400px] max-h-[600px] flex flex-col z-[200] rounded-lg bg-white dark:bg-neutral-900 shadow-[0_0_8px_8px_rgba(0,0,0,0.1)]"
-        use:clickOutside={{ avoid: [notificationButtonNode] }}
+        use:clickOutside={{ avoid: [avoidButtonNode] }}
         on:emit={() => (show = false)}
         transition:fly={{ y: clientWidth < 768 ? -50 : 50 }}
     >
@@ -64,7 +64,7 @@
             <h2 class="dark:text-neutral-50">Notifications</h2>
             <button
                 class="text-primary-700 dark:text-primary-400"
-                on:click={() => addToast({ type: "info", message: "Fonctionnalité pas encore implémentée" })}
+                on:click|stopPropagation={() => addToast({ type: "info", message: "Fonctionnalité pas encore implémentée" })}
             >
                 VOIR TOUT
             </button>
@@ -89,7 +89,7 @@
         <div class="relative w-full p-5 flex justify-end items-center">
             <button
                 class="flex gap-[10px]"
-                on:click={markAllNotificationsAsRead}
+                on:click|stopPropagation={markAllNotificationsAsRead}
             >
                 <IconChecks class="text-primary-700 size-5 dark:text-primary-400" />
                 <span class="text-sm dark:text-neutral-50">Marquer tout comme lu</span>

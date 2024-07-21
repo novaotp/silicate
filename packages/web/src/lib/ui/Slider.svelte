@@ -1,14 +1,26 @@
 <script lang="ts">
     import { cn } from "$utils/cn";
+    import { createEventDispatcher } from "svelte";
 
     export let value: number;
     export let min: number = 1;
     export let max: number = 3;
     export let step: number = 0.1
+
+    const dispatch = createEventDispatcher<{ input: number }>();
 </script>
 
-<div class={cn("relative", $$restProps["class"] || "")}>
-    <input type="range" {min} {max} {step} bind:value class="slider" />
+<div class={cn("relative w-full", $$restProps["class"] || "")}>
+    <input
+        type="range"
+        {min}
+        {max}
+        {step}
+        bind:value
+        class="slider" 
+        on:input|trusted={(event) => dispatch("input", Number(event.currentTarget.value))}
+        on:dragenter
+    />
 </div>
 
 <style lang="postcss">

@@ -1,0 +1,15 @@
+{
+    "$schema": "../../audio-metadata-schema.json",
+    "title": "Pluie",
+    "slug": "light-rain",
+    "credits": {
+        "artist": {
+            "name": "LIECIO",
+            "socialLink": "https://pixabay.com/users/liecio-3298866"
+        },
+        "platform": {
+            "name": "Pixabay",
+            "socialLink": "https://pixabay.com"
+        }
+    }
+}

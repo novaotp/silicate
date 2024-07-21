@@ -6,17 +6,24 @@
     import { goto } from '$app/navigation';
     import { timerCurrentState } from '$lib/stores/tools/pomodoro-timer';
     import PomodoroTimerCard from './PomodoroTimerCard.svelte';
+    import { currentAudio } from '$lib/stores/tools/audio-streaming';
+    import AudioStreamingCard from './AudioStreamingCard.svelte';
 
     export let show: boolean;
+    export let avoidButtonNode: HTMLElement;
 
     let innerWidth: number;
+
+    const isAnyToolRunning = () => {
+        return $timerCurrentState !== "idle" || $currentAudio !== null;
+    }
 </script>
 
 <svelte:window bind:innerWidth />
 
 {#if show}
     <article
-        use:clickOutside
+        use:clickOutside={{ avoid: [avoidButtonNode] }}
         on:emit={() => (show = false)}
         transition:fly={{ y: innerWidth < 768 ? -50 : 50 }}
         class="fixed top-20 md:top-auto md:bottom-[10px] left-5 w-[calc(100%-40px)] md:max-w-[400px] max-h-[600px]
@@ -28,8 +35,13 @@
         </div>
         <Separator />
         <ul class="relative w-full flex flex-col overflow-auto divide-y divide-neutral-100 dark:divide-neutral-500">
-            {#if $timerCurrentState !== "idle"}
-                <PomodoroTimerCard />
+            {#if isAnyToolRunning()}
+                {#if $timerCurrentState !== "idle"}
+                    <PomodoroTimerCard />
+                {/if}
+                {#if $currentAudio !== null}
+                    <AudioStreamingCard />
+                {/if}
             {:else}
                 <li
                     class="relative w-full p-5 flex flex-col justify-center items-center gap-[10px]
@@ -39,7 +51,13 @@
                     <span class="text-sm text-center">
                         Aucun outil ne tourne en ce moment.. Reviens lorsque tu en actives un !
                     </span>
-                    <Button.Normal on:click={() => goto("/app/tools")} class="text-sm">
+                    <Button.Normal
+                        on:click={() => {
+                            show = false;
+                            goto("/app/tools")
+                        }}
+                        class="text-sm"
+                    >
                         Activer un outil
                     </Button.Normal>
                 </li>

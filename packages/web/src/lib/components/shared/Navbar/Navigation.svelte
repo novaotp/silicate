@@ -38,26 +38,28 @@
                 on:click={() => (showToolMenu = !showToolMenu)}
                 class="relative flex h-full w-full overflow-hidden justify-center items-center text-center rounded-md
                         bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm dark:text-neutral-50"
+                bind:this={toolsButtonNode}
             >
-                <IconTool />
+                <IconTool class="pointer-events-none" />
             </button>
-            <ToolsMenu bind:show={showToolMenu} />
+            <ToolsMenu bind:show={showToolMenu} avoidButtonNode={toolsButtonNode} />
             <button
                 class="relative flex flex-col h-full items-center justify-evenly gap-1 text-center rounded-md
                         bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm"
-                on:click={() => (showNotifications = true)}
+                on:click={() => (showNotifications = !showNotifications)}
                 bind:this={notificationButtonNode}
             >
-                <IconBell />
+                <IconBell class="pointer-events-none" />
                 {#if unreadTaskNotificationsCount > 0}
                     <span
-                        class="absolute top-0 right-0 size-5 flex justify-center items-center rounded-full bg-accent-danger-500 text-xs text-white"
+                        class="absolute top-0 right-0 size-5 flex justify-center items-center rounded-full
+                        bg-accent-danger-500 text-xs text-white pointer-events-none"
                     >
                         {unreadTaskNotificationsCount}
                     </span>
                 {/if}
             </button>
-            <Notifications bind:show={showNotifications} bind:notificationButtonNode showMenu={false} />
+            <Notifications bind:show={showNotifications} avoidButtonNode={notificationButtonNode} showMenu={false} />
             <button on:click={() => goto('/app/settings')}>
                 <Avatar class="h-10 aspect-square" />
             </button>
@@ -144,7 +146,6 @@
     <ul class="relative w-full flex flex-col gap-3">
         <li class="relative flex flex-col w-full items-center justify-center">
             <button
-                bind:this={toolsButtonNode}
                 on:click={() => (showToolMenu = !showToolMenu)}
                 class="relative group flex h-full w-full overflow-hidden min-w-10 items-center justify-start py-[10px] text-center rounded-md
                         bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm dark:text-neutral-50"
@@ -161,7 +162,6 @@
         <li class="relative flex flex-col w-full items-center justify-center">
             <button
                 on:click={() => (showNotifications = !showNotifications)}
-                bind:this={notificationButtonNode}
                 class="relative group flex h-full w-full overflow-hidden min-w-10 items-center justify-start py-[10px] text-center rounded-md
                         bg-red-500 duration-150 ease-linear hover:bg-red-600 text-sm dark:text-neutral-50"
             >
@@ -179,7 +179,7 @@
                     </span>
                 {/if}
             </button>
-            <Notifications bind:show={showNotifications} {notificationButtonNode} {showMenu} />
+            <Notifications bind:show={showNotifications} {showMenu} />
         </li>
         <li class="relative flex w-full max-h-10 items-center justify-center">
             <a
