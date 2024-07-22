@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Chalarí</string>
+    <string name="title_activity_main">Chalarí</string>
+    <string name="package_name">ch.chalari</string>
+    <string name="custom_url_scheme">ch.chalari</string>
+</resources>
