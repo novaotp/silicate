@@ -18,7 +18,7 @@ Can pass an `on:click` event handler that fires when it is clicked (usually to c
     class={cn("fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.1)]", $$restProps['class'] || '')}
     style="z-index: {z}"
     transition:fade
-    on:click|stopPropagation
+    on:click|self|stopPropagation
 >
     <slot />
 </div>

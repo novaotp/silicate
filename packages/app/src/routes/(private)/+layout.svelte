@@ -4,6 +4,7 @@
 	import ContextProvider from './ContextProvider.svelte';
 	import type { User } from '$common/models/User';
 	import type { ApiResponseWithData } from '$common/types/api-response';
+	import { Navigation } from '$features/app/navigation';
 
     const getUser = async () => {
         const tokenPreference = await Preferences.get({ key: "token" });
@@ -25,6 +26,7 @@
 {#await getUser() then user}
     {#if user}
         <ContextProvider {user}>
+            <Navigation />
             <slot />
         </ContextProvider>
     {:else}
