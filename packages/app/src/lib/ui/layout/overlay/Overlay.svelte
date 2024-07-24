@@ -8,6 +8,8 @@
 <!--
 @component
 A fullscreen backdrop effect that sits above the current UI.
+
+Can pass an `on:click` event handler that fires when it is clicked (usually to close the component).
 -->
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
