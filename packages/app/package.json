@@ -1,6 +1,6 @@
 {
 	"name": "app",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -27,6 +27,7 @@
 		"postcss": "^8.4.39",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
+		"sass": "^1.77.8",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.6",
@@ -38,6 +39,11 @@
 	"dependencies": {
 		"@capacitor/android": "^6.1.1",
 		"@capacitor/core": "^6.1.1",
-		"@capacitor/ios": "^6.1.1"
+		"@capacitor/ios": "^6.1.1",
+		"@capacitor/preferences": "^6.0.1",
+		"@tabler/icons-svelte": "^3.11.0",
+		"bits-ui": "^0.21.12",
+		"clsx": "^2.1.1",
+		"tailwind-merge": "^2.4.0"
 	}
 }

@@ -11,7 +11,14 @@ const config = {
 			fallback: null,
 			precompress: false,
 			strict: true
-		})
+		}),
+        alias: {
+            '$features': './src/lib/features',
+            '$ui': './src/lib/ui',
+            '$utils': './src/lib/utils',
+            '$stores': './src/lib/stores',
+            '$common': '../common'
+        }
 	}
 };
 
