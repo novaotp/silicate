@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { createEventDispatcher, type ComponentType } from "svelte";
-    import Separator from "../../Separator.svelte";
+    import Separator from "../separator/Separator.svelte";
 
     export let tabs: { slug: string, label: string, component: ComponentType }[];
 

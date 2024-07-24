@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button } from "$ui/button";
+    import { Button } from "$ui/forms/button";
 
     let isToggled: boolean = false;
 </script>

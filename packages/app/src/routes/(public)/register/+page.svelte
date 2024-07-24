@@ -2,7 +2,7 @@
     import { goto } from '$app/navigation';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import { addToast } from '$stores/toast';
-	import { Button } from '$ui/button';
+	import { Button } from '$ui/forms/button';
     import { Input, Label } from '$ui/forms';
     import { AlternativeLink, Switcher } from '$features/auth/common';
 	import { register, type RegisterResponse } from '$features/auth/register';

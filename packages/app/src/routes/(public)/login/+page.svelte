@@ -4,7 +4,7 @@
 	import { Preferences } from '@capacitor/preferences';
 	import { addToast } from '$stores/toast';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
-	import { Button } from '$ui/button';
+	import { Button } from '$ui/forms/button';
 	import { Input, Label } from '$ui/forms';
 	import { login, type LoginResponse } from '$features/auth/login';
 	import AlternativeLink from '$features/auth/common/AlternativeLink.svelte';
