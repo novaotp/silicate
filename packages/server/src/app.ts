@@ -13,14 +13,14 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { authenticate } from './utils/jwt.ts';
 import { createTaskNotification, getTaskReminders, groupNotificationsByUserId } from './send_notifications.ts';
-import { TaskNotification } from '../../libs/models/Task.ts';
+import { TaskNotification } from '$common/models/task.ts';
 import { router as markRoutes } from './routes/marks/index.ts';
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: process.env.FRONTEND_URL
     }
 });
 
@@ -29,7 +29,7 @@ app.use(expressModuleAugmentations)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin: "*"
+    origin: process.env.FRONTEND_URL
 }));
 
 app.use("/api/v1/auth", authRoutes);
