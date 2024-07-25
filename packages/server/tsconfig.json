@@ -15,9 +15,12 @@
         "strictFunctionTypes": true,
         "useUnknownInCatchVariables": false,
         "noUnusedLocals": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "paths": {
+            "$common/*": ["../common/*"]
+        }
     },
-    "include": ["../libs/**/*", "src/**/*.ts"],
+    "include": ["../common/**/*", "src/**/*.ts"],
     "exclude": ["./node_modules/**"],
     "ts-node": {
         "experimentalSpecifierResolution": "node",

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { query } from "../database/utils";
-import { Memo } from "../../../libs/models/Memo";
 import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
+import { Memo } from "$common/models/memo";
+import { BuildPatchObject, buildPatchStatements, buildPatchValues } from "../utils/dynamic-query-builder";
 
 export const router = Router();
 
@@ -97,6 +98,40 @@ router.put('/:id', async (req, res) => {
                 updated_at = $5
             WHERE id = $6 AND user_id = $7;
         `, [category, title, content, pinned, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+
+        return res.success("Memo updated successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a memo : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+router.patch('/:id', async (req, res) => {
+    try {
+        // eslint-disable-next-line prefer-const
+        let { category, title, content, pinned } = req.body;
+
+        if (category === "" || !category) {
+            category = null;
+        }
+
+        const patchObjects: BuildPatchObject[] = [
+            { column: "category", value: category },
+            { column: "title", value: title },
+            { column: "content", value: content },
+            { column: "pinned", value: pinned },
+            { column: "updated_at", value: new Date() },
+        ]
+
+        // eslint-disable-next-line prefer-const
+        let { statements, id } = buildPatchStatements(patchObjects);
+        const values = buildPatchValues(patchObjects);
+
+        await query(`
+            UPDATE public.memo
+            SET ${statements}
+            WHERE id = $${id++} AND user_id = $${id++};
+        `, [...values, req.params.id, await userIdFromAuthHeader(req)]);
 
         return res.success("Memo updated successfully");
     } catch (err) {

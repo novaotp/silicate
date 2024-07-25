@@ -1,4 +1,4 @@
-import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from './dynamicQueryBuilder';
+import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '.';
 
 describe("Testing dynamic query builder functions.", () => {
     it("Builds statements string correctly.", () => {

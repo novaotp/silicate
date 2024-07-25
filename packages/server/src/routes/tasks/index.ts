@@ -4,7 +4,7 @@ import { Attachment, RawCategory, RawTask, Reminder, Task, TaskNotification } fr
 import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
 import { upload } from '../../middlewares/file-uploads';
 import { getAttachments } from './utils';
-import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/dynamicQueryBuilder';
+import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder';
 import { stringifyOrNull } from "../../utils/stringifyOrNull";
 import { query } from "../../database/utils";
 import { ApiResponseWithData } from "../../../../libs/types/ApiResponse";
