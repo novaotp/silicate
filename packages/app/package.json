@@ -1,10 +1,11 @@
 {
 	"name": "app",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"private": true,
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"dev:expose": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -19,6 +20,7 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/eslint": "^8.56.7",
+		"@types/uuid": "^10.0.0",
 		"autoprefixer": "^10.4.19",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -59,6 +61,7 @@
 		"bits-ui": "^0.21.12",
 		"clsx": "^2.1.1",
 		"svelte-easy-crop": "^3.0.0",
-		"tailwind-merge": "^2.4.0"
+		"tailwind-merge": "^2.4.0",
+		"uuid": "^10.0.0"
 	}
 }

@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { v4 } from "uuid";
 
 interface Toast {
     id: string,
@@ -12,7 +13,7 @@ export const toasts = writable<Toast[]>([]);
 
 /** Adds a new toast to the stack. */
 export const addToast = (toast: ToastData) => {
-    const id = crypto.randomUUID();
+    const id = v4();
 
     // Push the toast to the top of the list of toasts
     toasts.update((all) => [...all, { id, ...toast }]);
