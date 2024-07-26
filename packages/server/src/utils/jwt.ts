@@ -39,7 +39,7 @@ export const verify = async (token: string): Promise<CustomJWTPayload> => {
     return verified.payload as CustomJWTPayload;
 };
 
-/** Authenticates a JWT. */
+/** Authenticates a JWT and returns the user's id. */
 export const authenticate = async (jwt: string): Promise<number | null> => {
     try {
         const userId = (await verify(jwt)).payload.userId;

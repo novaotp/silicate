@@ -1,11 +1,11 @@
-import { verify } from '../utils/jwt.js';
+import { authenticate } from '../utils/jwt.js';
 import type { Request, Response, NextFunction } from 'express';
 
 export const expressModuleAugmentations = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     req.jwt = authHeader ? token(authHeader) : null;
-    req.userId = authHeader ? (await verify(token(authHeader))).payload.userId : null;
+    req.userId = req.jwt ? await authenticate(req.jwt) : null;
     
     res.success = (message: string, data?: unknown) => {
         if (data) {
