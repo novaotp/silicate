@@ -61,10 +61,10 @@
 	<ul class="relative w-full flex flex-col gap-3">
 		<li class="relative flex w-full max-h-10 items-center justify-center">
 			<a
-				href="/app/settings"
+				href="/settings"
 				on:click={() => (isMenuSheetOpen = false)}
 				class="link group relative flex h-full w-full items-center justify-start text-center text-sm overflow-hidden"
-				class:current={$page.url.pathname === '/app/settings'}
+				class:current={$page.url.pathname === '/settings'}
 			>
 				<span class="relative min-w-20 max-w-20 h-full min-h-10 flex justify-center items-center">
 					<Avatar user={$user} class="h-full aspect-square" textSize={14} />

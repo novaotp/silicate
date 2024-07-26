@@ -1,6 +1,6 @@
 {
 	"name": "app",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -58,6 +58,7 @@
 		"@tiptap/starter-kit": "^2.4.0",
 		"bits-ui": "^0.21.12",
 		"clsx": "^2.1.1",
+		"svelte-easy-crop": "^3.0.0",
 		"tailwind-merge": "^2.4.0"
 	}
 }

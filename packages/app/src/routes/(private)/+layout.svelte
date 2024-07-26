@@ -26,8 +26,10 @@
 {#await getUser() then user}
     {#if user}
         <ContextProvider {user}>
-            <Navigation />
-            <slot />
+            <div class="relative h-full w-full flex flex-col md:flex-row dark:bg-neutral-950">
+                <Navigation />
+                <slot />
+            </div>
         </ContextProvider>
     {:else}
         <p>Something went wrong !</p>

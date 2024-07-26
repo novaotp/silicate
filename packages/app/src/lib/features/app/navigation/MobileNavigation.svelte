@@ -19,7 +19,7 @@
 		<button on:click={() => (isMenuSheetOpen = true)}>
 			<IconMenu />
 		</button>
-		<button on:click={() => dispatch('navigate', '/app/settings')}>
+		<button on:click={() => dispatch('navigate', '/settings')}>
 			<Avatar user={$user} class="h-10 aspect-square" textSize={14} />
 		</button>
 	</div>

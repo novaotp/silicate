@@ -10,6 +10,11 @@
     export { className as class };
 </script>
 
+<!--
+@component
+Displays content from the side.
+-->
+
 {#if open}
     <Overlay on:click={() => (open = false)}>
         <article
