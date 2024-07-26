@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { PUBLIC_BACKEND_URL } from '$env/static/public';
-	import { Preferences } from '@capacitor/preferences';
-	import ContextProvider from './ContextProvider.svelte';
-	import type { User } from '$common/models/User';
-	import type { ApiResponseWithData } from '$common/types/api-response';
 	import { Navigation } from '$features/app/navigation';
+	import { getPreference } from '$utils/capacitor-preferences';
+	import ContextProvider from './ContextProvider.svelte';
+	import type { User } from '$common/models/user';
+	import type { ApiResponseWithData } from '$common/types/api-response';
 
     const getUser = async () => {
-        const tokenPreference = await Preferences.get({ key: "token" });
-        const token: { jwt: string, expires: Date } = JSON.parse(tokenPreference.value!);
+        const token = await getPreference<{ jwt: string, expires: Date }>('token', { parse: true });
+        console.log(token)
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/me`, {
             method: "GET",

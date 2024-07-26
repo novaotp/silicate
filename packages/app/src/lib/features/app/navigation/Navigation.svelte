@@ -4,7 +4,7 @@
 	import { navigationItems } from './items';
 	import { goto } from '$app/navigation';
 
-	let isMenuSheetOpen: boolean = true;
+	let isMenuSheetOpen: boolean = false;
 
 	const onNavigate = (href: string) => {
 		isMenuSheetOpen = false;

@@ -2,7 +2,7 @@
     import { getContext } from 'svelte';
     import { PUBLIC_APP_NAME } from '$env/static/public';
     import type { Writable } from 'svelte/store';
-	import type { User } from '$common/models/User';
+	import type { User } from '$common/models/user';
 
     const user = getContext<Writable<User>>('user');
 </script>

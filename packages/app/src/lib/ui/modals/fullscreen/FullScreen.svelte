@@ -3,6 +3,11 @@
     import { fly } from "svelte/transition";
 </script>
 
+<!--
+@component
+A full page modal that flies from the left.
+-->
+
 <div 
     role="dialog"
     class={cn("fixed w-full h-full top-0 left-0 bg-white dark:bg-neutral-950 z-[100] overflow-auto", $$restProps["class"])}
