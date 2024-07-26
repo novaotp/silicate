@@ -156,10 +156,14 @@ router.delete('/:id', async (req, res) => {
 
 router.get("/categories", async (req, res) => {
     try {
+        const search = (req.query.search as string) || "";
+
         const { rows } = await query<{ category: string }>(`
             SELECT DISTINCT category
             FROM public.memo
-            WHERE user_id = $1 AND category IS NOT NULL;
+            WHERE user_id = $1
+                ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
+                AND category IS NOT NULL;
         `, [await userIdFromAuthHeader(req)]);
 
         return res.success("Memo categories read successfully", rows.map(row => row.category));
