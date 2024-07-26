@@ -1,4 +1,4 @@
-import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '.';
+import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from './index.js';
 
 describe("Testing dynamic query builder functions.", () => {
     it("Builds statements string correctly.", () => {

@@ -1,4 +1,4 @@
-import { db } from ".";
+import { db } from "./index.js";
 import pg from 'pg';
 
 type QueryReturn<T> = {

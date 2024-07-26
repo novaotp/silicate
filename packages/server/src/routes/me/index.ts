@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { User, UserWithAvatarPath } from "../../../../libs/models/User";
 import { compare, hash } from "bcrypt";
-import { avatarUpload } from "../../middlewares/file-uploads";
-import { query } from "../../database/utils";
-import { avatarPathToBase64 } from "./utils";
 import path from "path";
 import sharp from "sharp";
+import { avatarUpload } from "../../middlewares/file-uploads.js";
+import { query } from "../../database/utils.js";
+import { avatarPathToBase64 } from "./utils.js";
+import type { User, UserWithAvatarPath } from "$common/models/user.js";
 
 export const router = Router();
 
 router.get('/', async (req, res) => {
     try {
-        const { first: user } = await query<UserWithAvatarPath>(`
+        const { first: userWithAvatarPath } = await query<UserWithAvatarPath>(`
             SELECT
                 id,
                 first_name as "firstName",
@@ -25,20 +25,26 @@ router.get('/', async (req, res) => {
             LIMIT 1;
         `, [req.userId]);
 
-        if (!user) {
+        if (!userWithAvatarPath) {
             return res.notFoundError("User not found");
         }
 
         let avatar: string | null = null;
-        if (user.avatarPath) {
-            avatar = await avatarPathToBase64(user.avatarPath);
+        if (userWithAvatarPath.avatarPath) {
+            avatar = await avatarPathToBase64(userWithAvatarPath.avatarPath);
         }
 
-        // No need for the avatar path.
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { avatarPath: _, ...userWithoutAvatarPath } = { ...user };
+        const user: User = {
+            id: userWithAvatarPath.id,
+            firstName: userWithAvatarPath.firstName,
+            lastName: userWithAvatarPath.lastName,
+            email: userWithAvatarPath.email,
+            avatar: avatar,
+            bio: userWithAvatarPath.bio,
+            joinedOn: userWithAvatarPath.joinedOn
+        }
 
-        return res.success("User read successfully", { ...userWithoutAvatarPath, avatar } satisfies User);
+        return res.success("User read successfully", user);
     } catch (err) {
         console.error(`Something went wrong whilst fetching a user's data : ${err.message}`);
         return res.serverError();

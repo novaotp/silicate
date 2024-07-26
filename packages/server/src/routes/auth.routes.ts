@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { query } from "../database/utils";
-import { RawUser, User } from "../../../libs/models/User";
 import { compare, hash } from 'bcrypt';
-import { sign, verify } from '../utils/jwt';
+import { query } from "../database/utils.js";
+import { sign, verify } from '../utils/jwt.js';
+import type { User } from "$common/models/user.js";
 
 export const router = Router();
 
@@ -71,7 +71,7 @@ router.post("/validate", async (req, res) => {
             });
         }
 
-        const { first: user } = await query<RawUser>(`
+        const { first: user } = await query<User>(`
             SELECT *
             FROM public.user
             WHERE id = $1
@@ -93,7 +93,7 @@ router.post('/register', async (req, res) => {
     try {
         const { firstName, lastName, email, password } = req.body;
 
-        const { first: existingUser } = await query<RawUser>(`
+        const { first: existingUser } = await query<User>(`
             SELECT *
             FROM public.user
             WHERE email = $1

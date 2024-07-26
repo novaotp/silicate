@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { verify } from '../utils/jwt';
+import { verify } from '../utils/jwt.js';
+import type { Request, Response, NextFunction } from 'express';
 
 export const expressModuleAugmentations = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;

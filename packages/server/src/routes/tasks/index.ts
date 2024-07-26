@@ -1,14 +1,14 @@
-import { Request, Router } from "express";
-import { db } from "../../database";
-import { Attachment, RawCategory, RawTask, Reminder, Task, TaskNotification } from '../../../../libs/models/Task';
-import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader";
-import { upload } from '../../middlewares/file-uploads';
-import { getAttachments } from './utils';
-import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder';
-import { stringifyOrNull } from "../../utils/stringifyOrNull";
-import { query } from "../../database/utils";
-import { ApiResponseWithData } from "../../../../libs/types/ApiResponse";
+import { Router, type Request } from "express";
 import mime from "mime";
+import { db } from "../../database/index.js";
+import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader.js";
+import { upload } from '../../middlewares/file-uploads.js';
+import { getAttachments } from './utils.js';
+import { query } from "../../database/utils.js";
+import { stringifyOrNull } from "../../utils/stringifyOrNull.js";
+import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/index.js';
+import type { ApiResponseWithData } from "$common/types/api-response.js";
+import type { Attachment, RawCategory, RawTask, Reminder, Task, TaskNotification } from '$common/models/task.js';
 
 export const router = Router();
 

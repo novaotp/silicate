@@ -1,5 +1,5 @@
-import { Handler } from "express";
-import type { ApiResponse } from '$common/types/api-response';
+import type { Handler } from "express";
+import type { ApiResponse } from '$common/types/api-response.js';
 
 /**
  * Validates or rejects a jwt.

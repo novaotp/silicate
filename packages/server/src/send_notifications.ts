@@ -1,5 +1,5 @@
-import { Reminder, TaskNotification } from '../../libs/models/Task';
-import { query } from './database/utils';
+import { query } from './database/utils.js';
+import type { Reminder, TaskNotification } from '$common/models/task.js';
 
 type ReminderWithUserId = Reminder & { userId: number; taskTitle: string };
 

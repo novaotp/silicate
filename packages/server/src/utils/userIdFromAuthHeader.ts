@@ -1,5 +1,5 @@
-import { Request } from "express";
-import { verify } from "./jwt";
+import { verify } from "./jwt.js";
+import type { Request } from "express";
 
 /**
  * @deprecated Use `req.userId` instead, added using module augmentation.

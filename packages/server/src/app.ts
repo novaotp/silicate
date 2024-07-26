@@ -1,20 +1,9 @@
 import 'dotenv/config';
 import express from "express";
-import cors from "cors";
-import path from "path";
-
-import { router as taskRoutes } from "./routes/tasks";
-import { router as meRoutes } from "./routes/me/index.ts";
-import { router as memoRoutes } from "./routes/memo.routes.ts";
-import { router as authRoutes } from "./routes/auth.routes.ts";
-import { authenticated } from './middlewares/authenticated';
-import { expressModuleAugmentations } from './middlewares/express-module-augmentations.ts';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { authenticate } from './utils/jwt.ts';
-import { createTaskNotification, getTaskReminders, groupNotificationsByUserId } from './send_notifications.ts';
-import { TaskNotification } from '$common/models/task.ts';
-import { router as markRoutes } from './routes/marks/index.ts';
+import { router } from './router.js';
+import { onSocketConnection } from './socket.js';
 
 const app = express();
 const server = createServer(app);
@@ -24,59 +13,8 @@ const io = new Server(server, {
     }
 });
 
-app.use(express.static(path.resolve('./public')));
-app.use(expressModuleAugmentations)
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cors({
-    origin: process.env.FRONTEND_URL
-}));
-
-app.use("/api/v1/auth", authRoutes);
-app.use(authenticated);
-app.use("/api/v1/me", meRoutes);
-app.use("/api/v1/memos", memoRoutes);
-app.use("/api/v1/tasks", taskRoutes);
-app.use("/api/v1/mark-books", markRoutes);
-
-io.on('connection', async (socket) => {
-    const jwt = socket.handshake.query.jwt as string;
-    const userId = await authenticate(jwt);
-
-    if (!userId) {
-        return socket.disconnect();
-    }
-    
-    const userRoom = userId.toString();
-    socket.join(userRoom)
-
-    const CHECK_TASK_DUE_MS = 60000;
-    const interval = setInterval(async () => {
-        const reminders = await getTaskReminders();
-        const taskNotifications: TaskNotification[] = [];
-
-        for (const reminder of reminders) {
-            const notification = await createTaskNotification(reminder);
-
-            if (notification) {
-                taskNotifications.push(notification);
-            }
-        }
-
-        for (const [userId, notifications] of Object.entries(groupNotificationsByUserId(taskNotifications))) {
-            socket.to(userId).emit("new_notifications", notifications)
-        }
-    }, CHECK_TASK_DUE_MS);
-
-    socket.on('disconnect', () => {
-        clearInterval(interval);
-        socket.leave(userRoom);
-    });
-});
-
-if (!process.env.SERVER_PORT) {
-    throw new Error("Set a backend port.")
-}
+app.use(router);
+io.on('connection', onSocketConnection);
 
 server.listen(process.env.SERVER_PORT, () => {
     process.stdout.write('\x1Bc'); // Clears the console

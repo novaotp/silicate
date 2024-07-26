@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { query } from "../database/utils";
-import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader";
-import { Memo } from "$common/models/memo";
-import { BuildPatchObject, buildPatchStatements, buildPatchValues } from "../utils/dynamic-query-builder";
+import { query } from "../database/utils.js";
+import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader.js";
+import type { Memo } from "$common/models/memo.js";
+import { buildPatchStatements, buildPatchValues, type BuildPatchObject } from "../utils/dynamic-query-builder/index.js";
 
 export const router = Router();
 

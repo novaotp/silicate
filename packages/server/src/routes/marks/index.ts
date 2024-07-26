@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { query } from "../../database/utils";
-import { Book, Exam, Group, Subject } from "../../../../libs/models/Mark";
+import { query } from "../../database/utils.js";
+import type { Book, Exam, Group, Subject } from "$common/models/mark.js";
 
 export const router = Router();
 

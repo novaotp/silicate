@@ -1,5 +1,5 @@
-import { Request } from "express";
-import { Attachment } from "../../../../libs/models/Task";
+import type { Request } from "express";
+import type { Attachment } from "$common/models/task.js";
 
 /**
  * Returns an array of {@link Attachment} objects, matching the files sent in the `multipart/form-data` request.

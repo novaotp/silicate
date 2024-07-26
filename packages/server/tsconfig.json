@@ -1,11 +1,9 @@
 {
     "compilerOptions": {
-        "target": "es2016",
-        "module": "ES6",
-        "moduleResolution": "Bundler",
-        "allowImportingTsExtensions": true,
+        "target": "ES6",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "allowJs": false,
-        "noEmit": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
@@ -16,9 +14,11 @@
         "useUnknownInCatchVariables": false,
         "noUnusedLocals": true,
         "skipLibCheck": true,
+        "verbatimModuleSyntax": true,
         "paths": {
             "$common/*": ["../common/*"]
-        }
+        },
+        "outDir": "build"
     },
     "include": ["../common/**/*", "src/**/*.ts"],
     "exclude": ["./node_modules/**"],
