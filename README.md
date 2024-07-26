@@ -19,22 +19,12 @@ Core features include :
 - [X] Gradebooks for tracking your grades
 - [ ] A calendar to view your tasks and schedule
 - [ ] Have your personal agenda
-- [ ] Study Aids
-    - [ ] Time Management
-        - [X] Pomodoro Timer
-    - [X] Audio
-    - [ ] Productivity
-        - [ ] Flashcards (quizlet-like)
 
 ### Later on
 
 Possible features (after core features are completed) :
 - [ ] An online community-driven resource library
-- [ ] Chat
-    - [ ] Private conversations
-    - [ ] Group conversations
-    - [ ] Voice-chat
-    - [ ] Streaming
+- [ ] Messaging System
 
 ## Supported Languages
 
@@ -45,9 +35,7 @@ Possible features (after core features are completed) :
 
 ## Development
 
-### Getting Started
-
-See `server/README.md` and `web/README.md` for each sub-project details.
+See `server/README.md`, `app/README.md` and `marketing/README.md` for each sub-project details.
 
 ## Author
 
