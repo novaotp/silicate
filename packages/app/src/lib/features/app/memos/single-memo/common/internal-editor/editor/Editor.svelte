@@ -76,12 +76,12 @@
 </script>
 
 <div
-    tabindex="0"
-    role="textbox"
-    bind:this={element}
-    class="relative w-full h-[calc(100%-140px)] {show ? "md:max-h-[400px]" : "md:max-h-[480px]"} outline-none overflow-auto"
-    spellcheck="false"
     on:input={update}
+    bind:this={element}
+    role="textbox"
+    tabindex="0"
+    spellcheck="false"
+    class="relative w-full h-[calc(100%-140px)] {show ? "md:max-h-[400px]" : "md:max-h-[480px]"} outline-none overflow-auto"
 ></div>
 
 {#if editor}

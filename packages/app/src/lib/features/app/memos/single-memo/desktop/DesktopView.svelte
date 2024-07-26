@@ -15,7 +15,7 @@
             <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
                 <IconX />
             </button>
-            <div class="flex gap-10 items-center">
+            <div class="flex gap-5 items-center">
                 <EditPinnedStatus />
                 <!-- <CategoryChanger {memo} /> -->
                 <DeleteMemo />

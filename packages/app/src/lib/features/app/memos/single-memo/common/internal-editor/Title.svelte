@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContext } from "svelte";
+	import { getContext, onMount } from "svelte";
     import { getPreference } from "$utils/capacitor-preferences";
 	import { patchMemo } from "$features/app/memos/requests";
 	import { addToast } from "$stores/toast";
@@ -12,9 +12,20 @@
     const memos = getContext<Writable<Memo[]>>('memos');
     
     let timer: NodeJS.Timeout;
+    let internalTitle: string = "";
 
     $: memoId = Number($page.url.searchParams.get('id')!);
     $: memo = $memos.find(m => m.id === memoId);
+    
+    /**
+     * ? Added because the title shows undefined when the card is closing.
+     * ? This retains the title even when closing.
+     * ? The component is instantiated everytime a memo is opened, so it
+     * ? will always have the current memo's title value.
+     */
+    onMount(() => {
+        internalTitle = memo?.title ?? "";
+    });
 
     const onTitleChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
         clearTimeout(timer);
@@ -26,6 +37,7 @@
          */
         const id = memoId;
         const newTitle = event.currentTarget.value;
+        internalTitle = newTitle;
 
         timer = setTimeout(async () => {
             await changeTitle(id, newTitle);
@@ -61,7 +73,7 @@
 </script>
 
 <input
-    value={memo?.title}
+    value={internalTitle}
     on:input={onTitleChange}
     class="relative w-full flex justify-between items-center bg-transparent text-2xl font-medium h-10 dark:text-neutral-50"
 />

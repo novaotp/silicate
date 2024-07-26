@@ -14,7 +14,7 @@
     };
 </script>
 
-<div role="list" class="relative w-full min-h-9 flex flex-nowrap items-center gap-2 overflow-scroll">
+<div role="list" class="relative w-[min(100%,800px)] mx-auto min-h-9 flex flex-nowrap items-center gap-2 overflow-scroll">
     <button
         class="relative h-full px-4 rounded text-sm {currentCategory === '' ? 'bg-primary-600 dark:bg-primary-500 text-neutral-50' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'}"
         on:click={() => changeCategory('')}
