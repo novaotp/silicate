@@ -1,114 +1,63 @@
 import { Router, type Request } from "express";
-import mime from "mime";
-import { db } from "../../database/index.js";
-import { userIdFromAuthHeader } from "../../utils/userIdFromAuthHeader.js";
-import { upload } from '../../middlewares/file-uploads.js';
+import { taskUpload } from '../../middlewares/file-uploads.js';
 import { getAttachments } from './utils.js';
 import { query } from "../../database/utils.js";
 import { stringifyOrNull } from "../../utils/stringifyOrNull.js";
 import { type BuildPatchObject, buildPatchStatements, buildPatchValues } from '../../utils/dynamic-query-builder/index.js';
-import type { ApiResponseWithData } from "$common/types/api-response.js";
-import type { Attachment, RawCategory, RawTask, Reminder, Task, TaskNotification } from '$common/models/task.js';
+import type { Task } from '$common/models/task.js';
+
+import { router as notificationsRouter } from "./notifications.js";
+import { router as remindersRouter } from "./reminders.js";
+import { router as attachmentsRouter } from "./attachments.js";
 
 export const router = Router();
 
-router.get("/notifications", async (req, res) => {
-    try {
-        const { rows: notifications } = await query<TaskNotification>(`
-            SELECT
-                task_notification.id,
-                task.user_id as "userId",
-                task_notification.task_reminder_id as "taskReminderId",
-                task_notification.message,
-                task_notification.is_read as "isRead",
-                task_notification.created_at as "createdAt"
-            FROM public.task_notification
-            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
-            INNER JOIN public.task ON task.id = task_reminder.task_id
-            WHERE task.user_id = $1
-            ORDER BY task_notification.created_at DESC;
-        `, [req.userId]);
-
-        return res.success("Notifications retrieved successfully", notifications);
-    } catch (err) {
-        console.error(err);
-        return res.serverError();
-    }
-});
-
-// Sets all given notifications as read
-router.put("/notifications", async (req, res) => {
-    try {
-        const notificationIds = req.body.notificationIds;
-
-        await query(`
-            UPDATE public.task_notification
-            SET is_read = true
-            WHERE id = ANY($1);
-        `, [notificationIds]);
-
-        return res.success("Notifications set as read successfully");
-    } catch (err) {
-        console.error(err);
-        return res.serverError();
-    }
-});
+router.use('/notifications', notificationsRouter);
+router.use('/:taskId(\\d+)/reminders', remindersRouter);
+router.use('/:id(\\d+)/attachment', attachmentsRouter);
 
 router.get('/:id(\\d+$)', async (req, res) => {
     try {
-        const client = await db.connect();
-
-        const { rows } = await client.query<RawTask>(`
-            SELECT *
+        const { first: task } = await query<Task>(`
+            SELECT
+                id,
+                title,
+                description,
+                category,
+                due,
+                steps,
+                attachments,
+                archived
             FROM public.task
-            WHERE
-                id = $1
-                AND
-                user_id = $2
-            LIMIT 1;`, [req.params.id, await userIdFromAuthHeader(req)]
-        );
-
-        client.release();
-
-        const task = rows[0];
+            WHERE id = $1 AND user_id = $2
+            LIMIT 1;
+        `, [req.params.id, req.userId]);
 
         if (!task) {
-            return res.status(404).send({
-                success: false,
-                message: "Task not found"
-            });
+            return res.notFoundError("Task not found");
         }
 
-        return res.status(200).send({
-            success: true,
-            message: "Task read successfully",
-            data: {
-                id: task.id,
-                title: task.title,
-                description: task.description,
-                category: task.category,
-                due: task.due,
-                steps: task.steps,
-                attachments: task.attachments,
-                archived: task.archived
-            } satisfies Task
-        });
+        return res.success("Task read successfully", task);
     } catch (err) {
         console.error(`Something went wrong whilst fetching a task : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.serverError;
     }
 });
 
 router.get('/', async (req, res) => {
     try {
         const { category, search, archived } = req.query;
-        const client = await db.connect();
 
-        const { rows } = await client.query<RawTask>(`
-            SELECT *
+        const { rows: tasks } = await query<Task>(`
+            SELECT
+                id,
+                title,
+                description,
+                category,
+                due,
+                steps,
+                attachments,
+                archived
             FROM public.task
             WHERE
                 user_id = $1
@@ -116,56 +65,34 @@ router.get('/', async (req, res) => {
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
                 ${archived && archived ? `AND archived is ${archived}` : ""}
             ORDER BY task.due ASC, task.updated_at DESC;
-        `, [await userIdFromAuthHeader(req)]);
+        `, [req.userId]);
 
-        client.release();
-
-        return res.status(200).send({
-            success: true,
-            message: "Tasks read successfully",
-            data: rows.map(row => {
-                return {
-                    id: row.id,
-                    title: row.title,
-                    description: row.description,
-                    category: row.category,
-                    due: row.due,
-                    steps: row.steps,
-                    attachments: row.attachments,
-                    archived: row.archived
-                } satisfies Task
-            })
-        });
+        return res.success("Tasks read successfully", tasks);
     } catch (err) {
         console.error(`Something went wrong whilst fetching the tasks : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.serverError();
     }
 });
 
-router.post('/', upload.array("attachments"), async (req, res) => {
+router.post('/', taskUpload.array("attachments"), async (req, res) => {
     try {
         const { category, title, description, due, steps, archived } = req.body;
-        const client = await db.connect();
-
         const attachments = getAttachments(req);
 
-        const { rows } = await client.query(`
+        const { first } = await query<{ id: number }>(`
             INSERT INTO public.task (user_id, category, title, description, due, steps, attachments, archived)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived]);
+        `, [req.userId, category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived]);
 
-        client.release();
-
-        const id = rows[0].id;
+        if (!first) {
+            return res.notFoundError("Unable to find the created task");
+        }
 
         return res.status(201).send({
             success: true,
             message: "Task created successfully",
-            data: id
+            data: first.id
         });
     } catch (err) {
         console.error(`Something went wrong whilst creating a task : ${err.message}`);
@@ -176,14 +103,12 @@ router.post('/', upload.array("attachments"), async (req, res) => {
     }
 });
 
-router.put('/:id', upload.array("attachments"), async (req, res) => {
+router.put('/:id', taskUpload.array("attachments"), async (req, res) => {
     try {
         const { category, title, description, due, steps, archived } = req.body;
-        const client = await db.connect();
-
         const attachments = getAttachments(req);
 
-        await client.query(`
+        await query(`
             UPDATE public.task
             SET category = $1,
                 title = $2,
@@ -193,24 +118,13 @@ router.put('/:id', upload.array("attachments"), async (req, res) => {
                 attachments = $6,
                 archived = $7
                 updated_at = $8
-            WHERE
-                id = $9
-                AND
-                user_id = $10;
-        `, [category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+            WHERE id = $9 AND user_id = $10;
+        `, [category, title, description, due, steps ? JSON.stringify(steps) : null, attachments ? JSON.stringify(attachments) : null, archived, new Date(), req.params.id, req.userId]);
 
-        client.release();
-
-        return res.status(200).send({
-            success: true,
-            message: "Task updated successfully"
-        });
+        return res.success("Task updated successfully");
     } catch (err) {
         console.error(`Something went wrong whilst updating a task : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.serverError();
     }
 });
 
@@ -233,60 +147,35 @@ router.patch('/:id', async (req, res) => {
 
     try {
         const patchObjects = buildPatchObjects(req);
-        const client = await db.connect();
 
         // eslint-disable-next-line prefer-const
         let { statements, id } = buildPatchStatements(patchObjects);
         const values = buildPatchValues(patchObjects);
 
-        await client.query(`
+        await query(`
             UPDATE public.task
             SET ${statements}
-            WHERE
-                id = $${id++}
-                AND
-                user_id = $${id++};
-        `, [...values, req.params.id, await userIdFromAuthHeader(req)]);
+            WHERE id = $${id++} AND user_id = $${id++};
+        `, [...values, req.params.id, req.userId]);
 
-        client.release();
-
-        return res.status(200).send({
-            success: true,
-            message: "Task patched successfully"
-        });
+        return res.success("Task patched successfully");
     } catch (err) {
         console.error(`Something went wrong whilst patching a task : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.serverError();
     }
 });
 
 router.delete('/:id', async (req, res) => {
     try {
-        const client = await db.connect();
-
-        await client.query(`
+        await query(`
             DELETE FROM public.task
-            WHERE
-                id = $1
-                AND
-                user_id = $2;
-        `, [req.params.id, await userIdFromAuthHeader(req)]);
+            WHERE id = $1 AND user_id = $2;
+        `, [req.params.id, req.userId]);
 
-        client.release();
-
-        return res.status(200).send({
-            success: true,
-            message: "Task deleted successfully"
-        });
+        return res.success("Task deleted successfully");
     } catch (err) {
         console.error(`Something went wrong whilst deleting a task : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.serverError();
     }
 });
 
@@ -294,322 +183,18 @@ router.get("/categories", async (req, res) => {
     try {
         const { search, archived } = req.query;
 
-        const { rows } = await query<RawCategory>(`
+        const { rows } = await query<{ category: string }>(`
             SELECT DISTINCT category
             FROM public.task
-            WHERE
-                title LIKE '%' || $1 || '%'
-                AND
-                archived = $2
-                AND
-                user_id = $3;
+            WHERE title LIKE '%' || $1 || '%'¨
+                AND archived = $2
+                AND user_id = $3
+                AND category IS NOT NULL;
         `, [search, archived === "true", req.userId]);
 
-        return res.status(200).send({
-            success: true,
-            message: "Categories read successfully",
-            data: rows.filter(row => row.category !== null).map(row => row.category) as string[]
-        });
+        return res.success("Categories read successfully", rows.map(row => row.category));
     } catch (err) {
         console.error(`Something went wrong whilst fetching the categories : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-});
-
-/**
- * ATTACHMENTS
- */
-
-router.get('/:id/attachment', async (req, res) => {
-    try {
-        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
-            method: "GET",
-            headers: {
-                "accept": "application/json",
-                "authorization": req.headers.authorization!
-            }
-        });
-        const result: ApiResponseWithData<Task> = await response.json();
-    
-        if (!result.success) {
-            return res.status(response.status).send(result);
-        }
-
-        const task = result.data;
-        const name = req.query.name as string;
-
-        if (!task.attachments) {
-            return res.status(404).send({ success: false, message: "No attachment found" })
-        }
-
-        const attachments: Attachment[] = JSON.parse(task.attachments);
-        const attachment = attachments.find(a => a.name === name);
-
-        if (!attachment) {
-            return res.status(404).send({ success: false, message: "No attachment found" })
-        }
-
-        res.setHeader("Content-Type", mime.lookup(attachment.relativePathOnServer));
-
-        return res.status(200).sendFile(attachment.relativePathOnServer, { root: "." });
-    } catch (err) {
-        console.error(`Something went wrong whilst fetching an attachment : ${err.message}`);
-        return res.status(500).send({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-});
-
-router.post("/:id/attachment", upload.array("attachments"), async (req, res) => {
-    try {
-        const newAttachments = getAttachments(req);
-
-        if (!newAttachments) {
-            return res.status(418).send({ success: false, message: "Adding attachments without sending them..." })
-        }
-
-        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
-            method: "GET",
-            headers: {
-                "accept": "application/json",
-                "authorization": req.headers.authorization!
-            }
-        });
-        const result: ApiResponseWithData<Task> = await response.json();
-    
-        if (!result.success) {
-            return res.status(response.status).send(result);
-        }
-
-        const task = result.data;
-        const client = await db.connect();
-
-        const attachments = task.attachments ? JSON.parse(task.attachments) as Attachment[] : [];
-        const mergedAttachments = [...attachments, ...newAttachments];
-
-        await client.query(`
-            UPDATE public.task
-            SET
-                attachments = $1,
-                updated_at = $2
-            WHERE
-                id = $3
-                AND
-                user_id = $4;
-        `, [JSON.stringify(mergedAttachments), new Date(), req.params.id, await userIdFromAuthHeader(req)]);
-
-        client.release();
-
-        return res.status(200).send({
-            success: true,
-            message: "Added attachments successfully",
-            data: newAttachments
-        })
-    } catch (err) {
-        console.error(`Something went wrong whilst adding an attachment : ${err.message}`);
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
-    }
-});
-
-router.delete("/:id/attachment", async (req, res) => {
-    try {
-        const response = await fetch(`${process.env.SERVER_URL}/api/v1/tasks/${req.params.id}`, {
-            method: "GET",
-            headers: {
-                "accept": "application/json",
-                "authorization": req.headers.authorization!
-            }
-        });
-        const result: ApiResponseWithData<Task> = await response.json();
-    
-        if (!result.success) {
-            return res.status(response.status).send(result);
-        }
-
-        const task = result.data;
-
-        if (!task.attachments) {
-            return res.status(418).send({ success: false, message: "How do you delete attachments when there are none ?" })
-        }
-
-        const name = req.query.name;
-        const client = await db.connect();
-
-        const attachments = JSON.parse(task.attachments) as Attachment[];
-        const filteredAttachments = attachments.filter(a => a.name !== name);
-
-        await client.query(`
-            UPDATE public.task
-            SET
-                attachments = $1,
-                updated_at = $2
-            WHERE
-                id = $3
-                AND
-                user_id = $4;
-        `, [filteredAttachments.length > 0 ? JSON.stringify(filteredAttachments) : null, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
-
-        client.release();
-
-        return res.status(200).send({ success: true, message: "Removed attachment successfully" })
-    } catch (err) {
-        console.error(`Something went wrong whilst adding an attachment : ${err.message}`);
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
-    }
-});
-
-/**
- * REMINDERS
- */
-
-router.get('/:id/reminders', async (req, res) => {
-    try {
-        const { rows: reminders } = await query<Reminder>(`
-            SELECT task_reminder.id, task_reminder.task_id as "taskId", task_reminder.time
-            FROM public.task_reminder
-            INNER JOIN public.task ON task.id = task_id
-            WHERE task_reminder.task_id = $1 AND task.user_id = $2;
-        `, [req.params.id, req.userId]);
-
-        return res.success("Task reminders read successfully", reminders);
-    } catch (err) {
-        console.error(`Something went wrong whilst fetching a task reminder : ${err.message}`);
         return res.serverError();
     }
 });
-
-router.post('/:id/reminders', async (req, res) => {
-    try {
-        const { time } = req.body;
-
-        const { first: reminder } = await query<Reminder>(`
-            INSERT INTO public.task_reminder (task_id, time)
-            VALUES ($1, $2)
-            RETURNING id, task_id as "taskId", time;
-        `, [req.params.id, time]);
-
-        return res.success("Task reminder added successfully", reminder);
-    } catch (err) {
-        console.error(`Something went wrong whilst adding a task reminder : ${err.message}`);
-        return res.serverError();
-    }
-});
-
-router.put('/:taskId/reminders/:reminderId', async (req, res) => {
-    try {
-        const { time } = req.body;
-
-        await query<Reminder>(`
-            UPDATE public.task_reminder
-            SET time = $1
-            WHERE id = $2 AND task_id = $3;
-        `, [new Date(time), req.params.reminderId, req.params.taskId]);
-
-        return res.success("Task reminder updated successfully");
-    } catch (err) {
-        console.error(`Something went wrong whilst updating a task reminder : ${err.message}`);
-        return res.serverError();
-    }
-});
-
-router.delete('/:taskId/reminders/:reminderId', async (req, res) => {
-    try {
-        await query<Reminder>(`
-            DELETE FROM public.task_reminder
-            WHERE id = $1 AND task_id = $2;
-        `, [req.params.reminderId, req.params.taskId]);
-
-        return res.success("Task reminder updated successfully");
-    } catch (err) {
-        console.error(`Something went wrong whilst updating a task reminder : ${err.message}`);
-        return res.serverError();
-    }
-});
-
-/**
- * NOTIFICATIONS
- */
-
-/* router.get("/:taskId/notifications/:notificationId", async (req, res) => {
-    try {
-        const { first: notification } = await query<TaskNotification>(`
-            SELECT
-                task_notification.id,
-                task.user_id as "userId",
-                task_notification.task_reminder_id as "taskReminderId",
-                task_notification.message,
-                task_notification.is_read as "isRead",
-                task_notification.created_at as "createdAt"
-            FROM public.task_notification
-            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
-            INNER JOIN public.task ON task.id = task_reminder.task_id
-            WHERE task_notification.id = $1 AND task.user_id = $2 AND task_reminder.task_id = $3
-            LIMIT 1;
-        `, [req.params.notificationId, req.userId, req.params.taskId]);
-
-        if (!notification) {
-            return res.notFoundError("Notification not found");
-        }
-
-        return res.success("Notification retrieved successfully", notification);
-    } catch (err) {
-        console.error(err);
-        return res.serverError();
-    }
-});
-
-router.get("/:taskId/notifications", async (req, res) => {
-    try {
-        const { rows: notifications } = await query<TaskNotification>(`
-            SELECT
-                task_notification.id,
-                task.user_id as "userId",
-                task_notification.task_reminder_id as "taskReminderId",
-                task_notification.message,
-                task_notification.is_read as "isRead",
-                task_notification.created_at as "createdAt"
-            FROM public.task_notification
-            INNER JOIN public.task_reminder ON task_reminder.id = task_notification.task_reminder_id
-            INNER JOIN public.task ON task.id = task_reminder.task_id
-            WHERE task.user_id = $1 AND task.id = $2;
-        `, [req.userId, ]);
-
-        return res.success("Notifications retrieved successfully", notifications);
-    } catch (err) {
-        console.error(err);
-        return res.serverError();
-    }
-});
-
-router.post("/:taskId/notifications", async (req, res) => {
-    try {
-        const { taskReminderId, message } = req.body;
-
-        const { first: notification } = await query<TaskNotification>(`
-            WITH new_notification AS (
-                INSERT INTO public.task_notification (task_reminder_id, message)
-                VALUES ($1, $2)
-                RETURNING *
-            )
-            SELECT
-                new_notification.id,
-                task.user_id as "userId",
-                new_notification.task_reminder_id as "taskReminderId",
-                new_notification.message,
-                new_notification.is_read as "isRead",
-                new_notification.created_at as "createdAt"
-            FROM new_notification
-            INNER JOIN public.task_reminder ON task_reminder.id = new_notification.task_reminder_id
-            INNER JOIN public.task ON task.id = task_reminder.task_id;
-        `, [taskReminderId, message]);
-
-        return res.success("Notification added successfully", notification);
-    } catch (err) {
-        console.error(err);
-        return res.serverError();
-    }
-}); */

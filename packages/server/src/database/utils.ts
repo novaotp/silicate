@@ -10,6 +10,7 @@ type QueryReturn<T> = {
  * Convenient helper to query the database while handling the open/close connection.
  * @param statement The SQL statement to execute.
  * @param values The values to pass in the statement (optional).
+ * @throws An error is thrown (if one is encountered) after gracefully closing the connection.
  */
 export async function query<T>(statement: string, values: unknown[] = []): Promise<QueryReturn<T>> {
     let client: pg.PoolClient | null = null;
@@ -17,6 +18,7 @@ export async function query<T>(statement: string, values: unknown[] = []): Promi
         rows: [],
         first: null
     };
+    let error: Error | undefined = undefined;
 
     try {
         client = await db.connect();
@@ -28,11 +30,17 @@ export async function query<T>(statement: string, values: unknown[] = []): Promi
             first: rows.length > 0 ? rows.at(0) : null
         };
     } catch (err) {
-        console.error("An error occurred whilst querying the database : ", err);
+        error = err;
     } finally {
         if (client) {
             client.release();
         }
+    }
+
+    // Throw error after closing the db connection.
+    // Avoids memory leaks.
+    if (error !== undefined) {
+        throw error;
     }
 
     return data;

@@ -11,7 +11,7 @@ const storage = diskStorage({
     }
 });
 const taskStorage = storage;
-/** @deprecated Use {@link taskUploads} instead. */
+/** @deprecated Use {@link taskUpload} instead. */
 export const upload = multer({ storage: taskStorage });
 export const taskUpload = upload;
 

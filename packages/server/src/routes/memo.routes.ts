@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { query } from "../database/utils.js";
-import { userIdFromAuthHeader } from "../utils/userIdFromAuthHeader.js";
 import type { Memo } from "$common/models/memo.js";
 import { buildPatchStatements, buildPatchValues, type BuildPatchObject } from "../utils/dynamic-query-builder/index.js";
 
@@ -18,7 +17,7 @@ router.get('/:id(\\d+$)', async (req, res) => {
                 pinned
             FROM public.memo
             WHERE id = $1 AND user_id = $2
-            LIMIT 1;`, [req.params.id, await userIdFromAuthHeader(req)]);
+            LIMIT 1;`, [req.params.id, req.userId]);
 
         if (!memo) {
             return res.notFoundError("Memo not found");
@@ -49,7 +48,7 @@ router.get('/', async (req, res) => {
                 ${category && category !== "" ? `AND category = '${category}'` : ""}
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
             ORDER BY updated_at DESC;
-        ;`, [await userIdFromAuthHeader(req)]);
+        ;`, [req.userId]);
 
         return res.success("Memos read successfully", memos);
     } catch (err) {
@@ -71,7 +70,7 @@ router.post('/', async (req, res) => {
             INSERT INTO public.memo (user_id, category, title, content, pinned)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING id;
-        `, [await userIdFromAuthHeader(req), category, title, content, pinned]);
+        `, [req.userId, category, title, content, pinned]);
 
         return res.success("Memo created successfully", first!.id);
     } catch (err) {
@@ -97,7 +96,7 @@ router.put('/:id', async (req, res) => {
                 pinned = $4,
                 updated_at = $5
             WHERE id = $6 AND user_id = $7;
-        `, [category, title, content, pinned, new Date(), req.params.id, await userIdFromAuthHeader(req)]);
+        `, [category, title, content, pinned, new Date(), req.params.id, req.userId]);
 
         return res.success("Memo updated successfully");
     } catch (err) {
@@ -131,7 +130,7 @@ router.patch('/:id', async (req, res) => {
             UPDATE public.memo
             SET ${statements}
             WHERE id = $${id++} AND user_id = $${id++};
-        `, [...values, req.params.id, await userIdFromAuthHeader(req)]);
+        `, [...values, req.params.id, req.userId]);
 
         return res.success("Memo updated successfully");
     } catch (err) {
@@ -145,7 +144,7 @@ router.delete('/:id', async (req, res) => {
         await query(`
             DELETE FROM public.memo
             WHERE id = $1 AND user_id = $2;
-        `, [req.params.id, await userIdFromAuthHeader(req)]);
+        `, [req.params.id, req.userId]);
 
         return res.success("Memo deleted successfully");
     } catch (err) {
@@ -164,7 +163,7 @@ router.get("/categories", async (req, res) => {
             WHERE user_id = $1
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
                 AND category IS NOT NULL;
-        `, [await userIdFromAuthHeader(req)]);
+        `, [req.userId]);
 
         return res.success("Memo categories read successfully", rows.map(row => row.category));
     } catch (err) {

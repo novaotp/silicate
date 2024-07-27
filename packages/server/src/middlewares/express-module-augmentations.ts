@@ -26,6 +26,7 @@ export const expressModuleAugmentations = async (req: Request, res: Response, ne
     next();
 };
 
+/** Retrieves the JWT token from the given header. */
 const token = (authHeader: string): string => {
     return authHeader.split(" ").at(1)!;
 }

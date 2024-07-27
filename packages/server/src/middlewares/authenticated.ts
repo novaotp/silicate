@@ -20,7 +20,8 @@ const validate = async (jwt: string) => {
 }
 
 /**
- * A middleware that interrupts the request if the `Authorization` header is undefined or if it is invalid.
+ * A middleware that interrupts the request if the `Authorization` header is undefined or invalid.
+ * @description Returns `401 Unauthorized action` or pases the request to the next handler.
  */
 export const authenticated = (async (req, res, next) => {
     if (!req.jwt) {
