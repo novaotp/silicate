@@ -52,7 +52,7 @@
 
 <Button.Normal
     on:click={onCreate}
-    class={cn("relative w-full h-full flex justify-center items-center gap-5", $$restProps['class'] || "")}
+    class={cn("relative h-full flex justify-center items-center gap-5", $$restProps['class'] || "")}
 >
     <IconPlus class="min-w-6 min-h-6" />
     <span class="hidden md:block whitespace-nowrap">Ajouter un mémo</span>

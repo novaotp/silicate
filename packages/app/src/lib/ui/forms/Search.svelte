@@ -17,21 +17,21 @@
 
 <div
     role="search"
-    class="relative w-full h-[50px] md:max-w-[350px] rounded flex justify-between items-center
+    class="relative w-full h-[50px] md:max-w-[350px] rounded-lg flex justify-between items-center
             bg-neutral-100 text-neutral-700 dark:text-neutral-100 dark:bg-neutral-800"
 >
     <input
         {placeholder}
         bind:value={internalValue}
         type="search"
-        class="relative w-[calc(100%-80px)] h-full bg-transparent px-5 rounded-l text-sm"
+        class="relative w-[calc(100%-80px)] h-full bg-transparent px-5 rounded-l-lg text-sm"
     />
     {#if internalValue !== ''}
         <button on:click={resetSearch} class="relative size-10 flex justify-center items-center">
             <IconCircleXFilled />
         </button>
     {/if}
-    <button on:click={() => dispatch('search', internalValue)} class="relative size-[50px] rounded-r flex justify-center items-center search-icon">
+    <button on:click={() => dispatch('search', internalValue)} class="relative size-[50px] rounded-r-lg flex justify-center items-center search-icon">
         <IconSearch class="size-5 text-neutral-600 dark:text-neutral-100" />
     </button>
 </div>

@@ -9,13 +9,14 @@
     export let showSettings: boolean;
 </script>
 
-<Overlay on:click={() => changeSearchParams('id', null)} class="hidden md:flex justify-center items-center">
+<Overlay z={2} on:click={() => changeSearchParams('id', null)} />
+<div class="fixed w-full h-full top-0 left-0 flex justify-center items-center z-3">
     <Card class="w-[760px] max-h-[760px]">
-        <header class="relative flex justify-between items-center w-full h-[60px] z-[100] bg-white dark:bg-neutral-900 dark:text-neutral-50">
+        <header class="relative flex justify-between items-center w-full z-[100] bg-white dark:bg-neutral-900 dark:text-neutral-50">
             <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
                 <IconX />
             </button>
-            <div class="flex gap-5 items-center">
+            <div class="relative flex gap-5 items-center">
                 <EditPinnedStatus />
                 <!-- <CategoryChanger {memo} /> -->
                 <DeleteMemo />
@@ -23,4 +24,4 @@
         </header>
         <InternalEditor bind:showSettings />
     </Card>
-</Overlay>
+</div>

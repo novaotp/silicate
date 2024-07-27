@@ -19,7 +19,7 @@
             <AddMemo class="hidden md:flex" />
         </div>
     </header>
-    <AddMemo class="fixed bottom-5 right-5 size-[60px] z-[100]" />
+    <AddMemo class="fixed md:hidden bottom-5 right-5 size-[60px] z-[100]" />
     {#if $memos.length > 0}
         <Categories />
     {/if}

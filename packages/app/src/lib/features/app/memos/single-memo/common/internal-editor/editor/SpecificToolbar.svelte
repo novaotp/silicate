@@ -21,7 +21,7 @@
 </script>
 
 {#if show}
-    <div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-[90px] md:bottom-auto mx-auto gap-[10px] bg-neutral-100 dark:bg-neutral-700 rounded-lg p-[10px] text-sm flex">
+    <div class="fixed md:relative w-[calc(100%-40px)] md:w-full h-[60px] bottom-[90px] md:mb-5 md:bottom-auto mx-auto gap-[10px] bg-neutral-100 dark:bg-neutral-700 rounded-lg p-[10px] text-sm flex">
         {#if show === "headings"}
             <button
                 class="relative h-full aspect-square flex justify-center items-center rounded dark:text-neutral-50"

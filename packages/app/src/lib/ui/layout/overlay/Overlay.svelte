@@ -7,16 +7,18 @@
 
 <!--
 @component
-A self-contained fullscreen overlay effect that sits above (controlled with the `z` prop) the current UI.
+A fullscreen overlay effect that sits above the current UI.
 
 Can pass an `on:click` event handler that fires when it is clicked (usually to close the component).
+
+When self-contained, make sure to elevate the sibling components over the overlay.
 -->
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class={cn("fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.1)]", $$restProps['class'] || '')}
+    class={cn("fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.2)] blur-md", $$restProps['class'] || '')}
     style="z-index: {z}"
     transition:fade
     on:click|self|stopPropagation
-></div>
+><slot /></div>

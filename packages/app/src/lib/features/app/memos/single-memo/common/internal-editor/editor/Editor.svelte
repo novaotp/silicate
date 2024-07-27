@@ -81,7 +81,7 @@
     role="textbox"
     tabindex="0"
     spellcheck="false"
-    class="relative w-full h-[calc(100%-140px)] {show ? "md:max-h-[400px]" : "md:max-h-[480px]"} outline-none overflow-auto"
+    class="relative w-full md:mb-5 {show === null ? "h-[calc(100%-140px)]" : "h-[calc(100%-200px)]"} {show ? "md:max-h-[480px]" : "md:max-h-[560px]"} outline-none overflow-auto"
 ></div>
 
 {#if editor}

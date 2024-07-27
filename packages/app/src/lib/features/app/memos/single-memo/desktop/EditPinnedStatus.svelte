@@ -42,7 +42,7 @@
     }
 </script>
 
-<button class="rounded-full" on:click={editPinnedStatus}>
+<button on:click={editPinnedStatus}>
     {#if memo?.pinned}
         <IconPinnedFilled />
     {:else}

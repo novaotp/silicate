@@ -39,7 +39,7 @@
 <Button.Danger
     on:click={destroyMemo}
     variant="tertiary"
-    class="px-0 h-14 border-0 rounded-none flex justify-start items-center gap-5"
+    class="px-0 rounded-none"
 >
     <IconTrash />
 </Button.Danger>
