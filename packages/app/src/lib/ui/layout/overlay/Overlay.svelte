@@ -7,7 +7,7 @@
 
 <!--
 @component
-A fullscreen backdrop effect that sits above the current UI.
+A self-contained fullscreen overlay effect that sits above (controlled with the `z` prop) the current UI.
 
 Can pass an `on:click` event handler that fires when it is clicked (usually to close the component).
 -->
@@ -19,6 +19,4 @@ Can pass an `on:click` event handler that fires when it is clicked (usually to c
     style="z-index: {z}"
     transition:fade
     on:click|self|stopPropagation
->
-    <slot />
-</div>
+></div>

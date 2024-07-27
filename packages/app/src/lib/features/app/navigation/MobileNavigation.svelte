@@ -23,7 +23,7 @@
 			<Avatar user={$user} class="h-10 aspect-square" textSize={14} />
 		</button>
 	</div>
-	<Sheet bind:open={isMenuSheetOpen} class="flex flex-col">
+	<Sheet bind:open={isMenuSheetOpen} class="flex flex-col" let:closeWithTransition>
 		<div
 			role="banner"
 			class="relative w-full h-[150px] bg-primary-600 px-5 flex flex-col justify-center"
@@ -34,7 +34,10 @@
 			{#each navigationItems as { href, label, icon }}
 				<li class="relative flex w-full items-center justify-center h-[50px]">
 					<button
-						on:click={() => dispatch('navigate', href)}
+						on:click={() => {
+                            closeWithTransition();
+                            dispatch('navigate', href)
+                        }}
 						class="relative flex h-full w-full items-center justify-start px-5 gap-5 dark:text-neutral-100"
 					>
 						<svelte:component this={icon} class="stroke-[1.5]" />
