@@ -1,11 +1,14 @@
 {
 	"name": "app",
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"private": true,
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
 		"dev:expose": "vite dev --host",
+        "native:sync": "npx cap sync",
+        "native:android": "npx cap run android",
+        "native:ios": "npx cap run ios",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

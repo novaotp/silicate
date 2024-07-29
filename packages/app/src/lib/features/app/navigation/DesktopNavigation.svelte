@@ -16,7 +16,7 @@
 </script>
 
 <nav
-	class="hidden md:flex flex-col justify-between items-center h-full {isMenuSheetOpen
+	class="flex flex-col justify-between items-center h-full {isMenuSheetOpen
 		? 'w-[200px]'
 		: 'w-20'}
     duration-300 overflow-x-hidden ease-in-out py-5 bg-neutral-100 dark:bg-neutral-900"

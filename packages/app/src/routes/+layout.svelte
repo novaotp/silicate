@@ -5,8 +5,11 @@
 	import { Preferences } from '@capacitor/preferences';
 	import { ToastContainer } from '$features/toast-notifications';
 	import { page } from '$app/stores';
+	import { initTheme } from '$stores/theme';
 
     const PUBLIC_ROUTES = ["/login", "/register", "logout"];
+
+    initTheme();
 
     onMount(async () => {
         const tokenPreference = await Preferences.get({ key: "token" });

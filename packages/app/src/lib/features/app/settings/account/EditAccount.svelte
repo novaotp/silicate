@@ -92,14 +92,11 @@
         ></TextArea>
     </div>
     {#if showSaveChanges}
-        <div class="fixed bottom-5 w-full p-5 h-[100px] bg-white gap-[10px] flex flex-col md:flex-row justify-between items-center" transition:fly={{ y: 50 }}>
-            <span>Enregistrer les modifications ?</span>
-            <div class="relative flex justify-center items-center gap-5">
-                <Button.Normal variant="secondary" on:click={() => (replicaUser = { ...$user })}>
-                    Annuler
-                </Button.Normal>
-                <Button.Normal type="submit">Enregistrer</Button.Normal>
-            </div>
+        <div class="fixed bottom-5 left-5 px-5 py-[10px] w-[calc(100%-40px)] bg-white dark:bg-neutral-900 rounded-lg gap-[10px] flex justify-center items-center" transition:fly={{ y: 50 }}>
+            <Button.Normal variant="secondary" class="flex-grow" on:click={() => (replicaUser = { ...$user })}>
+                Annuler
+            </Button.Normal>
+            <Button.Normal type="submit" class="flex-grow">Enregistrer</Button.Normal>
         </div>
     {/if}
 </form>

@@ -75,7 +75,7 @@
         {#if currentTab}
             {@const component = getComponentBySlug(currentTab)}
             <FullScreen>
-                <header class="absolute top-0 left-0 flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white dark:bg-neutral-950">
+                <header class="absolute top-0 left-0 flex justify-between items-center w-full h-[60px] px-5 z-[1] bg-white dark:bg-neutral-950">
                     <button class="rounded-full" on:click={() => changeSearchParams('tab', null)}>
                         <IconChevronLeft class="dark:text-neutral-50" />
                     </button>

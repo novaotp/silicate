@@ -17,8 +17,10 @@ When self-contained, make sure to elevate the sibling components over the overla
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class={cn("fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.2)] blur-md", $$restProps['class'] || '')}
+    class={cn("fixed h-full w-full top-0 left-0 bg-[rgba(0,0,0,0.2)]", $$restProps['class'] || '')}
     style="z-index: {z}"
     transition:fade
     on:click|self|stopPropagation
-><slot /></div>
+>
+    <slot />
+</div>

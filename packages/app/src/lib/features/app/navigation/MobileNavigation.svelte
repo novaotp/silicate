@@ -14,10 +14,10 @@
 	const dispatch = createEventDispatcher<{ navigate: string }>();
 </script>
 
-<nav class="relative w-full h-20 flex md:hidden justify-between items-center p-5">
+<nav class="relative w-full h-20 flex justify-between items-center p-5">
 	<div class="relative w-full flex justify-between">
 		<button on:click={() => (isMenuSheetOpen = true)}>
-			<IconMenu />
+			<IconMenu class="dark:text-white" />
 		</button>
 		<button on:click={() => dispatch('navigate', '/settings')}>
 			<Avatar user={$user} class="h-10 aspect-square" textSize={14} />
@@ -26,11 +26,11 @@
 	<Sheet bind:open={isMenuSheetOpen} class="flex flex-col" let:closeWithTransition>
 		<div
 			role="banner"
-			class="relative w-full h-[150px] bg-primary-600 px-5 flex flex-col justify-center"
+			class="relative w-full h-[150px] bg-primary-600 dark:bg-primary-500 px-5 flex flex-col justify-center"
 		>
 			<h2 class="text-white text-2xl font-semibold">Chalarí</h2>
 		</div>
-		<menu class="relative w-full flex-grow flex flex-col py-2">
+		<menu class="relative w-full flex-grow flex flex-col py-2 bg-white dark:bg-neutral-900">
 			{#each navigationItems as { href, label, icon }}
 				<li class="relative flex w-full items-center justify-center h-[50px]">
 					<button

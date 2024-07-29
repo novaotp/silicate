@@ -8,7 +8,6 @@
 
     const getUser = async () => {
         const token = await getPreference<{ jwt: string, expires: Date }>('token', { parse: true });
-        console.log(token)
 
         const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/me`, {
             method: "GET",
