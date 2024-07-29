@@ -10,7 +10,7 @@
     export let showSettings: boolean;
 </script>
 
-<FullScreen class="md:hidden">
+<FullScreen>
     <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white dark:bg-neutral-950 dark:text-neutral-50">
         <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
             <IconChevronLeft />

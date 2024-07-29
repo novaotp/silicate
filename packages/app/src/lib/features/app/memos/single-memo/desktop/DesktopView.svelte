@@ -9,8 +9,7 @@
     export let showSettings: boolean;
 </script>
 
-<Overlay z={2} on:click={() => changeSearchParams('id', null)} />
-<div class="fixed w-full h-full top-0 left-0 flex justify-center items-center z-3">
+<Overlay z={2} on:click={() => changeSearchParams('id', null)} class="flex justify-center items-center">
     <Card class="w-[760px] max-h-[760px]">
         <header class="relative flex justify-between items-center w-full z-[100] bg-white dark:bg-neutral-900 dark:text-neutral-50">
             <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
@@ -24,4 +23,4 @@
         </header>
         <InternalEditor bind:showSettings />
     </Card>
-</div>
+</Overlay>

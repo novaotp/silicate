@@ -5,6 +5,7 @@
 	import DesktopView from './desktop/DesktopView.svelte';
 	import type { Writable } from 'svelte/store';
 	import type { Memo } from '$common/models/memo';
+	import { innerWidth } from '$utils/inner-width';
 
     const memos = getContext<Writable<Memo[]>>('memos');
     
@@ -14,8 +15,10 @@
     $: viewedMemo = $memos.find(memo => memo.id.toString() === viewedMemoId);
 </script>
 
-<!-- Ensures that the memo id is valid. -->
-{#if viewedMemoId && viewedMemo}
-    <MobileView bind:showSettings />
+<!-- viewedMemoId && viewedMemo : Ensures that the memo id is valid. -->
+ <!-- $innerWidth is to make sure the animations are still played. -->
+{#if viewedMemoId && viewedMemo && $innerWidth > 768}
     <DesktopView bind:showSettings />
+{:else if viewedMemoId && viewedMemo && $innerWidth < 768}
+    <MobileView bind:showSettings />
 {/if}
