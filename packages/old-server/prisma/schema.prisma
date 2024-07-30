@@ -1,0 +1,40 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+    schemas  = ["public", "mark"]
+}
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["multiSchema"]
+}
+
+model Memo {
+    id        String   @id @default(uuid())
+    creatorId String @map("creator_id")
+    creator   User     @relation(fields: [creatorId], references: [id])
+    category  String?
+    title     String
+    content   String   @default("")
+    isPinned  Boolean  @default(false) @map("is_pinned")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@schema("public")
+}
+
+model User {
+    id         String   @id @default(uuid())
+    firstName  String   @db.VarChar(60) @map("first_name")
+    lastName   String   @db.VarChar(60) @map("last_name")
+    email      String   @unique
+    password   String   @db.VarChar(255)
+    bio        String   @default("") @db.Text()
+    avatarPath String? @map("avatar_path")
+    createdAt  DateTime @default(now()) @map("created_at")
+    updatedAt  DateTime @updatedAt@map("updated_at")
+    // The relation Memo -> User
+    memos      Memo[]
+
+    @@schema("public")
+}

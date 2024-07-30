@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import pg from 'pg';
  
 export const db = new pg.Pool({
@@ -7,3 +8,5 @@ export const db = new pg.Pool({
     password: process.env.DB_PASSWORD,
     port: Number(process.env.DB_PORT)
 });
+
+export const prisma = new PrismaClient();

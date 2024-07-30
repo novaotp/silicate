@@ -1,22 +1,3 @@
-export interface RawTask {
-    id: number,
-    user_id: number,
-    title: string,
-    category: string | null,
-    description: string | null,
-    /** A parsable array. */
-    steps: string | null,
-    /** A parsable array. */
-    attachments: string | null;
-    archived: boolean,
-    /** A parsable date. */
-    due: string,
-    /** A parsable date. */
-    created_at: string,
-    /** A parsable date. */
-    updated_at: string,
-}
-
 export interface Task {
     id: number,
     title: string,

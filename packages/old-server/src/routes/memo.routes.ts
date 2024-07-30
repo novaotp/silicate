@@ -2,6 +2,7 @@ import { Router } from "express";
 import { query } from "../database/utils.js";
 import type { Memo } from "$common/models/memo.js";
 import { buildPatchStatements, buildPatchValues, type BuildPatchObject } from "../utils/dynamic-query-builder/index.js";
+/* import { prisma } from "../database/index.js"; */
 
 export const router = Router();
 
@@ -49,6 +50,22 @@ router.get('/', async (req, res) => {
                 ${search && search !== "" ? `AND title ILIKE '%${search}%'` : ""}
             ORDER BY updated_at DESC;
         ;`, [req.userId]);
+
+        /* const temp = await prisma.memo.findMany(
+            {
+                select: {
+                    id: true,
+                    category: true,
+                    title: true,
+                    content: true,
+                    isPinned: true,
+                    updatedAt: true
+                },
+                where: {
+                    creatorId: req.userId
+                }
+            }
+        ); */
 
         return res.success("Memos read successfully", memos);
     } catch (err) {

@@ -82,7 +82,7 @@ router.post("/validate", async (req, res) => {
             return res.notFoundError("User not found");
         }
 
-        return res.success("Users read successfully");
+        return res.success("User validated successfully");
     } catch (err) {
         console.error(`Something went wrong whilst validating a jwt : ${err.message}`);
         return res.serverError();
