@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "hediet.vscode-drawio",
+        "aaron-bond.better-comments",
+        "naumovs.color-highlight",
+        "usernamehw.errorlens",
+        "42Crunch.vscode-openapi",
+        "Prisma.prisma",
+        "svelte.svelte-vscode",
+        "bradlc.vscode-tailwindcss",
+        "meganrogge.template-string-converter"
+    ]
+}
