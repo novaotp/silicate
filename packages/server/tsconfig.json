@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "useUnknownInCatchVariables": false,
+        "noUnusedLocals": true,
+        "skipLibCheck": true,
+        "verbatimModuleSyntax": true,
+        "resolveJsonModule": true,
+        "paths": {
+            "$common/*": ["../common/*"],
+            "$services/*": ["./src/services/*"]
+        },
+        "outDir": "build",
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ]
+    },
+    "include": ["../common/**/*", "src/**/*.ts"],
+    "exclude": ["./node_modules/**"],
+    "ts-node": {
+        "experimentalSpecifierResolution": "node",
+        "transpileOnly": true,
+        "esm": true
+    }
+}
