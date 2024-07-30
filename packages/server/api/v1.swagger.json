@@ -1,0 +1,828 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API for Chalarí",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/authentication/register": {
+            "summary": "Registers a new user in the database.",
+            "post": {
+                "tags": ["Authentication"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@chalari.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "johndoe01"
+                                    }
+                                },
+                                "required": ["firstName", "lastName", "email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered the user successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registered the user successfully"
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict. The provided email is already being used.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "A user with the given email already exists."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst registering a user"
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/authentication/login": {
+            "summary": "Logs a new user.",
+            "post": {
+                "tags": ["Authentication"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@chalari.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "johndoe01"
+                                    }
+                                },
+                                "required": ["email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged the user in successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged the user in successfully"
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Set-Cookie": {
+                                "description": "The JWT token to access protected resources.",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "34209rh32-12309hf3bnr-495u2394th-34t43295"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst logging a user in"
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/memos": {
+            "summary": "Handling memos.",
+            "get": {
+                "tags": ["Memos"],
+                "parameters": [
+                    {  
+                        "name": "search",
+                        "in": "query",
+                        "description": "Filter the memos via the title (case-insensitive). Don't set or set an empty string to omit.",
+                        "schema": {
+                            "type": "string",
+                            "example": "Memo",
+                            "default": ""
+                        }
+                    },
+                    {  
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter the memos via the category. Don't set or set an empty string to omit.",
+                        "schema": {
+                            "type": "string",
+                            "example": "Ideas",
+                            "default": ""
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved the memos successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrieved the memos successfully."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "qwg9efb-1r2egqw87e9f-1238rg2f-12f7h2"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Ideas"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "My new memo"
+                                                    },
+                                                    "content": {
+                                                        "type": "string",
+                                                        "example": "This is my new memo !!"
+                                                    },
+                                                    "isPinned": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "updatedAt": {
+                                                        "type": "string",
+                                                        "format": "ISO-8601",
+                                                        "example": "2024-08-15T12:30:00.000Z"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Memo with given id not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Memo with given id not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst retrieving the memos."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Memos"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Ideas",
+                                        "default": null
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My new memo"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "The content of my newly created memo !",
+                                        "default": ""
+                                    },
+                                    "isPinned": {
+                                        "type": "boolean",
+                                        "example": false,
+                                        "default": false
+                                    }
+                                },
+                                "required": ["title"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Created the memo successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Created the memo successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "qwg9efb-1r2egqw87e9f-1238rg2f-12f7h2"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Ideas"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "The content of my modified memo !"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is my new memo !!"
+                                                },
+                                                "isPinned": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "ISO-8601",
+                                                    "example": "2024-08-15T12:30:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst creating the memo."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/memos/{id}": {
+            "summary": "Handling a single memo.",
+            "get": {
+                "tags": ["Memos"],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved the memo successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrieved the memos successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "qwg9efb-1r2egqw87e9f-1238rg2f-12f7h2"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Ideas"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "My new memo"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is my new memo !!"
+                                                },
+                                                "isPinned": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "ISO-8601",
+                                                    "example": "2024-08-15T12:30:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Memo with given id not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Memo with given id not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst retrieving the memo."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Memos"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Ideas",
+                                        "default": null
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My modified memo"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "The content of my modified memo !",
+                                        "default": ""
+                                    },
+                                    "isPinned": {
+                                        "type": "boolean",
+                                        "example": false,
+                                        "default": false
+                                    }
+                                },
+                                "required": ["category", "title", "content", "isPinned"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated the memo successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Updated the memos successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "qwg9efb-1r2egqw87e9f-1238rg2f-12f7h2"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Ideas"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "The content of my modified memo !"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is my new memo !!"
+                                                },
+                                                "isPinned": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "ISO-8601",
+                                                    "example": "2024-08-15T12:30:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Memo with given id not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Memo with given id not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst updating the memo."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Memos"],
+                "responses": {
+                    "200": {
+                        "description": "Deleted the memo successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deleted the memos successfully."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Memo with given id not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Memo with given id not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst deleting a memo."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@ declare global {
     namespace Express {
         interface Request {
             /** The id of the user, retrieved from the JWT `Authorization` header. */
-            userId: number | null;
+            userId: string | null;
             /** @description Retrieved from the `Authorization` header. */
             jwt: string | null;
         }

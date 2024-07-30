@@ -2,6 +2,6 @@ import { Router } from "express";
 import { v1 } from "./v1.js";
 
 /** The router instance for all authentication-related routes. */
-export const authenticationRouter = Router();
+export const memoRouter = Router();
 
-authenticationRouter.use("/v1/authentication", v1);
+memoRouter.use("/v1/memos", v1);
