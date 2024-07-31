@@ -8,7 +8,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "npm run build && pm2 start .\\build\\server\\src\\app.js --watch --no-vizion && npm run build:watch",
+    "dev": "npm run build && pm2 start .\\build\\server\\src\\app.js --watch --ignore-watch=node_modules --no-vizion && npm run build:watch",
     "dev:monitor": "pm2 monit --name app",
     "dev:kill": "pm2 kill --name app",
     "build": "tsc && tsc-alias",

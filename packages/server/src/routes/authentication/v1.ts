@@ -57,7 +57,7 @@ v1.post("/register", async (req, res) => {
 
 interface LoginBody {
     email: string & tags.Format<"email">,
-    password: string & tags.MinLength<8>
+    password: string
 }
 
 v1.post("/login", async (req, res) => {
@@ -93,7 +93,9 @@ v1.post("/login", async (req, res) => {
 
         const { token, expires } = await sign({ userId: existingUser.id });
 
-        res.header("Set-Cookie", `token=${token}; HttpOnly; Secure; Expires=${new Date(expires)}`);
+        // .toUTCString because https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date
+        const security = process.env.ENV === "production" ? " HttpOnly; Secure;" : "";
+        res.header("Set-Cookie", `token=${token};${security} Expires=${new Date(expires).toUTCString()}; Path=/`);
         return res.success("User logged in successfully");
     } catch (error) {
         console.error(`Something went wrong whilst logging in a user : ${error.message}`);
