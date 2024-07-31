@@ -1,9 +1,15 @@
 declare global {
     namespace Express {
         interface Request {
-            /** The id of the user, retrieved from the JWT `Authorization` header. */
+            /**
+             * The id of the user, retrieved from the `Authorization` header.
+             * @description Is `null` if the JWT is `null` or invalid.
+             */
             userId: string | null;
-            /** @description Retrieved from the `Authorization` header. */
+            /**
+             * The JSON Web Token, retrieved from the `Authorization` header.
+             * @description Is `null` if the header is `undefined`.
+             */
             jwt: string | null;
         }
         interface Response {

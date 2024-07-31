@@ -1,11 +1,16 @@
-import { authenticate } from '../services/jwt.js';
+import { getUserId } from '../services/jwt.js';
 import type { Request, Response, NextFunction } from 'express';
 
-export const expressModuleAugmentations = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * ! MUST BE THE FIRST MIDDLEWARE, AS OTHER MIDDLEWARES AND ROUTES RELY ON IT.
+ * 
+ * Extends express `Request` and `Response` objects with convenient helpers.
+ */
+export const extendExpress = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     req.jwt = authHeader ? token(authHeader) : null;
-    req.userId = req.jwt ? await authenticate(req.jwt) : null;
+    req.userId = req.jwt ? await getUserId(req.jwt) : null;
     
     res.success = (message: string, data?: unknown) => {
         if (data) {

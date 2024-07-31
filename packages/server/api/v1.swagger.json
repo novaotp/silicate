@@ -39,7 +39,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Registered the user successfully",
                         "content": {
                             "application/json": {
@@ -359,6 +359,11 @@
         },
         "/api/v1/memos": {
             "summary": "Handling memos.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/JWTAuthHeader"
+                }
+            ],
             "get": {
                 "tags": ["Memos"],
                 "parameters": [
@@ -517,7 +522,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Created the memo successfully.",
                         "content": {
                             "application/json": {
@@ -615,6 +620,11 @@
         },
         "/api/v1/memos/{id}": {
             "summary": "Handling a single memo.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/JWTAuthHeader"
+                }
+            ],
             "get": {
                 "tags": ["Memos"],
                 "responses": {
@@ -867,7 +877,7 @@
             "delete": {
                 "tags": ["Memos"],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Deleted the memo successfully.",
                         "content": {
                             "application/json": {
@@ -931,6 +941,349 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/v1/users/me": {
+            "description": "Handling endpoints for the current user.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/JWTAuthHeader"
+                }
+            ],
+            "get": {
+                "tags": ["User"],
+                "description": "Retrieves the data for the current user.",
+                "responses": {
+                    "200": {
+                        "description": "Retrieved user data successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrieved user data successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "234jir9hq-fq4fu23-2fq234fq234-24f2q4f2f"
+                                                },
+                                                "firstName": {
+                                                    "type": "string",
+                                                    "example": "John"
+                                                },
+                                                "lastName": {
+                                                    "type": "string",
+                                                    "example": "Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.doe@chalari.com"
+                                                },
+                                                "bio": {
+                                                    "type": "string",
+                                                    "example": "Hey, I'm John Doe. Currently studying at XXXX."
+                                                },
+                                                "avatarPath": {
+                                                    "type": "string",
+                                                    "example": "/uploads/avatars/nf2394rh024h0182h4t.png"
+                                                },
+                                                "joinedOn": {
+                                                    "type": "string",
+                                                    "example": "2024-08-15T15:00:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal Server Error."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["User"],
+                "description": "Updates the current user's data.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@chalari.com"
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "example": "I am John Doe."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated user data successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Updated user data successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "234jir9hq-fq4fu23-2fq234fq234-24f2q4f2f"
+                                                },
+                                                "firstName": {
+                                                    "type": "string",
+                                                    "example": "John"
+                                                },
+                                                "lastName": {
+                                                    "type": "string",
+                                                    "example": "Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.doe@chalari.com"
+                                                },
+                                                "bio": {
+                                                    "type": "string",
+                                                    "example": "Hey, I'm John Doe. Currently studying at XXXX."
+                                                },
+                                                "avatarPath": {
+                                                    "type": "string",
+                                                    "example": "/uploads/avatars/nf2394rh024h0182h4t.png"
+                                                },
+                                                "joinedOn": {
+                                                    "type": "string",
+                                                    "example": "2024-08-15T15:00:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal Server Error."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["User"],
+                "description": "Deletes the current user permanently.",
+                "responses": {
+                    "200": {
+                        "description": "Deleted user successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deleted user successfully."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal Server Error."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "JWTAuthHeader": {
+                "name": "Authorization",
+                "in": "header",
+                "description": "The JWT for authorizing the request.",
+                "schema": {
+                    "type": "string",
+                    "example": "<your_token_here>"
+                },
+                "required": true
             }
         }
     }

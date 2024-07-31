@@ -31,7 +31,7 @@ model User {
     password   String   @db.VarChar(255)
     bio        String   @default("") @db.Text()
     avatarPath String? @map("avatar_path")
-    createdAt  DateTime @default(now()) @map("created_at")
+    joinedOn  DateTime @default(now()) @map("created_at")
     updatedAt  DateTime @updatedAt@map("updated_at")
     // The relation Memo -> User
     memos      Memo[]

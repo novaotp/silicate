@@ -23,9 +23,9 @@ export const sign = async (payload: { userId: string }) => {
 };
 
 /**
- * Verifies the JWT and returns the payload.
- * @param token The JWT token to verify
- * @returns The JWT payload after verification
+ * Verifies a JSON Web Token.
+ * @returns The payload inside the JSON Web Token.
+ * @throws Throws an error if the token is invalid.
  */
 export const verify = async (token: string): Promise<JWTPayload & { userId: string }> => {
     const verified = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
@@ -33,8 +33,8 @@ export const verify = async (token: string): Promise<JWTPayload & { userId: stri
     return verified.payload as unknown as JWTPayload & { userId: string };
 };
 
-/** Authenticates a JWT and returns the user's id. */
-export const authenticate = async (jwt: string): Promise<string | null> => {
+/** Returns the user's id or `null` if the JSON Web Token is invalid. */
+export const getUserId = async (jwt: string): Promise<string | null> => {
     try {
         const userId = (await verify(jwt)).userId;
 

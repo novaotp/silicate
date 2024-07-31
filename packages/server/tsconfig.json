@@ -18,7 +18,8 @@
         "resolveJsonModule": true,
         "paths": {
             "$common/*": ["../common/*"],
-            "$services/*": ["./src/services/*"]
+            "$services/*": ["./src/services/*"],
+            "$middlewares/*": ["./src/middlewares/*"]
         },
         "outDir": "build",
         "plugins": [
