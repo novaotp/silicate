@@ -1,8 +1,8 @@
-import type { Memo } from "$common/models/memo";
-import type { ApiResponseWithData } from "$common/types/api-response";
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { getPreference } from "$utils/capacitor-preferences";
+import { getJWTFromCookies } from "$utils/jwt";
 import type { PageLoad } from "./$types";
+import type { ApiResponseWithData } from "$common/types/api-response";
+import type { Memo } from "$common/models/memo";
 
 export const load: PageLoad = async ({ url }) => {
     const search = url.searchParams.get("search") ?? "";
@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ url }) => {
 };
 
 const getCategories = async (search: string) => {
-    const token = await getPreference<{ jwt: string, expires: Date }>('token', { parse: true });
+    const token = getJWTFromCookies();
     
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/categories?search=${search}`, {
         method: "GET",
@@ -26,12 +26,13 @@ const getCategories = async (search: string) => {
     });
 
     const result: ApiResponseWithData<string[]> = await response.json();
+    console.log(result)
 
     return result.success ? result.data : undefined;
 }
 
 const getMemos = async ({ search, category }: { search: string, category: string }) => {
-    const token = await getPreference<{ jwt: string, expires: Date }>('token', { parse: true });
+    const token = getJWTFromCookies();
     
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos?search=${search}&category=${category}`, {
         method: "GET",
