@@ -6,9 +6,9 @@
     },
     "paths": {
         "/api/v1/authentication/register": {
-            "summary": "Registers a new user in the database.",
             "post": {
                 "tags": ["Authentication"],
+                "summary": "Registers a new user in the database.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -130,6 +130,7 @@
             "summary": "Logs a new user.",
             "post": {
                 "tags": ["Authentication"],
+                "summary": "Verifies the given credentials and sets a cookie on success.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -249,9 +250,9 @@
             }
         },
         "/api/v1/authentication/validate": {
-            "summary": "Validates a JWT.",
             "post": {
                 "tags": ["Authentication"],
+                "summary": "Validates a JWT's validity.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -357,6 +358,80 @@
                 }
             }
         },
+        "/api/v1/memos/categories": {
+            "summary": "Fetch all categories.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/JWTAuthHeader"
+                }
+            ],
+            "get": {
+                "tags": ["Memos"],
+                "summary": "Fetch all the categories.",
+                "parameters": [
+                    {  
+                        "name": "search",
+                        "in": "query",
+                        "description": "Filter the categories via the memo titles (case-insensitive) to avoid fetching unnecessary categories. Don't set or set an empty string to omit.",
+                        "schema": {
+                            "type": "string",
+                            "example": "Memo",
+                            "default": ""
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved the categories successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrieved the categories successfully."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst retrieving the categories."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/memos": {
             "summary": "Handling memos.",
             "parameters": [
@@ -366,6 +441,7 @@
             ],
             "get": {
                 "tags": ["Memos"],
+                "summary": "Fetch all the memos.",
                 "parameters": [
                     {  
                         "name": "search",
@@ -489,6 +565,7 @@
             },
             "post": {
                 "tags": ["Memos"],
+                "summary": "Create a new memo.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -627,6 +704,7 @@
             ],
             "get": {
                 "tags": ["Memos"],
+                "summary": "Fetch a memo via its id.",
                 "responses": {
                     "200": {
                         "description": "Retrieved the memo successfully.",
@@ -725,6 +803,7 @@
             },
             "put": {
                 "tags": ["Memos"],
+                "summary": "Updates a memo via its id.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -876,6 +955,7 @@
             },
             "delete": {
                 "tags": ["Memos"],
+                "summary": "Delete a memo via its id.",
                 "responses": {
                     "204": {
                         "description": "Deleted the memo successfully.",
@@ -952,6 +1032,7 @@
             ],
             "get": {
                 "tags": ["User"],
+                "summary": "Fetch the user's data.",
                 "description": "Retrieves the data for the current user.",
                 "responses": {
                     "200": {
@@ -1054,6 +1135,7 @@
             },
             "patch": {
                 "tags": ["User"],
+                "summary": "Updates the user's data.",
                 "description": "Updates the current user's data.",
                 "requestBody": {
                     "content": {
@@ -1204,6 +1286,7 @@
             },
             "delete": {
                 "tags": ["User"],
+                "summary": "Deletes the user permanently.",
                 "description": "Deletes the current user permanently.",
                 "responses": {
                     "200": {

@@ -212,3 +212,37 @@ v1.delete<'/:id(\\d+$)', { id: string }, unknown, unknown, Record<string, never>
         }
     }
 );
+
+v1.get<"/categories", Record<string, never>, unknown, unknown, { search?: string }>("/categories", async (req, res) => {
+    try {
+        const { search = "" } = req.query;
+
+        const categories = (await prisma.memo.findMany({
+            select: {
+                category: true
+            },
+            where: {
+                category: {
+                    not: null
+                },
+                ...(search && {
+                    title: {
+                        contains: search,
+                        mode: "insensitive"
+                    }
+                })
+            },
+            orderBy: {
+                category: {
+                    sort: "asc"
+                }
+            },
+            distinct: ['category']
+        })).map(row => row.category);
+
+        return res.success("Retrieved categories successfully", categories);
+    } catch (err) {
+        console.error(`Something went wrong whilst retrieving categories : ${err.message}`);
+        return res.serverError();
+    }
+});
