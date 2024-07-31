@@ -1,23 +1,22 @@
-import { getPreference } from "$utils/capacitor-preferences";
 import { redirect } from "@sveltejs/kit";
-import type { LayoutLoad } from "./$types";
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import type { ApiResponse } from "$common/types/api-response";
 import { buildUrl } from "$utils/url";
-import { Preferences } from "@capacitor/preferences";
+import { getJWTFromCookies } from "$utils/jwt";
+import type { LayoutLoad } from "./$types";
+import type { User } from "$common/models/user";
+import type { ApiResponse, ApiResponseWithData } from "$common/types/api-response";
 
 export const load: LayoutLoad = async () => {
-    const keys = (await Preferences.keys()).keys;
-    if (!keys.includes("token")) {
+    const token = getJWTFromCookies();
+    if (!token) {
         throw redirect(303, buildUrl("/login", { message: "Connectez-vous pour accéder à l'application." }));
     }
 
-    const token = await getPreference<{ jwt: string, expires: Date }>('token', { parse: true });
     let response: ApiResponse;
     try {
-        const _response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/auth/validate`, {
+        const _response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/authentication/validate`, {
             method: "POST",
-            body: JSON.stringify({ jwt: token.jwt }),
+            body: JSON.stringify({ jwt: token }),
             headers: {
                 "accept": "application/json",
                 "content-type": "application/json"
@@ -34,5 +33,23 @@ export const load: LayoutLoad = async () => {
         throw redirect(303, buildUrl("/login", { message: response.message }));
     }
 
-    return;
+    return {
+        user: await getUser()
+    };
 };
+
+const getUser = async () => {
+    const token = getJWTFromCookies();
+
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/me`, {
+        method: "GET",
+        headers: {
+            "accept": "application/json",
+            "authorization": `Bearer ${token}`
+        }
+    });
+
+    const result: ApiResponseWithData<User> = await response.json();
+
+    return result.success ? result.data : undefined;
+}

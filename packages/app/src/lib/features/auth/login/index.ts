@@ -9,7 +9,7 @@ export type LoginResponse = ApiResponseWithData<{ jwt: string; expires: number }
  * @param password The password of the account to log into.
  */
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-	const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/auth/login`, {
+	const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/authentication/login`, {
 		method: 'POST',
 		body: JSON.stringify({
 			email,
@@ -18,7 +18,8 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 		headers: {
 			accept: 'application/json',
 			'content-type': 'application/json'
-		}
+		},
+        credentials: 'include',
 	});
 	
     return await response.json();

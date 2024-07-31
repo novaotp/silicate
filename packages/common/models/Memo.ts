@@ -1,13 +1,3 @@
-export interface Memo {
-    id: number;
-    category: string | null;
-    title: string;
-    content: string;
-    pinned: boolean,
-    /** A parsable date. */
-    lastChange: string,
-}
+import type { Memo as PrismaMemo } from "../../server/node_modules/@prisma/client/default"
 
-export interface RawCategory {
-    category: string | null
-}
+export type Memo = Omit<PrismaMemo, "creatorId" | "createdAt">;

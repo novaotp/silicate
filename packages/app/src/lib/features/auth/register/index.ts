@@ -11,7 +11,7 @@ export type RegisterResponse = ApiResponse;
  * @param password The password of the account to log into.
  */
 export const register = async (firstName: string, lastName: string, email: string, password: string): Promise<RegisterResponse> => {
-	const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/auth/register`, {
+	const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/authentication/register`, {
         method: "POST",
         body: JSON.stringify({
             firstName,

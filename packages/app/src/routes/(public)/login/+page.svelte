@@ -36,14 +36,6 @@
 			return addToast({ type: 'error', message: 'Données erronées.' });
 		}
 
-		await Preferences.set({
-			key: 'token',
-			value: JSON.stringify({
-				jwt: response.data.jwt,
-				expirationDate: new Date(response.data.expires)
-			})
-		});
-
 		addToast({ type: 'success', message: 'Connexion réussie.' });
 		return goto('/');
 	};
