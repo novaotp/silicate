@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { page } from '$app/stores';
-	import { getPreference } from '$utils/capacitor-preferences';
 	import { createMemo, fetchMemos } from '../requests';
 	import { changeSearchParams } from '$utils/change-search-params';
 	import { Button } from '$ui/forms';
 	import { addToast } from '$stores/toast';
+	import { getJWTFromCookies } from '$utils/jwt';
 	import type { Writable } from 'svelte/store';
 	import type { Memo } from '$common/models/memo';
 	import type { ApiResponseWithData } from '$common/types/api-response';
@@ -16,11 +16,11 @@
 	$: category = $page.url.searchParams.get('category') ?? '';
 
 	const onCreate = async () => {
-		const token = await getPreference<{ jwt: string; expires: string }>('token');
+		const token = getJWTFromCookies();
 
-		let response: ApiResponseWithData<number>;
+		let response: ApiResponseWithData<Memo>;
 		try {
-			response = await createMemo(token.jwt);
+			response = await createMemo(token!);
 		} catch (error) {
 			console.error(error);
 			return addToast({ type: 'error', message: 'Une erreur est survenue.' });
@@ -32,7 +32,7 @@
 
 		let memosResponse: ApiResponseWithData<Memo[]>;
 		try {
-			memosResponse = await fetchMemos(token.jwt, search, category);
+			memosResponse = await fetchMemos(token!, search, category);
 		} catch (error) {
 			console.error(error);
 			return addToast({ type: 'error', message: 'Une erreur est survenue.' });
@@ -44,7 +44,7 @@
 
 		$memos = memosResponse.data;
 		addToast({ type: 'success', message: 'Mémo ajouté avec succès.' });
-		return changeSearchParams('id', response.data);
+		return changeSearchParams('id', response.data.id);
 	};
 </script>
 

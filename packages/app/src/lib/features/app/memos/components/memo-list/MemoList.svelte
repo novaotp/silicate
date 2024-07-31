@@ -9,8 +9,8 @@
 	const memos = getContext<Writable<Memo[]>>('memos');
 
 	$: search = $page.url.searchParams.get('search');
-	$: pinnedMemos = $memos.filter((memo) => memo.pinned);
-	$: unpinnedMemos = $memos.filter((memo) => !memo.pinned);
+	$: pinnedMemos = $memos.filter((memo) => memo.isPinned);
+	$: unpinnedMemos = $memos.filter((memo) => !memo.isPinned);
 </script>
 
 <div class="relative w-[min(100%,800px)] h-full mx-auto flex flex-col gap-5">

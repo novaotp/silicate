@@ -37,12 +37,12 @@ export const fetchMemo = async (jwt: string, id: string): Promise<ApiResponseWit
     return await response.json();
 };
 
-export const createMemo = async (jwt: string): Promise<ApiResponseWithData<number>> => {
+export const createMemo = async (jwt: string): Promise<ApiResponseWithData<Memo>> => {
     const defaultMemo: Partial<Memo> = {
         title: 'Mon nouveau mémo',
         content: "",
         category: null,
-        pinned: false
+        isPinned: false
     };
 
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos`, {
@@ -58,7 +58,7 @@ export const createMemo = async (jwt: string): Promise<ApiResponseWithData<numbe
     return await response.json();
 }
 
-export const updateMemo = async (jwt: string, id: number, data: Omit<Memo, "id" | "lastChange">): Promise<ApiResponse> => {
+export const updateMemo = async (jwt: string, id: string, data: Omit<Memo, "id" | "lastChange">): Promise<ApiResponseWithData<Memo>> => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -72,7 +72,7 @@ export const updateMemo = async (jwt: string, id: number, data: Omit<Memo, "id" 
     return await response.json();
 }
 
-export const patchMemo = async (jwt: string, id: number, data: Partial<Omit<Memo, "id" | "lastChange">>): Promise<ApiResponse> => {
+export const patchMemo = async (jwt: string, id: string, data: Partial<Omit<Memo, "id" | "lastChange">>): Promise<ApiResponseWithData<Memo>> => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
@@ -86,12 +86,12 @@ export const patchMemo = async (jwt: string, id: number, data: Partial<Omit<Memo
     return await response.json();
 }
 
-export const deleteMemo = async (jwt: string, id: number): Promise<ApiResponse> => {
+export const deleteMemo = async (jwt: string, id: string): Promise<ApiResponse> => {
     const response = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/memos/${id}`, {
         method: 'DELETE',
         headers: {
             "accept": 'application/json',
-            authorization: jwt
+            authorization: `Bearer ${jwt}`
         }
     });
     

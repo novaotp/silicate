@@ -26,7 +26,6 @@ const getCategories = async (search: string) => {
     });
 
     const result: ApiResponseWithData<string[]> = await response.json();
-    console.log(result)
 
     return result.success ? result.data : undefined;
 }

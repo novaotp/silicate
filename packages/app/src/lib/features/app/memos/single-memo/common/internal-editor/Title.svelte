@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { getContext, onMount } from "svelte";
-    import { getPreference } from "$utils/capacitor-preferences";
+	import { page } from "$app/stores";
 	import { patchMemo } from "$features/app/memos/requests";
 	import { addToast } from "$stores/toast";
+	import { getJWTFromCookies } from "$utils/jwt";
 	import type { ChangeEventHandler } from "svelte/elements";
 	import type { Writable } from "svelte/store";
 	import type { Memo } from "$common/models/memo";
 	import type { ApiResponse } from "$common/types/api-response";
-	import { page } from "$app/stores";
     
     const memos = getContext<Writable<Memo[]>>('memos');
     
     let timer: NodeJS.Timeout;
     let internalTitle: string = "";
 
-    $: memoId = Number($page.url.searchParams.get('id')!);
+    $: memoId = $page.url.searchParams.get('id')!;
     $: memo = $memos.find(m => m.id === memoId);
     
     /**
@@ -44,8 +44,8 @@
         }, 750);
     }
 
-    const changeTitle = async (id: number, newTitle: string) => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token');
+    const changeTitle = async (id: string, newTitle: string) => {
+        const token = getJWTFromCookies();
 
         const oldTitle = $memos.find(m => m.id === id)!.title;
 
@@ -54,7 +54,7 @@
 
         let response: ApiResponse;
         try {
-            response = await patchMemo(token.jwt, id, { title: newTitle });
+            response = await patchMemo(token!, id, { title: newTitle });
         } catch (error) {
             // Optimistic update : revert
             $memos = $memos.map(m => m.id === id ? { ...m, title: oldTitle } : m);

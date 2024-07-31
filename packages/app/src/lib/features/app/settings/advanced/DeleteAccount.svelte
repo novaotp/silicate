@@ -1,22 +1,22 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import IconHeartBroken from '@tabler/icons-svelte/icons/heart-broken';
-	import { getPreference } from '$utils/capacitor-preferences';
 	import { addToast } from '$stores/toast';
-	import { deleteAccount } from '../account/requests';
+	import { getJWTFromCookies } from '$utils/jwt';
 	import { Button, Label } from '$ui/forms';
 	import { Overlay } from '$ui/layout';
 	import { Confirm } from '$ui/modals';
+	import { deleteAccount } from '../account/requests';
 	import type { ApiResponse } from '$common/types/api-response';
 
 	let showDeleteAccount = false;
 
 	const destroyAccount = async () => {
-		const token = await getPreference<{ jwt: string; expires: string }>('token', { parse: true });
+		const token = getJWTFromCookies();
 
 		let response: ApiResponse;
 		try {
-			response = await deleteAccount(token.jwt);
+			response = await deleteAccount(token!);
 		} catch (error) {
 			console.error(error);
 			return addToast({ type: 'error', message: 'Une erreur est survenue.' });

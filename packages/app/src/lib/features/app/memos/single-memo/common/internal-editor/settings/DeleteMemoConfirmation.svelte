@@ -3,8 +3,8 @@
 	import { page } from "$app/stores";
     import { deleteMemo } from "$features/app/memos/requests";
 	import { addToast } from "$stores/toast";
-	import { getPreference } from "$utils/capacitor-preferences";
 	import { changeSearchParams } from "$utils/change-search-params";
+	import { getJWTFromCookies } from "$utils/jwt";
 	import { Button } from "$ui/forms";
 	import { Overlay } from "$ui/layout";
 	import { Confirm } from "$ui/modals";
@@ -16,15 +16,15 @@
 
     const memos = getContext<Writable<Memo[]>>('memos');
 
-    $: memoId = Number($page.url.searchParams.get('memoId')!);
+    $: memoId = $page.url.searchParams.get('memoId')!;
     $: memo = $memos.find(m => m.id === memoId)!;
 
     const destroyMemo = async () => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token');
+        const token = getJWTFromCookies();
         
         let response: ApiResponse;
         try {
-            response = await deleteMemo(token.jwt, memoId);
+            response = await deleteMemo(token!, memoId);
         } catch (error) {
             console.error(error);
             return addToast({ type: "error", message: "Une erreur est survenue." });

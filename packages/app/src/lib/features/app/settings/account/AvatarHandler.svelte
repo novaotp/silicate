@@ -11,6 +11,7 @@
 	import type { User } from '$common/models/user';
 	import type { ApiResponse, ApiResponseWithData } from '$common/types/api-response';
 	import type { CropArea } from './types';
+	import { getJWTFromCookies } from '$utils/jwt';
 
     const user = getContext<Writable<User>>('user');
 
@@ -29,7 +30,7 @@
     };
 
     const editAvatar = async () => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token', { parse: true });
+        const token = getJWTFromCookies();
 
         if (!avatarFile) {
             return addToast({ type: "error", message: "Sélectionnez une image..." });
@@ -37,7 +38,7 @@
 
         let response: ApiResponseWithData<string>;
         try {
-            response = await updateAvatar(token.jwt, avatarFile, cropArea);
+            response = await updateAvatar(token!, avatarFile, cropArea);
         } catch (error) {
             console.error(error);
 			return addToast({ type: "error", message: "Une erreur est survenue." });
@@ -48,20 +49,20 @@
         }
 
         addToast({ type: 'success', message: response.message });
-        $user.avatar = response.data;
+        $user.avatarPath = response.data;
         avatarFile = null;
     };
 
     const destroyAvatar = async () => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token', { parse: true });
+        const token = getJWTFromCookies();
 
-        if ($user.avatar === null) {
+        if ($user.avatarPath === null) {
             return addToast({ type: "error", message: "Impossible de supprimer un avatar qui n'existe pas..." });
         }
 
         let response: ApiResponse;
         try {
-            response = await deleteAvatar(token.jwt);
+            response = await deleteAvatar(token!);
         } catch (error) {
             console.error(error);
 			return addToast({ type: "error", message: "Une erreur est survenue." });
@@ -72,7 +73,7 @@
         }
 
         addToast({ type: 'success', message: response.message });
-        $user.avatar = null;
+        $user.avatarPath = null;
     };
 </script>
 
@@ -122,7 +123,7 @@
             </Overlay>
         {/await}
     {/if}
-    {#if $user.avatar}
+    {#if $user.avatarPath}
         <div class="flex flex-col gap-[10px]">
             <Button.Normal on:click={() => avatarFileInputNode.click()}>
                 Modifier mon avatar

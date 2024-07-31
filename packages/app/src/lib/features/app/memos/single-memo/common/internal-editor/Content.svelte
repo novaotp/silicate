@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getContext, onMount } from "svelte";
+	import { getContext } from "svelte";
 	import { page } from "$app/stores";
 	import { patchMemo } from "$features/app/memos/requests";
 	import { addToast } from "$stores/toast";
-	import { getPreference } from "$utils/capacitor-preferences";
+	import { getJWTFromCookies } from "$utils/jwt";
 	import { Editor } from "./editor";
 	import type { Writable } from "svelte/store";
 	import type { Memo } from "$common/models/memo";
@@ -13,7 +13,7 @@
     
     let timer: NodeJS.Timeout;
 
-    $: memoId = Number($page.url.searchParams.get('id')!);
+    $: memoId = $page.url.searchParams.get('id')!;
     $: memo = $memos.find(m => m.id === memoId);
 
     const onContentChange = (event: CustomEvent<string>) => {
@@ -32,8 +32,8 @@
         }, 750);
     }
 
-    const changeContent = async (id: number, newContent: string) => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token');
+    const changeContent = async (id: string, newContent: string) => {
+        const token = getJWTFromCookies();
 
         const oldContent = $memos.find(m => m.id === id)!.content;
 
@@ -42,7 +42,7 @@
 
         let response: ApiResponse;
         try {
-            response = await patchMemo(token.jwt, id, { content: newContent });
+            response = await patchMemo(token!, id, { content: newContent });
         } catch (error) {
             // Optimistic update : revert
             $memos = $memos.map(m => m.id === id ? { ...m, content: oldContent } : m);

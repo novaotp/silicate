@@ -1,8 +1,8 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     import { fly } from 'svelte/transition';
-	import { getPreference } from '$utils/capacitor-preferences';
     import { addToast } from '$stores/toast';
+	import { getJWTFromCookies } from '$utils/jwt';
 	import { updateAccount } from './requests';
 	import { Button, Input, Label, TextArea } from '$ui/forms';
     import PasswordChanger from './PasswordChanger.svelte';
@@ -22,14 +22,14 @@
         $user.bio !== replicaUser.bio;
 
     const editAccount = async () => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token', { parse: true });
+        const token = getJWTFromCookies();
 
         // Nothing has changed
         if (!showSaveChanges) return;
 
         let response: ApiResponse;
         try {
-            response = await updateAccount(token.jwt, {
+            response = await updateAccount(token!, {
                 firstName: replicaUser.firstName,
                 lastName: replicaUser.lastName,
                 email: replicaUser.email,

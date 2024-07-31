@@ -5,22 +5,22 @@
 	import { Button } from "$ui/forms";
 	import { deleteMemo } from "../../requests";
 	import { addToast } from "$stores/toast";
-	import { getPreference } from "$utils/capacitor-preferences";
 	import { changeSearchParams } from "$utils/change-search-params";
+	import { getJWTFromCookies } from "$utils/jwt";
 	import type { Writable } from "svelte/store";
 	import type { Memo } from "$common/models/memo";
 	import type { ApiResponse } from "$common/types/api-response";
 
     const memos = getContext<Writable<Memo[]>>('memos');
 
-    $: memoId = Number($page.url.searchParams.get('memoId')!);
+    $: memoId = $page.url.searchParams.get('memoId')!;
 
     const destroyMemo = async () => {
-        const token = await getPreference<{ jwt: string, expires: string }>('token');
+        const token = getJWTFromCookies();
         
         let response: ApiResponse;
         try {
-            response = await deleteMemo(token.jwt, memoId);
+            response = await deleteMemo(token!, memoId);
         } catch (error) {
             console.error(error);
             return addToast({ type: "error", message: "Une erreur est survenue." });

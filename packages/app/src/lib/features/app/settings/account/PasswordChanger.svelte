@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { addToast } from '$stores/toast';
 	import IconLock from '@tabler/icons-svelte/icons/lock';
-	import { updatePassword } from './requests';
-	import { getPreference } from '$utils/capacitor-preferences';
+	import { getJWTFromCookies } from '$utils/jwt';
 	import { Button, Input, Label } from '$ui/forms';
 	import { Overlay } from '$ui/layout';
 	import { Confirm } from '$ui/modals';
+	import { updatePassword } from './requests';
 	import type { EventHandler } from 'svelte/elements';
 	import type { ApiResponse } from '$common/types/api-response';
 
 	let showPasswordChanger: boolean = false;
 
 	const editPassword: EventHandler<SubmitEvent, HTMLFormElement> = async (event) => {
-		const token = await getPreference<{ jwt: string; expires: string }>('token', { parse: true });
+		const token = getJWTFromCookies();
         const formData = new FormData(event.currentTarget);
 
         const oldPassword = formData.get('oldPassword')?.toString();
@@ -29,7 +29,7 @@
 
 		let response: ApiResponse;
 		try {
-			response = await updatePassword(token.jwt, oldPassword, newPassword);
+			response = await updatePassword(token!, oldPassword, newPassword);
 		} catch (error) {
 			console.error(error);
 			return addToast({ type: 'error', message: 'Une erreur est survenue.' });
