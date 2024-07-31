@@ -125,93 +125,141 @@ v1.post('/', async (req, res) => {
     }
 });
 
-v1.put<'/:id(\\d+$)', { id: string }, unknown, unknown, Record<string, never>, Record<string, unknown>>(
-    '/:id(\\d+$)',
-    async (req, res) => {
+v1.put<'/:id', { id: string }>('/:id', async (req, res) => {
+    try {
+        const body = req.body;
+
+        // Validate body.
         try {
-            const body = req.body;
-
-            // Validate body.
-            try {
-                typia.assertGuardEquals<MemoBody>(body);
-            } catch (error) {
-                const typiaError = error as typia.TypeGuardError;
-                return res.unprocessableEntityError(
-                    `Bad request on ${typiaError.path} : received ${typiaError.value}, expected ${typiaError.expected}`
-                );
-            }
-
-            const doesMemoExist = (await prisma.memo.findFirst({
-                where: {
-                    id: req.params.id,
-                    creatorId: req.userId!
-                }
-            })) !== null;
-
-            // Only update if the memo exists.
-            if (!doesMemoExist) {
-                return res.notFoundError("Memo with given id not found.")
-            }
-
-            const memo = await prisma.memo.update({
-                data: {
-                    category: body.category,
-                    title: body.title,
-                    content: body.content,
-                    isPinned: body.isPinned
-                },
-                where: {
-                    id: req.params.id,
-                    creatorId: req.userId!
-                },
-                select: {
-                    id: true,
-                    category: true,
-                    title: true,
-                    content: true,
-                    isPinned: true,
-                    updatedAt: true
-                },
-            });
-
-            return res.success("Memo updated successfully", memo);
-        } catch (err) {
-            console.error(`Something went wrong whilst updating a memo : ${err.message}`);
-            return res.serverError();
+            typia.assertGuardEquals<MemoBody>(body);
+        } catch (error) {
+            const typiaError = error as typia.TypeGuardError;
+            return res.unprocessableEntityError(
+                `Bad request on ${typiaError.path} : received ${typiaError.value}, expected ${typiaError.expected}`
+            );
         }
-    }
-);
 
-v1.delete<'/:id(\\d+$)', { id: string }, unknown, unknown, Record<string, never>, Record<string, never>>(
-    "/:id(\\d+$)",
-    async (req, res) => {
+        const doesMemoExist = (await prisma.memo.findFirst({
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            }
+        })) !== null;
+
+        // Only update if the memo exists.
+        if (!doesMemoExist) {
+            return res.notFoundError("Memo with given id not found.")
+        }
+
+        const memo = await prisma.memo.update({
+            data: {
+                category: body.category,
+                title: body.title,
+                content: body.content,
+                isPinned: body.isPinned
+            },
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            },
+            select: {
+                id: true,
+                category: true,
+                title: true,
+                content: true,
+                isPinned: true,
+                updatedAt: true
+            },
+        });
+
+        return res.success("Memo updated successfully", memo);
+    } catch (err) {
+        console.error(`Something went wrong whilst updating a memo : ${err.message}`);
+        return res.serverError();
+    }
+});
+
+v1.patch<'/:id', { id: string }>('/:id', async (req, res) => {
+    try {
+        const body = req.body;
+
+        // Validate body.
         try {
-            const doesMemoExist = (await prisma.memo.findFirst({
-                where: {
-                    id: req.params.id,
-                    creatorId: req.userId!
-                }
-            })) !== null;
-
-            // Only delete if the memo exists.
-            if (!doesMemoExist) {
-                return res.notFoundError("Memo with given id not found.")
-            }
-
-            await prisma.memo.delete({
-                where: {
-                    id: req.params.id,
-                    creatorId: req.userId!
-                }
-            });
-    
-            return res.success("Memo deleted successfully");
-        } catch (err) {
-            console.error(`Something went wrong whilst deleting a memo : ${err.message}`);
-            return res.serverError();
+            typia.assertGuardEquals<Partial<MemoBody>>(body);
+        } catch (error) {
+            const typiaError = error as typia.TypeGuardError;
+            return res.unprocessableEntityError(
+                `Bad request on ${typiaError.path} : received ${typiaError.value}, expected ${typiaError.expected}`
+            );
         }
+
+        const doesMemoExist = (await prisma.memo.findFirst({
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            }
+        })) !== null;
+
+        // Only partially update if the memo exists.
+        if (!doesMemoExist) {
+            return res.notFoundError("Memo with given id not found.")
+        }
+
+        const memo = await prisma.memo.update({
+            data: {
+                category: body.category,
+                title: body.title,
+                content: body.content,
+                isPinned: body.isPinned
+            },
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            },
+            select: {
+                id: true,
+                category: true,
+                title: true,
+                content: true,
+                isPinned: true,
+                updatedAt: true
+            },
+        });
+
+        return res.success("Memo partially updated successfully", memo);
+    } catch (err) {
+        console.error(`Something went wrong whilst partially updating a memo : ${err.message}`);
+        return res.serverError();
     }
-);
+});
+
+v1.delete<'/:id', { id: string }>("/:id", async (req, res) => {
+    try {
+        const doesMemoExist = (await prisma.memo.findFirst({
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            }
+        })) !== null;
+
+        // Only delete if the memo exists.
+        if (!doesMemoExist) {
+            return res.notFoundError("Memo with given id not found.")
+        }
+
+        await prisma.memo.delete({
+            where: {
+                id: req.params.id,
+                creatorId: req.userId!
+            }
+        });
+
+        return res.success("Memo deleted successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst deleting a memo : ${err.message}`);
+        return res.serverError();
+    }
+});
 
 v1.get<"/categories", Record<string, never>, unknown, unknown, { search?: string }>("/categories", async (req, res) => {
     try {

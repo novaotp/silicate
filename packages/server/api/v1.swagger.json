@@ -953,6 +953,156 @@
                     }
                 }
             },
+            "patch": {
+                "tags": ["Memos"],
+                "summary": "Partially updates a memo via its id.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Ideas",
+                                        "default": null
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My modified memo"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "The content of my modified memo !",
+                                        "default": ""
+                                    },
+                                    "isPinned": {
+                                        "type": "boolean",
+                                        "example": false,
+                                        "default": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Partially updated the memo successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Partially updated the memo successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "qwg9efb-1r2egqw87e9f-1238rg2f-12f7h2"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Ideas"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "The content of my modified memo !"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is my new memo !!"
+                                                },
+                                                "isPinned": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "ISO-8601",
+                                                    "example": "2024-08-15T12:30:00.000Z"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["success", "message", "data"]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Memo with given id not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Memo with given id not found."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The body format doesn't match the expected format.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request format."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong whilst updating the memo."
+                                        }
+                                    },
+                                    "required": ["success", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "delete": {
                 "tags": ["Memos"],
                 "summary": "Delete a memo via its id.",
