@@ -27,7 +27,7 @@
             }
         ]
     },
-    "include": ["../common/**/*", "src/**/*.ts"],
+    "include": ["../common/**/*", "src/**/*.ts", "api/**/*"],
     "exclude": ["./node_modules/**"],
     "ts-node": {
         "experimentalSpecifierResolution": "node",

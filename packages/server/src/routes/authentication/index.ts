@@ -1,7 +1,6 @@
-import { Router } from "express";
 import { v1 } from "./v1.js";
 
 /** The router instance for all authentication-related routes. */
-export const authenticationRouter = Router();
-
-authenticationRouter.use("/v1/authentication", v1);
+export const authenticationRouter = {
+    v1
+}

@@ -2,6 +2,10 @@ import { prisma } from '$services/db.js';
 import { Router } from 'express';
 import typia from 'typia';
 
+/**
+ * Routes are prefixed with /api/v1/memos
+ */
+
 export const v1 = Router();
 
 v1.get<'/', Record<string, never>, unknown, unknown, { category?: string; search?: string }, Record<string, unknown>>(

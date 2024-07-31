@@ -1,5 +1,5 @@
 import { prisma } from "$services/db.js";
-import { sign } from "$services/jwt.js";
+import { sign, verify } from "$services/jwt.js";
 import { compare, hash } from "bcrypt";
 import { Router } from "express";
 import typia, { type tags } from "typia";
@@ -97,6 +97,35 @@ v1.post("/login", async (req, res) => {
         return res.success("User logged in successfully");
     } catch (error) {
         console.error(`Something went wrong whilst logging in a user : ${error.message}`);
+        return res.serverError();
+    }
+});
+
+v1.post("/validate", async (req, res) => {
+    try {
+        const { jwt } = req.body;
+        if (!jwt) {
+            return res.status(401).send({ success: false, message: "Invalid token" });
+        }
+
+        const userId = (await verify(jwt)).userId;
+        if (!userId) {
+            return res.status(401).send({ success: false, message: "Invalid token" });
+        }
+
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId
+            }  
+        });
+
+        if (!user) {
+            return res.notFoundError("User not found");
+        }
+
+        return res.success("User validated successfully");
+    } catch (err) {
+        console.error(`Something went wrong whilst validating a jwt : ${err.message}`);
         return res.serverError();
     }
 });

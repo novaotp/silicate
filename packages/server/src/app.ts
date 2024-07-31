@@ -14,12 +14,10 @@ const server = createServer(app);
     }
 });
 
-app.use('/api-docs/v1', swaggerUi.serve, swaggerUi.setup(swaggerDocumentV1));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumentV1));
 app.use('/', router);
 
 server.listen(process.env.SERVER_PORT, () => {
-    process.stdout.write('\x1Bc'); // Clears the console
-
     console.log(`[Postgres] > Running on port 8080`);
     console.log(`[Server] > Running on port ${process.env.SERVER_PORT}`);
 });

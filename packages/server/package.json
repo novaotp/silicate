@@ -11,8 +11,8 @@
     "dev": "npm run build && pm2 start .\\build\\server\\src\\app.js --watch --no-vizion && npm run build:watch",
     "dev:monitor": "pm2 monit --name app",
     "dev:kill": "pm2 kill --name app",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "tsc && tsc-alias",
+    "build:watch": "concurrently --kill-others \"tsc -w\" \"tsc-alias -w\"",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "generate:jwt": "node -e \"console.log(require('crypto').randomBytes(128).toString('hex'))\"",
@@ -44,12 +44,14 @@
     "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
     "prisma": "^5.17.0",
     "ts-node": "^10.9.2",
     "ts-patch": "^3.2.1",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.5.2"
   }
 }
