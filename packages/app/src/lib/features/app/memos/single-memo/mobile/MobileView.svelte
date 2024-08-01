@@ -11,7 +11,7 @@
 </script>
 
 <FullScreen>
-    <header class="fixed flex justify-between items-center w-full h-[60px] px-5 z-[100] bg-white dark:bg-neutral-950 dark:text-neutral-50">
+    <header class="fixed flex justify-between items-center w-full h-20 px-5 z-[100] bg-white dark:bg-neutral-950 dark:text-neutral-50">
         <button class="rounded-full" on:click={() => changeSearchParams('id', null)}>
             <IconChevronLeft />
         </button>
@@ -20,7 +20,7 @@
             <DeleteMemo />
         </div>
     </header>
-    <div class="relative w-full h-full flex flex-col justify-start items-start p-5 pt-[60px] gap-5">
+    <div class="relative w-full h-full flex flex-col justify-start items-start p-5 pt-20 gap-5">
         <InternalEditor bind:showSettings />
     </div>
 </FullScreen>
